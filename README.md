@@ -149,6 +149,7 @@ You don't run these. The skills above and the agents load them when the work nee
 | [`umbraco-cms-source`](plugins/umbraco-devkit/skills/umbraco-cms-source/SKILL.md) | Read the CMS source at the version you target |
 | [`umbraco-docs`](plugins/umbraco-devkit/skills/umbraco-docs/SKILL.md) | Read the official docs for the version you target |
 | [`umbraco-security`](plugins/umbraco-devkit/skills/umbraco-security/SKILL.md) | What Umbraco provides for security, on the server and in the backoffice |
+| [`umbraco-testing`](plugins/umbraco-devkit/skills/umbraco-testing/SKILL.md) | Integration tests on Umbraco's test helpers that test the package, not the defaults |
 
 **General craft:**
 
