@@ -384,9 +384,9 @@ states not pictured>
 
 ## Non-functional targets
 <one line per target the feature must meet (scale, speed on a hot path, accessibility of a
-new screen), each a number or a condition a test or reviewer can check. A target that
-`BRIEF.md` or the human didn't give is `> ASSUMPTION: ...` until they agree to it. "none —
-<why>" when nothing applies.>
+new screen), each a number or a condition a test or reviewer can check. Every figure that
+`BRIEF.md` or the human didn't give (a time, a limit, a count) is `> ASSUMPTION: ...` until
+they agree to it. "none — <why>" when nothing applies.>
 ```
 
 Update the `ARCHITECTURE.md` and `SPEC.md` lines in `README.md`: check each box and replace
