@@ -36,12 +36,10 @@ dotnet add tests/<Package>.Tests.Unit package Moq
   `"DatabaseType": "SQLite"` by default, or SQL Server via `"LocalDb"` /
   `SQLServerMasterConnectionString`. Running the same tests on SQL Server is the automated
   version of `ef-core-data`'s "SQLite tests don't prove SQL Server" check.
-- Writing tests on it is `umbraco-testing`'s job: the test host differs from a real site
-  in ways that let a test pass without exercising the package.
-- The CMS's own integration project also has an assembly-level `[SetUpFixture]`
-  (`GlobalSetupTeardown.cs`) that loads that settings file. Check
-  `tests/Umbraco.Tests.Integration/` in the CMS repo, at the release tag the project targets,
-  for what a consuming project has to provide. Copy what's there; don't guess.
+- The project needs two files of its own before any database test runs. `umbraco-testing`'s
+  "Test project setup" section has them. Writing tests on it is that skill's job too: the
+  test host differs from a real site in ways that let a test pass without exercising the
+  package.
 
 If the project uses `Directory.Packages.props`, add the versions there, not in each `.csproj`.
 

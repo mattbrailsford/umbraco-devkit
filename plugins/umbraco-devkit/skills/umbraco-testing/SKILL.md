@@ -3,20 +3,85 @@ name: umbraco-testing
 description: >-
   Writing a package's integration tests on Umbraco's own test base classes
   (`UmbracoIntegrationTest`, `UmbracoTestServerTestBase` from Umbraco.Cms.Tests.Integration):
-  where the test host differs from a real site, so a test exercises the package instead of
-  passing by default. Use when writing or reviewing an integration test for an Umbraco
+  what the test project must add for them to run, and where the test host differs from a
+  real site, so a test exercises the package instead of passing by default. Use when adding
+  an integration test project, or writing or reviewing an integration test, for an Umbraco
   package, especially one that checks cached data, cache clearing or cache refreshers.
 ---
 
 # Testing Umbraco packages
 
-Setting up the test projects is `project-init`'s job (its backend tests step). How to shape a
-test is `bdd-specs`'s, and testing repositories against a real database is `ef-core-data`'s.
-This skill covers what Umbraco's test host leaves out compared to a real site.
+`project-init`'s backend tests step creates the test projects. How to shape a test is
+`bdd-specs`'s job, and testing repositories against a real database is `ef-core-data`'s.
+This skill covers what Umbraco's test helpers need from a package's test project, and what
+their test host leaves out compared to a real site.
 
 Check base class members against the CMS source at the target release tag, under
 `tests/Umbraco.Tests.Integration/` (`umbraco-cms-source`). Everything below was checked at
 `release-17.7.1` and `release-18.2.1`.
+
+## Test project setup: what Umbraco's own test project provides
+
+`Umbraco.Cms.Tests.Integration` is the CMS's own test project, published as a package. Two
+things that make it work stay behind in the CMS repo, so a package's test project adds them
+itself. Without them, every test with a database fails before it starts.
+
+- **A global setup class, outside any namespace.** The package's `GlobalSetupTeardown` loads
+  the test settings, but it's an NUnit `[SetUpFixture]`, which only runs for tests in its own
+  assembly. Call it from one in yours. With no namespace it applies to every test in the
+  project:
+
+  ```csharp
+  using NUnit.Framework;
+
+  [SetUpFixture]
+  public class CustomGlobalSetupTeardown
+  {
+      private static GlobalSetupTeardown? _setupTearDown;
+
+      [OneTimeSetUp]
+      public void SetUp()
+      {
+          _setupTearDown = new GlobalSetupTeardown();
+          _setupTearDown.SetUp();
+      }
+
+      [OneTimeTearDown]
+      public void TearDown() => _setupTearDown?.TearDown();
+  }
+  ```
+
+  Without it, `Tests:Database:DatabaseType` is never read, and the first database test
+  throws "Unsupported test database provider".
+- **`appsettings.Tests.json` in the output folder.** `GlobalSetupTeardown` requires it. The
+  package adds one to the project without copying it to the output, so add the project's
+  own and copy it:
+
+  ```json
+  {
+    "Tests": {
+      "Database": {
+        "DatabaseType": "SQLite",
+        "PrepareThreadCount": 4,
+        "SchemaDatabaseCount": 4,
+        "EmptyDatabasesCount": 2,
+        "SQLServerMasterConnectionString": ""
+      }
+    }
+  }
+  ```
+
+  ```xml
+  <ItemGroup>
+    <Content Include="appsettings.Tests.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  ```
+
+  An optional `appsettings.Tests.Local.json` overrides it, for example to run against SQL
+  Server. Copy it the same way and keep it out of git.
+
+Source: `tests/Umbraco.Tests.Integration/GlobalSetupTeardown.cs` and the package's `.nuspec`,
+[Integration testing](https://docs.umbraco.com/umbraco-cms/develop-with-umbraco/testing-and-debugging/integration-testing).
 
 ## Cache tests: switch caching and refreshers back on
 
