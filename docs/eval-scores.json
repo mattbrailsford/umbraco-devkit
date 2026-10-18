@@ -1131,6 +1131,14 @@
     "without": 56,
     "withoutDate": "2026-10-17"
   },
+  "testing-cache-false-green": {
+    "date": "2026-10-18",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-18"
+  },
   "typescript-write-data-source": {
     "date": "2026-10-16",
     "runs": 3,

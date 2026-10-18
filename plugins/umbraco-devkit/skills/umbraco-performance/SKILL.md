@@ -148,7 +148,8 @@ var relations = _appCaches.RuntimeCache.GetCacheItem(
 - **Prefix every cache key** with your package name. The runtime cache is shared with core
   and every other package.
 - **Decide what clears it, at design time.** An expiry alone means stale data for that
-  long. If the data changes when your entity is saved, clear the key there.
+  long. If the data changes when your entity is saved, clear the key there. An integration
+  test of that clearing needs `umbraco-testing`, or it passes whatever the code does.
 - **Clear it on every server.** On a load-balanced site the clear goes through a cache
   refresher (`umbraco-extensibility`'s catalogue, row 4).
 - **Refresh many items in one call.** `DistributedCache.Refresh(refresherId, ids)` or
