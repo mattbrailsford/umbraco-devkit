@@ -39,7 +39,7 @@ tags: [<skill-name>, should-trigger]
 # covers: ["<the skill section it tests>"]
 max_turns: 30
 timeout_seconds: 900
-allowed_tools: [Read, Glob, Grep, Skill, Write, Edit]
+allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, WebFetch]
 ---
 
 <the request, as a package developer would type it>
@@ -63,8 +63,14 @@ allowed_tools: [Read, Glob, Grep, Skill, Write, Edit]
     they don't show a skill prevents anything.
   - **Workflow cases** for bug-fixing skills (`investigate-bug`, `quick-fix`,
     `issue-resolve`) are handed a bug, because the workflow's own rules are what's tested.
-- **Say what the sandbox lacks.** Git, dotnet and the network don't run in an eval. Say so
-  in the prompt ("Git can't run here") so the answer doesn't stall trying.
+- **Say what the sandbox lacks.** Git and dotnet don't run in an eval. Say so in the prompt
+  ("Git can't run here") so the answer doesn't stall trying. Don't say the network is
+  missing.
+- **Keep docs access.** `WebFetch` is the one way out of the sandbox, and it's how
+  `umbraco-docs` and `umbraco-cms-source` read the docs and source when there's no local
+  clone. Keep it in `allowed_tools` so a skill can look things up as it would in a real
+  project. Both arms get it, so the comparison stays fair. Drop it only when the case
+  needs no lookup at all.
 - **Tags:** the skill's name, then `should-trigger`, `should-not-trigger`, or `workflow`.
   Add `real-bug` when it applies.
 - **Covers:** for a knowledge case, add `# covers: ["<heading>"]` after `tags:`, naming the
