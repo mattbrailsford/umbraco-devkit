@@ -80,6 +80,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`umbraco-package-conventions`](#umbraco-package-conventions) | knowledge | Proven | +22 | 4 | 0 | 1/6 | 1 |
 | [`umbraco-performance`](#umbraco-performance) | knowledge | Proven | +100 | 6 | 4 | 4/10 | 2 |
 | [`umbraco-security`](#umbraco-security) | knowledge | Proven | +44 | 18 | 6 | 6/6 | 1 |
+| [`umbraco-testing`](#umbraco-testing) | knowledge | Proven | +67 | 1 | 0 | 1/1 | 0 |
 | [`user-stories`](#user-stories) | knowledge | Proven | +100 | 1 | 0 | 2/4 | 1 |
 
 ## How to read this
@@ -512,6 +513,12 @@ Stays quiet on: `performance-skip-template`
 | Backoffice: credentials stay on the server | `security-bundle-secret-and-storage` | 100 | 78 | 22 | 3/3 | 2026-10-16 |
 
 Stays quiet on: `security-skip-generic-aspnet`
+
+### `umbraco-testing`
+
+| Section | Eval | With | Without | Gain | Skill loaded | Recorded |
+|---|---|---|---|---|---|---|
+| Cache tests: switch caching and refreshers back on | `testing-cache-false-green` | 100 | 33 | 67 | 3/3 | 2026-10-18 |
 
 ### `user-stories`
 
