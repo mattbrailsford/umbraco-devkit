@@ -173,7 +173,9 @@ Then pick the route for the fix, for the report's **Route** line:
   site, never posting it yourself. Route any package workaround as above.
 
 If the cause is a mistake a future `builder` would likely repeat, offer to save it to
-`.claude/memory/` as a `gotcha` (see `.claude/memory/README.md` for the format).
+`.claude/memory/` as a `gotcha` (see `.claude/memory/README.md` for the format). If Claude
+wrote the faulty code and a devkit skill should have prevented it, also suggest
+`skill-report`, so the devkit learns from it.
 
 ## Rules
 

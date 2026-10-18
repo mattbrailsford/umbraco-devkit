@@ -116,6 +116,12 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 | Move to a new Umbraco major, task by task, still reviewed | [`/major-upgrade`](plugins/umbraco-devkit/skills/major-upgrade/SKILL.md) |
 | Get a finished package listed on the Umbraco Marketplace | [`/umbraco-marketplace`](plugins/umbraco-devkit/skills/umbraco-marketplace/SKILL.md) |
 
+### Improve the devkit
+
+| I want to... | Run |
+|---|---|
+| Report a mistake a skill should have caught, from the project where it happened | [`/skill-report`](plugins/umbraco-devkit/skills/skill-report/SKILL.md) |
+
 ## What works in the background
 
 You don't run these. The skills above and the agents load them when the work needs them.
@@ -163,7 +169,8 @@ Each skill has evals: realistic requests run with and without the plugin, to sho
 changes the result. [docs/EVAL-COVERAGE.md](./docs/EVAL-COVERAGE.md) shows which skills and
 which of their sections have evals, with the latest scores. How evals are written, run and
 kept current is in [`write-skill-eval`](./.claude/skills/write-skill-eval/SKILL.md). If a skill
-misses something, [open a "skill missed" issue](../../issues/new?template=skill-missed.yml).
+misses something, run `/skill-report` in the project where it happened, or [open a "skill
+missed" issue](../../issues/new?template=skill-missed.yml) by hand.
 
 ## Contributing
 
