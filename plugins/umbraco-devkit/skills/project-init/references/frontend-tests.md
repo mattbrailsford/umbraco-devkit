@@ -34,10 +34,9 @@ export default {
 
 Add `"test": "web-test-runner"` to `package.json`.
 
-If a component under test imports `@umbraco-cms/backoffice/*` and the import doesn't resolve
-in the test browser, look at how the CMS's
-`src/Umbraco.Web.UI.Client/web-test-runner.config.mjs` maps imports before inventing a
-workaround.
+With `nodeResolve: true`, `@umbraco-cms/backoffice/*` imports resolve from `node_modules`; no
+import map is needed. What a test of a backoffice element needs beyond that (a controller
+host, the package's translations) is in `umbraco-testing`.
 
 ## Check
 

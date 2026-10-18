@@ -20,11 +20,13 @@ generates. If there isn't one, skip this step and say so.
   ```
   `@umbraco-cms/acceptance-test-helpers` is the CMS's own Playwright helper package (login,
   API helpers, builders), versioned with the CMS from 17.3. Older projects use
-  `@umbraco/playwright-testhelpers`. Read the package's README for its login and setup
-  pattern; don't guess its API.
+  `@umbraco/playwright-testhelpers`. Its login setup, environment variables and config are
+  in `umbraco-testing`'s "End-to-end tests" section; the package's README imports from a
+  name that doesn't exist on npm.
 - `playwright.config.ts`:
   - `baseURL` built from the worktree's port (`getPort()` from `worktree-dev-port`, see step
     3), so each worktree tests its own site. Without step 3, use an environment variable.
+    Set `process.env.URL` to the same address: Umbraco's helpers read `URL`, not `baseURL`.
   - `webServer` to start the demo site (`dotnet run --project <demo site>`) if it isn't
     already running.
   - Backoffice login details from environment variables or a gitignored `.env`. Never commit
