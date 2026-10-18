@@ -871,6 +871,14 @@
     "without": 67,
     "withoutDate": "2026-10-16"
   },
+  "reviewer-nfr-targets": {
+    "date": "2026-10-18",
+    "runs": 3,
+    "skillLoaded": 0,
+    "with": 100,
+    "without": 100,
+    "withoutDate": "2026-10-18"
+  },
   "security-bundle-secret-and-storage": {
     "date": "2026-10-16",
     "runs": 3,
