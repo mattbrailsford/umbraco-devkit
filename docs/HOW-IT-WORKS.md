@@ -31,6 +31,8 @@ Every other skill you run works around those flows and never changes code itself
   its PR is merged or the plan is dropped.
 - **Sets up and ships.** `project-init` prepares a project, `github-init` its first public
   repo, and `umbraco-marketplace` its Marketplace listing.
+- **Improves the devkit.** `skill-report` turns a mistake a skill should have caught into
+  an issue on the devkit's tracker, which becomes an eval.
 
 You don't have to pick. Describe what you want and Claude picks the skill from its
 description.

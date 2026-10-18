@@ -68,6 +68,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions) | knowledge | Proven | +100 | 6 | 2 | 3/11 | 1 |
 | [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 1 |
 | [`umbraco-cms-source`](#umbraco-cms-source) | knowledge | Proven | +33 | 3 | 1 | 1/5 | 0 |
@@ -268,6 +269,12 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 | Eval | Score | Recorded |
 |---|---|---|
 | `quick-fix-escalates` | 100 | 2026-10-16 |
+
+### `skill-report`
+
+| Eval | Score | Recorded |
+|---|---|---|
+| `skill-report-redacts-and-waits` | 100 | 2026-10-18 |
 
 ### `umbraco-backoffice-conventions`
 
