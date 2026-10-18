@@ -324,8 +324,8 @@ above:
 8. Hardest technical risk, and the fallback if the assumed extension point doesn't behave as
    expected?
 9. What are we explicitly **not** building for now (YAGNI)?
-10. Non-functionals that bite: content-tree scale, request latency, cold-start on a busy
-    site?
+10. Non-functionals that bite: content-tree or data scale, request latency, cold-start on a
+    busy site, accessibility of a new screen? Each answer becomes a target in `SPEC.md`.
 
 ## Produce
 
@@ -381,6 +381,12 @@ do/render/emit — or "none">
 states not pictured>
 
 <one block like this per mocked-up screen>
+
+## Non-functional targets
+<one line per target the feature must meet (scale, speed on a hot path, accessibility of a
+new screen), each a number or a condition a test or reviewer can check. A target that
+`BRIEF.md` or the human didn't give is `> ASSUMPTION: ...` until they agree to it. "none —
+<why>" when nothing applies.>
 ```
 
 Update the `ARCHITECTURE.md` and `SPEC.md` lines in `README.md`: check each box and replace
