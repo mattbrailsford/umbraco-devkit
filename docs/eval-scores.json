@@ -467,6 +467,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-nfr-targets": {
+    "date": "2026-10-18",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 92,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-design-stops-without-brief": {
     "date": "2026-10-16",
     "runs": 3,
