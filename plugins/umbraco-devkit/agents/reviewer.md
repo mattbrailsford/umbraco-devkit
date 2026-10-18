@@ -166,6 +166,11 @@ workflow. Look only for what builds up across tasks:
 - Leftovers from an approach a later task replaced: dead methods, unused registrations,
   orphaned files.
 - The same thing named differently in different tasks.
+- A target in `SPEC.md`'s "Non-functional targets" that nothing on the branch checks: no
+  test or measurement for it, and the code doesn't plainly meet it by its shape (a bounded
+  query meets "memory bounded by `take`"; nothing in code meets "under 1 second"). Each is its
+  own `Important` finding, naming the target. A target still marked `> ASSUMPTION:` was never
+  agreed: say so in the verdict and ask the human to confirm or replace it.
 
 `major-upgrade` dispatches this mode with its upgrade file (`docs/upgrades/v<major>.md`) in
 place of `ARCHITECTURE.md` and `SPEC.md`. There, drift means an inventory entry the branch
