@@ -62,6 +62,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions) | knowledge | Proven | +100 | 6 | 2 | 3/11 | 1 |
@@ -269,6 +270,12 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 |---|---|---|
 | `project-init-keeps-claude-md` | 100 | 2026-10-16 |
 | `project-init-new-package-template` | 100 | 2026-10-16 |
+
+### `project-retro`
+
+| Eval | Score | Recorded |
+|---|---|---|
+| `project-retro-sorts-and-waits` | 100 | 2026-10-19 |
 
 ### `quick-fix`
 
