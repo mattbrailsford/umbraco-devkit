@@ -52,6 +52,8 @@ env-sync-access-rules   # an eval case, cited in write-skill-eval
 should-trigger          # an eval tag, cited in write-skill-eval
 should-not-trigger      # an eval tag, cited in write-skill-eval
 tag-filters             # a feature branch name in eval prompts
+webhook-delivery-queue  # a feature branch name in the pr-describe-stacked-pr eval prompt
+webhook-retry-backoff   # a feature branch name in the pr-describe-stacked-pr eval prompt
 security-dotnet         # a removed skill, cited as history in CLAUDE.md
 typescript-best-practices # a removed skill, cited as history in CLAUDE.md
 my-pkg-badge
