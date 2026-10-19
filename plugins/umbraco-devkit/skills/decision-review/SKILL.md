@@ -82,3 +82,8 @@ result with the search process.
 
 Suggested next: `pr-describe` — fold anything real from this list into its "Special things to
 note" section, then open the PR per `git-workflow`.
+
+This is the post-build half of plan scrutiny; `feature-interrogate` is the pre-build half,
+run by hand before `feature-build` on a plan worth the extra confidence. Neither replaces the
+other: this one reads what actually got decided during a real build, that one stress-tests
+intent before any code exists.

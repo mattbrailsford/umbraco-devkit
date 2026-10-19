@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: feature-interrogate-routes-dont-edit
+context:
+  scaffold_script: fixture.sh

@@ -23,10 +23,11 @@ Every other skill you run works around those flows and never changes code itself
   flow should fix it. `issue-triage`, `issue-backlog`, and `issue-resolve` take tracker
   issues from new to a started fix.
 - **Reviews and explains it.** `pr-review` runs the same reviewer over a PR from outside the
-  team. `decision-review` pulls out what a human should look at after a build.
-  `pr-describe` writes the PR description. `dependency-review` sorts Dependabot PRs, security
-  alerts, and out-of-date packages by what each touches, and hands chosen bumps to
-  `quick-fix`.
+  team. `feature-interrogate` adversarially stress-tests a plan before it's built;
+  `decision-review` pulls out what a human should look at after it's built — the same job,
+  run at opposite ends of the pipeline. `pr-describe` writes the PR description.
+  `dependency-review` sorts Dependabot PRs, security alerts, and out-of-date packages by what
+  each touches, and hands chosen bumps to `quick-fix`.
 - **Tidies up after.** `feature-close` moves a closed plan out of the plans folder once
   its PR is merged or the plan is dropped.
 - **Sets up and ships.** `project-init` prepares a project, `github-init` its first public
