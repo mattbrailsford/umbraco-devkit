@@ -9,6 +9,25 @@ and backoffice extension development (C#/.NET, EF Core, Lit + UUI).
 New here? `README.md` says what each skill does, `docs/HOW-IT-WORKS.md` says how the skills
 fit together, and "Skill families and naming" below says where a capability lives.
 
+## Goals
+
+These decide what belongs in this repo. Check a new rule, skill, or section against them.
+
+- **Works for any Umbraco package or extension.** Rules stay general, never tied to one
+  product. A correction becomes a rule about the situation, not the product it was caught in.
+- **Proven, not assumed.** A skill ships only once an eval shows it beats plain Claude. One
+  that stops showing a gain gets cut.
+- **Two kinds of gate, used differently.** The builder/reviewer loop runs on every change and
+  never stops for a yes; it's a correctness check, not a human interruption.
+- **Ask only where it's risky.** Committing to trunk, pushing, opening or merging a PR,
+  writing to the tracker, dropping a stash. Anything local and reversible goes ahead without
+  asking.
+- **Front-load human input where it's cheap.** A mockup, a design decision, a drafted PR
+  description: show it once, early, before code or commits depend on it, rather than asking
+  in small pieces as the work proceeds.
+- **A foundation, not a finished house.** Covers the workflow from idea to merged PR. Release
+  prep, CI, and hosting stay out; they live in each product repo.
+
 ## Layout
 
 ```
@@ -264,6 +283,13 @@ A skill's behavior depends on what it's given, never on which skill started it.
 Follow the `git-workflow` skill this repo ships: Conventional Commits, branch by change
 size. This is a solo repo that merges via PRs to `main`. Always ask before committing
 straight to `main`.
+
+**Check before you start, not after.** This checkout can be shared with another running
+session. Before editing anything, check the current branch and `git status`. A branch that
+isn't `main`, or changes you didn't make, mean another session is mid-work there: do your own
+edit in a separate worktree off `main` instead of this checkout, so switching branches or
+committing here can't disturb it (`git worktree add ../playbook-worktrees/<slug> main`).
+Remove the worktree once its PR merges.
 
 ## Skill boundary discipline
 

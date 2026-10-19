@@ -109,10 +109,11 @@ Show the user what each step will change and wait for a yes before step 4.
    <ideas-path>/<idea-name>.md <archive-path>/ideas/`. References use the name, so nothing
    needs fixing. If something is left, leave it where it is.
 
-6. **Commit and open a PR.** On a short-lived branch off this line's trunk, named per
-   `git-workflow` (for example `docs/archive-plans` or `v18/docs/archive-plans`). One commit
-   for the whole run: `docs: archive <feature-slug> plan`, or `docs: archive shipped plans`
-   when there are several. Then invoke `pr-describe` to open the PR.
+6. **Commit, then ask before pushing.** On a short-lived branch off this line's trunk, named
+   per `git-workflow` (for example `docs/archive-plans` or `v18/docs/archive-plans`). One
+   commit for the whole run: `docs: archive <feature-slug> plan`, or `docs: archive shipped
+   plans` when there are several. Ask before pushing. Then invoke `pr-describe` to open the
+   PR.
 
 ## Rules
 
