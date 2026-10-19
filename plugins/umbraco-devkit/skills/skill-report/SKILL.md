@@ -21,8 +21,9 @@ public: nothing gets posted until the user has read the draft and said yes.
 - IN: one miss per report. Claude wrote or advised something wrong, in a project with the
   devkit loaded, and a devkit skill should have prevented it.
 - OUT: a bug in the project's own code that Claude didn't cause (that's `investigate-bug`),
-  a bug in Umbraco itself (that goes to the CMS tracker), and a feature request for the
-  devkit. Say which it is and stop.
+  a bug in Umbraco itself (that goes to the CMS tracker), a feature request for the devkit,
+  and a repeatable trap that isn't the devkit's fault (that's a `.claude/memory/` `gotcha`,
+  or `project-retro` if nothing already caught it). Say which it is and stop.
 
 ## Argument
 
