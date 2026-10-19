@@ -563,8 +563,24 @@
     "without": null,
     "withoutDate": null
   },
+  "issue-resolve-linked-pr": {
+    "date": "2026-10-19",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "issue-resolve-security-stop": {
     "date": "2026-10-16",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-triage-linked-pr": {
+    "date": "2026-10-19",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
