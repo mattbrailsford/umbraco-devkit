@@ -799,6 +799,14 @@
     "without": null,
     "withoutDate": null
   },
+  "pr-describe-stacked-pr": {
+    "date": "2026-10-19",
+    "runs": 6,
+    "skillLoaded": 6,
+    "with": 100,
+    "without": 83,
+    "withoutDate": "2026-10-19"
+  },
   "pr-review-hidden-install-hooks": {
     "date": "2026-10-16",
     "runs": 3,

@@ -26,6 +26,9 @@ as-is; don't restate them here.
    `quick-fix` or trunk-based commit won't have one, and that's expected, not an error.
 
 2. **Gather context.**
+   - Resolve `<base>` first, using `git-workflow`'s "Resolving the base branch" (branch
+     prefix, remote existence check, and the stacked-PR check). A wrong base here means the
+     diff below includes commits that were never really part of this PR.
    - Plan folder found: read `BRIEF.md`, `ARCHITECTURE.md`/`SPEC.md`, and `PLAN.md` for the
      "why." Then invoke `decision-review` (via the Skill tool) — always, not only if it
      happens to have already run — and use its ranked output as-is for step 4's "Special
@@ -34,7 +37,7 @@ as-is; don't restate them here.
      by hand and don't re-derive the list yourself.
    - No plan folder: read the branch's commit messages instead — there's no separate plan
      artifact to draw on, and `decision-review` needs a plan folder to run against.
-   - Either way, read the full diff against the base branch (`git diff <base>...HEAD`, or
+   - Either way, read the full diff against the resolved base (`git diff <base>...HEAD`, or
      `gh pr diff <number>` if a PR already exists) — enough of it, and enough surrounding code,
      to explain behavior and ownership, not just line counts.
 
@@ -44,7 +47,9 @@ as-is; don't restate them here.
      `git-workflow`'s "Pull requests" section for the push, title and base branch. Don't
      duplicate those rules here.
 
-4. **Write the description**, in the style step 1 decided:
+4. **Write the description**, in the style step 1 decided. Either way, a stacked PR (step 2)
+   opens with `Stacked on #<parent-pr-number>.` ahead of everything else — the template's
+   placeholder for it is omitted entirely when the PR isn't stacked.
    - **Plan folder found** — use `templates/pr-description.md`:
      - **Why the change** — exactly one sentence.
      - **What it looks like** — only when the PR adds or changes backoffice UI; omit the

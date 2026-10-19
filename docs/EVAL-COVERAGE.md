@@ -64,7 +64,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
-| [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -252,6 +252,7 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 | Eval | Score | Recorded |
 |---|---|---|
 | `pr-describe-plan-folder` | 100 | 2026-10-16 |
+| `pr-describe-stacked-pr` | 100 | 2026-10-19 |
 
 ### `pr-review`
 
