@@ -93,6 +93,9 @@ is one that changes behavior someone saw go wrong. Typos, comments, and dead cod
    person doesn't see from the changed lines: a public signature, a caller in another file, a
    manifest `alias`. Fix any Critical or Important finding yourself and review again until
    `PASS`. If a finding shows the fix isn't small after all, stop and escalate as in step 2.
+   If a finding was a repeatable mistake a future `builder` would likely make on another
+   task, write it to `.claude/memory/` (type: `gotcha`) once fixed, the same as
+   `feature-build` does.
 9. **Report and ask before committing.** Show the diff summary and propose a one-line commit
    message, following `git-workflow`'s Conventional Commits format. Do **not** commit unless
    the user says go — committing straight to the default branch is a shared-state action, per
