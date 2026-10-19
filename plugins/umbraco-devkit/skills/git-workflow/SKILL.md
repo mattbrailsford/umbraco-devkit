@@ -149,9 +149,34 @@ gh pr create \
 
 Title follows whatever commit convention the project uses (see above — Conventional Commits
 or the looser `Area: description` style), same as a commit summary, and should reflect *all*
-the commits on the branch, not just the latest. If the branch isn't pushed yet, push it first:
-`git push -u origin HEAD`. Use `--draft` for a draft PR, `--base <branch>` for a non-default
-target.
+the commits on the branch, not just the latest. If the branch isn't pushed yet, push it first
+(see "Pushing to the right remote name" below). Use `--draft` for a draft PR, `--base <branch>`
+for a non-default target (see "Resolving the base branch" below).
+
+**Pushing to the right remote name.** A local branch doesn't always push to a remote ref with
+the same name — a local `wip/...` branch can already track a differently-named
+`v17/bugfix/23806-...` ref. Check before the first push:
+
+```bash
+git rev-parse --abbrev-ref HEAD
+git config --get "branch.<local-name>.merge"   # e.g. refs/heads/v17/bugfix/23806-... — strip refs/heads/
+```
+
+An unset `branch.<name>.merge` means the remote name matches the local one:
+`git push -u origin HEAD`. Otherwise push explicitly to the tracked name:
+`git push -u origin HEAD:<remote-branch>`.
+
+**Resolving the base branch.** A `v{N}/...`-prefixed branch targets `v{N}/dev` — confirm it
+exists first (`git ls-remote --exit-code --heads origin v{N}/dev`), falling back to the
+project's default branch if it doesn't. Anything else targets the default branch directly.
+
+Before settling on that, check whether this is a **stacked PR**: a branch built on top of
+another work branch rather than off the resolved base. Compare how far back each merge-base
+sits — `git merge-base HEAD <resolved-base>` landing far behind `git merge-base HEAD
+<other-open-branch>` is the tell, and the user may simply say so. When it's stacked, the base
+becomes that other branch instead, and `pr-describe` opens the description with `Stacked on
+#<parent-pr-number>.` ahead of everything else — the parent PR merges first, and this one's
+base moves to the normal resolved base once that happens.
 
 **Reviewing someone else's PR against this repo** (most packages here are open source, so
 this is routine, not an edge case): if the author is outside the core maintainer team, use

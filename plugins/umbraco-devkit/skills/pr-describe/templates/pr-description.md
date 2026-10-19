@@ -3,6 +3,8 @@ Omit the whole line if there's nothing to link.}
 
 [{Ticket ID}]({ticket_url}) | [{Plan folder}]({plan_folder_link}) | ...
 
+{Stacked PR only — omit entirely otherwise: `Stacked on #<parent-pr-number>.`}
+
 ## Why the change
 
 {Exactly one sentence: the problem this PR solves and what becomes possible once it ships.}

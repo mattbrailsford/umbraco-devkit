@@ -1,3 +1,5 @@
+<Stacked PR only, as the first line — omit entirely otherwise: "Stacked on #<parent-pr-number>.">
+
 ## Summary
 - <headline change>
 - <caveats / non-changes>
