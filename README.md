@@ -39,7 +39,7 @@ The official
 marketplace has two plugins, and this devkit works alongside both. The first covers the
 individual backoffice extension points. The second covers testing backoffice extensions:
 element tests, mocked APIs and backoffice journeys in Playwright. This devkit covers C# tests,
-and what Umbraco's test tooling leaves out (`umbraco-integration-testing`).
+and what Umbraco's test tooling leaves out (`umbraco-test-setup`).
 
 The backoffice skills follow the CMS major. `#main` is the latest major. If your project
 targets an older one, swap `#main` for `#v<major>/main` (for example `#v17/main`). The
@@ -154,7 +154,7 @@ You don't run these. The skills above and the agents load them when the work nee
 | [`umbraco-cms-source`](plugins/umbraco-devkit/skills/umbraco-cms-source/SKILL.md) | Read the CMS source at the version you target |
 | [`umbraco-docs`](plugins/umbraco-devkit/skills/umbraco-docs/SKILL.md) | Read the official docs for the version you target |
 | [`umbraco-security`](plugins/umbraco-devkit/skills/umbraco-security/SKILL.md) | What Umbraco provides for security, on the server and in the backoffice |
-| [`umbraco-integration-testing`](plugins/umbraco-devkit/skills/umbraco-integration-testing/SKILL.md) | C# integration tests, and what Umbraco's test tooling leaves out |
+| [`umbraco-test-setup`](plugins/umbraco-devkit/skills/umbraco-test-setup/SKILL.md) | What a test project on Umbraco's test tooling must add, so tests exercise the package |
 
 **General craft:**
 

@@ -21,7 +21,7 @@ generates. If there isn't one, skip this step and say so.
   `@umbraco-cms/acceptance-test-helpers` is the CMS's own Playwright helper package (login,
   API helpers, builders), versioned with the CMS from 17.3. Older projects use
   `@umbraco/playwright-testhelpers`. Its login setup, environment variables and config are
-  in `umbraco-integration-testing`'s "End-to-end tests" section, and test patterns in the official
+  in `umbraco-test-setup`'s "End-to-end tests" section, and test patterns in the official
   Backoffice Testing Skills plugin, if installed; the package's README imports from a
   name that doesn't exist on npm.
 - `playwright.config.ts`:

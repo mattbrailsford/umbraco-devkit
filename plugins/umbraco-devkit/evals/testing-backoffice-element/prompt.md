@@ -1,6 +1,6 @@
 ---
 description: Component test for a backoffice element that reads a context and a translation; the test needs an Umbraco controller host and the package's translations loaded, or it fails.
-tags: [umbraco-integration-testing, should-trigger]
+tags: [umbraco-test-setup, should-trigger]
 # covers: ["Backoffice element tests: a controller host and loaded translations"]
 max_turns: 30
 timeout_seconds: 900

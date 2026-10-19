@@ -55,7 +55,7 @@ is one that changes behavior someone saw go wrong. Typos, comments, and dead cod
    - `umbraco-env-sync`: only if the project syncs with Umbraco Deploy or uSync and the fix
      adds an entity, changes a synced one, or touches the sync code.
    - `umbraco-dependencies`: only if the fix adds or bumps a NuGet or npm package.
-   - `umbraco-integration-testing`: only if the fix adds or changes an integration test on Umbraco's
+   - `umbraco-test-setup`: only if the fix adds or changes an integration test on Umbraco's
      test base classes, a backoffice element test, or a Playwright test.
    - **`umbraco-security`: always, if the fix touches auth, user input, the
      Management API, secrets, or `unsafeHTML`/`unsafeSVG`.** "Quick" doesn't exempt a fix from

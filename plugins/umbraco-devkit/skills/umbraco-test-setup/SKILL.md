@@ -1,5 +1,5 @@
 ---
-name: umbraco-integration-testing
+name: umbraco-test-setup
 description: >-
   Testing an Umbraco package against what Umbraco's own test tooling leaves out: integration
   tests on `UmbracoIntegrationTest` and `UmbracoTestServerTestBase`

@@ -1197,8 +1197,8 @@
   },
   "testing-cache-false-green": {
     "date": "2026-10-19",
-    "runs": 3,
-    "skillLoaded": 3,
+    "runs": 6,
+    "skillLoaded": 6,
     "with": 100,
     "without": 56,
     "withoutDate": "2026-10-19"
@@ -1207,7 +1207,7 @@
     "date": "2026-10-19",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 100,
+    "with": 92,
     "without": 42,
     "withoutDate": "2026-10-19"
   },
@@ -1216,7 +1216,7 @@
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
-    "without": 56,
+    "without": 44,
     "withoutDate": "2026-10-19"
   },
   "testing-test-server-controllers": {

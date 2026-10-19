@@ -1,6 +1,6 @@
 ---
 description: Adding an integration test project on Umbraco's test helpers; it needs its own global setup class and the test settings file copied to output, or no database test runs.
-tags: [umbraco-integration-testing, should-trigger]
+tags: [umbraco-test-setup, should-trigger]
 # covers: ["Test project setup: what Umbraco's own test project provides"]
 max_turns: 30
 timeout_seconds: 900
