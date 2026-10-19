@@ -12,12 +12,6 @@ These evals gain, but the skill mostly didn't load, so the gain may come from el
 - [`umbraco-docs`](#umbraco-docs): `docs-custom-webhook-event` (+23, loaded 0/4). Fix its description's "Use when" for these requests, then rerun to see if the gain holds.
 - [`umbraco-performance`](#umbraco-performance): `performance-converter-cache-level` (+100, loaded 0/4). Fix its description's "Use when" for these requests, then rerun to see if the gain holds.
 
-### Prove the gain
-
-No baseline yet, or the gain is too small to trust.
-
-- [`git-workflow`](#git-workflow): best gain only 17 (`git-workflow-two-cms-majors`). Rerun with `--runs 6`, or add a harder scenario.
-
 ### Under-covered
 
 Fewer than 50% of the skill's sections have an eval, so most of its rules are unproven.
@@ -25,10 +19,10 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 - [`umbraco-env-sync`](#umbraco-env-sync): 24 of 31 sections have no eval.
 - [`umbraco-extensibility`](#umbraco-extensibility): 17 of 23 sections have no eval.
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): 8 of 11 sections have no eval.
-- [`git-workflow`](#git-workflow): 7 of 8 sections have no eval.
 - [`umbraco-performance`](#umbraco-performance): 6 of 10 sections have no eval.
 - [`bdd-specs`](#bdd-specs): 5 of 6 sections have no eval.
 - [`ef-core-data`](#ef-core-data): 5 of 7 sections have no eval.
+- [`git-workflow`](#git-workflow): 5 of 8 sections have no eval.
 - [`umbraco-package-conventions`](#umbraco-package-conventions): 5 of 6 sections have no eval.
 - [`umbraco-cms-source`](#umbraco-cms-source): 4 of 5 sections have no eval.
 - [`umbraco-docs`](#umbraco-docs): 4 of 5 sections have no eval.
@@ -56,7 +50,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`git-workflow`](#git-workflow) | knowledge | Small gain | +17 | 1 | 0 | 1/8 | 0 |
+| [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -191,8 +185,8 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | If you are an AI agent: always ask before touching main or a support branch | **no eval** | | | | | |
 | Commits — Conventional Commits, kept honest | **no eval** | | | | | |
 | Issues — `gh issue create` | **no eval** | | | | | |
-| Pull requests — `gh pr create` | **no eval** | | | | | |
-| Sanity rules | **no eval** | | | | | |
+| Pull requests — `gh pr create` | `git-workflow-pr-reply` | 67 | 0 | 67 | 3/3 | 2026-10-19 |
+| Sanity rules | `git-workflow-stash-safety` | 100 | 33 | 67 | 3/3 | 2026-10-19 |
 | Umbraco packages and version tracking | `git-workflow-two-cms-majors` | 100 | 83 | 17 | 6/6 | 2026-10-17 |
 
 ### `github-init`

@@ -1,9 +1,11 @@
 ---
 name: git-workflow
 description: >-
-  Conventional Commits, trunk vs. branch by change size, and how a package's versions relate
-  to the CMS majors it supports. Use when committing, branching, or deciding how to
-  structure either in an Umbraco project. Not for release pipelines.
+  Conventional Commits, trunk vs. branch by change size, how a package's versions relate
+  to the CMS majors it supports, and replying to or resolving feedback on an open PR. Use
+  when committing, branching, switching branches with work still in progress, deciding how
+  to structure either, or responding to review comments (human or automatic) in an Umbraco
+  project. Not for release pipelines.
 
 ---
 
@@ -183,6 +185,44 @@ this is routine, not an edge case): if the author is outside the core maintainer
 `pr-review` instead of reviewing it by hand — it wraps `reviewer` and adds the
 checks that only matter because the diff came from outside.
 
+**Replying to feedback on your own PR** (a human reviewer, or an automatic one like GitHub
+Copilot's review): read and address every comment before touching any thread — don't resolve
+one in isolation while others sit unread. Fetch them first:
+
+```bash
+gh api graphql -f query='query {
+  repository(owner: "<owner>", name: "<repo>") {
+    pullRequest(number: <n>) {
+      reviewThreads(first: 50) {
+        nodes { id isResolved comments(first: 1) { nodes { body } } }
+      }
+    }
+  }
+}'
+```
+
+Reply to a specific comment (not a new top-level PR comment — `in_reply_to` keeps it in the
+same thread):
+
+```bash
+gh api repos/<owner>/<repo>/pulls/comments -f body="<reply>" -F in_reply_to=<comment_id>
+```
+
+There's no `pulls/comments/{id}/replies` REST endpoint, despite what the dashboard's "Reply"
+button implies — the call above, against the comments collection, is the one that works.
+Resolve the thread once it's actually addressed, with the thread's `id` from the query above
+(not the comment id), over GraphQL — there's no REST equivalent:
+
+```bash
+gh api graphql -f query='mutation {
+  resolveReviewThread(input: {threadId: "<thread_node_id>"}) { thread { isResolved } }
+}'
+```
+
+Replying and resolving are as visible to everyone watching the PR as the original review
+comment was — treat each one as its own small decision, same as any other comment or push, not
+something to batch silently alongside an unrelated commit.
+
 ## Sanity rules
 
 - Don't push to the default branch with `--force`. Ever.
@@ -192,6 +232,14 @@ checks that only matter because the diff came from outside.
   them.
 - If `git status` shows untracked files you didn't expect, investigate before staging — it
   could be someone else's in-progress work.
+- Never carry changes across a branch switch with a bare `git stash` / `git stash pop`. The
+  stash list is a single shared stack across every worktree and concurrent Claude session on
+  the machine, so a plain `pop` can restore someone else's in-progress stash instead of your
+  own. Save with `git stash push -u -m <label>`, restore by name
+  (`git stash apply stash^{/<label>}`, or the exact `stash@{n}` from `git stash list` if two
+  entries share wording), and only `git stash drop` once you've confirmed it applied the right
+  one. A throwaway commit (`git commit -m wip`, amended or dropped later) is simpler and safer
+  than stashing at all when the change is cheap to re-create.
 
 ## Umbraco packages and version tracking
 
