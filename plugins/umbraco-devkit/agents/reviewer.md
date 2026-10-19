@@ -42,7 +42,7 @@ design. A reviewer that fixes its own findings isn't a gate.
   that adds an entity, changes a synced one, or touches the sync code; use its "Reviewing a
   diff for environment sync" list. A new entity with no decision on how it moves, or a
   synced entity changed with no matching sync change, is `Important`.
-- `umbraco-testing` — for any diff that adds or changes an integration test on Umbraco's
+- `umbraco-integration-testing` — for any diff that adds or changes an integration test on Umbraco's
   test base classes, a backoffice element test, or a Playwright test. A test of cached data
   that keeps the test host's defaults passes whatever the code does, so it proves nothing.
 - `umbraco-backoffice-ux` — for any diff that adds or changes backoffice UI; use its

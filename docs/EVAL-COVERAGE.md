@@ -71,11 +71,11 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`umbraco-docs`](#umbraco-docs) | knowledge | Gain, skill rarely loads | +23 | 2 | 0 | 1/5 | 0 |
 | [`umbraco-env-sync`](#umbraco-env-sync) | knowledge | Proven | +27 | 7 | 0 | 7/31 | 1 |
 | [`umbraco-extensibility`](#umbraco-extensibility) | knowledge | Proven | +89 | 24 | 4 | 6/23 | 6 |
+| [`umbraco-integration-testing`](#umbraco-integration-testing) | knowledge | Proven | +67 | 5 | 0 | 5/5 | 0 |
 | [`umbraco-marketplace`](#umbraco-marketplace) | knowledge | Proven | +100 | 1 | 0 | 1/4 | 4 |
 | [`umbraco-package-conventions`](#umbraco-package-conventions) | knowledge | Proven | +22 | 4 | 0 | 1/6 | 1 |
 | [`umbraco-performance`](#umbraco-performance) | knowledge | Proven | +100 | 6 | 4 | 4/10 | 2 |
 | [`umbraco-security`](#umbraco-security) | knowledge | Proven | +44 | 18 | 6 | 6/6 | 1 |
-| [`umbraco-testing`](#umbraco-testing) | knowledge | Proven | +100 | 5 | 0 | 5/5 | 0 |
 | [`user-stories`](#user-stories) | knowledge | Proven | +100 | 1 | 0 | 2/4 | 1 |
 
 ## How to read this
@@ -445,6 +445,16 @@ shown to follow (kept so a regression shows up), or a case not yet mapped.
 
 Stays quiet on: `extensibility-skip-dashboard` `extensibility-skip-generic-csharp` `load-balancing-skip-host-config`
 
+### `umbraco-integration-testing`
+
+| Section | Eval | With | Without | Gain | Skill loaded | Recorded |
+|---|---|---|---|---|---|---|
+| Test project setup: what Umbraco's own test project provides | `testing-project-setup` | 100 | 56 | 44 | 3/3 | 2026-10-19 |
+| Test server: add the package's controllers | `testing-test-server-controllers` | 100 | 100 | 0 | 3/3 | 2026-10-19 |
+| Cache tests: switch caching and refreshers back on | `testing-cache-false-green` | 100 | 56 | 44 | 3/3 | 2026-10-19 |
+| Backoffice element tests: a controller host and loaded translations | `testing-backoffice-element` | 100 | 33 | 67 | 3/3 | 2026-10-19 |
+| End-to-end tests: Umbraco's Playwright helpers | `testing-e2e-helpers` | 100 | 42 | 58 | 3/3 | 2026-10-19 |
+
 ### `umbraco-marketplace`
 
 | Section | Eval | With | Without | Gain | Skill loaded | Recorded |
@@ -518,16 +528,6 @@ Stays quiet on: `performance-skip-template`
 | Backoffice: credentials stay on the server | `security-bundle-secret-and-storage` | 100 | 78 | 22 | 3/3 | 2026-10-16 |
 
 Stays quiet on: `security-skip-generic-aspnet`
-
-### `umbraco-testing`
-
-| Section | Eval | With | Without | Gain | Skill loaded | Recorded |
-|---|---|---|---|---|---|---|
-| Test project setup: what Umbraco's own test project provides | `testing-project-setup` | 100 | 0 | 100 | 3/3 | 2026-10-18 |
-| Test server: add the package's controllers | `testing-test-server-controllers` | 100 | 33 | 67 | 3/3 | 2026-10-18 |
-| Cache tests: switch caching and refreshers back on | `testing-cache-false-green` | 100 | 33 | 67 | 3/3 | 2026-10-18 |
-| Backoffice element tests: a controller host and loaded translations | `testing-backoffice-element` | 100 | 22 | 78 | 3/3 | 2026-10-18 |
-| End-to-end tests: Umbraco's Playwright helpers | `testing-e2e-helpers` | 100 | 25 | 75 | 3/3 | 2026-10-18 |
 
 ### `user-stories`
 

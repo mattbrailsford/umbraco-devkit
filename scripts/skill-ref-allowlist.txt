@@ -80,3 +80,8 @@ umb-input-document
 umb-user-input
 uui-box
 uui-table
+umbraco-unit-testing  # a skill in the official Backoffice Testing Skills plugin, not ours
+umbraco-msw-testing  # a skill in the official Backoffice Testing Skills plugin, not ours
+umbraco-e2e-testing  # a skill in the official Backoffice Testing Skills plugin, not ours
+umbraco-playwright-testhelpers  # a skill in the official Backoffice Testing Skills plugin, not ours
+umbraco-test-builders  # a skill in the official Backoffice Testing Skills plugin, not ours

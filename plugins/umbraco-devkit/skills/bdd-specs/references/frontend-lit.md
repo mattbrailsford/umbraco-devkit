@@ -64,7 +64,7 @@ describe("Feature: feature card", () => {
   plugin's `umbraco-state-management` and this plugin's `umbraco-backoffice-conventions` for
   that pattern), provide a fake context exposing the same observable shape, not a real backend
   call. The fake has to be a real Umbraco context on an Umbraco host, not a plain object;
-  `umbraco-testing`'s "Backoffice element tests" section shows how, and how to load the
+  `umbraco-integration-testing`'s "Backoffice element tests" section shows how, and how to load the
   package's translations.
 - **New specs pending by default** — `it.skip("pending implementation", () => { ... })` (Mocha
   BDD interface, which both Web Test Runner and Vitest support) until a `builder` task makes

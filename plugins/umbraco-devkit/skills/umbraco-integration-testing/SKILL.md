@@ -1,15 +1,14 @@
 ---
-name: umbraco-testing
+name: umbraco-integration-testing
 description: >-
-  Testing an Umbraco package on Umbraco's own test tooling: integration tests on
-  `UmbracoIntegrationTest` and `UmbracoTestServerTestBase` (Umbraco.Cms.Tests.Integration),
-  component tests of backoffice elements built on `@umbraco-cms/backoffice`, and Playwright
-  end-to-end tests on Umbraco's helpers. Covers what the test project must add for them to
-  run, and where the test host differs from a real site, so a test exercises the package
-  instead of passing by default. Use when adding a test project, or writing or reviewing a
-  test, for an Umbraco package's C# code, backoffice elements or backoffice journeys,
-  especially one that checks cached data, a Management API endpoint, a context or translated
-  text.
+  Testing an Umbraco package against what Umbraco's own test tooling leaves out: integration
+  tests on `UmbracoIntegrationTest` and `UmbracoTestServerTestBase`
+  (Umbraco.Cms.Tests.Integration), plus the setup a backoffice element test or a Playwright
+  test on Umbraco's helpers needs to exercise the package. Use when adding a test project, or
+  writing or reviewing a test, for an Umbraco package's C# code (services, Management API
+  endpoints, caches, notification handlers), or when setting up a backoffice element or
+  end-to-end test. Not for test patterns, API mocking (MSW) or backoffice journeys, which the
+  official Backoffice Testing Skills plugin covers.
 ---
 
 # Testing Umbraco packages
@@ -19,11 +18,20 @@ shape a test is `bdd-specs`'s job, and testing repositories against a real datab
 `ef-core-data`'s. This skill covers what Umbraco's test tooling needs from a package's test
 project, and what its test host leaves out compared to a real site.
 
+The official Umbraco Backoffice Testing Skills plugin covers testing backoffice extensions:
+element and context test patterns (`umbraco-unit-testing`), mocked API responses
+(`umbraco-msw-testing`), and backoffice journeys on Umbraco's Playwright helpers
+(`umbraco-e2e-testing`, `umbraco-playwright-testhelpers`, `umbraco-test-builders`). Defer to
+it for those. It has no C# tests, and its end-to-end tests reach C# only through a backoffice
+screen. C# with no screen of its own (a notification handler, a cache refresher, a Delivery
+API response, a scheduled job) is tested here.
+
 Check base class members against the CMS source at the target release tag, under
 `tests/Umbraco.Tests.Integration/` (`umbraco-cms-source`). The C# sections were checked at
 `release-17.7.1` and `release-18.2.1`. The backoffice section was run against
 `@umbraco-cms/backoffice` 17.7.1 in Web Test Runner, and the end-to-end snippets
-type-checked against `@umbraco-cms/acceptance-test-helpers` 17.7.1.
+type-checked against `@umbraco-cms/acceptance-test-helpers` 17.7.1. The environment variable
+names were checked at `release-17.7.1` and `release-18.2.1`.
 
 ## Test project setup: what Umbraco's own test project provides
 
@@ -233,6 +241,8 @@ versioned with the CMS from 17.3. Install the version matching the site.
   `https://localhost:44339`, the CMS repo's own port), `UMBRACO_USER_LOGIN`,
   `UMBRACO_USER_PASSWORD`, and `STORAGE_STATE_PATH`. The API helpers read their tokens from
   the storage state file, so `STORAGE_STATE_PATH` names the same file the setup saves.
+  The helpers read no other names: `UMBRACO_URL` or `STORAGE_STAGE_PATH` is ignored, and the
+  helpers fall back to the default address and no tokens.
 - **Log in once**, in a setup project, and give the tests that state.
 - **Run one test at a time** (`workers: 1`). Every test shares one site and database.
   Umbraco's own suite runs this way, and asks for SQL Server or LocalDb because SQLite can't
@@ -248,7 +258,7 @@ export const STORAGE_STATE = process.env.STORAGE_STATE_PATH ?? 'playwright/.auth
 export default defineConfig({
 	testDir: './tests',
 	workers: 1,
-	use: { baseURL: process.env.URL, ignoreHTTPSErrors: true },
+	use: { baseURL: process.env.URL, ignoreHTTPSErrors: true, testIdAttribute: 'data-mark' },
 	projects: [
 		{ name: 'setup', testMatch: '**/*.setup.ts' },
 		{
@@ -282,4 +292,5 @@ The config loads `.env` with `dotenv` (a dev dependency). Keep `.env` and
 `playwright/.auth/` out of git.
 
 Source: `tests/Umbraco.Tests.AcceptanceTest/` in the CMS repo (`playwright.config.ts`,
-`tests/auth.setup.ts`, `README.md`) and the package's `dist/umbraco.config.js`.
+`tests/auth.setup.ts`, `README.md`) and the package's `dist/umbraco.config.js` and
+`dist/helpers/`.

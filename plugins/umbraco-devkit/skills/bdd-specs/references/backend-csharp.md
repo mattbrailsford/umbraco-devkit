@@ -47,7 +47,7 @@ precedent alone:
 
   - For **expensive** shared arrange (a real database, a running Umbraco), use
     `[OneTimeSetUp]`, or inherit `UmbracoIntegrationTest` from `Umbraco.Cms.Tests.Integration`
-    with a per-fixture database, instead of re-arranging per test. `umbraco-testing` covers
+    with a per-fixture database, instead of re-arranging per test. `umbraco-integration-testing` covers
     what that test host leaves out compared to a real site.
   - Do **not** fall back to a private `Arrange...()` helper called at the top of every test
     method — that hides the scenario's precondition inside a method body instead of the

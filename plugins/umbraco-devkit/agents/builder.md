@@ -30,7 +30,9 @@ section, and the files/extension points you own. Build that task and nothing mor
   converter, a cache, or a backoffice list or search → `umbraco-performance`.
 - Code that runs on a timer or as a background job → `umbraco-extensibility`.
 - An integration test on `UmbracoIntegrationTest` or `UmbracoTestServerTestBase`, a test of
-  a backoffice element, or a Playwright test on Umbraco's helpers → `umbraco-testing`.
+  a backoffice element, or a Playwright test on Umbraco's helpers → `umbraco-integration-testing`
+  for what the test host needs, and the installed Umbraco Backoffice Testing Skills for
+  backoffice test patterns, API mocking and backoffice journeys.
 - In a project that syncs with Umbraco Deploy or uSync: a new entity, a change to a synced
   entity, or the sync code itself → `umbraco-env-sync`. Make the matching sync change in
   the same task.

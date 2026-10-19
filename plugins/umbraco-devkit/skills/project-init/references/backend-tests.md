@@ -36,7 +36,7 @@ dotnet add tests/<Package>.Tests.Unit package Moq
   `"DatabaseType": "SQLite"` by default, or SQL Server via `"LocalDb"` /
   `SQLServerMasterConnectionString`. Running the same tests on SQL Server is the automated
   version of `ef-core-data`'s "SQLite tests don't prove SQL Server" check.
-- The project needs two files of its own before any database test runs. `umbraco-testing`'s
+- The project needs two files of its own before any database test runs. `umbraco-integration-testing`'s
   "Test project setup" section has them. Writing tests on it is that skill's job too: the
   test host differs from a real site in ways that let a test pass without exercising the
   package.
