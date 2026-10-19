@@ -54,8 +54,8 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -211,12 +211,14 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `issue-resolve-linked-pr` | 100 | 2026-10-19 |
 | `issue-resolve-security-stop` | 100 | 2026-10-16 |
 
 ### `issue-triage`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `issue-triage-linked-pr` | 100 | 2026-10-19 |
 | `issue-triage-security-report` | 100 | 2026-10-16 |
 
 ### `major-upgrade`

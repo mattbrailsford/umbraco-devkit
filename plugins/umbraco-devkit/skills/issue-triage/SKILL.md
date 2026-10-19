@@ -101,7 +101,10 @@ Every dispatch gets: the issue ID, the tracker's type/location/access method, th
 any dedup-pre-pass hint for that issue, why it's back if it already had a state label (a
 reply, the needs-info timeout, or a closed blocker), the "What counts" list from Security
 reports below, the "Which state" rules from State labels, and the Tracker comments section.
-The triager searches the tracker itself, open and closed, for earlier duplicates.
+The triager searches the tracker itself, open and closed, for earlier duplicates. It also
+checks whether an open pull request is already linked to the issue (GitHub: the issue's
+"Development" links or a cross-reference in its timeline), opened by the reporter or another
+outside contributor, and reports it if so.
 
 ## Aggregating and reporting
 
@@ -110,7 +113,9 @@ The triager searches the tracker itself, open and closed, for earlier duplicates
    Security reports below says.
 3. Build one combined table for everything else: issue, type, likely area, priority/urgency,
    duplicate-of (if any), recommended action, one-line why (written following
-   `plain-writing`).
+   `plain-writing`). When a triager reports a linked open PR from the reporter or another
+   outside contributor, the recommended action is "Review with `pr-review` #<PR>", not a
+   state label or fix route — the fix already exists, it hasn't been built yet.
 4. Next to each recommended action, show the tracker write it maps to (State labels below):
    the label or close, any type or area label fix the triager found, and the comment the
    triager drafted. A label fix is a tracker write like any other, applied only on approval.
@@ -368,6 +373,8 @@ reference, or similar.
 A triaged issue that turns into real work goes to `issue-resolve` next, with its ID. That
 picks `quick-fix` or the pipeline, and drafts the tracker reply once the fix lands. A
 `state/needs-investigation` issue can go to `investigate-bug` first instead, to prove it
-before anyone commits to a fix. To work the whole tracker through to ready, `issue-backlog`
-runs triage, decisions, and investigations in order. This skill stops at "here's what I'd
-do," it doesn't start building.
+before anyone commits to a fix. An issue with a linked open PR goes to `pr-review` with that
+PR number instead — name the skill explicitly, never a generic "review the PR(s)", since a
+busy install can drop skill descriptions from the listing and a bare mention won't route. To
+work the whole tracker through to ready, `issue-backlog` runs triage, decisions, and
+investigations in order. This skill stops at "here's what I'd do," it doesn't start building.

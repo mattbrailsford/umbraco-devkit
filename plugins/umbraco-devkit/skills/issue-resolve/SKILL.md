@@ -41,10 +41,14 @@ draft, never a live action.
      Don't change its labels.
 4. **A security flag stops everything here.** If the triage read says `security: true`,
    stop and follow `issue-triage`'s Security reports section.
-5. A `state/needs-info` issue isn't ready. Say what's missing and stop, unless the user's
+5. **A linked open PR stops the build route.** If the triage read, or a fresh check, shows an
+   open PR from the reporter or another outside contributor already attached to the issue,
+   don't route to a fix lane below — the fix is already written, not something to build. Hand
+   off to `pr-review` with that PR number instead and stop.
+6. A `state/needs-info` issue isn't ready. Say what's missing and stop, unless the user's
    notes supply it. Likewise a `state/needs-decision` issue, unless the notes give the
    maintainer's yes, and a `state/blocked` issue, unless the notes ask for a workaround.
-6. Capture any notes given in the argument — how the user wants it fixed, constraints,
+7. Capture any notes given in the argument — how the user wants it fixed, constraints,
    anything the triage didn't know. These get folded into whichever lane runs next; they don't
    replace it.
 
@@ -135,9 +139,12 @@ finishes and the PR is open for the pipeline route:
 
 ## Hand off
 
-Report which lane it took (`quick-fix` or the pipeline) and why, then whatever that lane's own
-hand-off says. Once code is committed, report the draft tracker resolution and wait for
-confirmation before posting it.
+Report which lane it took (`quick-fix`, the pipeline, or `pr-review` for a linked PR) and why,
+then whatever that lane's own hand-off says. Once code is committed, report the draft tracker
+resolution and wait for confirmation before posting it.
+
+- **If another skill started this one** (such as `issue-backlog`'s fix stage), return once the
+  lane finishes or hands off, and stop. That skill decides what runs next.
 
 - **If another skill started this one**, return once the resolution is posted or declined,
   and stop. That skill decides what runs next.
