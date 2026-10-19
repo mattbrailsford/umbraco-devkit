@@ -113,4 +113,5 @@ blocks task Y, why a slice was deferred).
 ## Hand off
 
 Summarize: N stories, M tasks, S spec files generated, the first parallel group, then:
-`Suggested next: feature-build — specs are in place and pending.`
+`Suggested next: feature-build — specs are in place and pending.` For a large or risky plan,
+mention `feature-interrogate` as an optional stress-test before that first build.

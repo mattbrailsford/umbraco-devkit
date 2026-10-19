@@ -81,6 +81,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 | What are we building, and for whom? | [`/feature-explore`](plugins/umbraco-devkit/skills/feature-explore/SKILL.md) |
 | Extension points, data model, API, mockups of new screens | [`/feature-design`](plugins/umbraco-devkit/skills/feature-design/SKILL.md) |
 | Stories and an ordered task list | [`/feature-plan`](plugins/umbraco-devkit/skills/feature-plan/SKILL.md) |
+| Stress-test a big or risky plan before you build it (optional) | [`/feature-interrogate`](plugins/umbraco-devkit/skills/feature-interrogate/SKILL.md) |
 | Build, review, and commit, task by task | [`/feature-build`](plugins/umbraco-devkit/skills/feature-build/SKILL.md) |
 | See the assumptions and workarounds worth a human look | [`/decision-review`](plugins/umbraco-devkit/skills/decision-review/SKILL.md) |
 | Archive a plan once its PR is merged, or the plan is dropped | [`/feature-close`](plugins/umbraco-devkit/skills/feature-close/SKILL.md) |
