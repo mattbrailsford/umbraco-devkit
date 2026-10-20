@@ -61,3 +61,8 @@ umbraco-msw-testing  # a skill in the official Backoffice Testing Skills plugin,
 umbraco-e2e-testing  # a skill in the official Backoffice Testing Skills plugin, not ours
 umbraco-playwright-testhelpers  # a skill in the official Backoffice Testing Skills plugin, not ours
 umbraco-test-builders  # a skill in the official Backoffice Testing Skills plugin, not ours
+uui-label  # a real UUI web component, not a skill
+uui-badge  # a real UUI web component, not a skill
+umb-property-layout  # a real Umbraco backoffice web component, not a skill
+umb-form-validation-message  # a real Umbraco backoffice web component, not a skill
+max-width  # a CSS property, not a skill

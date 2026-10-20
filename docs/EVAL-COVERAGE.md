@@ -47,7 +47,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
 | [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 5 | 0 | – | – |
+| [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 6 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -167,6 +167,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 |---|---|---|
 | `feature-design-all-screens-mocked` | 100 | 2026-10-20 |
 | `feature-design-mockup-component-fidelity` | 100 | 2026-10-20 |
+| `feature-design-mockup-modal-property-layout` | 100 | 2026-10-20 |
 | `feature-design-mockups-email-without-ui` | 100 | 2026-10-20 |
 | `feature-design-nfr-targets` | 100 | 2026-10-18 |
 | `feature-design-stops-without-brief` | 100 | 2026-10-16 |

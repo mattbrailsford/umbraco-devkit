@@ -168,8 +168,24 @@ For each screen the feature adds or visibly changes:
    rows always sit inside a `uui-box` group, never loose on the page or modal background —
    `modal-form.html` is `modal-sidebar.html`'s shell with that content instead of a picker
    list; reach for it whenever the modal's job is to create or edit something, not choose
-   from a list. A screen that fits none of them starts from the closest starter, and the
-   mockup notes which.
+   from a list. A property row stacks (label, then description, then the editor, full width)
+   or sits side by side (a fixed label column next to the editor) purely by how wide the row
+   itself renders, not by which starter or modal size it's in — `_mockup.css` already does
+   this with a container query, the same way the real `umb-property-layout` component does,
+   so it's never something to add by hand per screen. A property row that looks wrong is
+   almost always a sign something else broke its width (an unexpected `max-width`, a modal
+   narrower than intended), not a layout to override directly.
+
+   A property with a validation problem — a duplicate alias, a value that fails a rule — gets
+   the real mistake-moment treatment, not an invented one: inside the `uui-label`, right after
+   its text, a small red `!` badge (`<span class="invalid-badge"><uui-badge color="danger"
+   attention>!</uui-badge></span>` — the span is required, since `uui-badge` positions itself
+   absolutely by default and needs a small relatively-positioned box to land in rather than
+   the corner of the page), and a `<div class="validation-message">` as the last thing in the
+   editor column, holding the one-line error. `_mockup.css` styles both already. Show it on
+   the one field with the problem, not every field, matching the real
+   `umb-form-validation-message` component. A screen that fits none of them starts from the
+   closest starter, and the mockup notes which.
 
    The starters load the real UUI elements, theme and Umbraco's own backoffice icons from the
    CDN (`<uui-icon name="icon-*">` uses the same icon names the code will), and
