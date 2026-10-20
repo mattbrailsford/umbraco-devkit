@@ -1,7 +1,10 @@
 ---
 type: llm
 weight: 2
+focus: trace
 ---
+Judge the verdict the reviewer agent returned, not the main reply around it.
+
 `ROUND-2.diff` only changes the prefix comparison to `StringComparison.OrdinalIgnoreCase` and
 adds a `Prefix_IgnoresCase` test. The unchanged `Describe()` method in `TagFilter.cs` is
 unused and wasn't asked for by the task.

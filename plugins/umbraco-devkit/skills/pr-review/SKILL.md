@@ -91,14 +91,29 @@ of checks that only exist *because* the diff came from outside.
      (step 8 in its workflow), which judges against a plan-folder task; here there is no plan,
      so the PR's own description is the only scope boundary there is.
 
-7. **Draft the review, don't post it yet.** Combine `reviewer`'s verdict and findings with
-   step 6's additions into one comment: a short summary line, then findings grouped the same
-   way `reviewer` tiers them (Critical / Important / Suggestion). Write it following
-   `plain-writing` — a contributor who doesn't know this codebase needs to be able to act on
+7. **Check every finding before it reaches the contributor.** A wrong finding on an outside
+   PR costs the contributor a round trip and makes the next finding easier to ignore. Do
+   this on every PR, however small, and don't check the findings yourself instead: you
+   collected them, so you're the wrong one to doubt them. Dispatch one fresh general-purpose
+   subagent (Agent tool) on the checked-out branch with every finding from steps 5 and 6.
+   Tell it to try to disprove each one by reading the code around the cited file:line and
+   beyond the diff: a guard in a base class, attribute or caller, a handler elsewhere that
+   already covers it, an API that doesn't behave the way the finding assumes. It returns
+   each finding as confirmed, refuted, or unsure, with the evidence. Drop refuted ones, and
+   turn unsure ones into a question for the contributor instead of a demand. List what was
+   dropped, and why, for the user under the draft, not in it.
+
+8. **Draft the review, don't post it yet.** Combine `reviewer`'s verdict and the findings
+   that survived step 7 into one comment. Before the first finding, give one line with the
+   verdict and the count per tier, such as `Changes needed: 1 Important, 2 Suggestions`;
+   with nothing to fix, say so in those words. Then the findings, grouped the same way
+   `reviewer` tiers them (Critical / Important / Suggestion / Pre-existing). Pre-existing
+   ones are for the maintainer, so say plainly the contributor doesn't need to fix them.
+   Write it following `plain-writing` — a contributor who doesn't know this codebase needs to be able to act on
    it. Say what's blocking and what's a nice-to-have; don't bury a `Critical` finding in a
    wall of Suggestions.
 
-8. **Show the draft and ask before posting.** A PR comment on a public repo is visible to the
+9. **Show the draft and ask before posting.** A PR comment on a public repo is visible to the
    contributor and anyone else watching the repo — confirm with the user first, every time.
    Once confirmed, post with `gh pr review <number> --comment --body-file <path>` for a plain
    comment, or `--request-changes`/`--approve` instead of `--comment` only if the user
