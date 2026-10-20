@@ -148,7 +148,8 @@ For each screen the feature adds or visibly changes:
    | Collection (list) view | `collection.html` | Toolbar (create, filter, view switch), table with status tags and selection, bulk action bar, pagination; content cards and empty state as alternatives |
    | Media card view | `collection-media.html` | Grid of folder, image and file cards, selection, bulk action bar |
    | Editor (workspace) | `editor.html` | Header (back, icon, name, "..." actions menu, view tabs), count badges on a view tab and a content tab, property groups, a picker property, footer with save actions, toast; `editor.html#save-options` shows the save options menu |
-   | Sidebar modal | `modal-sidebar.html` | Slide-in panel for pickers and create flows, small/medium/large widths |
+   | Sidebar modal (picker) | `modal-sidebar.html` | Slide-in panel for choosing from a list, small/medium/large widths |
+   | Sidebar modal (form) | `modal-form.html` | Slide-in panel for create/edit forms — property rows inside a `uui-box` group, same as `editor.html`'s groups |
    | Dialog modal | `modal-dialog.html` | Centred confirm box, positive or danger action |
 
    Every starter carries the backoffice chrome: the header with **section tabs** and the
@@ -162,8 +163,12 @@ For each screen the feature adds or visibly changes:
    A few more patterns build from these: a **property editor** is one `.property` row in
    `editor.html`; an editor's **Info view** is the editor's main area as a two-column grid
    (`1fr 350px`, 24px gap) with stacked boxes left and a "General" box right; a **search or
-   filter bar** above a box is the collection toolbar without its create button. A screen
-   that fits none of them starts from the closest starter, and the mockup notes which.
+   filter bar** above a box is the collection toolbar without its create button. Property
+   rows always sit inside a `uui-box` group, never loose on the page or modal background —
+   `modal-form.html` is `modal-sidebar.html`'s shell with that content instead of a picker
+   list; reach for it whenever the modal's job is to create or edit something, not choose
+   from a list. A screen that fits none of them starts from the closest starter, and the
+   mockup notes which.
 
    The starters load the real UUI elements, theme and Umbraco's own backoffice icons from the
    CDN (`<uui-icon name="icon-*">` uses the same icon names the code will), and
@@ -175,20 +180,28 @@ For each screen the feature adds or visibly changes:
    pink highlight. Umbraco 17.6+ and 18 use UUI 2 (the default); 17.5 and older use UUI 1
    (see the note in `_mockup.js`). Static HTML only: no build step, no data fetching, no charting
    library (a rough inline SVG of the right chart type is enough).
-3. **Use realistic fake data.** Real-looking names and real magnitudes, one long value that
+3. **For a component that already exists and runs in the product, copy its real source —
+   don't invent it.** A chat bubble from the product's own chat package, a bespoke chart, any
+   custom control that isn't plain UUI: read its actual CSS/markup (the same discipline
+   "Project starters" below uses for the backoffice chrome) and copy its real colours,
+   spacing and shape. A plausible-looking guess is exactly the kind of difference a human
+   catches by eye and sends back as a fix-and-rebuild round trip, instead of being resolved in
+   the one minutes-long look that was the point of mocking it up.
+4. **Use realistic fake data.** Real-looking names and real magnitudes, one long value that
    might wrap, one row in a warning or error state. Placeholder text hides the questions that
    matter — whether a range reads better as one number, whether a column earns its space,
    whether a first-time viewer understands what a chart is showing.
-4. **Mock the five moments that apply.** The empty state and error state are their own small
+5. **Mock the five moments that apply.** The empty state and error state are their own small
    variants (a second section in the same file, or `<screen>-empty.html`), not something left
    for the builder to invent.
-5. **Screenshot and show it.** Serve the folder locally (the pages load ES modules, so
+6. **Screenshot and show it.** Serve the folder locally (the pages load ES modules, so
    `file://` won't work), wait for `html[data-mockup-ready]` so UUI, icons and any toast have
-   finished loading, screenshot each mockup at a backoffice-sized viewport (1440×900), save it
-   beside the HTML as `<screen>.png`, and show
-   it to the human with the two or three choices you're least sure of named underneath.
-   Revise the HTML on feedback and re-shoot; the screenshot in the folder is always the
-   current one.
+   finished loading, then check the console for warnings before screenshotting — a missing
+   icon name (`No backoffice icon named icon-*`) is the common one, and it's free to catch
+   since the loader already prints it. Screenshot each mockup at a backoffice-sized viewport
+   (1440×900), save it beside the HTML as `<screen>.png`, and show it to the human with the
+   two or three choices you're least sure of named underneath. Revise the HTML on feedback
+   and re-shoot; the screenshot in the folder is always the current one.
 
 #### Project starters
 
@@ -404,7 +417,12 @@ follow), write it to `.claude/memory/` instead (type: `decision`) — see
 
 ## Hand off
 
-Note any `TODO` in `ARCHITECTURE.md`/`SPEC.md`, any screen still missing its mockup (the
-phase isn't finished until it has one), any screen mockup the human hasn't approved yet, and
-any project starter created or refreshed in `docs/mockups/starters/`, then:
+If any screen described in `SPEC.md` is still missing its mockup, this phase is not finished.
+Stop here instead of handing off: say which screens are left, per "Mockup each screen" above,
+so the human can re-run this phase in a fresh session. A design with a screen described but
+not drawn is not a smaller version of this phase's output — it's an unfinished one, and
+noting the gap is not a substitute for closing it.
+
+Otherwise, note any `TODO` in `ARCHITECTURE.md`/`SPEC.md`, any screen mockup the human hasn't
+approved yet, and any project starter created or refreshed in `docs/mockups/starters/`, then:
 `Suggested next: feature-plan.`

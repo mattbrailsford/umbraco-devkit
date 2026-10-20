@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+  Sidebar modal starter for a create/edit form: the panel that slides in from the right for
+  "add new" and "edit in place" flows. Shows: property rows inside a uui-box group, exactly
+  like editor.html's groups — a form's properties always sit inside a box, never loose on the
+  modal background. Width: add class "small" (500px) or "large" (1200px); default is medium
+  (800px). The page behind is only context, keep it minimal. For a modal that chooses from a
+  list instead of creating or editing, use modal-sidebar.html.
+-->
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Mockup: Sidebar modal (form)</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@umbraco-ui/uui@2/dist/themes/light.css">
+	<link rel="stylesheet" href="_mockup.css">
+	<script type="module" src="_mockup.js"></script>
+</head>
+<body class="uui-font uui-text">
+	<header class="app-header">
+		<span class="logo">Umbraco</span>
+		<uui-tab-group class="sections">
+			<uui-tab label="Content" active>Content</uui-tab>
+			<uui-tab label="Media">Media</uui-tab>
+			<uui-tab label="Settings">Settings</uui-tab>
+		</uui-tab-group>
+		<div class="apps">
+			<uui-button look="primary" compact label="User"><uui-avatar name="Matt Brailsford"></uui-avatar></uui-button>
+		</div>
+	</header>
+	<div class="section">
+		<nav class="section-sidebar"><h3>Content</h3></nav>
+		<main class="section-main"></main>
+	</div>
+
+	<div class="modal-backdrop"></div>
+	<aside class="modal-sidebar">
+		<div class="body-layout">
+			<div class="header">
+				<h3 class="headline">Add webhook</h3>
+			</div>
+
+			<div class="main">
+				<!-- Replace from here: the form's groups and properties. Property rows always sit
+				     inside a uui-box group, never loose on the modal background — same pattern as
+				     editor.html's groups. -->
+				<uui-box class="group" headline="Delivery">
+					<div class="property">
+						<div>
+							<uui-label required>Name</uui-label>
+							<div class="description">Shown in the webhooks list.</div>
+						</div>
+						<div><uui-input label="Name" value=""></uui-input></div>
+					</div>
+					<div class="property">
+						<div>
+							<uui-label required>URL</uui-label>
+							<div class="description">Where the payload is posted.</div>
+						</div>
+						<div><uui-input label="URL" value="https://hooks.example.dk/umbraco/published"></uui-input></div>
+					</div>
+					<div class="property">
+						<div>
+							<uui-label>Enabled</uui-label>
+							<div class="description">Turn off to pause deliveries without losing settings.</div>
+						</div>
+						<div><uui-toggle label="Enabled" checked></uui-toggle></div>
+					</div>
+				</uui-box>
+				<!-- Replace to here. -->
+			</div>
+
+			<div class="footer">
+				<div class="actions">
+					<uui-button label="Close">Close</uui-button>
+					<uui-button look="primary" color="positive" label="Save">Save</uui-button>
+				</div>
+			</div>
+		</div>
+	</aside>
+</body>
+</html>

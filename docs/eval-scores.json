@@ -475,6 +475,22 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-all-screens-mocked": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-design-mockup-component-fidelity": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-design-nfr-targets": {
     "date": "2026-10-18",
     "runs": 3,
