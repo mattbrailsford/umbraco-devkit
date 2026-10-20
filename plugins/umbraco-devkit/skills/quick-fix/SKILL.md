@@ -94,7 +94,9 @@ is one that changes behavior someone saw go wrong. Typos, comments, and dead cod
    uncommitted diff, with the fix description as its task. Small diffs still break things a
    person doesn't see from the changed lines: a public signature, a caller in another file, a
    manifest `alias`. Fix any Critical or Important finding yourself and review again until
-   `PASS`. If a finding shows the fix isn't small after all, stop and escalate as in step 2.
+   `PASS`, giving each re-review the round's diff and previous findings, as in
+   `feature-build`'s "Recurse" step. If a finding shows the fix isn't small after all, or it
+   still fails after three rounds, stop and escalate as in step 2.
    If a finding was a repeatable mistake a future `builder` would likely make on another
    task, write it to `.claude/memory/` (type: `gotcha`) once fixed, the same as
    `feature-build` does.

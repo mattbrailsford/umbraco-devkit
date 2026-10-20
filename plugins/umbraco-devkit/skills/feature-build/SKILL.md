@@ -93,11 +93,21 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    touches security) and the relevant stack skills, reads the builder's diff, and returns `PASS` or
    `FAIL` with specific findings.
 
-3. **Recurse.** If `FAIL`: send the findings to a fresh `builder` for the same task. Repeat
-   build → review until `PASS`. No cap: a task isn't done until it passes code and security
-   review. Nothing reaches git history before `PASS`. If a finding is a repeatable mistake a
-   future `builder` would likely make on another task, write it to `.claude/memory/` (type:
-   `gotcha`) once fixed.
+3. **Recurse.** If `FAIL`: send the findings to a fresh `builder` for the same task, then
+   review again. Nothing reaches git history before `PASS`. If a finding is a repeatable
+   mistake a future `builder` would likely make on another task, write it to
+   `.claude/memory/` (type: `gotcha`) once fixed.
+   - **Re-review the round, not the task.** Before each fix round, snapshot the tree
+     (`git add -A && git write-tree`, which stages but doesn't commit). After it, give the
+     `reviewer` the previous round's findings and the round's diff
+     (`git add -A && git diff --cached <tree>`), so it runs its "Re-review rounds" mode.
+     Reviewing the whole task again each round mostly finds older code, not the fix, and
+     the loop stops converging.
+   - **Three rounds, then rethink.** After the third `FAIL` on one task, don't send a fourth
+     patch. Dispatch one fresh `builder` with every round's findings, told to reconsider the
+     approach rather than patch the last finding, and review its result in full. If that
+     fails too, stop and report the task and its findings. If the findings show the design
+     is wrong, not the code, hand off to `feature-design`.
 
 4. **Smoke the real entry point.** Before commit, exercise the deployed artifact. Use the
    first of these the project has:
@@ -158,9 +168,10 @@ started calling a repository directly, drift from `ARCHITECTURE.md`. Dispatch on
 subagent in whole-feature mode with the full branch diff (`git diff <base>...HEAD`),
 `ARCHITECTURE.md` and `SPEC.md`.
 
-- On `FAIL`, send the findings to a fresh `builder`, then review the whole branch again. Repeat
-  until `PASS`. Commit each round as its own `refactor:` commit and add a `BUILD-LOG.md` line
-  for it.
+- On `FAIL`, send the findings to a fresh `builder`, then review again. Repeat until `PASS`,
+  with the same round diffs and three-round limit as the loop's "Recurse" step; here the
+  round diff is the round's own `refactor:` commit. Commit each round as its own `refactor:`
+  commit and add a `BUILD-LOG.md` line for it.
 - If a finding means the design itself is wrong, not just the code, stop and hand off to
   `feature-design`.
 
@@ -191,5 +202,5 @@ post-merge too: `feature-close`, once the PR is merged.
   moment a fix touches code, dispatch a builder, even for one line you already know. This is
   easiest to break mid-debugging against a live system, where each small tweak feels too
   small to hand off.
-- If a gate can't pass after repeated attempts and the builder is stuck, stop and report the
-  task + findings rather than committing degraded code.
+- If a gate still fails after the rethink round, stop and report the task + findings rather
+  than committing degraded code.

@@ -341,8 +341,8 @@ line's trunk, follow `feature-close`'s
 - The CMS source at the target tag beats the docs, and both beat memory. Quote the tag or
   page behind every inventory entry.
 - Never commit to the current major's line, or to `main`, without asking.
-- If a task can't pass after repeated attempts, stop and report it with its findings. Don't
-  work around a removed API by copying the CMS's old code into the package.
+- If a task still fails after `feature-build`'s rethink round, stop and report it with its
+  findings. Don't work around a removed API by copying the CMS's old code into the package.
 
 ## Hand off
 
