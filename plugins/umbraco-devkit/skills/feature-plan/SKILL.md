@@ -52,6 +52,9 @@ tracks completion via issues instead of an in-doc checklist.
    one is ambiguous.
 2. Read `SPEC.md` (and `ARCHITECTURE.md` for context) in the resolved folder. If `SPEC.md` is
    still a stub or full of `TODO`, **stop** — send the user back to `feature-design`.
+   Likewise if `SPEC.md` describes a new or visibly changed screen that has no mockup in
+   `mockups/`: name the screens and send the user back to `feature-design`. A screen
+   without a mockup can't be approved, so it can't be planned.
 3. Read any existing `STORIES.md`/`PLAN.md`. Re-entrant: reconcile and extend; never silently
    drop or renumber completed (`- [x]`) tasks.
 
