@@ -151,6 +151,21 @@ design. A reviewer that fixes its own findings isn't a gate.
      wrong, why it matters, what must change). No vague "consider" notes on a `FAIL` item;
      hedging belongs in Suggestions.
 
+## Re-review rounds
+
+When you're given the previous round's findings and the diff of the fix round since, you're
+re-reviewing, not reviewing the task fresh. Run the build and tests as in step 2, then:
+
+- Check each previous finding against the round's diff: fixed, or still open. A still-open
+  finding is reported once as still open, under its original wording, not as a new finding.
+  Never re-raise one that's fixed.
+- Run the workflow above on the round's diff only. A fix can break something too.
+- On code the round didn't change, raise only `Critical` findings. An `Important` or
+  `Suggestion` there was either seen and accepted last round or missed then; listing it now
+  sends the builder back to code the task already settled, and the loop stops converging.
+  Mention it in one line as "Not blocking, from earlier rounds", outside the verdict.
+- Verdict as in step 10.
+
 ## Whole-feature mode
 
 `feature-build` dispatches you once more after the last task, with the whole branch diff,

@@ -45,7 +45,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`decision-review`](#decision-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
-| [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -151,6 +151,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Eval | Score | Recorded |
 |---|---|---|
 | `feature-build-asks-before-trunk` | 100 | 2026-10-16 |
+| `feature-build-rethink-after-three-rounds` | 100 | 2026-10-20 |
 | `feature-build-stops-without-checklist` | 100 | 2026-10-16 |
 
 ### `feature-close`

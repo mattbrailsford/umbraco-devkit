@@ -451,6 +451,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-build-rethink-after-three-rounds": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-build-stops-without-checklist": {
     "date": "2026-10-16",
     "runs": 3,
@@ -942,6 +950,14 @@
     "with": 100,
     "without": 100,
     "withoutDate": "2026-10-18"
+  },
+  "reviewer-rereview-round-diff": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 0,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
   },
   "security-bundle-secret-and-storage": {
     "date": "2026-10-16",
