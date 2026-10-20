@@ -16,7 +16,7 @@ description: >-
 shape a test is `bdd-specs`'s job. C# tests on Umbraco's integration test package are
 `umbraco-dotnet-testing`'s.
 
-The official Umbraco Backoffice Testing Skills plugin has more patterns: element and context
+The official Umbraco Backoffice Testing Skills plugin, if installed, has more patterns: element and context
 tests (`umbraco-unit-testing`), mocked API responses (`umbraco-msw-testing`), and backoffice
 journeys (`umbraco-e2e-testing`, `umbraco-playwright-testhelpers`, `umbraco-test-builders`).
 Where it differs from this skill on package names, environment variables or setup, this skill

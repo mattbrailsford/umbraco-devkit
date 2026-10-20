@@ -31,16 +31,11 @@ claude plugin install umbraco-devkit@umbraco-devkit --scope project
 # The official Umbraco backoffice extension-point skills.
 claude plugin marketplace add https://github.com/umbraco/Umbraco-CMS-Backoffice-Skills.git#main --scope project
 claude plugin install umbraco-cms-backoffice-skills@umbraco-backoffice-marketplace --scope project
-claude plugin install umbraco-cms-backoffice-testing-skills@umbraco-backoffice-marketplace --scope project
 ```
 
-The official
-[Umbraco Backoffice Skills](https://github.com/umbraco/Umbraco-CMS-Backoffice-Skills)
-marketplace has two plugins, and this devkit works alongside both. The first covers the
-individual backoffice extension points. The second covers testing backoffice extensions:
-element tests, mocked APIs and backoffice journeys in Playwright. This devkit covers C# tests,
-and where the official testing skills get Umbraco's helpers wrong (`umbraco-dotnet-testing`,
-`umbraco-backoffice-testing`).
+The second plugin, the official
+[Umbraco Backoffice Skills](https://github.com/umbraco/Umbraco-CMS-Backoffice-Skills), covers
+the individual backoffice extension points; this devkit works alongside it.
 
 The backoffice skills follow the CMS major. `#main` is the latest major. If your project
 targets an older one, swap `#main` for `#v<major>/main` (for example `#v17/main`). The
@@ -48,6 +43,17 @@ backoffice API changes between majors, so the wrong line gives confidently wrong
 
 You can also run the same commands inside Claude Code as `/plugin marketplace add ...` and
 `/plugin install ...`.
+
+**Optional:** the same marketplace has a testing plugin, with more patterns for backoffice
+tests: mocked API responses, trees, entity actions and test data builders.
+
+```bash
+claude plugin install umbraco-cms-backoffice-testing-skills@umbraco-backoffice-marketplace --scope project
+```
+
+This devkit doesn't need it. `umbraco-dotnet-testing` and `umbraco-backoffice-testing` cover
+the setup a package's tests need, and where the two disagree on package names, environment
+variables or setup, follow this devkit's skills.
 
 **Optional:** copy [`settings.example.json`](./settings.example.json) to your project's
 `.claude/settings.json` and uncomment the permissions and hooks you want. It isn't installed
