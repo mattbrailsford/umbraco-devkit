@@ -91,3 +91,5 @@ uui-badge  # a real UUI web component, not a skill
 umb-property-layout  # a real Umbraco backoffice web component, not a skill
 umb-form-validation-message  # a real Umbraco backoffice web component, not a skill
 max-width  # a CSS property, not a skill
+grid-column  # a CSS property, not a skill
+grid-template-columns  # a CSS property, not a skill
