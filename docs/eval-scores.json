@@ -1220,44 +1220,44 @@
     "withoutDate": "2026-10-17"
   },
   "testing-backoffice-element": {
-    "date": "2026-10-18",
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-20"
+  },
+  "testing-cache-false-green": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-20"
+  },
+  "testing-e2e-helpers": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 92,
+    "without": 25,
+    "withoutDate": "2026-10-20"
+  },
+  "testing-project-setup": {
+    "date": "2026-10-20",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
     "without": 22,
-    "withoutDate": "2026-10-18"
-  },
-  "testing-cache-false-green": {
-    "date": "2026-10-18",
-    "runs": 3,
-    "skillLoaded": 3,
-    "with": 100,
-    "without": 33,
-    "withoutDate": "2026-10-18"
-  },
-  "testing-e2e-helpers": {
-    "date": "2026-10-18",
-    "runs": 3,
-    "skillLoaded": 3,
-    "with": 100,
-    "without": 25,
-    "withoutDate": "2026-10-18"
-  },
-  "testing-project-setup": {
-    "date": "2026-10-18",
-    "runs": 3,
-    "skillLoaded": 3,
-    "with": 100,
-    "without": 0,
-    "withoutDate": "2026-10-18"
+    "withoutDate": "2026-10-20"
   },
   "testing-test-server-controllers": {
-    "date": "2026-10-18",
+    "date": "2026-10-20",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
-    "without": 33,
-    "withoutDate": "2026-10-18"
+    "without": 100,
+    "withoutDate": "2026-10-20"
   },
   "typescript-write-data-source": {
     "date": "2026-10-16",

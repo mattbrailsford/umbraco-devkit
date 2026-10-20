@@ -66,17 +66,18 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions) | knowledge | Proven | +100 | 6 | 2 | 3/11 | 1 |
+| [`umbraco-backoffice-testing`](#umbraco-backoffice-testing) | knowledge | Proven | +67 | 2 | 0 | 2/2 | 0 |
 | [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 1 |
 | [`umbraco-cms-source`](#umbraco-cms-source) | knowledge | Proven | +33 | 3 | 1 | 1/5 | 0 |
 | [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 8 | 0 | 4/5 | 0 |
 | [`umbraco-docs`](#umbraco-docs) | knowledge | Gain, skill rarely loads | +23 | 2 | 0 | 1/5 | 0 |
+| [`umbraco-dotnet-testing`](#umbraco-dotnet-testing) | knowledge | Proven | +78 | 3 | 0 | 3/3 | 0 |
 | [`umbraco-env-sync`](#umbraco-env-sync) | knowledge | Proven | +27 | 7 | 0 | 7/31 | 1 |
 | [`umbraco-extensibility`](#umbraco-extensibility) | knowledge | Proven | +89 | 24 | 4 | 6/23 | 6 |
 | [`umbraco-marketplace`](#umbraco-marketplace) | knowledge | Proven | +100 | 1 | 0 | 1/4 | 4 |
 | [`umbraco-package-conventions`](#umbraco-package-conventions) | knowledge | Proven | +22 | 4 | 0 | 1/6 | 1 |
 | [`umbraco-performance`](#umbraco-performance) | knowledge | Proven | +100 | 6 | 4 | 4/10 | 2 |
 | [`umbraco-security`](#umbraco-security) | knowledge | Proven | +44 | 18 | 6 | 6/6 | 1 |
-| [`umbraco-testing`](#umbraco-testing) | knowledge | Proven | +100 | 5 | 0 | 5/5 | 0 |
 | [`user-stories`](#user-stories) | knowledge | Proven | +100 | 1 | 0 | 2/4 | 1 |
 
 ## How to read this
@@ -312,6 +313,13 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 
 Stays quiet on: `backoffice-conventions-skip-plain-lit`
 
+### `umbraco-backoffice-testing`
+
+| Section | Eval | With | Without | Gain | Skill loaded | Recorded |
+|---|---|---|---|---|---|---|
+| Backoffice element tests: a controller host and loaded translations | `testing-backoffice-element` | 100 | 33 | 67 | 3/3 | 2026-10-20 |
+| End-to-end tests: Umbraco's Playwright helpers | `testing-e2e-helpers` | 92 | 25 | 67 | 3/3 | 2026-10-20 |
+
 ### `umbraco-backoffice-ux`
 
 | Section | Eval | With | Without | Gain | Skill loaded | Recorded |
@@ -371,6 +379,14 @@ Stays quiet on: `dependencies-skip-generic-node`
 | Read, search, list | `docs-delivery-api-allow-list` | 61 | 61 | 0 | 5/6 | 2026-10-17 |
 | No clone: live site fallback | **no eval** | | | | | |
 | Rules | **no eval** | | | | | |
+
+### `umbraco-dotnet-testing`
+
+| Section | Eval | With | Without | Gain | Skill loaded | Recorded |
+|---|---|---|---|---|---|---|
+| Test project setup: what Umbraco's own test project provides | `testing-project-setup` | 100 | 22 | 78 | 3/3 | 2026-10-20 |
+| Test server: add the package's controllers | `testing-test-server-controllers` | 100 | 100 | 0 | 3/3 | 2026-10-20 |
+| Cache tests: switch caching and refreshers back on | `testing-cache-false-green` | 100 | 33 | 67 | 3/3 | 2026-10-20 |
 
 ### `umbraco-env-sync`
 
@@ -527,16 +543,6 @@ Stays quiet on: `performance-skip-template`
 | Backoffice: credentials stay on the server | `security-bundle-secret-and-storage` | 100 | 78 | 22 | 3/3 | 2026-10-16 |
 
 Stays quiet on: `security-skip-generic-aspnet`
-
-### `umbraco-testing`
-
-| Section | Eval | With | Without | Gain | Skill loaded | Recorded |
-|---|---|---|---|---|---|---|
-| Test project setup: what Umbraco's own test project provides | `testing-project-setup` | 100 | 0 | 100 | 3/3 | 2026-10-18 |
-| Test server: add the package's controllers | `testing-test-server-controllers` | 100 | 33 | 67 | 3/3 | 2026-10-18 |
-| Cache tests: switch caching and refreshers back on | `testing-cache-false-green` | 100 | 33 | 67 | 3/3 | 2026-10-18 |
-| Backoffice element tests: a controller host and loaded translations | `testing-backoffice-element` | 100 | 22 | 78 | 3/3 | 2026-10-18 |
-| End-to-end tests: Umbraco's Playwright helpers | `testing-e2e-helpers` | 100 | 25 | 75 | 3/3 | 2026-10-18 |
 
 ### `user-stories`
 

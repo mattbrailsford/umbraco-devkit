@@ -1,6 +1,6 @@
 ---
 description: Testing a package's Management API endpoint on UmbracoTestServerTestBase; the test server only finds the CMS's controllers, so the package's own returns 404.
-tags: [umbraco-testing, should-trigger]
+tags: [umbraco-dotnet-testing, should-trigger]
 # covers: ["Test server: add the package's controllers"]
 max_turns: 30
 timeout_seconds: 900

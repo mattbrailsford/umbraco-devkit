@@ -44,6 +44,17 @@ backoffice API changes between majors, so the wrong line gives confidently wrong
 You can also run the same commands inside Claude Code as `/plugin marketplace add ...` and
 `/plugin install ...`.
 
+**Optional:** the same marketplace has a testing plugin, with more patterns for backoffice
+tests: mocked API responses, trees, entity actions and test data builders.
+
+```bash
+claude plugin install umbraco-cms-backoffice-testing-skills@umbraco-backoffice-marketplace --scope project
+```
+
+This devkit doesn't need it. `umbraco-dotnet-testing` and `umbraco-backoffice-testing` cover
+the setup a package's tests need, and where the two disagree on package names, environment
+variables or setup, follow this devkit's skills.
+
 **Optional:** copy [`settings.example.json`](./settings.example.json) to your project's
 `.claude/settings.json` and uncomment the permissions and hooks you want. It isn't installed
 with the plugin, because what to allow is your call.
@@ -151,7 +162,8 @@ You don't run these. The skills above and the agents load them when the work nee
 | [`umbraco-cms-source`](plugins/umbraco-devkit/skills/umbraco-cms-source/SKILL.md) | Read the CMS source at the version you target |
 | [`umbraco-docs`](plugins/umbraco-devkit/skills/umbraco-docs/SKILL.md) | Read the official docs for the version you target |
 | [`umbraco-security`](plugins/umbraco-devkit/skills/umbraco-security/SKILL.md) | What Umbraco provides for security, on the server and in the backoffice |
-| [`umbraco-testing`](plugins/umbraco-devkit/skills/umbraco-testing/SKILL.md) | Integration, backoffice element and Playwright tests on Umbraco's own test tooling |
+| [`umbraco-dotnet-testing`](plugins/umbraco-devkit/skills/umbraco-dotnet-testing/SKILL.md) | C# integration tests on Umbraco's test package, so they exercise the package |
+| [`umbraco-backoffice-testing`](plugins/umbraco-devkit/skills/umbraco-backoffice-testing/SKILL.md) | Backoffice element tests and Playwright end-to-end tests on Umbraco's helpers |
 
 **General craft:**
 
