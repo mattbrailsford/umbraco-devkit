@@ -127,6 +127,10 @@ box layout, a column nobody needs, and a chart people misread — each one found
 code exists, and each one a fix-and-rebuild round trip. A picture gets the same feedback in
 minutes, before a task is planned.
 
+Every new or visibly changed screen gets a mockup; none is optional. If the session is too
+long to finish them, stop and say which screens are left, so the user can re-run this phase
+in a fresh session. Never hand off with a screen described but not drawn.
+
 For each screen the feature adds or visibly changes:
 
 1. **Match the sibling screen first.** Following `umbraco-backoffice-ux`'s "Match what's already
@@ -400,6 +404,7 @@ follow), write it to `.claude/memory/` instead (type: `decision`) — see
 
 ## Hand off
 
-Note any `TODO` in `ARCHITECTURE.md`/`SPEC.md`, any screen mockup the human hasn't approved
-yet, and any project starter created or refreshed in `docs/mockups/starters/`, then:
+Note any `TODO` in `ARCHITECTURE.md`/`SPEC.md`, any screen still missing its mockup (the
+phase isn't finished until it has one), any screen mockup the human hasn't approved yet, and
+any project starter created or refreshed in `docs/mockups/starters/`, then:
 `Suggested next: feature-plan.`

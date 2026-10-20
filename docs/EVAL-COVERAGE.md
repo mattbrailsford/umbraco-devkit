@@ -50,7 +50,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-plan`](#feature-plan) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`feature-plan`](#feature-plan) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -183,7 +183,8 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-plan-stops-without-design` | 100 | 2026-10-16 |
+| `feature-plan-stops-without-design` | 100 | 2026-10-20 |
+| `feature-plan-stops-without-mockup` | 100 | 2026-10-20 |
 
 ### `git-workflow`
 
