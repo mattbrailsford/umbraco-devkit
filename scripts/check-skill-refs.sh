@@ -33,7 +33,11 @@ sort -u -o "$valid_names" "$valid_names"
 
 # Every backtick-quoted, kebab-case (>= one hyphen) token across tracked Markdown files.
 # docs/EVAL-COVERAGE.md is skipped: it's generated, and its backticked names are eval cases.
-md_files() { git ls-files '*.md' ':!docs/EVAL-COVERAGE.md'; }
+# plugins/umbraco-devkit/evals/ is skipped: a grader's or fixture's backticked tokens are
+# routinely CSS properties, HTML/web-component tag names, or fictional fixture entities, not
+# skill references — the stale-rename risk this check guards against lives in skill/agent
+# prose and docs, not in eval judging criteria.
+md_files() { git ls-files '*.md' ':!docs/EVAL-COVERAGE.md' ':!plugins/umbraco-devkit/evals/**'; }
 found_tokens="$(mktemp)"
 md_files \
   | xargs grep -ohE '`[a-z][a-z0-9]*(-[a-z0-9]+)+`' \
