@@ -1,6 +1,6 @@
 ---
 description: First Playwright test for a package against its SQLite demo site; Umbraco's helpers moved to a new npm name in 17.3, and the shared SQLite site needs serial runs.
-tags: [umbraco-test-setup, should-trigger]
+tags: [umbraco-backoffice-testing, should-trigger]
 # covers: ["End-to-end tests: Umbraco's Playwright helpers"]
 max_turns: 30
 timeout_seconds: 900

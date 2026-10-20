@@ -1,6 +1,6 @@
 ---
 description: Testing that a saved rule shows straight away; the test host disables caching and cache refreshers, so the obvious test passes without them.
-tags: [umbraco-test-setup, should-trigger]
+tags: [umbraco-dotnet-testing, should-trigger]
 # covers: ["Cache tests: switch caching and refreshers back on"]
 max_turns: 30
 timeout_seconds: 900

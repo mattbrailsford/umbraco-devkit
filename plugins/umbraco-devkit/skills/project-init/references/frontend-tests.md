@@ -36,7 +36,7 @@ Add `"test": "web-test-runner"` to `package.json`.
 
 With `nodeResolve: true`, `@umbraco-cms/backoffice/*` imports resolve from `node_modules`; no
 import map is needed. What a test of a backoffice element needs beyond that (a controller
-host, the package's translations) is in `umbraco-test-setup`. Test patterns and API
+host, the package's translations) is in `umbraco-backoffice-testing`. Test patterns and API
 mocking are in the official Backoffice Testing Skills plugin, if installed.
 
 ## Check

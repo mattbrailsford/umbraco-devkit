@@ -1,5 +1,5 @@
 ---
 type: tool_used
 tool: Skill
-input_match: '"skill"\s*:\s*"(?:[\w-]+:)?umbraco-test-setup"'
+input_match: '"skill"\s*:\s*"(?:[\w-]+:)?umbraco-dotnet-testing"'
 ---
