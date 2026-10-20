@@ -51,45 +51,18 @@ reviewer-feature-diff   # an eval case, cited in CLAUDE.md
 env-sync-access-rules   # an eval case, cited in write-skill-eval
 should-trigger          # an eval tag, cited in write-skill-eval
 should-not-trigger      # an eval tag, cited in write-skill-eval
-tag-filters             # a feature branch name in eval prompts
-webhook-delivery-queue  # a feature branch name in the pr-describe-stacked-pr eval prompt
-webhook-retry-backoff   # a feature branch name in the pr-describe-stacked-pr eval prompt
-silkeborg-dev           # a fictional contributor username in the issue-triage-linked-pr eval prompt
 security-dotnet         # a removed skill, cited as history in CLAUDE.md
 typescript-best-practices # a removed skill, cited as history in CLAUDE.md
-my-pkg-badge
-my-pkg-help-text
-my-pkg-tooltip
-order-status-badge
-page-summary-preview
 monaco-editor
 skill-fired
-user-key
-allow-same-origin
-allow-scripts
-cb-product-card
-display-name
-document-key
-notes-doc-link
-notes-mention
-product-picker-details-panel
-auto-fill
-auto-fit
-header-actions
-umb-input-document
-umb-user-input
 uui-box
-uui-table
 umbraco-unit-testing  # a skill in the official Backoffice Testing Skills plugin, not ours
 umbraco-msw-testing  # a skill in the official Backoffice Testing Skills plugin, not ours
 umbraco-e2e-testing  # a skill in the official Backoffice Testing Skills plugin, not ours
 umbraco-playwright-testhelpers  # a skill in the official Backoffice Testing Skills plugin, not ours
 umbraco-test-builders  # a skill in the official Backoffice Testing Skills plugin, not ours
-mc-tier-pill  # a fictional Lit component in an eval fixture, not a skill
 uui-label  # a real UUI web component, not a skill
 uui-badge  # a real UUI web component, not a skill
 umb-property-layout  # a real Umbraco backoffice web component, not a skill
 umb-form-validation-message  # a real Umbraco backoffice web component, not a skill
 max-width  # a CSS property, not a skill
-grid-column  # a CSS property, not a skill
-grid-template-columns  # a CSS property, not a skill
