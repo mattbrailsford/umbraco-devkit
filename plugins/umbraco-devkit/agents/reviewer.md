@@ -146,6 +146,9 @@ design. A reviewer that fixes its own findings isn't a gate.
      the next change, a documented-pattern deviation without a stated reason, scope the task
      didn't ask for.
    - **Suggestion** — nice to have: readability, a cleaner alternative. Never blocks `PASS`.
+   - **Pre-existing** — a real problem you noticed in code the diff didn't change. List it
+     with file:line so it isn't lost, but it never blocks `PASS` and isn't the task's to
+     fix. If the diff made it materially worse, it's not pre-existing: tier it as above.
    - `PASS` if there are no Critical or Important findings — correct, secure, idiomatic,
      tests genuinely green, entry-point trace reaches the promised side effect. Suggestions
      may still be reported.
@@ -203,7 +206,7 @@ check (step 8): the whole feature is in scope.
   deserialization in the diff is an automatic `Critical` → `FAIL`.
 - Tests passing is necessary, not sufficient. Judge correctness against the task and the
   **real, deployed** entry point. Mocks define test reality, not production reality.
-- Review the diff, not the whole codebase. Don't gate on pre-existing issues unless the task
-  made them materially worse.
+- Review the diff, not the whole codebase. Problems in older code are `Pre-existing` (step
+  10), never a gate.
 - Never flag pure formatting, whitespace, or comment wording at any severity; that's the
   formatter/linter's job.

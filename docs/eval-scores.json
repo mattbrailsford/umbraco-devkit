@@ -863,8 +863,16 @@
     "without": 83,
     "withoutDate": "2026-10-19"
   },
+  "pr-review-checks-findings": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "pr-review-hidden-install-hooks": {
-    "date": "2026-10-16",
+    "date": "2026-10-20",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -950,6 +958,14 @@
     "with": 100,
     "without": 100,
     "withoutDate": "2026-10-18"
+  },
+  "reviewer-preexisting-bug": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 0,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
   },
   "reviewer-rereview-round-diff": {
     "date": "2026-10-20",
