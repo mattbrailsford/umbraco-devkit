@@ -86,3 +86,10 @@ umbraco-e2e-testing  # a skill in the official Backoffice Testing Skills plugin,
 umbraco-playwright-testhelpers  # a skill in the official Backoffice Testing Skills plugin, not ours
 umbraco-test-builders  # a skill in the official Backoffice Testing Skills plugin, not ours
 mc-tier-pill  # a fictional Lit component in an eval fixture, not a skill
+uui-label  # a real UUI web component, not a skill
+uui-badge  # a real UUI web component, not a skill
+umb-property-layout  # a real Umbraco backoffice web component, not a skill
+umb-form-validation-message  # a real Umbraco backoffice web component, not a skill
+max-width  # a CSS property, not a skill
+grid-column  # a CSS property, not a skill
+grid-template-columns  # a CSS property, not a skill
