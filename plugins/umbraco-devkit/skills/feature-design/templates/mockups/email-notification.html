@@ -1,0 +1,106 @@
+<!doctype html>
+<!--
+  Email notification starter: the shell every real Umbraco notification email uses. Checked
+  against Umbraco.Cms source (src/Umbraco.Core/EmbeddedResources/Lang/en.xml, area
+  "notifications", key "mailBodyHtml") — there's no shared Razor layout or CSS file to extend;
+  every real template duplicates this shell inline, so this starter does too.
+
+  Real Umbraco HTML notification emails are plain inline-styled HTML with literal hex colors,
+  never CSS custom properties or a <style> block on the email body itself — mail clients strip
+  both. This file does NOT load this folder's _mockup.css/_mockup.js/UUI harness: that's for
+  backoffice screens, and would be actively wrong here.
+
+  Shell: a dark #1d1333 header strip with Umbraco's small logo mark (VML-wrapped for Outlook), a
+  white #FFFFFF card (max-width 560px) with #392F54 heading/body text, a #35C786 teal CTA button
+  (nested-table markup for Outlook compatibility), sans-serif body text, and a plain one-line
+  sign-off footer — no separate unsubscribe/legal footer exists in Umbraco's own templates.
+
+  Open directly in a browser or an email client preview — no local server needed, unlike the
+  backoffice starters.
+-->
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mockup: Email notification</title>
+	<style>
+		/* Only a page-preview convenience (subject line + page background) — not part of the email
+		   body itself, which is the <table class="body"> below and must stay inline-styled. */
+		body.preview { margin: 0; padding: 40px 20px; background: #e9e9ef; font-family: sans-serif; }
+		.preview-subject { max-width: 560px; margin: 0 auto 16px; font-family: sans-serif; }
+		.preview-subject .from { font-size: 13px; color: #6b6b76; }
+		.preview-subject .subject { font-size: 15px; font-weight: bold; color: #1d1333; margin-top: 2px; }
+		@media only screen and (max-width: 620px) {
+			table.body .container { width: 100% !important; }
+			table.body .wrapper { padding: 20px !important; }
+		}
+	</style>
+</head>
+<body class="preview">
+	<div class="preview-subject">
+		<div class="from">Your Site &lt;noreply@yoursite.example&gt;</div>
+		<!-- Replace from here: the subject line — as reviewable as the layout, so it belongs here
+		     too, not just in prose. -->
+		<div class="subject">Something happened that needs your attention</div>
+		<!-- Replace to here. -->
+	</div>
+
+	<!-- ============ Real email body starts here (inline-styled, mail-client safe) ============ -->
+	<table class="body" width="100%" bgcolor="#1d1333" style="background:#1d1333; margin:0; padding:0; border-collapse:collapse;">
+		<tr>
+			<td align="center" style="padding: 36px 20px;">
+				<!-- Logo strip, matching the real template's small square mark -->
+				<table width="28" style="margin: 0 auto 24px;">
+					<tr>
+						<td width="28" height="28" style="background: #1d1333; border-radius: 4px;">
+							<!--[if gte mso 9]>
+							<v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:28px;height:28px;">
+								<v:fill type="tile" src="https://umbraco.com/umbraco/assets/img/application/logo.png" color="#1d1333" />
+							</v:rect>
+							<![endif]-->
+							<div style="background: #392F54 url('https://umbraco.com/umbraco/assets/img/application/logo.png') no-repeat center / contain; width: 28px; height: 28px; border-radius: 3px;"></div>
+						</td>
+					</tr>
+				</table>
+
+				<table class="container" width="560" style="max-width: 560px; width: 560px; margin: 0 auto; background: #FFFFFF; border-radius: 5px;">
+					<tr>
+						<td class="wrapper" style="padding: 40px; font-family: sans-serif; font-size: 14px; line-height: 22px; color: #392F54;">
+							<!-- Replace from here: the email's own content. -->
+							<h1 style="color: #392F54; font-family: sans-serif; font-weight: bold; line-height: 1.4; font-size: 24px; text-align: left; margin: 0 0 24px;">Hi there,</h1>
+
+							<p style="margin: 0 0 16px;">
+								Say what happened, plainly, in one or two short sentences.
+							</p>
+
+							<!-- CTA button — identical nested-table markup to the real template, for
+							     Outlook/older-client compatibility, not a plain <a> or <button>. Drop this
+							     whole block for an email with no action to take. -->
+							<table style="margin: 0 0 28px;">
+								<tr>
+									<td style="border-radius: 5px; text-align: center; background: #35C786;" align="center" bgcolor="#35C786">
+										<a href="#" target="_blank" rel="noopener" style="color: #FFFFFF; text-decoration: none; border-radius: 5px; font-family: sans-serif; font-size: 14px; font-weight: bold; display: inline-block; background: #35C786; margin: 0; padding: 12px 30px; border: 1px solid #35c786;">
+											Call to action
+										</a>
+									</td>
+								</tr>
+							</table>
+
+							<p style="margin: 0 0 28px; font-size: 13px; color: #6b6279;">
+								Any fine print: what the link does, who can use it, how long it lasts.
+							</p>
+
+							<p style="margin: 0;">
+								Have a nice day!<br><br>
+								Cheers from the Umbraco robot
+							</p>
+							<!-- Replace to here. -->
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<!-- ============ Real email body ends here ============ -->
+</body>
+</html>

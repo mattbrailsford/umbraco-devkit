@@ -31,8 +31,9 @@ folder when the feature has a UI:
   frontend components' expected behavior, in concrete, testable terms. This answers "what must
   it do," and is what `feature-plan` slices into stories — keep it testable, not vague.
 - **`mockups/<screen>.html` + `mockups/<screen>.png`** — one static mockup per new or changed
-  screen, and its screenshot. This answers "what will it look like," and is what the human
-  approves before any UI code is written. See "Mockup each screen" below.
+  screen (or user-facing email), and its screenshot. This answers "what will it look like," and
+  is what the human approves before any UI code is written. See "Mockup each screen" and
+  "Mockup a user-facing email" below.
 
 Outside the plan folder, it also owns the project's shared mockup starters in
 `docs/mockups/starters/` (see "Project starters" below), created only when a product surface
@@ -50,9 +51,9 @@ append-only discipline as `DECISION-LOG.md`: never touch a line owned by another
 - IN: which Umbraco extension point(s) to use (property editor, dashboard, content app,
   section, notification handler, middleware, tree, workspace, etc.), data model & persistence
   (EF Core entities/migrations, or none), Management API surface (controllers, DTOs, routes),
-  frontend component boundaries, static mockups of each new or changed screen, build-vs-buy,
-  key tradeoffs, which connected systems a change
-  of this kind conventionally touches (see "Connected-pattern check" below).
+  frontend component boundaries, static mockups of each new or changed screen and of any
+  user-facing email the feature sends, build-vs-buy, key tradeoffs, which connected systems a
+  change of this kind conventionally touches (see "Connected-pattern check" below).
 - OUT: the problem/why (`feature-explore` — read it, don't redo it), task breakdown
   (`feature-plan`), actual code (`feature-build`).
 
@@ -268,6 +269,27 @@ and content, and `feature-build`'s smoke step compares the built screen against 
 is a decision, logged in `DECISION-LOG.md` and reflected back into the mockup by re-running
 this phase.
 
+## Mockup a user-facing email
+
+If the feature sends an email (a notification, a digest, anything a real person reads in their
+inbox), it needs the same mockup discipline as a screen, whether or not the feature has any
+backoffice UI of its own — a described email reads fine in `ARCHITECTURE.md` and still ships
+with a subject line that's too long or a layout that breaks in Outlook, found only once it's
+built.
+
+Start from `templates/mockups/email-notification.html` (check the project's own
+`docs/mockups/starters/` first, same as a screen) and replace what's between its "Replace from
+here"/"Replace to here" comments, including the subject line — it's as reviewable as the layout.
+Real Umbraco notification emails, and most transactional email generally, are plain
+inline-styled HTML with literal hex colors, not CSS custom properties or a `<style>` block on
+the email body itself: mail clients strip both. This file never loads this folder's
+`_mockup.css`/`_mockup.js`/UUI harness — that's for backoffice screens, and would be actively
+wrong here. Open it directly in a browser or an email client preview; no local server needed.
+
+Same rules as a screen otherwise: realistic copy, not placeholder text; the real send and
+failure behaviour goes in `SPEC.md`'s prose, not the mockup; screenshot it and show the human
+before moving on.
+
 ## Skills to pull in
 
 - Extension-point idioms, DI registration patterns → `umbraco-extensibility`.
@@ -417,11 +439,12 @@ follow), write it to `.claude/memory/` instead (type: `decision`) — see
 
 ## Hand off
 
-If any screen described in `SPEC.md` is still missing its mockup, this phase is not finished.
-Stop here instead of handing off: say which screens are left, per "Mockup each screen" above,
-so the human can re-run this phase in a fresh session. A design with a screen described but
-not drawn is not a smaller version of this phase's output — it's an unfinished one, and
-noting the gap is not a substitute for closing it.
+If any screen or email described in `SPEC.md`/`ARCHITECTURE.md` is still missing its mockup,
+this phase is not finished. Stop here instead of handing off: say which are left, per "Mockup
+each screen" and "Mockup a user-facing email" above, so the human can re-run this phase in a
+fresh session. A design with a screen or email described but not drawn is not a smaller version
+of this phase's output — it's an unfinished one, and noting the gap is not a substitute for
+closing it.
 
 Otherwise, note any `TODO` in `ARCHITECTURE.md`/`SPEC.md`, any screen mockup the human hasn't
 approved yet, and any project starter created or refreshed in `docs/mockups/starters/`, then:
