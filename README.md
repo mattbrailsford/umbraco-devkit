@@ -122,11 +122,12 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 | Move to a new Umbraco major, task by task, still reviewed | [`/major-upgrade`](plugins/umbraco-devkit/skills/major-upgrade/SKILL.md) |
 | Get a finished package listed on the Umbraco Marketplace | [`/umbraco-marketplace`](plugins/umbraco-devkit/skills/umbraco-marketplace/SKILL.md) |
 
-### Improve the devkit
+### Learn from a session
 
 | I want to... | Run |
 |---|---|
 | Report a mistake a skill should have caught, from the project where it happened | [`/skill-report`](plugins/umbraco-devkit/skills/skill-report/SKILL.md) |
+| Capture what a session taught you, even when nothing was the devkit's fault | [`/project-retro`](plugins/umbraco-devkit/skills/project-retro/SKILL.md) |
 
 ## What works in the background
 

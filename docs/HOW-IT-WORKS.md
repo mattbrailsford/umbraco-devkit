@@ -32,8 +32,10 @@ Every other skill you run works around those flows and never changes code itself
   its PR is merged or the plan is dropped.
 - **Sets up and ships.** `project-init` prepares a project, `github-init` its first public
   repo, and `umbraco-marketplace` its Marketplace listing.
-- **Improves the devkit.** `skill-report` turns a mistake a skill should have caught into
-  an issue on the devkit's tracker, which becomes an eval.
+- **Learns from a session.** `skill-report` turns a mistake a skill should have caught into
+  an issue on the devkit's tracker, which becomes an eval. `project-retro` handles the rest:
+  a trap that's the project's own, or knowledge worth keeping even when nothing went wrong,
+  saved to [project memory](#project-memory) instead.
 
 You don't have to pick. Describe what you want and Claude picks the skill from its
 description.
@@ -107,7 +109,9 @@ Some facts don't belong in a feature's plan folder or in `CLAUDE.md` forever. `p
 sets up `.claude/memory/` for those:
 
 - **`decision`**: a standing project-wide decision.
-- **`gotcha`**: a lesson from a reviewer `FAIL`, so the next build doesn't repeat it.
+- **`gotcha`**: a repeatable mistake, so the next build doesn't repeat it. `feature-build` and
+  `quick-fix` save one after a reviewer finding; `investigate-bug` saves one after a proven
+  bug; `project-retro` catches whatever a session left uncaptured.
 - **`reference`**: a pointer to an outside system.
 
 A convention for one folder still goes in a `CLAUDE.md` in that folder. The reviewer reads
