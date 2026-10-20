@@ -84,7 +84,9 @@ given and the project supports exactly two lines, the target is the other one; o
 4. **Review.** Dispatch one `reviewer` subagent (Agent tool, `subagent_type: reviewer`)
    against the port's diff. Give it the source change as the task, and say what you adapted
    and why, so it can check the adaptation and not only the code. Fix Critical and Important
-   findings and review again until `PASS`.
+   findings and review again until `PASS`, giving each re-review the round's diff and
+   previous findings, as in `feature-build`'s "Recurse" step. If it still fails after three
+   rounds, stop and report the findings.
 5. **Commit.** Keep the source commit's Conventional Commits type and scope, and its message
    where it still describes the change. Add `Port of <source PR or SHA> to <target line>.` to
    the body.

@@ -99,6 +99,12 @@ and tests, and return `PASS` or `FAIL`. A reviewer that could patch its own find
 stop being a gate. Once every task is built, one more review covers the whole branch, to
 catch problems that build up across tasks.
 
+A failed task goes back to a fresh builder, and the next review looks only at what that
+round changed, plus whether the old findings were fixed. Reviewing the whole task every round
+mostly turns up older code and the loop never settles. After three failed rounds, the builder
+is told to rethink the approach instead of patching again; if that fails too, the build
+stops and reports.
+
 `quick-fix` uses the same reviewer for small fixes. `major-upgrade` uses the whole gate for
 a move to a new Umbraco major: it lists the breaking changes that hit the project in
 `docs/upgrades/v<major>.md`, then builds that list task by task, green at every commit.
