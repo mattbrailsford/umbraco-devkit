@@ -491,6 +491,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-mockup-modal-property-layout": {
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-design-mockups-email-without-ui": {
     "date": "2026-10-20",
     "runs": 3,

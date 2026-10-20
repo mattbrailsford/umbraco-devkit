@@ -308,7 +308,12 @@ uui-tab uui-badge[slot='extra'] {
 
 /* ---- Property groups and property layout (umb-property-layout) ---- */
 
-.group {
+/* Any box holding .property rows gets zero vertical box padding, even one that forgot
+   class="group" (:has backs that up automatically) — each row already supplies its own 24px
+   top/bottom padding; the two adding together is what made a box of property rows look
+   over-padded at its very start and end. */
+.group,
+uui-box:has(> .property) {
 	--uui-box-default-padding: 0 var(--uui-size-space-5);
 }
 
@@ -322,6 +327,30 @@ uui-tab uui-badge[slot='extra'] {
 	column-gap: var(--uui-size-layout-2);
 	padding: var(--uui-size-layout-1) 0;
 	border-bottom: 1px solid var(--uui-color-divider);
+	container-type: inline-size;
+}
+
+/* Stacked by default (each child spans both columns, so the label/description sit above the
+   editor, full width, with a small gap between); side by side only once the row itself
+   measures over 700px wide. This is the real umb-property-layout component's own rule — it
+   picks by its own rendered width, never by which kind of screen or modal it happens to sit
+   in, so a mockup never has to guess from a size name. */
+.property > div {
+	grid-column: span 2;
+}
+
+.property > div + div {
+	margin-top: var(--uui-size-space-3);
+}
+
+@container (width > 700px) {
+	.property > div {
+		grid-column: span 1;
+	}
+
+	.property > div + div {
+		margin-top: 0;
+	}
 }
 
 .property:last-child {
@@ -332,12 +361,36 @@ uui-tab uui-badge[slot='extra'] {
 	--uui-color-invalid: var(--uui-color-danger);
 }
 
+/* The "mistake" moment on a property: a small red "!" badge beside the label, plus a red
+   message under the editor once the field is dirty — inside the uui-label, after its text,
+   <span class="invalid-badge"><uui-badge color="danger" attention>!</uui-badge></span>
+   (uui-badge is absolutely positioned by default, so it needs this small relatively-positioned
+   wrapper to land next to the label instead of the corner of the page), and
+   <div class="validation-message">...</div> as the last child of the editor column. Matches
+   the real umb-property-layout/umb-form-validation-message components; shown only on the one
+   field with the problem, not every field. */
+.property uui-label .invalid-badge {
+	display: inline-block;
+	position: relative;
+	width: 18px;
+	height: 1em;
+	margin-left: 6px;
+	vertical-align: middle;
+}
+
+.property .validation-message {
+	color: var(--uui-color-invalid-standalone);
+	font-size: var(--uui-type-small-size);
+	margin-top: var(--uui-size-space-2);
+}
+
 .property .description {
 	color: var(--uui-color-text-alt);
 }
 
 .property uui-input,
-.property uui-textarea {
+.property uui-textarea,
+.property uui-select {
 	width: 100%;
 }
 
