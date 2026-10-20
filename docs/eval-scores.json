@@ -500,7 +500,15 @@
     "withoutDate": null
   },
   "feature-plan-stops-without-design": {
-    "date": "2026-10-16",
+    "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-plan-stops-without-mockup": {
+    "date": "2026-10-20",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
