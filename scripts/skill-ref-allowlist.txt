@@ -66,3 +66,7 @@ uui-badge  # a real UUI web component, not a skill
 umb-property-layout  # a real Umbraco backoffice web component, not a skill
 umb-form-validation-message  # a real Umbraco backoffice web component, not a skill
 max-width  # a CSS property, not a skill
+needs-info  # an issue-triage outcome name, used in its Auto-apply line, not a skill
+needs-investigation  # an issue-triage outcome name, used in its Auto-apply line, not a skill
+needs-decision  # an issue-triage outcome name, used in its Auto-apply line, not a skill
+already-fixed  # an issue-triage outcome name, used in its Auto-apply line, not a skill

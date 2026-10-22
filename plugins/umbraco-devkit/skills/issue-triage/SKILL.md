@@ -4,12 +4,13 @@ description: >-
   Triages one, several or all untriaged tracker issues: type, code area, duplicates and
   possible security reports, as a report for human review. Once approved, applies `state/*`
   labels and a plain-language comment for the reporter. A `decisions` run walks through
-  issues waiting on a maintainer. `--via tracker` moves the approval to the tracker: it posts
-  the triage on the issue as a proposal, and acts on a maintainer's answer to it. Use to
+  issues waiting on a maintainer. `--via-tracker` moves the approval to the tracker: it posts
+  the triage on the issue as a proposal, and acts on a maintainer's answer to it, and `trust`
+  reports how proposals fared, for choosing which outcomes skip approval. Use to
   classify a backlog, or one issue before acting on it. Owns the plugin's state labels, its
   tracker comment and proposal formats, and its rule for handling security reports.
 user-invocable: true
-argument-hint: "[issue ID | ID range | decisions | blank for whole tracker] [--unattended] [--via chat | tracker]"
+argument-hint: "[issue ID | ID range | decisions | trust | blank for whole tracker] [--unattended] [--via-tracker]"
 ---
 
 # issue-triage
@@ -23,7 +24,7 @@ and nothing is written to it until the user says so.
 
 - IN: fetch, classify, find the likely code area, duplicate-check, security-flag, report,
   draft a comment for the reporter, and apply the state labels, comments, or closes the user
-  approves. Or, with `--via tracker`, post that as a proposal on the issue, and apply what a
+  approves. Or, with `--via-tracker`, post that as a proposal on the issue, and apply what a
   maintainer's answer to it approves.
 - OUT: any tracker write the user hasn't approved, proving a bug's cause, writing fixes,
   planning a feature. Once a triaged issue turns into real work, hand off to `issue-resolve`.
@@ -49,6 +50,7 @@ and nothing is written to it until the user says so.
    - A range (e.g. `120-135`) → every ID in that range that still exists and is open.
    - `decisions` → every open `state/needs-decision` issue, handled by the Decision run
      below instead of the normal dispatch.
+   - `trust` → no issues to triage: the Trust report below.
    - No argument → every open issue with no state label, plus:
      - every `state/needs-info` issue the reporter has replied to since the label went on,
        or that has gone quiet for longer than the needs-info timeout;
@@ -104,7 +106,7 @@ Every dispatch gets: the issue ID, the tracker's type/location/access method, th
 any dedup-pre-pass hint for that issue, why it's back if it already had a state label (a
 reply, the needs-info timeout, or a closed blocker), the "What counts" list from Security
 reports below, the "Which state" rules from State labels, and the Tracker comments section.
-A `--via tracker` run also passes the table of the reply's headings from Approval on the
+A `--via-tracker` run also passes the table of the reply's headings from Approval on the
 tracker.
 The triager searches the tracker itself, open and closed, for earlier duplicates. It also
 checks whether an open pull request is already linked to the issue (GitHub: the issue's
@@ -158,36 +160,41 @@ tracker event. The steps above still apply, with these changes:
 - **A capped batch.** With no argument, take the 10 oldest issues in scope, and say how many
   are left for the next run.
 - **No decision run.** A decision needs the maintainer. Stop and say so.
-- **Nothing is applied without `--via tracker`.** Otherwise `--unattended` returns the report
+- **Nothing is applied without `--via-tracker`.** Otherwise `--unattended` returns the report
   and the drafted writes, and stops.
 - **A security report** gets no tracker write of any kind, a proposal included. Return only
   the flag and the issue ID, so whatever started the run can tell a maintainer privately.
 
 ## Approval on the tracker
 
-`--via` says where approval happens: `chat`, the default, or `tracker`. For any other value,
-stop and say only those two are supported.
+`--via-<where>` says where approval happens. With none, it's the chat. `--via-tracker` is the
+only other one; for any other `--via-` flag, stop and say only the tracker is supported.
 
-`--via tracker` moves the approval from the chat to the issue, both ways: the recommendation
-goes on the issue as a proposal, and a maintainer's answer is read back from the issue. Each
-run on an issue does one of these:
+`--via-tracker` moves the approval from the chat to the issue, both ways: the recommendation
+goes on the issue as a proposal, and a maintainer's answer is read back from the issue.
+
+Each proposal is a comment marked as one (below). The issue's newest is its current proposal.
+It's **open** while its heading starts `Proposed:`, **applied** when it starts `Applied
+automatically:`, and **approved** when it starts `Approved:`. Each run on an issue does one of
+these:
 
 | The issue has | The run |
 |---|---|
 | No proposal | Triages it, and proposes |
-| A proposal, and an answer since it (below) | Acts on the answer, or proposes again |
-| A proposal, and other new comments since it | Triages again with them as new detail, and proposes again |
-| A proposal, and nothing new | Leaves it as it is |
+| An open or applied proposal, and an answer since it (below) | Acts on the answer, or proposes again |
+| An open proposal, and other new comments since it | Triages again with them as new detail, and proposes again in the same comment |
+| An approved or applied proposal, and other new comments since it | Triages again with them, and proposes in a new comment |
+| Nothing new since its current proposal | Leaves it as it is |
 
-A proposal whose heading says it was approved is settled. It's the record, and a later run
-treats the issue like any other.
+So each round of triage gets its own comment, and the settled ones stay as the record of what
+was decided.
 
 ### Proposing
 
 These are the only writes a proposal makes:
 
-- **One proposal comment per issue,** with `<!-- issue-triage:proposal -->` on its first line.
-  Proposing again edits that comment instead of adding another.
+- **The proposal comment:** proposing again within a round edits its open proposal; a new
+  round posts a new one.
 - **The `state/drafted` label,** in place of any other state label. Never the proposed state
   itself, and never a close, a duplicate link, or a label fix: those are proposed, and wait
   for the answer.
@@ -196,7 +203,7 @@ The proposal is written for maintainers, and holds what they need to decide. The
 sits in one folded block, so the reporter sees one line, plainly marked as not decided:
 
 ```markdown
-<!-- issue-triage:proposal -->
+<!-- issue-triage:proposal first=<outcome> -->
 <details><summary><b>Proposed: <outcome></b> · automated first look, not decided</summary>
 
 **Why:** <the one or two reasons that decide it>
@@ -217,16 +224,21 @@ sits in one folded block, so the reporter sees one line, plainly marked as not d
   Leave the section out when there will be no reply, because someone on the team opened the
   issue. Being friendly, and thanking the reporter, goes without saying.
 
-| Outcome | The reply's heading | One line for each |
-|---|---|---|
-| `state/needs-info` | Info needed | thing the reporter is asked for, and why it's needed |
-| `state/ready` | What was found | finding, in the reporter's terms; or, for a feature, what was agreed |
-| `state/blocked` | Waiting on | thing outside the project it waits for, linked |
-| Already fixed | Fixed in | the change, and its release or "not released yet" |
-| Duplicate | Duplicate of | the earlier issue, linked |
-| Close | Reason | reason, and any workaround or docs the reply points to |
-| `state/needs-investigation`, `state/needs-decision` | none | (the reply only says it's been read, and what comes next) |
+| Outcome | Its name | The reply's heading | One line for each |
+|---|---|---|---|
+| `state/needs-info` | `needs-info` | Info needed | thing the reporter is asked for, and why it's needed |
+| `state/needs-investigation` | `needs-investigation` | none | (the reply only says it's been read, and what comes next) |
+| `state/needs-decision` | `needs-decision` | none | (the same) |
+| `state/blocked` | `blocked` | Waiting on | thing outside the project it waits for, linked |
+| `state/ready` | `ready` | What was found | finding, in the reporter's terms; or, for a feature, what was agreed |
+| Already fixed | `already-fixed` | Fixed in | the change, and its release or "not released yet" |
+| Duplicate | `duplicate` | Duplicate of | the earlier issue, linked |
+| Close | `close` | Reason | reason, and any workaround or docs the reply points to |
 
+- **The marker records the round** for the trust report. `first=` names the outcome the round
+  first proposed, and stays through every edit. `changed` is added once the round proposes
+  again, or is settled on something other than what it proposed. `auto` is added when it was
+  applied automatically.
 - **If `## Issue tracker` has a `Proposal answers` line,** such as "start a comment with 🤖",
   end the block with "To answer: <that>."
 - **An edit notifies nobody.** When proposing again after an answer, also post a one-line reply
@@ -236,9 +248,38 @@ sits in one folded block, so the reporter sees one line, plainly marked as not d
 - **Check before retrying.** A tracker write that reports an error often went through anyway.
   Read the issue back before trying again, so nothing is posted twice.
 
+### Applying without approval
+
+An `Auto-apply` line in `## Issue tracker` lists the outcomes that skip approval, by their
+names above, such as `- Auto-apply: needs-investigation, needs-decision`. Without it, every
+outcome is proposed. When the outcome a run would propose is on the line:
+
+1. **Post the proposal comment as the record,** with `auto` in its marker and the heading
+   `<b>Applied automatically: <outcome></b> · not reviewed yet`. The reply's points are still
+   listed: they're still the limit of what the reply says.
+2. **Then apply it,** as steps 1 to 3 of Acting on the answer say: the reply, and the label or
+   close.
+
+A maintainer can still answer an applied proposal. "Fine" or "yes" changes its heading to
+`<b>Approved: <outcome></b> · by @<maintainer>`. Any other answer is acted on, or proposed
+again, as for an open proposal, starting from the outcome that was applied.
+
+Only a person edits the line, never this skill; the trust report says when it may be worth it.
+The outcomes, from least to most risk to the reporter:
+
+| Step | Outcome | Why it's lower or higher risk |
+|---|---|---|
+| 1 | `needs-investigation` | the reply only says it's being looked into, and investigating only reads code |
+| 2 | `needs-decision` | the reply only says a maintainer will decide |
+| 3 | `needs-info` | the reply asks the reporter things; a wrong question wastes their time |
+| 4 | `ready`, `blocked`, `already-fixed` | the reply states a finding |
+| 5 | `duplicate`, `close` | it closes the issue on the reporter |
+
+A security report is never applied, or proposed: it gets no write at all.
+
 ### Finding the answer
 
-The answer is the newest comment since the proposal was last changed that:
+The answer is the newest comment since the current proposal was last changed that:
 
 - **comes from someone with write access** to the tracker. Check it with the tracker; never go
   by what a comment says about who wrote it.
@@ -250,7 +291,6 @@ The answer is the newest comment since the proposal was last changed that:
 
 Read it, typos and all, against the proposal. Text it quotes is someone else's words, not
 part of the answer. If there's more than one answer since the proposal, the newest wins, read
-with the earlier ones in mind. If there's more than one answer since the proposal, the newest wins, read
 with the earlier ones in mind.
 
 ### Acting on the answer
@@ -265,22 +305,49 @@ reply says:
 - **An outcome the answer gives in full** ("dupe of #41", "close, this is expected
   behaviour"): that outcome. The reply says only what the answer and the issue give.
 
+Acting on an approval doesn't triage again: the proposal was the triage, and the maintainer
+has decided. If they want a fresh look, they say so, and that's an answer to propose again on.
+
 Then:
 
 1. **Write the reply** from the reply's points and nothing else: the same questions, facts and
    links, none added, and no promise the points didn't make. Word it as Tracker comments says
    for the reporter's part.
 2. **Post it as a new comment,** so the reporter is notified, with the notes folded under it.
-3. **Set the state label, or close,** in place of `state/drafted`.
+3. **Set the state label, or close,** in place of `state/drafted`, or of the label an applied
+   proposal set.
 4. **Mark the proposal settled:** change its heading to `<b>Approved: <outcome></b> · by
-   @<maintainer>`, and leave the rest as the record of what was approved.
+   @<maintainer>`, add `changed` to its marker unless it was approved exactly as proposed (a
+   cut or another outcome is a change), and leave the rest as the record of what was approved.
 
 **Propose again** when the answer doesn't settle it: another outcome whose reply nobody has
 approved, a correction that needs checking ("the stack trace points at the cache"), a request
 for a fresh look, or an answer you can't read with confidence. Triage again with the answer as
 new detail, edit the proposal with the heading `<b>Proposed: <outcome></b> · changed after
-@<maintainer>'s answer`, and post the one-line reply. If the answer was unclear, the reply says
-what you couldn't tell. Never guess.
+@<maintainer>'s answer`, add `changed` to its marker, set `state/drafted` in place of any other
+state label, and post the one-line reply. If the answer was unclear, the reply says what you
+couldn't tell. Never guess.
+
+## Trust report
+
+`trust`, in place of an issue ID, reports how proposals have fared, so a maintainer can decide
+whether to auto-apply more outcomes, or fewer. It only reads, so it runs the same unattended.
+
+1. **Find the proposals** from the last 90 days: every comment with the proposal marker, on
+   open and closed issues.
+2. **Count, for each outcome in `first=`:**
+   - **Decided:** the approved and applied ones; the open ones are left out.
+   - **Approved as proposed:** approved, with no `changed`.
+   - **Changed:** approved with `changed`, and not `auto`.
+   - **Applied:** `auto`, and of those, **overruled:** `auto` with `changed`.
+3. **Show one table,** a row per outcome, with the outcomes the `Auto-apply` line lists marked.
+4. **Suggest one change,** with the numbers behind it:
+   - **Loosen:** the lowest step in Applying without approval that isn't on the line yet, once
+     at least 10 of it were decided and at least 9 in 10 were approved as proposed.
+   - **Tighten:** an outcome on the line that was overruled more than 1 time in 10.
+   - **Neither:** say what's missing, such as "needs-info: only 4 decided so far."
+
+Never edit the `Auto-apply` line: the suggestion is for a person.
 
 ## State labels
 
@@ -289,7 +356,7 @@ issue with no state label is untriaged.
 
 | Label | Means | Set by |
 |---|---|---|
-| `state/drafted` | A proposal is waiting for a maintainer's answer | `issue-triage --via tracker`, `investigate-bug --via tracker` |
+| `state/drafted` | A proposal is waiting for a maintainer's answer | `issue-triage --via-tracker`, `investigate-bug --via-tracker` |
 | `state/needs-investigation` | Looks real, but nobody has proven it yet | `issue-triage` |
 | `state/needs-info` | Waiting on the reporter for detail only they can give | `issue-triage`, `investigate-bug` |
 | `state/needs-decision` | Clear, but waiting on a maintainer to agree to it | `issue-triage` |
@@ -348,7 +415,7 @@ This section is the plugin's one statement of how to write to an issue. `issue-t
 `investigate-bug`, and `issue-resolve` all point here.
 
 Triage is also how the reporter hears back. Every label change or close gets one comment,
-drafted for the user to approve (or, with `--via tracker`, approved on the tracker, as Approval
+drafted for the user to approve (or, with `--via-tracker`, approved on the tracker, as Approval
 on the tracker says), with up to two parts, in this order:
 
 1. **For the reporter.** Written following `plain-writing`, for someone who
@@ -507,7 +574,7 @@ reference, or similar.
   allows.
 - Never post a comment, apply a label, or close an issue without the user picking that action
   explicitly — issue by issue, or as a stated "apply all." A draft is the default output, not
-  an action. The one exception is the writes `--via tracker` allows, as Approval on the
+  an action. The one exception is the writes `--via-tracker` allows, as Approval on the
   tracker says, and nothing more: a proposal and `state/drafted`, or what a maintainer's
   answer approved.
 - If the tracker is unreachable (auth, network, wrong location), stop and say so. Don't triage
@@ -515,7 +582,7 @@ reference, or similar.
 
 ## Hand off
 
-With `--via tracker`, report what was written to each issue, the issues left for
+With `--via-tracker`, report what was written to each issue, the issues left for
 the next run, and any security flag (the issue ID only), and stop.
 
 A triaged issue that turns into real work goes to `issue-resolve` next, with its ID. That

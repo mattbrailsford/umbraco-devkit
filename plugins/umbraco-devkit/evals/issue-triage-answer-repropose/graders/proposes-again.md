@@ -1,7 +1,7 @@
 ---
 type: llm
 weight: 2
-focus: trace
+focus: {source: file, path: TRACKER-WRITES.md}
 ---
 PASS if the writes edit the proposal comment (9001) with a fresh look that takes the cache into
 account, its summary saying it was changed after @jodean's answer, and post a short reply saying

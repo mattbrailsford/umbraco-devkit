@@ -28,12 +28,6 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 - [`umbraco-docs`](#umbraco-docs): 4 of 5 sections have no eval.
 - [`umbraco-marketplace`](#umbraco-marketplace): 3 of 4 sections have no eval.
 
-### Workflow rules broken
-
-A workflow eval scored under 100, so the skill broke one of its own rules.
-
-- [`issue-triage`](#issue-triage): `issue-triage-via-tracker` (87). Read the run, then fix the skill or the grader.
-
 ### Evals never run
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
@@ -62,7 +56,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`issue-triage`](#issue-triage) | workflow | Broke a rule | – | 6 | 0 | – | – |
+| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 10 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -243,10 +237,14 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 |---|---|---|
 | `issue-triage-answer-approve` | 100 | 2026-10-22 |
 | `issue-triage-answer-repropose` | 100 | 2026-10-22 |
+| `issue-triage-auto-apply` | 100 | 2026-10-22 |
 | `issue-triage-linked-pr` | 100 | 2026-10-19 |
+| `issue-triage-new-round` | 100 | 2026-10-22 |
+| `issue-triage-overrule-applied` | 100 | 2026-10-22 |
 | `issue-triage-security-report` | 100 | 2026-10-16 |
+| `issue-triage-trust-report` | 100 | 2026-10-22 |
 | `issue-triage-unattended-security` | 100 | 2026-10-22 |
-| `issue-triage-via-tracker` | 87 | 2026-10-22 |
+| `issue-triage-via-tracker` | 100 | 2026-10-22 |
 
 ### `major-upgrade`
 

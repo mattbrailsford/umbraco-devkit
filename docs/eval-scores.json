@@ -667,6 +667,14 @@
     "without": null,
     "withoutDate": null
   },
+  "issue-triage-auto-apply": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "issue-triage-linked-pr": {
     "date": "2026-10-19",
     "runs": 3,
@@ -675,8 +683,32 @@
     "without": null,
     "withoutDate": null
   },
+  "issue-triage-new-round": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-triage-overrule-applied": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "issue-triage-security-report": {
     "date": "2026-10-16",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-triage-trust-report": {
+    "date": "2026-10-22",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -695,7 +727,7 @@
     "date": "2026-10-22",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 87,
+    "with": 100,
     "without": null,
     "withoutDate": null
   },

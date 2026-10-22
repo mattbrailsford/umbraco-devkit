@@ -68,7 +68,7 @@ Labels: state/drafted
 
 ### Comment 9001 by @jodean
 
-<!-- issue-triage:proposal -->
+<!-- issue-triage:proposal first=needs-info -->
 <details><summary><b>Proposed: needs info</b> · automated first look, not decided</summary>
 
 **Why:** the indexer only skips content when the `tags` property is missing, and the report

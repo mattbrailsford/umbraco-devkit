@@ -1,7 +1,7 @@
 ---
 type: llm
 weight: 3
-focus: trace
+focus: {source: file, path: TRACKER-WRITES.md}
 ---
 PASS if TRACKER-WRITES.md holds a new comment for the reporter of #140 that asks which package
 version they updated from and to, does not ask for the log warning, and adds no other question,
