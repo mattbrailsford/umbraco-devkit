@@ -3,10 +3,12 @@ name: issue-backlog
 description: >-
   Works a tracker's open issues from new to fixed, one stage at a time: triage, maintainer
   decisions, investigation, then fixes. Shows how many issues sit in each state and runs the
-  next stage. Use for "work through the backlog" or "what's next on the tracker". For one
-  known issue, use `issue-triage`, `investigate-bug` or `issue-resolve`.
+  next stage. `--unattended --via tracker` runs the stages that need nobody, triage and
+  investigation, as proposals on the tracker, such as from a schedule. Use for "work through
+  the backlog" or "what's next on the tracker". For one known issue, use `issue-triage`,
+  `investigate-bug` or `issue-resolve`.
 user-invocable: true
-argument-hint: [stage to start at: triage | decisions | investigate | fix, optional]
+argument-hint: "[stage to start at: triage | decisions | investigate | fix] [--unattended --via tracker]"
 ---
 
 # issue-backlog
@@ -92,12 +94,29 @@ show the board again and pick again, until the user stops or nothing is left to 
    never runs in parallel.
 3. When `issue-resolve` hands back, show the board again and offer the next ready issue.
 
+## Running unattended
+
+`--unattended` runs the stages that need nobody, such as from a daily schedule. It needs
+`--via tracker`, since nobody is there to approve anything; without it, stop and say so.
+
+1. **Show the board** in the output.
+2. **Triage,** if To triage has anything: invoke `issue-triage` with `--unattended --via tracker`
+   and no ID.
+3. **Investigate,** if Needs investigation has anything: steps 1 to 3 of the investigation
+   stage above, in its order, without waiting for the user. Each investigation gets
+   `--unattended --via tracker`, so it posts its own proposal, and there's nothing to gather or
+   apply. At most three per run; the rest wait for the next.
+4. **Skip decisions and fixes.** They need a person. Say how many wait in each.
+5. **Report** the board again, the proposals posted, and any security flag (the issue ID
+   only), and stop.
+
 ## Rules
 
-- Never write to the tracker without the user's yes, as `issue-triage`'s Rules say.
+- Never write to the tracker without the user's yes, as `issue-triage`'s Rules say. Unattended,
+  the stages it runs post proposals only, as their own sections allow.
 - Never fix anything itself. Ready issues go to `issue-resolve`, one at a time.
 - Never run the next stage without saying what it is and getting a yes. A stage can mean
-  dozens of subagents.
+  dozens of subagents. Unattended, only triage and investigation run, each capped.
 
 ## Hand off
 

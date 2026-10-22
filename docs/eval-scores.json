@@ -611,8 +611,24 @@
     "without": null,
     "withoutDate": null
   },
+  "investigate-bug-via-tracker": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "issue-backlog-board": {
     "date": "2026-10-16",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-backlog-unattended": {
+    "date": "2026-10-22",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -635,6 +651,22 @@
     "without": null,
     "withoutDate": null
   },
+  "issue-triage-answer-approve": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-triage-answer-repropose": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "issue-triage-linked-pr": {
     "date": "2026-10-19",
     "runs": 3,
@@ -648,6 +680,22 @@
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-triage-unattended-security": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-triage-via-tracker": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 87,
     "without": null,
     "withoutDate": null
   },
