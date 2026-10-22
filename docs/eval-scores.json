@@ -667,6 +667,14 @@
     "without": null,
     "withoutDate": null
   },
+  "issue-triage-answer-team-issue": {
+    "date": "2026-10-22",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "issue-triage-auto-apply": {
     "date": "2026-10-22",
     "runs": 3,

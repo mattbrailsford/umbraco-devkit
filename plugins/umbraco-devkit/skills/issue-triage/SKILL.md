@@ -214,6 +214,7 @@ sits in one folded block, so the reporter sees one line, plainly marked as not d
 **<the notes' title for this outcome>**
 - <the notes, as Tracker comments says>
 
+To answer: <the Proposal answers line, if there is one>
 </details>
 ```
 
@@ -240,7 +241,7 @@ sits in one folded block, so the reporter sees one line, plainly marked as not d
   again, or is settled on something other than what it proposed. `auto` is added when it was
   applied automatically.
 - **If `## Issue tracker` has a `Proposal answers` line,** such as "start a comment with 🤖",
-  end the block with "To answer: <that>."
+  the block's last line, inside it, is "To answer: <that>." Without the line, leave it out.
 - **An edit notifies nobody.** When proposing again after an answer, also post a one-line reply
   saying what changed, so the maintainer sees it.
 - **Every other comment this skill posts** carries `<!-- issue-triage:reply -->` on its first
@@ -312,7 +313,9 @@ Then:
 
 1. **Write the reply** from the reply's points and nothing else: the same questions, facts and
    links, none added, and no promise the points didn't make. Word it as Tracker comments says
-   for the reporter's part.
+   for the reporter's part. With no points to write from, the reply is only what the outcome
+   allows: for `needs-investigation` or `needs-decision`, that it's been read and what comes
+   next; when someone on the team opened the issue, no reporter's part at all, only the notes.
 2. **Post it as a new comment,** so the reporter is notified, with the notes folded under it.
 3. **Set the state label, or close,** in place of `state/drafted`, or of the label an applied
    proposal set.

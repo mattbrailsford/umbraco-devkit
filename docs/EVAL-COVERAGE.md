@@ -56,7 +56,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 10 | 0 | – | – |
+| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 11 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -237,6 +237,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 |---|---|---|
 | `issue-triage-answer-approve` | 100 | 2026-10-22 |
 | `issue-triage-answer-repropose` | 100 | 2026-10-22 |
+| `issue-triage-answer-team-issue` | 100 | 2026-10-22 |
 | `issue-triage-auto-apply` | 100 | 2026-10-22 |
 | `issue-triage-linked-pr` | 100 | 2026-10-19 |
 | `issue-triage-new-round` | 100 | 2026-10-22 |
