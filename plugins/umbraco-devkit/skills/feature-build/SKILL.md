@@ -145,7 +145,8 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    the image edge, and its `-before.png` is cropped to the same area so the pair lines up.
 
    **If the smoke needed content the demo site didn't have** (a document type using the new
-   property editor, tagged posts for a new dashboard to list, a setting turned on), record it
+   property editor, tagged posts for a new dashboard to list, a setting turned on), make it
+   realistic, as `pr-demo`'s step 6 describes, and record it
    in the task's `BUILD-LOG.md` entry as a short "Demo setup" note, next to the click path, so
    someone trying the branch can see the same thing. If the project has a committed seed
    (a seed script, uSync files), have the builder add the content there as part of this task

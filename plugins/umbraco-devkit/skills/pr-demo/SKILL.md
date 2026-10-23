@@ -63,9 +63,16 @@ It never changes code, commits, pushes, or comments on the PR.
 6. **Make sure the change has something to show.** With a plan folder, start from the
    "Demo setup" notes in `BUILD-LOG.md`. Otherwise read the diff for what it needs in the
    site: a document type using a new property editor, content for a new dashboard to list,
-   a setting turned on. If the demo data doesn't have it, add the least that shows the
-   change, through the backoffice or the Management API, in this worktree's copy only. List
-   what you added.
+   a setting turned on. If the demo data doesn't have it, add what shows the change, through
+   the backoffice or the Management API, in this worktree's copy only. List what you added.
+
+   **Make it look like a real site.** Write what an editor of this site would really write:
+   real-sounding titles, names and text that match the demo's existing content and
+   languages; a mix of lengths, including one long enough to wrap; the characters real
+   content has (an accent, an ampersand, quotes); an optional field left empty. Add enough of
+   it to reach paging, sorting or an empty state when the change has one. Never "Test 1",
+   "foo" or lorem ipsum: placeholder data hides the layout and edge-case problems a
+   click-through is meant to find.
 
 7. **Hand over.** Give:
    - The backoffice address, with the worktree's port.
@@ -73,7 +80,7 @@ It never changes code, commits, pushes, or comments on the PR.
    - What you added in step 6.
    - The click-through list: each item a click path and what should happen
      ("Settings › Tag filters › add `internal-` as a prefix › the cloud on the home page drops
-     `internal-notes`"). Take it from the plan folder when the branch has one (`SPEC.md`,
+     the "internal-notes" tag"). Take it from the plan folder when the branch has one (`SPEC.md`,
      `STORIES.md`, and the click paths in `BUILD-LOG.md`), otherwise from the PR's
      description (its "Where to find it" or "How to verify", when `pr-describe` wrote it). Include the edge cases the spec or PR names, and the screens next to the
      change that it could have broken.
