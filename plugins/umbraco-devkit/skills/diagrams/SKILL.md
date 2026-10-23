@@ -137,10 +137,9 @@ Then search the file for `#` colours and `style=`; there should be none outside 
 
 - **Plan files and docs:** keep the `.svg` beside the Markdown that uses it and link it with
   a relative path: `![Delivery flow](diagrams/delivery-flow.svg)`.
-- **PR descriptions:** relative paths break in a PR body. Link the committed file by its full
-  URL pinned to a commit, the same way as a screenshot:
-  `https://github.com/<owner>/<repo>/blob/<sha>/<path>.svg?raw=true`. GitHub serves it as an
-  image with its styles intact.
+- **PR descriptions:** relative paths break in a PR body; link the committed file the way
+  `pr-describe` links a screenshot, by full URL pinned to a commit. GitHub serves an `.svg`
+  from that URL as an image with its styles intact.
 
 ## *Class reference*
 

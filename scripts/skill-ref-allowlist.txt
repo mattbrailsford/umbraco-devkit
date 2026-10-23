@@ -66,3 +66,10 @@ uui-badge  # a real UUI web component, not a skill
 umb-property-layout  # a real Umbraco backoffice web component, not a skill
 umb-form-validation-message  # a real Umbraco backoffice web component, not a skill
 max-width  # a CSS property, not a skill
+font-family  # an SVG/CSS presentation attribute, not a skill
+font-size  # an SVG/CSS presentation attribute, not a skill
+font-weight  # an SVG/CSS presentation attribute, not a skill
+marker-end  # an SVG/CSS presentation attribute, not a skill
+marker-start  # an SVG/CSS presentation attribute, not a skill
+text-anchor  # an SVG/CSS presentation attribute, not a skill
+prefers-color-scheme  # a CSS media feature, not a skill

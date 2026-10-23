@@ -67,7 +67,7 @@ things, the colours. The text covers only what the picture can't show:
 - the states the picture doesn't show: empty, loading, error
 
 For a screen in `SPEC.md`, that usually means the screenshot plus a short list of behaviours,
-not a paragraph walking through the screen.
+not a paragraph walking through the screen. To draw a diagram or chart, follow `diagrams`.
 
 ## Shape for scanning
 

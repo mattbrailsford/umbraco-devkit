@@ -399,8 +399,7 @@ approaches and why they were rejected belong in `DECISION-LOG.md`.
 A section that explains how parts connect, in what order they run, or which states a record
 moves through opens with its diagram from `diagrams/`
 (`![Delivery flow](./diagrams/delivery-flow.svg)`), and its prose keeps only what the
-picture can't show. A data model with more than one table gets one too. Revising the design
-means editing the diagram in place, keeping unchanged boxes where they were.
+picture can't show. A data model with more than one table gets one too.
 
 `ARCHITECTURE.md`:
 
