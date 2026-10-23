@@ -28,6 +28,12 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 - [`umbraco-docs`](#umbraco-docs): 4 of 5 sections have no eval.
 - [`umbraco-marketplace`](#umbraco-marketplace): 3 of 4 sections have no eval.
 
+### Workflow rules broken
+
+A workflow eval scored under 100, so the skill broke one of its own rules.
+
+- [`major-upgrade`](#major-upgrade): `major-upgrade-offers-stopgaps` (67). Read the run, then fix the skill or the grader.
+
 ### Evals never run
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
@@ -57,13 +63,13 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 2 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions) | knowledge | Proven | +100 | 6 | 2 | 3/11 | 1 |
 | [`umbraco-backoffice-testing`](#umbraco-backoffice-testing) | knowledge | Proven | +67 | 2 | 0 | 2/2 | 0 |
@@ -240,7 +246,8 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `major-upgrade-version-mismatch` | 100 | 2026-10-16 |
+| `major-upgrade-offers-stopgaps` | 67 | 2026-10-23 |
+| `major-upgrade-version-mismatch` | 100 | 2026-10-23 |
 
 ### `plain-writing`
 
@@ -291,6 +298,8 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 | Eval | Score | Recorded |
 |---|---|---|
 | `quick-fix-escalates` | 100 | 2026-10-16 |
+| `quick-fix-root-cause` | 100 | 2026-10-23 |
+| `quick-fix-stopgap-marker` | 100 | 2026-10-23 |
 
 ### `skill-report`
 
