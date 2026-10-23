@@ -5,6 +5,31 @@ Omit the whole line if there's nothing to link.}
 
 {Stacked PR only — omit entirely otherwise: `Stacked on #<parent-pr-number>.`}
 
+{Your call: every Your call item from decision-review, in its order. Omit the whole callout
+when there are none. Every line starts with `> `.}
+
+> [!IMPORTANT]
+> **{N} choices were made without you.** Please check each one.
+>
+> | | Type | Plan said | Built | Options |
+> |---|---|---|---|---|
+> | 1 | {Design / Behavior / UI} | {what the plan said, or "Nothing about <topic>"} | [{what was built}](https://github.com/{owner}/{repo}/blob/{sha}/{path}#L{line}) | **A. {recommended option}** *(recommended)*<br>B. {other option} |
+>
+> **{n}. Mockup vs built**
+>
+> | Mockup | Built |
+> |---|---|
+> | ![Mockup](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/mockups/{screen}.png?raw=true) | ![Built](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}.png?raw=true) |
+
+{Mockup vs built: only for a UI item that departs from its mockup, one per item.}
+
+{Must fix: only when decision-review returned Must fix items. Omit it otherwise.}
+
+> [!CAUTION]
+> **Must fix before merge**
+>
+> - [{what's broken}](https://github.com/{owner}/{repo}/blob/{sha}/{path}#L{line})
+
 ## Why the change
 
 {Exactly one sentence: the problem this PR solves and what becomes possible once it ships.}
@@ -34,15 +59,14 @@ screen's screenshot.}
 
 ![{Screen name}: {action}](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}-{action}.gif?raw=true)
 
-## Special things to note
+## How to verify
 
-- {Every `Needs a decision`/`Consider reverting` item decision-review flagged, first, each
-  prefixed with its verdict — e.g. "**Needs a decision:** {what and why}" or "**Consider
-  reverting:** {what and why}". A plain `Looks fine as documented` item gets no prefix.}
-- {Then one bullet each for migrations, compatibility constraints, or other deliberate
-  omissions decision-review wouldn't have caught — no fixed count, but each one must be
-  something the reviewer genuinely needs before approving, not a restatement of the change
-  outline below. Write "- None." if there's nothing at all.}
+1. {A step on the demo site, and what the reviewer should see.}
+
+## Good to know
+
+{Only for a planned migration, a compatibility limit or a deliberate omission the reviewer
+needs before approving. One line each. Omit the section when there's nothing.}
 
 ## Change outline
 
@@ -69,3 +93,12 @@ contract, manifest registration diff, backoffice registrations table, settings, 
 endpoints, pseudocode. Prefer `diff` for a change to an existing shape; show the whole block
 only when most of it is new or a diff would hide ownership or order. Tables never go in a
 `diff` block; they mark changes in a `Change` column.}
+
+{Checked and fine: decision-review's Checked and fine items, folded. Omit when there are none.}
+
+<details>
+<summary>Checked and fine ({count})</summary>
+
+- {One line per item.}
+
+</details>
