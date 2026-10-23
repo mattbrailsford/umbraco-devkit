@@ -64,6 +64,11 @@ as-is; don't restate them here.
          one; a two-column table with `<screen>-before.png` and `<screen>.png` for a changed
          one. No screenshots on disk means no screenshots in the PR. Never stand a mockup in
          for the built screen.
+       - **GIFs**: each `<screen>-<action>.gif` in `screenshots/` goes straight under its
+         screen's screenshot, after a one-line caption saying what it shows ("Dragging a
+         gallery item to the top"). A `-before.gif` pairs with its GIF in the same
+         two-column table. A GIF never stands in for the screenshot; no GIF on disk, no GIF
+         in the PR.
        - Image links in a PR body must be full URLs: a relative path renders as a broken
          image. Use `https://github.com/<owner>/<repo>/blob/<sha>/<path>?raw=true`, with
          `<owner>/<repo>` from `gh repo view --json nameWithOwner` and `<sha>` the pushed
