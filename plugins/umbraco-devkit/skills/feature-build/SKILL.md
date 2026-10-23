@@ -151,6 +151,14 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    it. A screen that only sits there gets no GIF. Record a `<screen>-<action>-before.gif`
    only when the old behavior is what the task fixes.
 
+   **If the smoke needed content the demo site didn't have** (a document type using the new
+   property editor, tagged posts for a new dashboard to list, a setting turned on), make it
+   realistic, as `pr-demo`'s step 6 describes. Record it in the task's `BUILD-LOG.md` entry as
+   a short "Demo setup" note, next to the click path, so someone trying the branch can see the
+   same thing. If the project has a committed seed (a seed script, uSync files), have the
+   builder add the content there as part of this task instead, and the note says "in the
+   seed".
+
 5. **Commit.** On `PASS` + smoke green, have the builder commit *only this task's changes*
    with a message naming the task, following the project's commit conventions (see
    `git-workflow`). One commit per task. If the task's code makes a pending spec pass for
@@ -204,6 +212,8 @@ an earlier look.)
 If this feature built inside a worktree, don't remove it here. That's post-merge cleanup (the
 project's `WorktreeRemove` hook, or `git worktree remove`). Archiving the plan folder is
 post-merge too: `feature-close`, once the PR is merged.
+
+To click through the finished feature on the demo site before merging, use `pr-demo`.
 
 ## Rules
 

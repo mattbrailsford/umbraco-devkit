@@ -731,8 +731,16 @@
     "without": 100,
     "withoutDate": "2026-10-16"
   },
+  "major-upgrade-offers-stopgaps": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-version-mismatch": {
-    "date": "2026-10-16",
+    "date": "2026-10-23",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -903,6 +911,38 @@
     "without": 80,
     "withoutDate": "2026-10-16"
   },
+  "pr-demo-main-checkout-data": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-demo-realistic-content": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-demo-uses-demo-setup": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-describe-diagram-readability": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "pr-describe-gif": {
     "date": "2026-10-23",
     "runs": 3,
@@ -977,6 +1017,22 @@
   },
   "quick-fix-escalates": {
     "date": "2026-10-16",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "quick-fix-root-cause": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "quick-fix-stopgap-marker": {
+    "date": "2026-10-23",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,

@@ -28,6 +28,14 @@ marked; they go in the main bump task.
 |---|---|---|---|---|
 | [JsonSchema.Net.Generation] | [5.1.1] | [7.4.0] | [`JsonSchema` in `IStepType`; consumers see it] | [yes] |
 
+## Stopgaps
+
+`TODO(stopgap):` markers offered in inventory step 11, and what was picked.
+
+| Marker | Where | Proper fix | Breaking for consumers | Picked |
+|---|---|---|---|---|
+| [`GetLevel` returns -1 for untracked stock] | [`src/Services/IStockService.cs:12`] | [return `int?`] | [yes] | [yes] |
+
 ## Blockers
 
 [Dependencies with no release for the target major yet, or "None".]
@@ -43,6 +51,7 @@ Each task ends in a green build.
 - [ ] [Bump `@umbraco-cms/backoffice`; fix the client]
 - [ ] [Bump <shipped dependency or family> to <version>, one task each]
 - [ ] [Remove this package's own code scheduled for removal in this version]
+- [ ] [Proper fix for <stopgap>, one task each]
 - [ ] [Update compatibility markers]
 
 ## Decisions
@@ -59,7 +68,7 @@ see. Or "None".]
 
 [Things found along the way that the upgrade didn't need: obsolete APIs whose replacement
 isn't in every CMS version the branch builds against, shipped dependency majors not picked,
-refactors, dropping an old major.]
+stopgaps not picked, refactors, dropping an old major.]
 
 ## Log
 

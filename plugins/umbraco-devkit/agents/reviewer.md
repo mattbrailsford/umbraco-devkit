@@ -125,6 +125,9 @@ design. A reviewer that fixes its own findings isn't a gate.
    ships` is a deliberate, tracked Umbraco pattern (e.g. marking a default interface
    implementation for removal once a deprecated overload is gone). A vague, undated
    `// TODO: fix this later` is the finding; a dated one tied to a real removal condition is not.
+   So does a stopgap marker (`TODO(stopgap):` or the project's own) when the task says the user
+   chose a stopgap and the comment says what it hides and what the proper fix is. A stopgap
+   without that marker is the finding.
    Also flag (`Important`) a code comment that links to a repo file or memory entry, and a
    new link from a `CLAUDE.md` or `.claude/memory/` into a plan folder or the archive. Both
    break when files move. See `CLAUDE.md`'s "Plans and the archive".

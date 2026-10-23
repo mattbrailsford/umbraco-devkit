@@ -228,6 +228,18 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
     Packages that release together (`react` with `react-dom`, an SDK family) are one row and
     one task. Record each picked bump that's breaking for consumers in "Breaking changes for
     consumers". What isn't picked goes in "Follow-ups".
+11. **Stopgaps waiting for a major.** Same condition as step 10: only when this release is a
+    major for the package. Grep for `TODO(stopgap):`, or the project's own debt marker if
+    its `CLAUDE.md` names one (`quick-fix` writes these when the user picks a stopgap over
+    the proper fix). Each comment says what it hides and what the proper fix is. Mark the
+    ones whose proper fix is a breaking change for consumers (a public signature, a stored
+    data shape, a manifest alias, a setting): a major is the release where those can land.
+
+    Show the user the list (marker, where, the proper fix, breaking or not) and let them
+    pick. Nothing goes in by default: an upgrade that takes on every old shortcut never
+    finishes. Each picked one is a task, and its proper fix removes the marker comments. Record
+    the breaking ones in "Breaking changes for consumers". What isn't picked goes in
+    "Follow-ups".
 
 Write the file from `templates/UPGRADE.md`. Order the tasks so **every task ends in a green
 build**:
@@ -251,7 +263,9 @@ build**:
    dependency, not the CMS.
 7. Remove the package's own deprecated code scheduled for this version (step 9), after the
    other code changes, so a test failing here points at the removal.
-8. Compatibility markers.
+8. Proper fixes for the stopgaps the user picked (step 11), one task each, after the
+   removals, so a failure points at the fix.
+9. Compatibility markers.
 
 Show the user the inventory and the ordered tasks, and wait for a yes before building. This
 is the plan; a missing item here becomes a broken site later.
@@ -268,7 +282,7 @@ the last RC to the final release). Work on the same branch.
    happen. Re-read the docs page too: it's often only finished for the final release.
 3. Append what you find to the file as new entries and new unchecked tasks. Don't rewrite or
    untick earlier ones; they're done and committed. Update the file's target release line.
-   Don't re-offer step 10's list, but re-check each unchecked step 10 task against the newer
+   Don't re-offer step 10's or step 11's list, but re-check each unchecked step 10 task against the newer
    tag: its locked packages, and whether a forced bump changed.
 4. Always add a task, ahead of any unchecked step 10 or removal tasks, to move the CMS
    packages, `@umbraco-cms/backoffice`, every shared dependency (step 1 at the newer tag),
