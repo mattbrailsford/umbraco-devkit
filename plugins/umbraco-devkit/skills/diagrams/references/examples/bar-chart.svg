@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="500"/>
+
+  <text class="heading" x="24" y="36">Delivery throughput, deliveries per second</text>
+  <rect class="bar before swatch" x="24" y="54" width="12" height="12" rx="2"/>
+  <text class="axis-label" x="42" y="64">Before: sequential sends</text>
+  <rect class="bar after swatch" x="210" y="54" width="12" height="12" rx="2"/>
+  <text class="axis-label" x="228" y="64">After: batched, 8 in parallel</text>
+  <text class="axis-label" x="80" y="414" text-anchor="end">0</text>
+  <path class="gridline" d="M90,306.7 H920"/>
+  <text class="axis-label" x="80" y="310.7" text-anchor="end">100</text>
+  <path class="gridline" d="M90,203.3 H920"/>
+  <text class="axis-label" x="80" y="207.3" text-anchor="end">200</text>
+  <path class="gridline" d="M90,100 H920"/>
+  <text class="axis-label" x="80" y="104" text-anchor="end">300</text>
+  <path class="axis" d="M90,410 H920"/>
+  <path class="bar before" d="M199.3,410 V370.6 Q199.3,366.6 203.3,366.6 H223.3 Q227.3,366.6 227.3,370.6 V410 Z"/>
+  <text class="value-label" x="213.3" y="360.6" text-anchor="middle">42</text>
+  <path class="bar after" d="M229.3,410 V368.5 Q229.3,364.5 233.3,364.5 H253.3 Q257.3,364.5 257.3,368.5 V410 Z"/>
+  <text class="value-label" x="243.3" y="358.5" text-anchor="middle">44</text>
+  <text class="axis-label" x="228.3" y="430" text-anchor="middle">1 endpoint</text>
+  <path class="bar before" d="M476,410 V374.7 Q476,370.7 480,370.7 H500 Q504,370.7 504,374.7 V410 Z"/>
+  <text class="value-label" x="490" y="364.7" text-anchor="middle">38</text>
+  <path class="bar after" d="M506,410 V197 Q506,193 510,193 H530 Q534,193 534,197 V410 Z"/>
+  <text class="value-label" x="520" y="187" text-anchor="middle">210</text>
+  <text class="axis-label" x="505" y="430" text-anchor="middle">10 endpoints</text>
+  <path class="bar before" d="M752.7,410 V377.8 Q752.7,373.8 756.7,373.8 H776.7 Q780.7,373.8 780.7,377.8 V410 Z"/>
+  <text class="value-label" x="766.7" y="367.8" text-anchor="middle">35</text>
+  <path class="bar after" d="M782.7,410 V140.2 Q782.7,136.2 786.7,136.2 H806.7 Q810.7,136.2 810.7,140.2 V410 Z"/>
+  <text class="value-label" x="796.7" y="130.2" text-anchor="middle">265</text>
+  <text class="axis-label" x="781.7" y="430" text-anchor="middle">50 endpoints</text>
+  <text class="footnote" x="24" y="480">Local SQL Server, mock endpoint answering in 20 ms, mean of 5 runs.</text>
+</svg>

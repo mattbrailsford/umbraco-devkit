@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <rect class="bg" width="960" height="560"/>
+  <g class="table">
+  <rect x="40" y="40" width="300" height="148" rx="6" class="shape"/>
+  <path d="M46,40 h288 a6,6 0 0 1 6,6 v24 h-300 v-24 a6,6 0 0 1 6,-6 z" class="head"/>
+  <text class="head-text" x="52" y="60">WebhookEndpoint</text>
+  <text class="pk" x="52" y="89">PK</text>
+  <text class="col keycol" x="80" y="89">Id</text>
+  <text class="type" x="328" y="89">int</text>
+  <rect x="41" y="96" width="298" height="22" class="row-alt"/>
+  <text class="col" x="80" y="111">Url</text>
+  <text class="type" x="328" y="111">string</text>
+  <text class="col" x="80" y="133">Secret</text>
+  <text class="type" x="328" y="133">string</text>
+  <rect x="41" y="140" width="298" height="22" class="row-alt"/>
+  <text class="col" x="80" y="155">IsEnabled</text>
+  <text class="type" x="328" y="155">bool</text>
+  <text class="col" x="80" y="177">CreatedUtc</text>
+  <text class="type" x="328" y="177">datetime</text>
+  <rect x="560" y="40" width="360" height="126" rx="6" class="shape"/>
+  <path d="M566,40 h348 a6,6 0 0 1 6,6 v24 h-360 v-24 a6,6 0 0 1 6,-6 z" class="head"/>
+  <text class="head-text" x="572" y="60">WebhookSubscription</text>
+  <text class="pk" x="572" y="89">PK</text>
+  <text class="col keycol" x="600" y="89">Id</text>
+  <text class="type" x="908" y="89">int</text>
+  <rect x="561" y="96" width="358" height="22" class="row-alt"/>
+  <text class="fk" x="572" y="111">FK</text>
+  <text class="col keycol" x="600" y="111">EndpointId</text>
+  <text class="type" x="908" y="111">int</text>
+  <text class="col" x="600" y="133">EventAlias</text>
+  <text class="type" x="908" y="133">string, e.g. content.published</text>
+  <rect x="561" y="140" width="358" height="22" class="row-alt"/>
+  <text class="col" x="600" y="155">ContentTypeAlias</text>
+  <text class="type" x="908" y="155">string?  null = all types</text>
+  <rect x="40" y="300" width="300" height="192" rx="6" class="shape"/>
+  <path d="M46,300 h288 a6,6 0 0 1 6,6 v24 h-300 v-24 a6,6 0 0 1 6,-6 z" class="head"/>
+  <text class="head-text" x="52" y="320">WebhookOutbox</text>
+  <text class="pk" x="52" y="349">PK</text>
+  <text class="col keycol" x="80" y="349">Id</text>
+  <text class="type" x="328" y="349">long</text>
+  <rect x="41" y="356" width="298" height="22" class="row-alt"/>
+  <text class="fk" x="52" y="371">FK</text>
+  <text class="col keycol" x="80" y="371">EndpointId</text>
+  <text class="type" x="328" y="371">int</text>
+  <text class="col" x="80" y="393">Payload</text>
+  <text class="type" x="328" y="393">json</text>
+  <rect x="41" y="400" width="298" height="22" class="row-alt"/>
+  <text class="col" x="80" y="415">Status</text>
+  <text class="type" x="328" y="415">Pending | Delivered | DeadLettered</text>
+  <text class="col" x="80" y="437">Attempts</text>
+  <text class="type" x="328" y="437">int</text>
+  <rect x="41" y="444" width="298" height="22" class="row-alt"/>
+  <text class="col" x="80" y="459">NextAttemptAt</text>
+  <text class="type" x="328" y="459">datetime</text>
+  <text class="col" x="80" y="481">CreatedUtc</text>
+  <text class="type" x="328" y="481">datetime</text>
+  <rect x="560" y="300" width="360" height="192" rx="6" class="shape"/>
+  <path d="M566,300 h348 a6,6 0 0 1 6,6 v24 h-360 v-24 a6,6 0 0 1 6,-6 z" class="head"/>
+  <text class="head-text" x="572" y="320">WebhookLog</text>
+  <text class="pk" x="572" y="349">PK</text>
+  <text class="col keycol" x="600" y="349">Id</text>
+  <text class="type" x="908" y="349">long</text>
+  <rect x="561" y="356" width="358" height="22" class="row-alt"/>
+  <text class="fk" x="572" y="371">FK</text>
+  <text class="col keycol" x="600" y="371">OutboxId</text>
+  <text class="type" x="908" y="371">long</text>
+  <text class="col" x="600" y="393">AttemptNumber</text>
+  <text class="type" x="908" y="393">int</text>
+  <rect x="561" y="400" width="358" height="22" class="row-alt"/>
+  <text class="col" x="600" y="415">StatusCode</text>
+  <text class="type" x="908" y="415">int?</text>
+  <text class="col" x="600" y="437">Error</text>
+  <text class="type" x="908" y="437">string?</text>
+  <rect x="561" y="444" width="358" height="22" class="row-alt"/>
+  <text class="col" x="600" y="459">DurationMs</text>
+  <text class="type" x="908" y="459">int</text>
+  <text class="col" x="600" y="481">CreatedUtc</text>
+  <text class="type" x="908" y="481">datetime</text>
+  </g>
+  <!-- Relationships: one-bar at the 1 side, crow's foot at the many side -->
+  <g class="rel">
+    <path class="edge" d="M340,85 H450 V107 H560"/>
+    <path class="edge" d="M350,78 V92"/>
+    <path class="edge" d="M545,107 L560,99 M545,107 L560,115"/>
+    <path class="edge" d="M190,188 V300"/>
+    <path class="edge" d="M183,198 H197"/>
+    <path class="edge" d="M190,285 L182,300 M190,285 L198,300"/>
+    <path class="edge" d="M340,345 H450 V367 H560"/>
+    <path class="edge" d="M350,338 V352"/>
+    <path class="edge" d="M545,367 L560,359 M545,367 L560,375"/>
+  </g>
+  <g class="rel-labels">
+    <text class="edge-label" x="356" y="80">1</text>
+    <text class="edge-label" x="508" y="100">many</text>
+    <text class="edge-label" x="198" y="212">1</text>
+    <text class="edge-label" x="200" y="284">many</text>
+    <text class="edge-label" x="356" y="340">1</text>
+    <text class="edge-label" x="508" y="360">many</text>
+  </g>
+  <text class="footnote" x="40" y="530">PK primary key · FK foreign key · ? nullable · one bar = one, crow's foot = many</text>
+</svg>

@@ -216,8 +216,8 @@ preserve when editing these skills:
 - **One owner per file:**
   - `feature-explore`: `BRIEF.md`; creates the folder's `README.md` (read-order index) once
     and never recreates it.
-  - `feature-design`: `ARCHITECTURE.md`, `SPEC.md`, `mockups/`, and project-wide
-    `docs/mockups/starters/`.
+  - `feature-design`: `ARCHITECTURE.md`, `SPEC.md`, `mockups/`, `diagrams/`, and
+    project-wide `docs/mockups/starters/`.
   - `feature-plan`: `STORIES.md`, `PLAN.md`.
   - `feature-build`: `BUILD-LOG.md`, `screenshots/`.
   - `pr-describe`: `PR-DESCRIPTION.md`, only when a plan folder exists.

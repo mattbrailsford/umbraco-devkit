@@ -69,8 +69,8 @@ as-is; don't restate them here.
          gallery item to the top"). A `-before.gif` pairs with its GIF in the same
          two-column table. A GIF never stands in for the screenshot; no GIF on disk, no GIF
          in the PR.
-       - Image links in a PR body must be full URLs: a relative path renders as a broken
-         image. Use `https://github.com/<owner>/<repo>/blob/<sha>/<path>?raw=true`, with
+       - Image links in a PR body (screenshots, GIFs, diagrams) must be full URLs: a
+         relative path renders as a broken image. Use `https://github.com/<owner>/<repo>/blob/<sha>/<path>?raw=true`, with
          `<owner>/<repo>` from `gh repo view --json nameWithOwner` and `<sha>` the pushed
          commit that contains the file (`git rev-parse HEAD` after pushing). Pinning to a
          commit keeps the image working after the branch is deleted.
@@ -88,6 +88,11 @@ as-is; don't restate them here.
        draw it. Only include a view that actually changed; skip the rest. Order them the way a
        reader would want the story told (a data structure or contract usually comes before the
        code that uses it), not in a fixed sequence.
+     - **Picture diagrams first.** When the plan folder has `diagrams/`, lead the outline with
+       the ones that show what this PR built, each under a one-line caption and linked by
+       full URL like the screenshots. Then the text views for detail a picture can't carry.
+       A diagram that no longer matches the code stays out; never describe a design the PR
+       didn't build.
      - Prefer a `diff` block for a change to an existing shape; show the whole thing only when
        most of it is new or the diff notation would obscure ownership or order.
    - **No plan folder** — use `templates/pr-plain.md`: Summary, Why, How to verify, Risk /

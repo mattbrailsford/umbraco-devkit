@@ -21,6 +21,7 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): 8 of 11 sections have no eval.
 - [`umbraco-performance`](#umbraco-performance): 6 of 10 sections have no eval.
 - [`bdd-specs`](#bdd-specs): 5 of 6 sections have no eval.
+- [`diagrams`](#diagrams): 5 of 9 sections have no eval.
 - [`ef-core-data`](#ef-core-data): 5 of 7 sections have no eval.
 - [`git-workflow`](#git-workflow): 5 of 8 sections have no eval.
 - [`umbraco-package-conventions`](#umbraco-package-conventions): 5 of 6 sections have no eval.
@@ -44,10 +45,11 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`change-backport`](#change-backport) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`decision-review`](#decision-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`diagrams`](#diagrams) | knowledge | Proven | +100 | 1 | 0 | 4/9 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
 | [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 6 | 0 | – | – |
+| [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 7 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -59,7 +61,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
-| [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 3 | 0 | – | – |
+| [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 4 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -130,6 +132,20 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 |---|---|---|
 | `dependency-review-locked-bump` | 100 | 2026-10-16 |
 
+### `diagrams`
+
+| Section | Eval | With | Without | Gain | Skill loaded | Recorded |
+|---|---|---|---|---|---|---|
+| When to draw one | **no eval** | | | | | |
+| Hand-placed SVG, not Mermaid | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
+| Pick the type | **no eval** | | | | | |
+| Start from the template | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
+| Lay it out by hand | **no eval** | | | | | |
+| Colours come from classes | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
+| Show what changed | **no eval** | | | | | |
+| Check it | **no eval** | | | | | |
+| Embed it | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
+
 ### `ef-core-data`
 
 | Section | Eval | With | Without | Gain | Skill loaded | Recorded |
@@ -166,6 +182,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Eval | Score | Recorded |
 |---|---|---|
 | `feature-design-all-screens-mocked` | 100 | 2026-10-20 |
+| `feature-design-draws-diagrams` | 100 | 2026-10-23 |
 | `feature-design-mockup-component-fidelity` | 100 | 2026-10-20 |
 | `feature-design-mockup-modal-property-layout` | 100 | 2026-10-20 |
 | `feature-design-mockups-email-without-ui` | 100 | 2026-10-20 |
@@ -263,6 +280,7 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 | Eval | Score | Recorded |
 |---|---|---|
 | `pr-describe-gif` | 100 | 2026-10-23 |
+| `pr-describe-plan-diagrams` | 100 | 2026-10-23 |
 | `pr-describe-plan-folder` | 100 | 2026-10-16 |
 | `pr-describe-stacked-pr` | 100 | 2026-10-19 |
 

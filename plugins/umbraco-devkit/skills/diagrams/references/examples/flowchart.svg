@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="820" viewBox="0 0 960 820">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="820"/>
+
+  <rect class="zone" x="20" y="20" width="260" height="196" rx="10"/>
+  <text class="zone-title" x="32" y="40">Any server (load balanced)</text>
+
+  <rect class="zone" x="300" y="20" width="640" height="680" rx="10"/>
+  <text class="zone-title" x="316" y="42">SchedulingPublisher server only</text>
+  <text class="zone-note" x="316" y="58">Subscriber servers skip the job</text>
+
+  <g class="node">
+    <rect class="shape" x="40" y="54" width="220" height="48" rx="6"/>
+    <text class="title" x="150" y="74">Editor publishes content</text>
+    <text class="sub" x="150" y="92">backoffice</text>
+  </g>
+
+  <g class="node">
+    <rect class="shape" x="40" y="132" width="220" height="68" rx="6"/>
+    <text class="title" x="150" y="152" font-size="12">ContentPublishedNotification</text>
+    <text class="title" x="150" y="170" font-size="12">handler</text>
+    <text class="sub" x="150" y="188">sends nothing</text>
+  </g>
+
+  <g class="node store">
+    <path class="shape" d="M40,266 v48 a110,8 0 0 0 220,0 v-48"/>
+    <ellipse class="lid" cx="150" cy="266" rx="110" ry="8"/>
+    <text class="title" x="150" y="294">WebhookOutbox</text>
+    <text class="sub" x="150" y="311">EF Core table</text>
+  </g>
+
+  <g class="node">
+    <rect class="shape" x="430" y="72" width="260" height="52" rx="6"/>
+    <text class="title" x="560" y="94">IRecurringBackgroundJob</text>
+    <text class="sub" x="560" y="112">runs every 10 s</text>
+  </g>
+
+  <g class="node">
+    <rect class="shape" x="430" y="156" width="260" height="52" rx="6"/>
+    <text class="title" x="560" y="178">Pick due outbox rows</text>
+    <text class="sub" x="560" y="196">Pending, NextAttemptAt &lt;= now</text>
+  </g>
+
+  <g class="node new">
+    <rect class="shape" x="430" y="236" width="260" height="52" rx="6"/>
+    <text class="title" x="560" y="258">Sign payload: HMAC-SHA256</text>
+    <text class="sub" x="560" y="276">endpoint Secret, adds X-Signature header</text>
+  </g>
+
+  <g class="node">
+    <rect class="shape" x="430" y="316" width="260" height="52" rx="6"/>
+    <text class="title" x="560" y="338">POST payload to endpoint URL</text>
+    <text class="sub" x="560" y="356">HttpClient</text>
+  </g>
+
+  <g class="node decision">
+    <path class="shape" d="M560,398 L630,430 L560,462 L490,430 z"/>
+    <text class="title" x="560" y="435">2xx?</text>
+  </g>
+
+  <g class="node decision">
+    <path class="shape" d="M560,506 L645,540 L560,574 L475,540 z"/>
+    <text class="title" x="560" y="545" font-size="12">attempts &lt; 5?</text>
+  </g>
+
+  <g class="node ok">
+    <rect class="shape" x="720" y="406" width="170" height="48" rx="6"/>
+    <text class="title" x="805" y="426">Mark Delivered</text>
+    <text class="sub" x="805" y="444">+ WebhookLog entry</text>
+  </g>
+
+  <g class="node fail">
+    <rect class="shape" x="720" y="516" width="170" height="48" rx="6"/>
+    <text class="title" x="805" y="536">Mark DeadLettered</text>
+    <text class="sub" x="805" y="554">+ WebhookLog entry</text>
+  </g>
+
+  <g class="node">
+    <rect class="shape" x="430" y="610" width="260" height="64" rx="6"/>
+    <text class="title" x="560" y="630">attempts + 1</text>
+    <text class="sub" x="560" y="647">NextAttemptAt = exponential backoff</text>
+    <text class="sub" x="560" y="663">stays Pending</text>
+  </g>
+
+  <g class="node store">
+    <path class="shape" d="M720,738 v48 a85,8 0 0 0 170,0 v-48"/>
+    <ellipse class="lid" cx="805" cy="738" rx="85" ry="8"/>
+    <text class="title" x="805" y="770">WebhookLog</text>
+  </g>
+
+  <g class="node">
+    <rect class="shape" x="430" y="730" width="260" height="64" rx="6"/>
+    <text class="title" x="560" y="752">Dashboard: Webhook deliveries</text>
+    <text class="sub" x="560" y="770">backoffice, shows each attempt</text>
+    <text class="sub new-text" x="560" y="786" font-weight="600">+ Resend on DeadLettered rows</text>
+  </g>
+
+  <g marker-end="url(#arrow)">
+    <path class="edge" d="M150,102 V132"/>
+    <path class="edge" d="M150,200 V256"/>
+    <path class="edge" d="M260,290 H380 V182 H430"/>
+    <path class="edge" d="M560,124 V156"/>
+    <path class="edge" d="M560,208 V236"/>
+    <path class="edge" d="M560,288 V316"/>
+    <path class="edge" d="M560,368 V398"/>
+    <path class="edge" d="M630,430 H720"/>
+    <path class="edge" d="M560,462 V506"/>
+    <path class="edge" d="M645,540 H720"/>
+    <path class="edge" d="M560,574 V610"/>
+    <path class="edge" d="M430,642 H150 V324"/>
+    <path class="edge" d="M890,430 H915 V762 H890"/>
+    <path class="edge" d="M805,564 V728"/>
+    <path class="edge" d="M720,762 H690"/>
+  </g>
+  <path class="edge new" d="M430,762 H110 V324" marker-end="url(#arrow-new)"/>
+
+  <text class="edge-label" x="158" y="234">insert 1 row per endpoint,</text>
+  <text class="edge-label" x="158" y="248">same scope as publish</text>
+  <text class="edge-label" x="386" y="250">read</text>
+  <text class="edge-label" x="662" y="423">yes</text>
+  <text class="edge-label" x="568" y="489">no / timeout</text>
+  <text class="edge-label" x="672" y="533">no</text>
+  <text class="edge-label" x="568" y="596">yes</text>
+  <text class="edge-label" x="160" y="636">picked up again next run</text>
+  <text class="edge-label" x="692" y="752">reads</text>
+  <text class="edge-label new" x="120" y="754">Resend: Pending, attempts = 0</text>
+
+  <g class="legend">
+    <rect class="shape" x="700" y="30" width="226" height="24" rx="12"/>
+    <text x="813" y="46">Highlighted = new in this change</text>
+  </g>
+</svg>

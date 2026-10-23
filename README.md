@@ -170,6 +170,7 @@ You don't run these. The skills above and the agents load them when the work nee
 | Skill | What it covers |
 |---|---|
 | [`bdd-specs`](plugins/umbraco-devkit/skills/bdd-specs/SKILL.md), [`user-stories`](plugins/umbraco-devkit/skills/user-stories/SKILL.md) | Stories with acceptance criteria, turned into tests |
+| [`diagrams`](plugins/umbraco-devkit/skills/diagrams/SKILL.md) | Hand-placed SVG diagrams and charts for plans and PRs, in light and dark |
 | [`git-workflow`](plugins/umbraco-devkit/skills/git-workflow/SKILL.md) | Commits, branches, and asking before touching `main` |
 | [`plain-writing`](plugins/umbraco-devkit/skills/plain-writing/SKILL.md) | How every document a person reads gets written |
 

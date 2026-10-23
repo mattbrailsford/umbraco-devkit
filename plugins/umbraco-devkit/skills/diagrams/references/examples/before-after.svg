@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="660" viewBox="0 0 960 660">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="660"/>
+
+  <text class="heading" x="40" y="44">Before</text>
+  <text class="heading" x="520" y="44">After</text>
+  <path class="lifeline" d="M480,24 V610"/>
+  <g class="legend">
+    <rect class="shape" x="740" y="26" width="190" height="24" rx="12"/>
+    <text x="835" y="42">Highlighted = new type</text>
+  </g>
+
+  <g class="node">
+    <rect class="shape" x="40" y="70" width="400" height="310" rx="6"/>
+    <text class="title" x="240" y="96">WebhookDeliveryJob</text>
+    <text class="sub" x="240" y="114">IRecurringBackgroundJob, does everything itself</text>
+    <path class="gridline" d="M56,132 H424"/>
+    <circle class="point" cx="72" cy="160" r="11"/>
+    <text class="value-label" x="72" y="164" text-anchor="middle">1</text>
+    <text class="sub" x="256" y="164">Query due rows: Pending, NextAttemptAt &lt;= now</text>
+    <circle class="point" cx="72" cy="206" r="11"/>
+    <text class="value-label" x="72" y="210" text-anchor="middle">2</text>
+    <text class="sub" x="256" y="210">Sign payload: HMAC-SHA256, X-Signature</text>
+    <circle class="point" cx="72" cy="252" r="11"/>
+    <text class="value-label" x="72" y="256" text-anchor="middle">3</text>
+    <text class="sub" x="256" y="256">Build request, POST with new HttpClient()</text>
+    <circle class="point" cx="72" cy="298" r="11"/>
+    <text class="value-label" x="72" y="302" text-anchor="middle">4</text>
+    <text class="sub" x="256" y="302">Update row: Delivered, retry or DeadLettered</text>
+    <circle class="point" cx="72" cy="344" r="11"/>
+    <text class="value-label" x="72" y="348" text-anchor="middle">5</text>
+    <text class="sub" x="256" y="348">Write WebhookLog entry</text>
+  </g>
+
+  <g class="node">
+    <rect class="shape" x="570" y="70" width="320" height="52" rx="6"/>
+    <text class="title" x="730" y="92">WebhookDeliveryJob</text>
+    <text class="sub" x="730" y="110">only loops over due rows</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="570" y="170" width="320" height="52" rx="6"/>
+    <text class="title" x="730" y="192">IWebhookDeliveryService</text>
+    <text class="sub" x="730" y="210">runs one delivery</text>
+  </g>
+  <g class="node new">
+    <rect class="shape" x="570" y="276" width="320" height="60" rx="6"/>
+    <circle class="point" cx="598" cy="306" r="11"/>
+    <text class="value-label" x="598" y="310" text-anchor="middle">2</text>
+    <text class="title" x="742" y="302">PayloadSigner</text>
+    <text class="sub" x="742" y="321">HMAC-SHA256, X-Signature header</text>
+  </g>
+  <g class="node new">
+    <rect class="shape" x="570" y="366" width="320" height="60" rx="6"/>
+    <circle class="point" cx="598" cy="396" r="11"/>
+    <text class="value-label" x="598" y="400" text-anchor="middle">3</text>
+    <text class="title" x="742" y="392">WebhookSender</text>
+    <text class="sub" x="742" y="411">builds request, POST via IHttpClientFactory</text>
+  </g>
+  <g class="node new">
+    <rect class="shape" x="570" y="452" width="320" height="128" rx="6"/>
+    <text class="title" x="730" y="476">WebhookOutboxRepository</text>
+    <circle class="point" cx="598" cy="504" r="11"/>
+    <text class="value-label" x="598" y="508" text-anchor="middle">1</text>
+    <text class="sub" x="742" y="508">query due rows</text>
+    <circle class="point" cx="598" cy="532" r="11"/>
+    <text class="value-label" x="598" y="536" text-anchor="middle">4</text>
+    <text class="sub" x="742" y="536">update row: Delivered, retry, DeadLettered</text>
+    <circle class="point" cx="598" cy="560" r="11"/>
+    <text class="value-label" x="598" y="564" text-anchor="middle">5</text>
+    <text class="sub" x="742" y="564">write WebhookLog entry</text>
+  </g>
+
+  <g marker-end="url(#arrow)">
+    <path class="edge" d="M730,122 V170"/>
+    <path class="edge" d="M570,196 H545 V306 H570"/>
+    <path class="edge" d="M545,306 V396 H570"/>
+    <path class="edge" d="M545,396 V518 H570"/>
+  </g>
+  <text class="edge-label mono" x="740" y="151">DeliverAsync(row)</text>
+  <text class="edge-label" x="553" y="254">uses</text>
+
+  <text class="footnote" x="40" y="636">Takeaway: the job keeps only the loop. Each numbered job (1 to 5) moved to one small type you can test alone, and HttpClient now comes from IHttpClientFactory.</text>
+</svg>
