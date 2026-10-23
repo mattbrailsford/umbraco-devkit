@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="430" viewBox="0 0 960 430">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="430"/>
+
+  <text class="heading" x="24" y="34">WebhookOutbox row: lifecycle</text>
+
+  <circle class="start" cx="60" cy="220" r="9"/>
+
+  <g class="node">
+    <rect class="shape" x="260" y="190" width="200" height="60" rx="30"/>
+    <text class="title" x="360" y="215">Pending</text>
+    <text class="sub" x="360" y="233">waits for NextAttemptAt</text>
+  </g>
+
+  <g class="node ok">
+    <rect class="shape" x="620" y="80" width="180" height="56" rx="28"/>
+    <text class="title" x="710" y="104">Delivered</text>
+    <text class="sub" x="710" y="121">+ WebhookLog entry</text>
+  </g>
+
+  <g class="node fail">
+    <rect class="shape" x="620" y="304" width="180" height="56" rx="28"/>
+    <text class="title" x="710" y="328">DeadLettered</text>
+    <text class="sub" x="710" y="345">+ WebhookLog entry</text>
+  </g>
+
+  <circle class="end" cx="900" cy="220" r="11"/>
+  <circle class="end-dot" cx="900" cy="220" r="6"/>
+
+  <g marker-end="url(#arrow)">
+    <path class="edge" d="M69,220 H260"/>
+    <path class="edge" d="M330,190 V140 H390 V190"/>
+    <path class="edge" d="M460,205 H540 V108 H620"/>
+    <path class="edge" d="M460,235 H540 V332 H620"/>
+    <path class="edge" d="M710,360 V400 H360 V250"/>
+    <path class="edge" d="M800,108 H900 V209"/>
+    <path class="edge" d="M800,332 H900 V231"/>
+  </g>
+
+  <text class="edge-label" x="84" y="194">created by publish handler</text>
+  <text class="edge-label" x="84" y="208">1 row per endpoint</text>
+
+  <text class="edge-label" x="360" y="110" text-anchor="middle">failure, attempts &lt; 5</text>
+  <text class="edge-label" x="360" y="124" text-anchor="middle">attempts + 1, NextAttemptAt = backoff</text>
+
+  <text class="edge-label" x="548" y="160">2xx response</text>
+  <text class="edge-label" x="548" y="284">5th failure</text>
+
+  <text class="edge-label" x="380" y="392">Resend (dashboard or API): attempts = 0</text>
+
+  <text class="edge-label" x="884" y="214" text-anchor="end">WebhookCleanupJob (nightly)</text>
+  <text class="edge-label" x="884" y="228" text-anchor="end">deletes rows older than 30 days</text>
+</svg>

@@ -13,7 +13,12 @@
 - Settings — new or changed configuration
 - Management API endpoints — new or changed routes
 - Data structure / contract — a new or changed type
+- Picture diagrams — from the plan folder's `diagrams/`
 - Rule of thumb
+
+When the plan folder has `diagrams/`, its pictures come first (see "Picture diagrams" below);
+these text views add the detail a picture can't carry, such as exact JSON, columns or
+signatures.
 
 Pick the smallest view that makes the key point clear. Skip any view that doesn't apply — a
 one-file bug fix might use none of these and just need "Why" and "Special things to note."
@@ -212,6 +217,28 @@ existing one, one member per line.
 +    DateTime UnpublishDate,
 +    string? Reason);
 ```
+
+## Picture diagrams — from the plan folder's `diagrams/`
+
+`feature-design` draws SVG diagrams of the flow, call order, statuses, data model or layers.
+Show each one that matches what the PR built, under a one-line caption, linked by full URL
+pinned to the pushed commit:
+
+```md
+How a delivery moves from publish to delivered or dead-lettered.
+
+![Delivery flow](https://github.com/<owner>/<repo>/blob/<sha>/docs/plans/<feature-slug>/diagrams/delivery-flow.svg?raw=true)
+```
+
+Don't redraw them here. A picture replaces the text view that tells the same story:
+
+- a flow or sequence picture replaces the call chain and the pseudocode
+- a component-tree picture replaces the Lit component tree
+- a data-model picture replaces the database table view, unless a column's exact type or
+  constraint is the point
+
+Text views that hold exact values stay, picture or not: the manifest or composer diff, the
+backoffice registrations table, settings, API endpoints, a data contract, and a file tree.
 
 ## Rule of thumb
 

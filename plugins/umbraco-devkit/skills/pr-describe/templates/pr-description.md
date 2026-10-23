@@ -51,6 +51,13 @@ the implementation. Only include a view that actually changed — omit the rest.
 however tells the story best; a data structure or contract usually comes before the code that
 uses it.}
 
+{Plan-folder diagrams first, if diagrams/ has any that match what was built: a one-line
+caption, then the image by full URL.}
+
+{What the diagram shows, e.g. "How a delivery moves from publish to delivered."}
+
+![{Diagram name}](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/diagrams/{name}.svg?raw=true)
+
 {...one short sentence introducing the view...}
 
 ```diff

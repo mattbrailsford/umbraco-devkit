@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="810" viewBox="0 0 960 810">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="810"/>
+
+  <text class="heading" x="20" y="34">Load-balanced site: where each part runs</text>
+
+  <!-- Entry points -->
+  <g class="node">
+    <rect class="shape" x="170" y="56" width="220" height="44" rx="6"/>
+    <text class="title" x="280" y="75">Visitors</text>
+    <text class="sub" x="280" y="92">public website</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="170" y="130" width="220" height="44" rx="6"/>
+    <text class="title" x="280" y="149">Load balancer</text>
+    <text class="sub" x="280" y="166">front ends only</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="645" y="56" width="220" height="44" rx="6"/>
+    <text class="title" x="755" y="75">Editors</text>
+    <text class="sub" x="755" y="92">backoffice, /umbraco</text>
+  </g>
+
+  <!-- Front-end server 1 -->
+  <rect class="zone" x="20" y="210" width="250" height="366" rx="10"/>
+  <text class="zone-title" x="35" y="230">Front-end server 1</text>
+  <text class="zone-note" x="35" y="246">role: Subscriber</text>
+  <g class="node">
+    <rect class="shape" x="35" y="262" width="220" height="48" rx="6"/>
+    <text class="title" x="145" y="282">Renders the website</text>
+    <text class="sub" x="145" y="300">visitor traffic</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="35" y="324" width="220" height="48" rx="6"/>
+    <text x="145" y="344" text-anchor="middle" font-weight="600">Dashboard + Management API</text>
+    <text x="145" y="360" text-anchor="middle">unused: editors use backoffice</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="35" y="386" width="220" height="48" rx="6"/>
+    <text x="145" y="406" text-anchor="middle" font-weight="600">Publish handler</text>
+    <text x="145" y="422" text-anchor="middle">idle: no publishes happen here</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="35" y="448" width="220" height="48" rx="6"/>
+    <text x="145" y="468" text-anchor="middle" font-weight="600">WebhookCleanupJob</text>
+    <text x="145" y="484" text-anchor="middle">skipped: Subscriber role</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="35" y="510" width="220" height="48" rx="6"/>
+    <text x="145" y="530" text-anchor="middle" font-weight="600">WebhookDeliveryJob</text>
+    <text x="145" y="546" text-anchor="middle">skipped: Subscriber role</text>
+  </g>
+
+  <!-- Front-end server 2 -->
+  <rect class="zone" x="290" y="210" width="250" height="366" rx="10"/>
+  <text class="zone-title" x="305" y="230">Front-end server 2</text>
+  <text class="zone-note" x="305" y="246">role: Subscriber</text>
+  <g class="node">
+    <rect class="shape" x="305" y="262" width="220" height="48" rx="6"/>
+    <text class="title" x="415" y="282">Renders the website</text>
+    <text class="sub" x="415" y="300">visitor traffic</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="305" y="324" width="220" height="48" rx="6"/>
+    <text x="415" y="344" text-anchor="middle" font-weight="600">Dashboard + Management API</text>
+    <text x="415" y="360" text-anchor="middle">unused: editors use backoffice</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="305" y="386" width="220" height="48" rx="6"/>
+    <text x="415" y="406" text-anchor="middle" font-weight="600">Publish handler</text>
+    <text x="415" y="422" text-anchor="middle">idle: no publishes happen here</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="305" y="448" width="220" height="48" rx="6"/>
+    <text x="415" y="468" text-anchor="middle" font-weight="600">WebhookCleanupJob</text>
+    <text x="415" y="484" text-anchor="middle">skipped: Subscriber role</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="305" y="510" width="220" height="48" rx="6"/>
+    <text x="415" y="530" text-anchor="middle" font-weight="600">WebhookDeliveryJob</text>
+    <text x="415" y="546" text-anchor="middle">skipped: Subscriber role</text>
+  </g>
+
+  <!-- Backoffice server -->
+  <rect class="zone" x="570" y="210" width="370" height="366" rx="10"/>
+  <text class="zone-title" x="586" y="230">Backoffice server</text>
+  <text class="zone-note" x="586" y="246">role: SchedulingPublisher</text>
+  <g class="node">
+    <rect class="shape" x="590" y="262" width="330" height="48" rx="6"/>
+    <text class="title" x="755" y="282">Dashboard: Webhook deliveries</text>
+    <text class="sub" x="755" y="300">wd-deliveries-dashboard, Settings section</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="590" y="324" width="330" height="48" rx="6"/>
+    <text class="title" x="755" y="344">WebhookDeliveriesController</text>
+    <text class="sub" x="755" y="362">/umbraco/management/api/v1/webhook-deliveries</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="590" y="386" width="330" height="48" rx="6"/>
+    <text class="title" x="755" y="406">ContentPublishedNotification handler</text>
+    <text class="sub" x="755" y="424">inserts 1 WebhookOutbox row per endpoint</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="590" y="448" width="330" height="48" rx="6"/>
+    <text class="title" x="755" y="468">WebhookCleanupJob</text>
+    <text class="sub" x="755" y="486">nightly: deletes finished rows over 30 days</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="590" y="510" width="330" height="48" rx="6"/>
+    <text class="title" x="755" y="530">WebhookDeliveryJob</text>
+    <text class="sub" x="755" y="548">every 10 s: signs and POSTs due rows</text>
+  </g>
+
+  <!-- Shared database -->
+  <g class="node store">
+    <path class="shape" d="M20,640 v70 a320,10 0 0 0 640,0 v-70"/>
+    <ellipse class="lid" cx="340" cy="640" rx="320" ry="10"/>
+    <text class="title" x="340" y="676">SQL Server database (shared by all three)</text>
+    <text class="sub" x="340" y="696">WebhookEndpoint · WebhookSubscription · WebhookOutbox · WebhookLog · Umbraco tables</text>
+  </g>
+
+  <!-- External -->
+  <g class="node">
+    <rect class="shape" x="700" y="640" width="240" height="56" rx="6"/>
+    <text class="title" x="820" y="662">Subscriber endpoints</text>
+    <text class="sub" x="820" y="680">external HTTPS</text>
+  </g>
+
+  <g marker-end="url(#arrow)">
+    <path class="edge" d="M280,100 V130"/>
+    <path class="edge" d="M250,174 V192 H200 V262"/>
+    <path class="edge" d="M310,174 V192 H470 V262"/>
+    <path class="edge" d="M755,100 V262"/>
+    <path class="edge" d="M755,310 V324"/>
+    <path class="edge" d="M145,576 V630"/>
+    <path class="edge" d="M415,576 V629"/>
+    <path class="edge" d="M620,576 V634"/>
+    <path class="edge" d="M820,558 V640"/>
+  </g>
+
+  <text class="edge-label" x="763" y="160">editors only</text>
+  <text class="edge-label" x="153" y="608">site content</text>
+  <text class="edge-label" x="423" y="608">site content</text>
+  <text class="edge-label" x="628" y="600">outbox, log</text>
+  <text class="edge-label" x="628" y="614">(EF Core)</text>
+  <text class="edge-label" x="828" y="600">HTTPS POST</text>
+  <text class="edge-label" x="828" y="614">X-Signature header</text>
+
+  <g class="note">
+    <rect class="shape" x="20" y="742" width="150" height="28" rx="6"/>
+    <text x="95" y="760" text-anchor="middle" font-weight="600">dashed box</text>
+  </g>
+  <text class="footnote" x="182" y="760">= installed on that server but does nothing there (skipped or idle)</text>
+  <text class="footnote" x="20" y="792">Every server runs the same package. Umbraco's server role decides where the background jobs run.</text>
+</svg>

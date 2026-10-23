@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="720" viewBox="0 0 960 720">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="720"/>
+  <g class="node">
+    <rect class="shape" x="360" y="30" width="240" height="56" rx="6"/>
+    <text class="title" x="480" y="54">Umbraco.Webhooks</text>
+    <text class="sub" x="480" y="72">NuGet package users install</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="40" y="150" width="200" height="56" rx="6"/>
+    <text class="title" x="140" y="174">Umbraco.Webhooks.Client</text>
+    <text class="sub" x="140" y="192">Lit backoffice bundle</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="310" y="150" width="240" height="56" rx="6"/>
+    <text class="title" x="430" y="174">Umbraco.Webhooks.Web</text>
+    <text class="sub" x="430" y="192">Management API, composer</text>
+  </g>
+  <g class="node store">
+    <rect class="shape" x="40" y="270" width="200" height="56" rx="6"/>
+    <text class="title" x="140" y="294">@umbraco-cms/backoffice</text>
+    <text class="sub" x="140" y="312">npm</text>
+  </g>
+  <g class="node store">
+    <rect class="shape" x="252" y="270" width="232" height="56" rx="6"/>
+    <text class="title" x="368" y="303">Umbraco.Cms.Api.Management</text>
+    
+  </g>
+  <g class="node">
+    <rect class="shape" x="560" y="270" width="240" height="56" rx="6"/>
+    <text class="title" x="680" y="294">Umbraco.Webhooks.Persistence</text>
+    <text class="sub" x="680" y="312">EF Core WebhookDbContext</text>
+  </g>
+  <g class="node">
+    <rect class="shape" x="370" y="390" width="240" height="56" rx="6"/>
+    <text class="title" x="490" y="414">Umbraco.Webhooks.Core</text>
+    <text class="sub" x="490" y="432">services, models</text>
+  </g>
+  <g class="node store">
+    <rect class="shape" x="650" y="390" width="270" height="56" rx="6"/>
+    <text class="title" x="785" y="423">Umbraco.Cms.Persistence.EFCore</text>
+    
+  </g>
+  <g class="node store">
+    <rect class="shape" x="390" y="510" width="200" height="56" rx="6"/>
+    <text class="title" x="490" y="543">Umbraco.Cms.Core</text>
+    
+  </g>
+  <g class="note">
+    <rect class="shape" x="700" y="510" width="220" height="56" rx="6"/>
+    <text class="mono" x="810" y="534" text-anchor="middle">Microsoft.EntityFrameworkCore</text>
+    <text class="mono" x="810" y="550" text-anchor="middle">.SqlServer</text>
+  </g>
+  <g class="note">
+    <rect class="shape" x="700" y="630" width="220" height="56" rx="6"/>
+    <text class="mono" x="810" y="654" text-anchor="middle">Microsoft.EntityFrameworkCore</text>
+    <text class="mono" x="810" y="670" text-anchor="middle">.Sqlite</text>
+  </g>
+
+  <g marker-end="url(#arrow)">
+    <path class="edge" d="M430,86 V150"/>
+    <path class="edge" d="M580,86 V270"/>
+    <path class="edge" d="M360,58 H18 V418 H370"/>
+    <path class="edge" d="M368,206 V270"/>
+    <path class="edge" d="M500,206 V390"/>
+    <path class="edge" d="M530,206 V298 H560"/>
+    <path class="edge" d="M590,326 V390"/>
+    <path class="edge" d="M760,326 V390"/>
+    <path class="edge" d="M630,326 V538 H700"/>
+    <path class="edge" d="M800,298 H940 V658 H920"/>
+    <path class="edge" d="M490,446 V510"/>
+    <path class="edge" d="M140,206 V270"/>
+    <path class="edge dashed" d="M310,178 H240"/>
+  </g>
+  <text class="edge-label center" x="275" y="168">ships as</text>
+  <text class="edge-label center" x="275" y="196">static files</text>
+  <text class="edge-label" x="148" y="242">npm dependency</text>
+
+  <g class="legend-key">
+    <g class="node"><rect class="shape" x="40" y="560" width="40" height="22" rx="4"/></g>
+    <text class="footnote" x="92" y="575">Project in this solution</text>
+    <g class="node store"><rect class="shape" x="40" y="594" width="40" height="22" rx="4"/></g>
+    <text class="footnote" x="92" y="609">Umbraco CMS package</text>
+    <g class="note"><rect class="shape" x="40" y="628" width="40" height="22" rx="4"/></g>
+    <text class="footnote" x="92" y="643">Third-party package</text>
+    <path class="edge" d="M40,673 H80" marker-end="url(#arrow)"/>
+    <text class="footnote" x="92" y="677">references (points at the dependency)</text>
+    <path class="edge dashed" d="M40,700 H80" marker-end="url(#arrow)"/>
+    <text class="footnote" x="92" y="704">built separately, shipped inside</text>
+  </g>
+</svg>

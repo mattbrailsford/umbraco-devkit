@@ -22,7 +22,7 @@ component shape (if any).
 ## Where this writes
 
 The same per-feature plan folder `feature-explore` started. Owns two files, plus a `mockups/`
-folder when the feature has a UI:
+folder when the feature has a UI and a `diagrams/` folder when a picture explains it:
 
 - **`ARCHITECTURE.md`** — the internal structural decisions: which extension point(s), the
   data model, key decisions with their rationale and the rejected alternative. This answers
@@ -34,6 +34,9 @@ folder when the feature has a UI:
   screen (or user-facing email), and its screenshot. This answers "what will it look like," and
   is what the human approves before any UI code is written. See "Mockup each screen" and
   "Mockup a user-facing email" below.
+- **`diagrams/<name>.svg`** — one diagram per idea that `ARCHITECTURE.md` or `SPEC.md` would
+  otherwise explain in prose: the main flow, the order of calls, a record's statuses, the
+  data model, which layer holds what. Drawn following `diagrams`.
 
 Outside the plan folder, it also owns the project's shared mockup starters in
 `docs/mockups/starters/` (see "Project starters" below), created only when a product surface
@@ -330,6 +333,7 @@ before moving on.
   editor, tree, etc.), plus `umbraco-backoffice-conventions` for package-level frontend
   structure.
 - Writing `ARCHITECTURE.md` and `SPEC.md` → `plain-writing`.
+- A flow, call order, lifecycle, data model or layer structure to explain → `diagrams`.
 - Anything touching auth, the Management API, an endpoint outside it, a stored secret,
   rendering external or AI-generated content in the backoffice, or a design that would
   expose a secret to the client → `umbraco-security`, now, not at review time.
@@ -391,6 +395,11 @@ When revising an existing `ARCHITECTURE.md`/`SPEC.md`, rewrite the affected sect
 reflect the current approach only — don't leave the old approach in place alongside a note
 about what changed. These files are a snapshot of the current design, not a changelog. Past
 approaches and why they were rejected belong in `DECISION-LOG.md`.
+
+A section that explains how parts connect, in what order they run, or which states a record
+moves through opens with its diagram from `diagrams/`
+(`![Delivery flow](./diagrams/delivery-flow.svg)`), and its prose keeps only what the
+picture can't show. A data model with more than one table gets one too.
 
 `ARCHITECTURE.md`:
 

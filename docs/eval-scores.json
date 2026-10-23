@@ -279,6 +279,22 @@
     "without": 0,
     "withoutDate": "2026-10-16"
   },
+  "diagrams-architecture-flow": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 0,
+    "withoutDate": "2026-10-23"
+  },
+  "diagrams-update-keeps-layout": {
+    "date": "2026-10-23",
+    "runs": 1,
+    "skillLoaded": 1,
+    "with": 100,
+    "without": 100,
+    "withoutDate": "2026-10-23"
+  },
   "docs-custom-webhook-event": {
     "date": "2026-10-17",
     "runs": 4,
@@ -477,6 +493,14 @@
   },
   "feature-design-all-screens-mocked": {
     "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-design-draws-diagrams": {
+    "date": "2026-10-23",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -920,6 +944,14 @@
     "withoutDate": null
   },
   "pr-describe-gif": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-describe-plan-diagrams": {
     "date": "2026-10-23",
     "runs": 3,
     "skillLoaded": 3,
