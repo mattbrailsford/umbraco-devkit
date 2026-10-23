@@ -1,6 +1,6 @@
 {
   "name": "umbraco-devkit",
-  "version": "8.0.5",
+  "version": "8.0.6",
   "description": "Claude Code devkit for Umbraco package and backoffice extension development: an explore/design/plan/build feature pipeline, a builder/reviewer gate, and C#/.NET, EF Core, Lit + UUI, security, and testing convention skills, validated against real Umbraco product repos.",
   "author": {
     "name": "Matt Brailsford",
