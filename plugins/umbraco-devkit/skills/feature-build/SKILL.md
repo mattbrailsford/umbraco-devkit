@@ -144,13 +144,20 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    least 24px of the surrounding screen on every side, so no edge, border or popover touches
    the image edge, and its `-before.png` is cropped to the same area so the pair lines up.
 
+   **If the task adds an interaction a still can't show** (a drag and drop, an animation, a
+   screen that changes live, a short flow across screens), also record it as
+   `screenshots/<screen>-<action>.gif`, following `references/recording-gifs.md`, and link it
+   from the same `BUILD-LOG.md` entry. A GIF sits beside the screenshot, never in place of
+   it. A screen that only sits there gets no GIF. Record a `<screen>-<action>-before.gif`
+   only when the old behavior is what the task fixes.
+
    **If the smoke needed content the demo site didn't have** (a document type using the new
    property editor, tagged posts for a new dashboard to list, a setting turned on), make it
-   realistic, as `pr-demo`'s step 6 describes, and record it
-   in the task's `BUILD-LOG.md` entry as a short "Demo setup" note, next to the click path, so
-   someone trying the branch can see the same thing. If the project has a committed seed
-   (a seed script, uSync files), have the builder add the content there as part of this task
-   instead, and the note says "in the seed".
+   realistic, as `pr-demo`'s step 6 describes. Record it in the task's `BUILD-LOG.md` entry as
+   a short "Demo setup" note, next to the click path, so someone trying the branch can see the
+   same thing. If the project has a committed seed (a seed script, uSync files), have the
+   builder add the content there as part of this task instead, and the note says "in the
+   seed".
 
 5. **Commit.** On `PASS` + smoke green, have the builder commit *only this task's changes*
    with a message naming the task, following the project's commit conventions (see
@@ -159,8 +166,8 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
 
 6. **Check the box.** Edit `PLAN.md`: `- [ ]` → `- [x]` for the completed task, and add a
    one-line entry to `BUILD-LOG.md` (commit SHA, what was verified). Commit that change, plus
-   any `screenshots/` this task saved, with the task commit or immediately after.
-   `pr-describe` links screenshots by commit, so an uncommitted one is a broken image in the
+   any `screenshots/` (images and GIFs) this task saved, with the task commit or immediately
+   after. `pr-describe` links screenshots by commit, so an uncommitted one is a broken image in the
    PR. If the builder's report named "any decision the plan left implicit that you had to
    make" (step 6 of its workflow), such as an assumption, spec deviation, or workaround,
    append a dated one-line entry to `DECISION-LOG.md` too. Otherwise it is lost when the task

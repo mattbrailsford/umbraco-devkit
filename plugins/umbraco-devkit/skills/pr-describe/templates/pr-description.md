@@ -27,6 +27,13 @@ Omit the whole line if there's nothing to link.}
 |---|---|
 | ![{Screen name} before](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}-before.png?raw=true) | ![{Screen name} after](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}.png?raw=true) |
 
+{Interaction GIF, only if one is in screenshots/: a one-line caption, then the GIF, under its
+screen's screenshot.}
+
+{What the GIF shows, e.g. "Dragging a gallery item to the top."}
+
+![{Screen name}: {action}](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}-{action}.gif?raw=true)
+
 ## Special things to note
 
 - {Every `Needs a decision`/`Consider reverting` item decision-review flagged, first, each
