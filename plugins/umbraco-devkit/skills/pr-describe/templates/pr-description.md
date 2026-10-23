@@ -57,7 +57,8 @@ uses it.}
 {the diagram}
 ```
 
-{Repeat for each relevant view — file tree, component tree, call chain, table/contract diff,
-manifest registration diff, backoffice registrations table, settings, API endpoints,
-pseudocode. Prefer `diff` for a change to an existing shape; show
-the whole block only when most of it is new or a diff would hide ownership or order.}
+{Repeat for each relevant view — file tree, component tree, call chain, database table,
+contract, manifest registration diff, backoffice registrations table, settings, API
+endpoints, pseudocode. Prefer `diff` for a change to an existing shape; show the whole block
+only when most of it is new or a diff would hide ownership or order. Tables never go in a
+`diff` block; they mark changes in a `Change` column.}

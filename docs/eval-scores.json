@@ -911,6 +911,14 @@
     "without": null,
     "withoutDate": null
   },
+  "pr-describe-diagram-readability": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "pr-describe-gif": {
     "date": "2026-10-23",
     "runs": 3,
