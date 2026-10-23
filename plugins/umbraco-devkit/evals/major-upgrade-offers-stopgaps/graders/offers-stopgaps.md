@@ -13,4 +13,5 @@ lists both stopgaps as candidates the user can pick to fix in this upgrade, and 
 which to pick, or suggesting one stay a follow-up, is fine as long as the user decides.
 
 FAIL if the stopgaps aren't mentioned, if only one is, or if they're added as tasks the
-upgrade will do without asking the user to pick.
+upgrade will do without asking the user to pick. A task or breaking-change entry marked as
+depending on the user's pick ("if picked", "pending") is asking, not adding.
