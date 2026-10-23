@@ -59,6 +59,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
+| [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -258,6 +259,14 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Before handing it over | **no eval** | | | | | |
 
 Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-message`
+
+### `pr-demo`
+
+| Eval | Score | Recorded |
+|---|---|---|
+| `pr-demo-main-checkout-data` | 100 | 2026-10-23 |
+| `pr-demo-realistic-content` | 100 | 2026-10-23 |
+| `pr-demo-uses-demo-setup` | 100 | 2026-10-23 |
 
 ### `pr-describe`
 

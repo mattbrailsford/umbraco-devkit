@@ -119,6 +119,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 |---|---|
 | Write the PR description, with diagrams and screenshots | [`/pr-describe`](plugins/umbraco-devkit/skills/pr-describe/SKILL.md) |
 | Review a PR from outside the core team | [`/pr-review`](plugins/umbraco-devkit/skills/pr-review/SKILL.md) |
+| Try a PR yourself on the demo site, with a click-through list | [`/pr-demo`](plugins/umbraco-devkit/skills/pr-demo/SKILL.md) |
 | Review dependencies: Dependabot PRs, security alerts, and what's out of date | [`/dependency-review`](plugins/umbraco-devkit/skills/dependency-review/SKILL.md) |
 
 ### Upgrade and publish
