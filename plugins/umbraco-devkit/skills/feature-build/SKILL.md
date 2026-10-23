@@ -137,7 +137,12 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    `screenshots/<screen>.png` in the plan folder (this loop's folder; `mockups/` belongs to
    `feature-design`). Link it from the task's `BUILD-LOG.md` entry with the click path to reach it
    ("Settings › Webhooks › any webhook › Deliveries tab"), so `pr-describe` can tell
-   reviewers where to find it.
+   reviewers where to find it. When the task changed only one part of the screen and that part
+   makes sense on its own, crop the saved screenshot to it, so the reviewer sees just what
+   needs approving. Keep the full screen when where it sits matters: a new menu or list item,
+   a layout change, or anything placed against other parts of the screen. A crop keeps at
+   least 24px of the surrounding screen on every side, so no edge, border or popover touches
+   the image edge, and its `-before.png` is cropped to the same area so the pair lines up.
 
 5. **Commit.** On `PASS` + smoke green, have the builder commit *only this task's changes*
    with a message naming the task, following the project's commit conventions (see
