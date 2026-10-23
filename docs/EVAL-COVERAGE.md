@@ -32,7 +32,6 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
-- [`pr-demo`](#pr-demo): `pr-demo-realistic-content`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -60,7 +59,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
-| [`pr-demo`](#pr-demo) | workflow | Not run | – | 3 | 0 | – | – |
+| [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -265,7 +264,7 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 | Eval | Score | Recorded |
 |---|---|---|
 | `pr-demo-main-checkout-data` | 100 | 2026-10-23 |
-| `pr-demo-realistic-content` | – | – |
+| `pr-demo-realistic-content` | 100 | 2026-10-23 |
 | `pr-demo-uses-demo-setup` | 100 | 2026-10-23 |
 
 ### `pr-describe`

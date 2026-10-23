@@ -61,7 +61,9 @@ It never changes code, commits, pushes, or comments on the PR.
    start fails, stop and report it: a demo that won't start is a finding about the PR.
 
 6. **Make sure the change has something to show.** With a plan folder, start from the
-   "Demo setup" notes in `BUILD-LOG.md`. Otherwise read the diff for what it needs in the
+   "Demo setup" notes in `BUILD-LOG.md`. Set up what a note names exactly as written (the
+   same tags, values and settings) so the result it describes still holds; anything you add
+   goes beside it, never into it. Otherwise read the diff for what it needs in the
    site: a document type using a new property editor, content for a new dashboard to list,
    a setting turned on. If the demo data doesn't have it, add what shows the change, through
    the backoffice or the Management API, in this worktree's copy only. List what you added.
@@ -70,7 +72,8 @@ It never changes code, commits, pushes, or comments on the PR.
    real-sounding titles, names and text that match the demo's existing content and
    languages; a mix of lengths, including one long enough to wrap; the characters real
    content has (an accent, an ampersand, quotes); an optional field left empty. Add enough of
-   it to reach paging, sorting or an empty state when the change has one. Never "Test 1",
+   it to reach paging, sorting or an empty state when the change has one, and write out every
+   item: never "add more until there are 12" for the user to finish. Never "Test 1",
    "foo" or lorem ipsum: placeholder data hides the layout and edge-case problems a
    click-through is meant to find.
 
