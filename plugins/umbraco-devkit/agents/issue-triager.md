@@ -14,7 +14,9 @@ both.
 - The issue ID, and the tracker's type/location/access method (MCP server, CLI, or REST).
 - The repo path to search for the likely affected code.
 - The security "What counts" list.
-- The "Which state" rules and the Tracker comments section from `issue-triage`.
+- The "Which state" rules and the Tracker comments section from `issue-triage`, and, for a
+  run that proposes on the tracker, the table of the reply's headings from its Approval on
+  the tracker section.
 - Optionally, a "possibly a duplicate of #N" hint from the orchestrator's pre-pass.
 - For an issue that already has a state label, why it's back: a reply, the needs-info
   timeout, or a closed blocker.
@@ -53,9 +55,12 @@ both.
 7. **Draft the comment** for that action, following the Tracker comments section you were
    given: a plain part for the reporter, then the notes that section lists for your
    recommended outcome. Skip this for a security flag.
+8. **List the reply's points**, if you were given the table of the reply's headings: one line
+   for each thing the reporter's part says, asks, or links, under that outcome's heading. The
+   reply can't make a point that isn't on this list.
 
 ## Report back
 
 A short structured block: issue ID, title, type, security flag (true/false), likely area,
 duplicate-of (or none), label fixes (or none), recommended action, one-paragraph rationale,
-and the drafted comment. Nothing more. The comment is a draft for the user; you never post it.
+the drafted comment, and the reply's points if you listed them. Nothing more. The comment is a draft for the user; you never post it.
