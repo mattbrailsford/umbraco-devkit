@@ -45,7 +45,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`change-backport`](#change-backport) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`decision-review`](#decision-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`diagrams`](#diagrams) | knowledge | Proven | +100 | 1 | 0 | 4/9 | 1 |
+| [`diagrams`](#diagrams) | knowledge | Proven | +100 | 2 | 0 | 4/9 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
 | [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -145,6 +145,11 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | Show what changed | **no eval** | | | | | |
 | Check it | **no eval** | | | | | |
 | Embed it | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
+
+No section: `diagrams-update-keeps-layout`
+
+These test something with no rule in the skill: a guard for a rule plain Claude was
+shown to follow (kept so a regression shows up), or a case not yet mapped.
 
 ### `ef-core-data`
 
