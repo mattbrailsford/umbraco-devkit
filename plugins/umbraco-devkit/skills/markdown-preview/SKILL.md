@@ -59,26 +59,44 @@ The reader leaves comments on lines, table rows, diagrams or picked-out words, t
 "Send to Claude". The helper's background run then finishes, and its output is the batch.
 "Go through my comments" means the same: `scripts/preview.py comments` prints the batch.
 
-Answer every comment in the batch, then start the helper again for the next one. For each:
+Answer every comment in the batch, then start the helper again for the next one. Only the
+reader resolves a comment. The most Claude does is mark it done, for them to check. For each:
 
-1. **Find the spot.** The batch gives each comment's file, the text it's on and the text
-   around it.
+1. **Find the spot.** The batch gives each comment's file, the text it's on, the text around
+   it and the section heading it's under.
 2. **Decide who may change the file.** A plan folder's files each have one owner: the step
    whose "Where this writes" names it.
    - **This run owns the file, or no step is running** (the user only opened the preview):
-     make the fix, following the owning skill's rules for that file. Then
-     `scripts/preview.py reply <id> "<what changed>" --resolve`.
+     make the change, following the owning skill's rules for that file. Then
+     `scripts/preview.py reply <id> "<what changed>" --done`.
    - **Another step owns it, and a step is running:** don't touch the file.
      `scripts/preview.py reply <id> "Left for <step>." --defer <step>`. That step picks it
      up under "Open comments on your files".
 3. **Unsure what's wanted, or it needs a decision only the user can make:** ask, don't
    guess. `scripts/preview.py reply <id> "<question>"`, with no flag, leaves it open as
    "Waiting on you". Their answer comes back in a later batch with the whole thread.
-4. **Just an acknowledgement** ("looks great"): reply briefly and resolve.
+4. **Just an acknowledgement** ("looks great"): reply briefly with `--done`.
 
-- A fix that changes a decision gets a line in `DECISION-LOG.md`, as every phase's does.
+- A change that settles a decision gets a line in `DECISION-LOG.md`, as every phase's does.
 - Replies are a sentence or two: what changed, or the one question. The reader sees them
   beside the line.
+
+## Check before removing text
+
+A comment often settles something the doc left open: an `IMPORTANT` box asking for a
+decision, a list of options. The change can then replace or remove the text it was on, and
+other text around it. Before saving, list the file's open comments
+(`scripts/preview.py comments --file <path>`) and, for each one on text you're replacing or
+removing:
+
+- **The comment that prompted the change:** add `--move "<new text>"` to its reply, so it
+  stays pinned beside what replaced its text.
+- **Any other open comment on removed text:** reply saying the text is gone and why, with
+  `--done`. Don't leave it to be found later.
+
+A comment whose line goes some other way (the reader edits the file) shows under its
+section's heading, marked "Line removed". If the heading's gone too, it's listed at the
+bottom of the doc. Either way it stays open until the reader resolves it.
 
 ## Open comments on your files
 
@@ -88,8 +106,9 @@ A step that owns files in a plan folder checks them for open comments before it 
 python3 <this skill's folder>/scripts/preview.py comments --file <path> [--file <path>...]
 ```
 
-Each open comment, including ones left for this step, is part of this run's input. Handle it
-under "Review comments" as part of the step's normal work, and reply on it. This reads the
+Each comment listed as new, or left for this step, is part of this run's input. Handle it
+under "Review comments" as part of the step's normal work, and reply on it. The rest are
+waiting on the reader; leave them, apart from "Check before removing text". This reads the
 comments straight from the worktree, so the preview needn't be open.
 
 ## Offering a preview

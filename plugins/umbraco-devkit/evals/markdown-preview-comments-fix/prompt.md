@@ -1,5 +1,5 @@
 ---
-description: A clear review comment on BRIEF.md, with no step running, gets fixed in the file and resolved with a reply saying what changed.
+description: A clear review comment on BRIEF.md, with no step running, gets fixed in the file and marked done (for the reader to resolve) with a reply saying what changed.
 tags: [markdown-preview, workflow]
 max_turns: 20
 timeout_seconds: 600

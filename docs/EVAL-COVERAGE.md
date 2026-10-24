@@ -35,7 +35,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
 - [`feature-design`](#feature-design): `feature-design-open-comments`
 - [`feature-plan`](#feature-plan): `feature-plan-offers-preview`
-- [`markdown-preview`](#markdown-preview): `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
+- [`markdown-preview`](#markdown-preview): `markdown-preview-comments-decision` `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -63,7 +63,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`markdown-preview`](#markdown-preview) | workflow | Not run | – | 4 | 0 | – | – |
+| [`markdown-preview`](#markdown-preview) | workflow | Not run | – | 5 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 5 | 0 | – | – |
@@ -276,6 +276,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `markdown-preview-comments-decision` | – | – |
 | `markdown-preview-comments-fix` | – | – |
 | `markdown-preview-comments-unclear` | – | – |
 | `markdown-preview-open-plan` | – | – |

@@ -1,5 +1,5 @@
 ---
-description: A review comment left for feature-design on SPEC.md is picked up as input on its next run, fixed in SPEC.md and resolved.
+description: A review comment left for feature-design on SPEC.md is picked up as input on its next run, fixed in SPEC.md and marked done.
 tags: [feature-design, workflow]
 max_turns: 40
 timeout_seconds: 1200

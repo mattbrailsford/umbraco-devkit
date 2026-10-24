@@ -5,7 +5,7 @@ Usage:
   preview.py <file-or-folder> [--scope [DIR]] [--no-comments] [--root DIR] [--port N] [--no-open]
   preview.py wait                       block until the reviewer sends comments, then print them
   preview.py comments [--file PATH...]  list comments waiting on Claude, or open ones on PATH
-  preview.py reply ID TEXT [--resolve | --defer STEP]
+  preview.py reply ID TEXT [--done | --defer STEP] [--move TEXT]
 
 Renders through GitHub's Markdown API (with the `gh` CLI's sign-in), serves the page on
 127.0.0.1 and refreshes it in place whenever the file changes on disk. A folder opens
@@ -150,7 +150,11 @@ aside summary { display: none; }
 .resolved-pin { position: absolute; top: 2px; height: 20px; min-width: 20px; padding: 0 4px; border: 0; border-radius: 10px; background: none; color: var(--done); opacity: .75; font: 600 11px/20px sans-serif; cursor: pointer; display: flex; align-items: center; gap: 2px; }
 .resolved-pin:hover, .resolved-pin.on { opacity: 1; background: var(--hover); box-shadow: 0 0 0 1px var(--border); }
 .resolved-pin svg { fill: currentColor; }
-.thread.outdated .msg:first-child .msg-quote::before { content: "Outdated · "; font-weight: 600; }
+.thread.outdated .msg:first-child .msg-quote::before { content: "No longer in the doc · "; font-weight: 600; }
+.thread.line-removed .msg:first-child .msg-quote::before { content: "Line removed · "; font-weight: 600; }
+.state.addressed { color: var(--done); }
+#content .orphans { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); }
+#content .orphans h4 { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
 mark.cmark { background: var(--pending-bg); color: inherit; border-bottom: 2px solid var(--pending); padding: 0 1px; }
 .comment-form { padding: 12px 14px; display: flex; gap: 10px; }
 .thread.editing .msg-body textarea, .comment-form textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; resize: vertical; }
@@ -349,6 +353,15 @@ function place(block, el) {
   sublist ? sublist.before(el) : block.append(el);
 }
 
+// The heading of the section a block sits in (or the block itself, if it's a heading).
+function sectionOf(block) {
+  let el = block;
+  while (el.parentElement && el.parentElement !== content) el = el.parentElement;
+  for (; el; el = el.previousElementSibling)
+    if (el.matches('h1, h2, h3, h4, h5, h6')) return blockText(el);
+  return '';
+}
+
 function removeThread(thread) {
   thread?.slotRow?.remove();
   thread?.remove();
@@ -387,7 +400,7 @@ function openForm(block, quote, prefix, suffix) {
   thread.querySelector('.cancel').onclick = () => removeThread(thread);
   thread.querySelector('.add').onclick = async () => {
     if (!box.value.trim()) return;
-    await post('/__comments', { path: docPath, quote, prefix, suffix, body: box.value.trim() });
+    await post('/__comments', { path: docPath, quote, prefix, suffix, section: sectionOf(block), body: box.value.trim() });
     removeThread(thread);
     renderComments();
   };
@@ -530,7 +543,9 @@ function findBlock(c) {
   return best;
 }
 
-const STATE = { draft: 'Pending', sent: 'Sent', working: 'Claude is on it', replied: 'Waiting on you', deferred: 'Left for a later step', resolved: 'Resolved' };
+// Only the reader resolves: Claude's best is "addressed", which waits on their check.
+const STATE = { draft: 'Pending', sent: 'Sent', working: 'Claude is on it', replied: 'Waiting on you',
+                addressed: 'Done, please check', deferred: 'Left for a later step', resolved: 'Resolved' };
 const TICK = '<svg viewBox="0 0 16 16" width="14" height="14"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>';
 
 function avatar(who) {
@@ -626,18 +641,28 @@ async function renderComments() {
     return setTimeout(renderComments, 1000);
   const comments = JSON.parse(await fetchText('/__comments?path=' + encodeURIComponent(docPath)));
   content.querySelectorAll('.thread:not(.new)').forEach(removeThread);
-  content.querySelectorAll('.resolved-pin').forEach(p => p.remove());
+  content.querySelectorAll('.resolved-pin, .orphans').forEach(p => p.remove());
+  let orphans = null;
   content.querySelectorAll('mark.cmark').forEach(m => m.replaceWith(...m.childNodes));
   content.normalize();
   for (const c of comments) {
-    const block = findBlock(c);
+    // Its own line if it's still there; else the heading of the section it was in; else the
+    // list at the bottom of the doc. A resolved comment on vanished text needs no place.
+    let block = findBlock(c);
+    let lineGone = false;
+    if (!block && c.section) {
+      block = [...content.querySelectorAll('h1[data-block], h2[data-block], h3[data-block], h4[data-block], h5[data-block], h6[data-block]')]
+        .find(h => blockText(h) === c.section) || null;
+      lineGone = !!block;
+    }
+    if (!block && c.status === 'resolved') continue;
     const thread = document.createElement('div');
-    thread.className = 'thread ' + c.status + (block ? '' : ' outdated');
+    thread.className = 'thread ' + c.status + (lineGone ? ' line-removed' : block ? '' : ' outdated');
     // Whole-line comments sit right under their line; only a picked-out phrase, or text
     // that's since been edited away, needs quoting.
-    const partial = block && c.quote !== blockText(block);
+    const partial = block && !lineGone && c.quote !== blockText(block);
     const marked = partial && c.status !== 'resolved' && markQuote(block, c.quote);
-    const quote = !block || (partial && !marked) ? `<div class="msg-quote">${esc(c.quote)}</div>` : '';
+    const quote = !block || lineGone || (partial && !marked) ? `<div class="msg-quote">${esc(c.quote)}</div>` : '';
     const action = c.status === 'draft' ? '<button class="link-btn edit">Edit</button><button class="link-btn del">Delete</button>'
       : c.status !== 'resolved' ? '<button class="link-btn resolve">Resolve</button>' : '';
     const label = c.status === 'deferred' && c.owner ? `For ${esc(c.owner)}` : STATE[c.status];
@@ -648,7 +673,7 @@ async function renderComments() {
       .join('');
     thread.querySelectorAll('.msg.you').forEach((m, i, all) => i === all.length - 1 && c.status === 'draft' && m.classList.add('pending'));
     // Answer Claude, or reopen a resolved thread, from the bottom of the thread.
-    if (c.status === 'replied' || c.status === 'deferred' || c.status === 'resolved') {
+    if (['replied', 'addressed', 'deferred', 'resolved'].includes(c.status)) {
       const reply = document.createElement('div');
       reply.className = 'reply-box';
       reply.innerHTML = `<textarea rows="1" placeholder="${c.status === 'resolved' ? 'Reply to reopen…' : 'Reply…'}"></textarea>
@@ -675,7 +700,16 @@ async function renderComments() {
       text.onclick = () => thread.classList.contains('editing') || editDraft(thread, c);
     }
     thread.querySelector('.resolve')?.addEventListener('click', async () => { await post('/__comments/resolve', { id: c.id }); renderComments(); });
-    if (!block) { content.append(thread); continue; }
+    if (!block) {
+      if (!orphans) {
+        orphans = document.createElement('section');
+        orphans.className = 'orphans';
+        orphans.innerHTML = "<h4>On text that's no longer here</h4>";
+        content.append(orphans);
+      }
+      orphans.append(thread);
+      continue;
+    }
     place(block, thread);
     if (c.status !== 'resolved') block.closest('details')?.setAttribute('open', '');
     if (block.matches('tr')) placePins();
@@ -710,7 +744,9 @@ async function renderComments() {
   placePins();
   lastStatus = Object.fromEntries(comments.map(c => [c.id, c.status]));
   const open = comments.filter(c => c.status !== 'resolved').length;
-  document.getElementById('count').textContent = open ? `${open} open comment${open > 1 ? 's' : ''}` : '';
+  const toCheck = comments.filter(c => c.status === 'addressed').length;
+  document.getElementById('count').textContent = !open ? ''
+    : `${open} open comment${open > 1 ? 's' : ''}` + (toCheck ? ` · ${toCheck} to check` : '');
   const drafts = JSON.parse(await fetchText('/__comments?drafts=1')).length;
   const bar = document.getElementById('sendbar');
   if (drafts) {
@@ -982,10 +1018,10 @@ class Comments:
             self.save(items)
             return result
 
-    def add(self, path, quote, prefix, suffix, body):
+    def add(self, path, quote, prefix, suffix, section, body):
         def add(items):
             item = {"id": f"c{max([int(c['id'][1:]) for c in items] + [0]) + 1}", "path": path,
-                    "quote": quote, "prefix": prefix, "suffix": suffix, "body": body,
+                    "quote": quote, "prefix": prefix, "suffix": suffix, "section": section, "body": body,
                     "status": "draft", "replies": [], "created": time.strftime("%Y-%m-%dT%H:%M:%S")}
             items.append(item)
             return item
@@ -1128,7 +1164,8 @@ def make_handler(root, css, renderer, comments, user, waiter_file, tabs):
                 if url.path == "/__comments":
                     if not self.resolve(data["path"]):
                         return self.send(404, "Not found", "text/plain")
-                    comments.add(data["path"], data["quote"], data.get("prefix", ""), data.get("suffix", ""), data["body"])
+                    comments.add(data["path"], data["quote"], data.get("prefix", ""), data.get("suffix", ""),
+                                 data.get("section", ""), data["body"])
                 elif url.path == "/__comments/send":
                     comments.send_drafts()
                 elif url.path == "/__comments/resolve":
@@ -1183,9 +1220,11 @@ def comments_cli(argv):
     parser.add_argument("command", choices=["wait", "comments", "reply"])
     parser.add_argument("id", nargs="?")
     parser.add_argument("text", nargs="?")
+    # No --resolve: only the reader resolves. --done hands it back to them to check.
     outcome = parser.add_mutually_exclusive_group()
-    outcome.add_argument("--resolve", action="store_true", help="the comment is dealt with")
+    outcome.add_argument("--done", action="store_true", help="dealt with; the reader checks and resolves it")
     outcome.add_argument("--defer", metavar="STEP", help="another step owns the file; leave it for STEP")
+    parser.add_argument("--move", metavar="TEXT", help="re-pin the comment to TEXT, which replaced what it was on")
     parser.add_argument("--file", action="append", help="comments: open comments on this file instead")
     parser.add_argument("--root", help="worktree (default: the one holding the current folder)")
     args = parser.parse_args(argv)
@@ -1227,14 +1266,17 @@ def comments_cli(argv):
         print_comments(items)
         return
     if not (args.id and args.text):
-        sys.exit("Usage: preview.py reply <id> <text> [--resolve | --defer STEP]")
+        sys.exit("Usage: preview.py reply <id> <text> [--done | --defer STEP] [--move TEXT]")
 
     def reply(c):
         c["replies"].append({"author": "claude", "body": args.text, "created": time.strftime("%Y-%m-%dT%H:%M:%S")})
-        c["status"] = "resolved" if args.resolve else "deferred" if args.defer else "replied"
+        c["status"] = "addressed" if args.done else "deferred" if args.defer else "replied"
         c["owner"] = args.defer
+        if args.move:
+            c["quote"], c["prefix"], c["suffix"] = args.move, "", ""
     store.update(args.id, reply)
-    print(f"Replied to {args.id}" + (" and resolved it" if args.resolve else f" and left it for {args.defer}" if args.defer else ""))
+    outcome = " and marked it done" if args.done else f" and left it for {args.defer}" if args.defer else ""
+    print(f"Replied to {args.id}{outcome}" + (" (moved to its new text)" if args.move else ""))
 
 
 def helper_running(waiter_file):
@@ -1246,11 +1288,19 @@ def helper_running(waiter_file):
         return False
 
 
+# How each status reads to Claude in a listing: whose move it is.
+STATUS_NOTE = {
+    "sent": "new, for you", "working": "new, for you", "deferred": "left for {owner}",
+    "replied": "waiting on the reader's answer", "addressed": "done, waiting on the reader's check",
+}
+
+
 def print_comments(items):
     for c in items:
-        waiting_on = f" (left for {c['owner']})" if c["status"] == "deferred" else ""
-        print(f"[{c['id']}] {c['path'].lstrip('/')}{waiting_on}")
+        print(f"[{c['id']}] {c['path'].lstrip('/')} ({STATUS_NOTE[c['status']].format(owner=c.get('owner'))})")
         print(f"  on: \"{c['quote']}\"")
+        if c.get("section"):
+            print(f"  in section: {c['section']}")
         print(f"  context: ...{c['prefix']}[{c['quote']}]{c['suffix']}...")
         print(f"  says: {c['body']}")
         for r in c["replies"]:
