@@ -30,6 +30,11 @@ folder when the feature has a UI and a `diagrams/` folder when a picture explain
 - **`SPEC.md`** — the externally observable contract: the Management API surface and the
   frontend components' expected behavior, in concrete, testable terms. This answers "what must
   it do," and is what `feature-plan` slices into stories — keep it testable, not vague.
+
+Each fact goes in one of the two, never both (`plain-writing`'s "One fact, one place").
+Anything a user or a caller can see goes in `SPEC.md`: routes and their shapes, limits,
+permissions, what happens to a duplicate. `ARCHITECTURE.md` points to it ("what they do:
+SPEC") instead of repeating it. Neither repeats `BRIEF.md`'s problem, audience or non-goals.
 - **`mockups/<screen>.html` + `mockups/<screen>.png`** — one static mockup per new or changed
   screen (or user-facing email), and its screenshot. This answers "what will it look like," and
   is what the human approves before any UI code is written. See "Mockup each screen" and
@@ -46,8 +51,8 @@ Read `BRIEF.md` — design must serve it, not redefine it. As with `feature-expl
 has its own plan-folder convention, fold this content into that shape, but keep the discipline
 of touching only these files; that's the point, not the specific file names.
 
-Also updates its own two lines in `README.md` (the index `feature-explore` created) — same
-append-only discipline as `DECISION-LOG.md`: never touch a line owned by another phase.
+Also updates its own two rows in `README.md` (the index `feature-explore` created) — same
+append-only discipline as `DECISION-LOG.md`: never touch a row owned by another phase.
 
 ## Scope
 
@@ -71,9 +76,9 @@ go straight to "Project starters".
    current feature's plan folder" rule) — this is the normal case once `feature-build` has
    started. If nothing matches, fall back to the one plan folder present, or ask if more than
    one is ambiguous.
-2. Read `BRIEF.md` in the resolved folder. If it's still `TODO` or missing, surface that and
-   offer to bounce back to `feature-explore` — designing against an undefined problem is wasted
-   work.
+2. Read `BRIEF.md` in the resolved folder. If it still has open questions or is missing,
+   surface that and offer to bounce back to `feature-explore` — designing against an undefined
+   problem is wasted work.
 3. Read the project's `CLAUDE.md` for existing architectural conventions (folder structure,
    namespace rules, extension patterns already in use) — a new feature should extend the
    grain of the codebase, not fight it.
@@ -96,12 +101,12 @@ Before drafting `ARCHITECTURE.md`, decide if this feature is that kind of additi
 2. **Otherwise, sample sibling implementations.** Find two or three existing siblings of the
    same kind (properties on similar models, similar entity types, similar CRUD methods) and
    read what each one currently wires up. If they agree, that's the pattern. If they disagree,
-   note the split in `ARCHITECTURE.md` and ask which behavior this feature should follow rather
-   than picking one.
+   put the split in `ARCHITECTURE.md`'s callout as an open question with the siblings'
+   behaviors as options, rather than picking one.
 3. For each system the pattern touches, decide: does this feature need the same treatment?
-   Carry the ones that apply into `ARCHITECTURE.md`'s decisions and `SPEC.md`'s scope so
-   `feature-plan` slices them into real tasks. Explicitly note the ones that don't apply and why,
-   so it reads as a deliberate cut, not an oversight.
+   Carry the ones that apply into `ARCHITECTURE.md`'s "What changes" and `SPEC.md`'s rules so
+   `feature-plan` slices them into real tasks. Name the ones that don't apply, with a few words
+   on why, in the "Not touched" line, so it reads as a deliberate cut, not an oversight.
 
 This is a different altitude than `reviewer`'s sibling-comparison step: reviewer catches a
 missed cross-cutting concern on the *same class* after the code is written; this catches a
@@ -110,7 +115,7 @@ it just means the gap ships, because nothing else in the pipeline looks for it.
 
 ## Backoffice UX check (features with a UI)
 
-If `SPEC.md`'s "Frontend components" section isn't "none," invoke `umbraco-backoffice-ux` and apply
+If `SPEC.md` has a screen section, invoke `umbraco-backoffice-ux` and apply
 it before finalizing the design:
 
 1. **Pick each component by its convention**, not the plainest control that works. Above all,
@@ -278,7 +283,7 @@ Fidelity is "close enough to judge the layout and the content choices," not pixe
 real components, real spacing tokens, real data shapes. Final colour tweaks and dark-mode
 polish still happen on the built screen.
 
-`SPEC.md`'s "Frontend components" section shows each mockup's screenshot inline at full size
+Each screen section in `SPEC.md` shows its mockup's screenshot inline at full size
 (GitHub fits it to the page; a thumbnail is too small to judge layout) with a link to its
 HTML source underneath. The text under a screenshot covers only what the picture can't show
 (see `plain-writing`'s "Let pictures carry what they show"): what happens on click, save and
@@ -350,9 +355,9 @@ Not every topic below needs a spoken question. Before asking:
    from a `CLAUDE.md` summary or memory. A detail recalled from a summary can be wrong in ways
    nothing catches until a builder compiles against it, several tasks later.
 2. **If it's a judgment call and a wrong guess is cheap to correct once it's written down**
-   (component boundaries, a non-functional target, which pattern to reach for), write it as
-   `> ASSUMPTION: ...` under the relevant section of `ARCHITECTURE.md`/`SPEC.md` instead of
-   asking, and let the human correct it when they read the design. Correcting a written-down
+   (component boundaries, a non-functional target, which pattern to reach for), write it as a
+   guess in the list at the top of `ARCHITECTURE.md` or `SPEC.md`, whichever owns the fact,
+   instead of asking, and let the human correct it when they read the design. Correcting a written-down
    guess costs them a sentence; answering a live question costs them a context switch.
 3. **Ask directly only when a wrong guess is expensive to undo here** — which extension point
    to hang the feature off (hard to walk back once built against), the data model/migration
@@ -396,65 +401,101 @@ reflect the current approach only — don't leave the old approach in place alon
 about what changed. These files are a snapshot of the current design, not a changelog. Past
 approaches and why they were rejected belong in `DECISION-LOG.md`.
 
+Both files open with what needs the human, per `plain-writing`'s "What needs the reader goes
+first": a `> [!IMPORTANT]` callout with a numbered list of guesses and open questions, each
+with its *If not:* line. A guess lives only there until the human agrees; then it moves into
+its section as a plain fact. A file with nothing to check has no callout.
+
 A section that explains how parts connect, in what order they run, or which states a record
 moves through opens with its diagram from `diagrams/`
 (`![Delivery flow](./diagrams/delivery-flow.svg)`), and its prose keeps only what the
-picture can't show. A data model with more than one table gets one too.
+picture can't show. A data model with more than one table gets one too. `ARCHITECTURE.md`
+opens with the diagram of the main flow, under its one-line summary.
+
+Tables follow `plain-writing`'s "Fit a narrow screen": short cells only. Decisions, rules and
+endpoints are lists.
 
 `ARCHITECTURE.md`:
 
 ```md
-# Architecture
+# Architecture: <feature name>
 
-## Extension points
-<which Umbraco extension point(s), and why this one over an alternative>
+<One or two sentences: how it works, not why. The why is in BRIEF.>
 
-## Data model & persistence
-<entities, relationships, SQL Server + SQLite considerations, or "none — reads/writes
-existing Umbraco data via <service>">
+![<Main flow>](./diagrams/<main-flow>.svg)
 
-## Connected systems
-<other systems this kind of change conventionally touches — version history, Deploy
-connectors, search indexing, notification events, etc. — and whether each applies here and
-why, or "none — not this kind of change">
+> [!IMPORTANT]
+> **<N> guesses need your OK.**
+>
+> 1. <the guess>\
+>    *If not:* <what changes>
 
-## Key decisions
-<each decision, its rationale, and the alternative rejected>
+## Decisions
+- **<What was chosen>**, not <the alternative>. <Why, in one sentence.>
+<one line per decision: extension point, persistence, where the work runs, anything a later
+reader might want to undo>
+
+## What changes
+
+| Part | Change |
+|---|---|
+| <Backoffice / Server / Database / Cache / Events / ...> | <a short sentence: the class, table, extension or setting> |
+
+<Database: entities, relationships, SQL Server and SQLite, or "none: reads and writes existing
+Umbraco data via <service>". A data model with more than one table also gets its diagram.>
+
+Not touched: <each connected system this kind of change usually touches that doesn't apply
+here, with a few words on why: "Deploy (no connector), search index (not indexed)". One line.>
 ```
 
 `SPEC.md`:
 
 ```md
-# Spec
+# Spec: <feature name>
 
-## Management API surface
-<routes, request/response shapes, and the observable behavior each one guarantees — or
-"none">
+> [!IMPORTANT]
+> **<N> guesses need your OK.**
+>
+> 1. <the guess, such as a limit or a target figure>\
+>    *If not:* <what changes>
 
-## Frontend components
-<component boundaries, which package/library they live in, and what each must observably
-do/render/emit — or "none">
+## Endpoints
+Base path: `<shared prefix>`
 
-### <Screen name>
+**`<METHOD> <route>`** <what it takes, in a few words>
+- **<status>** `<response shape>`
+- **<status>** <when, in a few words>
+
+<one block per route, or "None.">
+
+## Rules
+- **R1** <one observable rule a test can check: validation, permissions, limits, what
+  happens to a duplicate>
+
+## <Screen name>
+<Where it opens from, in one line.>
 
 ![<Screen name> mockup](./mockups/<screen>.png)
 
 [Mockup source](./mockups/<screen>.html)
 
-<behaviour the screenshot can't show: what happens on each action, rules, data source,
-states not pictured>
+| When | The screen |
+|---|---|
+| <an action or state> | <what it shows or does, in a few words> |
 
-<one block like this per mocked-up screen>
+<behaviour the screenshot can't show, per plain-writing's "Let pictures carry what they
+show". One block like this per mocked-up screen.>
 
-## Non-functional targets
-<one line per target the feature must meet (scale, speed on a hot path, accessibility of a
-new screen), each a number or a condition a test or reviewer can check. Every figure that
-`BRIEF.md` or the human didn't give (a time, a limit, a count) is `> ASSUMPTION: ...` until
-they agree to it. "none — <why>" when nothing applies.>
+## Targets
+- <one line per target the feature must meet (scale, speed on a hot path, accessibility of a
+  new screen), each a number or a condition a test or reviewer can check. Every figure that
+  `BRIEF.md` or the human didn't give (a time, a limit, a count) is a guess in the callout
+  until they agree to it, not a line here. "None: <why>" when nothing applies.>
 ```
 
-Update the `ARCHITECTURE.md` and `SPEC.md` lines in `README.md`: check each box and replace
-`<pending>` with one plain-English line for what each file now says.
+Update the Architecture and Spec rows in `README.md`: `⬜` becomes `✅`, "In one line" gets a
+few words for what each file now says, and "Needs you" gets the count from each file's
+callout, or stays empty. Same rules as `feature-explore`'s Brief row.
 
 Append dated entries to `DECISION-LOG.md` for each architectural call made here. If a call is
 a standing, project-wide decision rather than one scoped to this feature (the CMS major
@@ -471,6 +512,6 @@ fresh session. A design with a screen or email described but not drawn is not a 
 of this phase's output — it's an unfinished one, and noting the gap is not a substitute for
 closing it.
 
-Otherwise, note any `TODO` in `ARCHITECTURE.md`/`SPEC.md`, any screen mockup the human hasn't
+Otherwise, note any open question in `ARCHITECTURE.md`/`SPEC.md`, any screen mockup the human hasn't
 approved yet, and any project starter created or refreshed in `docs/mockups/starters/`, then:
 `Suggested next: feature-plan.`

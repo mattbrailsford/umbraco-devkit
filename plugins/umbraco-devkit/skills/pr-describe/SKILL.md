@@ -56,14 +56,15 @@ as-is; don't restate them here.
      - **Your call** — first, straight after the header line, in a GitHub `> [!IMPORTANT]`
        callout. Every Your call item from `decision-review`, no exceptions; omit the whole
        callout when there are none. It opens with a bold count ("**4 choices were made
-       without you.** Please check each one."), then one table row per item, in
-       `decision-review`'s order: number, Type, Plan said, Built, Options. Built links to its
-       line. Options sit one per line (`<br>` between them), the recommended one first, in
-       bold, marked *(recommended)*. Under the table, for each UI item whose screen has a
-       mockup in the plan folder's `mockups/`, a two-column "Mockup | Built" table headed
-       with the item's number. Look in `mockups/` yourself; don't wait for `decision-review`
-       to name the file. Every line
-       of the callout, tables included, starts with `> `.
+       without you.** Please check each one."), then one block per item, in
+       `decision-review`'s order, as a list rather than a table so it reads on a phone
+       (`plain-writing`'s "Fit a narrow screen"): a bold line with the number, Type and topic
+       in a few words, then "Plan said" and "Built" on their own lines (Built links to its
+       line), then the options as a bullet list, the recommended one first, in bold, marked
+       *(recommended)*. Under a UI item whose screen has a mockup in the plan folder's
+       `mockups/`, a two-column "Mockup | Built" image table. Look in `mockups/` yourself;
+       don't wait for `decision-review` to name the file. Every line of the callout, blank
+       lines and tables included, starts with `>`.
      - **Must fix** — only when `decision-review` returned Must fix items; omit it otherwise.
        A `> [!CAUTION]` callout straight after Your call, one linked line per item.
      - **Why the change** — exactly one sentence.

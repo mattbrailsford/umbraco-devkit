@@ -11,17 +11,18 @@ when there are none. Every line starts with `> `.}
 > [!IMPORTANT]
 > **{N} choices were made without you.** Please check each one.
 >
-> | | Type | Plan said | Built | Options |
-> |---|---|---|---|---|
-> | 1 | {Design / Behavior / UI} | {what the plan said, or "Nothing about <topic>"} | [{what was built}](https://github.com/{owner}/{repo}/blob/{sha}/{path}#L{line}) | **A. {recommended option}** *(recommended)*<br>B. {other option} |
+> **1. {Design / Behavior / UI}: {topic in a few words}**\
+> Plan said: {what the plan said, or "Nothing about <topic>"}\
+> Built: [{what was built}](https://github.com/{owner}/{repo}/blob/{sha}/{path}#L{line})
 >
-> **{n}. Mockup vs built**
+> - **A. {recommended option}** *(recommended)*
+> - B. {other option}
 >
 > | Mockup | Built |
 > |---|---|
 > | ![Mockup](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/mockups/{screen}.png?raw=true) | ![Built](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}.png?raw=true) |
 
-{Mockup vs built: only for a UI item that departs from its mockup, one per item.}
+{Mockup | Built: only under a UI item whose screen has a mockup, straight after its options.}
 
 {Must fix: only when decision-review returned Must fix items. Omit it otherwise.}
 

@@ -44,11 +44,11 @@ Do not draft design or stories yourself under this skill — that's `feature-des
 
 ## Which layer(s) does this feature touch?
 
-Check `SPEC.md`'s "Management API surface" and "Frontend components" sections, and read
-only the reference file(s) that layer needs:
+Check `SPEC.md`'s "Endpoints" section and its screen sections, and read only the reference
+file(s) that layer needs:
 
-- **Management API surface isn't "none"** → read `references/backend-csharp.md`.
-- **Frontend components isn't "none"** → read `references/frontend-lit.md`.
+- **Endpoints isn't "None"** → read `references/backend-csharp.md`.
+- **At least one screen section** → read `references/frontend-lit.md`.
 - Both present → read both, and generate both as separate spec files in their respective
   projects. A story that spans both layers gets a spec in each — don't try to force one file
   to cover both.

@@ -86,6 +86,15 @@ EOF
 cat > docs/plans/subscriber-export/SPEC.md <<'EOF'
 # Spec
 
+> [!IMPORTANT]
+> **2 guesses need your OK.** Neither figure came from `BRIEF.md`.
+>
+> 1. A page at `take=500` returns in under 1 second at the 95th percentile with 60,000
+>    members and about 150,000 subscriptions, on SQL Server and on SQLite.\
+>    *If not:* give the figure you need.
+> 2. A full export of 60,000 members, one page after another, finishes in under 5 minutes.\
+>    *If not:* give the figure you need.
+
 ## Management API surface
 
 ### `GET /umbraco/management/api/v1/newsletter/export/subscribers`
@@ -106,17 +115,11 @@ Response `200`: `{ "items": [{ "memberKey", "email", "topics": [{ "id", "name" }
 
 None.
 
-## Non-functional targets
+## Targets
 
-- A page at `take=500` returns in under 1 second at the 95th percentile with 60,000
-  members and about 150,000 subscriptions, on SQL Server and on SQLite.
-- A full export of 60,000 members, one page after another, finishes in under 5 minutes.
 - Each request runs at most two queries on the package's tables plus one batched member
   read, whatever `take` is.
 - Memory per request is bounded by `take`: nothing loads all subscriptions or all members.
-
-> ASSUMPTION: the 1 second and 5 minute figures are mine, not from `BRIEF.md`. Confirm or
-> replace them.
 EOF
 cat > docs/plans/subscriber-export/PLAN.md <<'EOF'
 # Plan

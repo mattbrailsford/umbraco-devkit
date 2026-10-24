@@ -8,9 +8,9 @@ total run time, memory or query-count limits, data volumes), wherever SPEC.md st
 API contract values such as a `take` default or its allowed range are not targets; ignore
 them.
 
-PASS if each such target that uses a figure the brief didn't give is marked as an
-assumption for the human to confirm (for example `> ASSUMPTION:`, on the target or in one
-note covering the targets).
+PASS if each such target that uses a figure the brief didn't give is marked as a guess for
+the human to confirm (for example listed in the guesses callout at the top of SPEC.md, or
+marked `> ASSUMPTION:` on the target).
 
 FAIL if any such target states an invented figure as settled with no assumption marker, or
 SPEC.md states no such targets at all.

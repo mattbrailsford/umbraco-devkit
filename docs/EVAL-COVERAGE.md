@@ -39,6 +39,8 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
+- [`feature-plan`](#feature-plan): `feature-plan-area-headings`
+- [`plain-writing`](#plain-writing): `plain-writing-draw-it` `plain-writing-guesses-first` `plain-writing-narrow-tables` `plain-writing-one-place`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -58,7 +60,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 7 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-plan`](#feature-plan) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`feature-plan`](#feature-plan) | workflow | Not run | – | 3 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -66,7 +68,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
+| [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -87,7 +89,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`umbraco-package-conventions`](#umbraco-package-conventions) | knowledge | Proven | +22 | 4 | 0 | 1/6 | 1 |
 | [`umbraco-performance`](#umbraco-performance) | knowledge | Proven | +100 | 6 | 4 | 4/10 | 2 |
 | [`umbraco-security`](#umbraco-security) | knowledge | Proven | +44 | 18 | 6 | 6/6 | 1 |
-| [`user-stories`](#user-stories) | knowledge | Proven | +100 | 1 | 0 | 2/4 | 1 |
+| [`user-stories`](#user-stories) | knowledge | Proven | +100 | 1 | 0 | 3/4 | 1 |
 
 ## How to read this
 
@@ -218,6 +220,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `feature-plan-area-headings` | – | – |
 | `feature-plan-stops-without-design` | 100 | 2026-10-20 |
 | `feature-plan-stops-without-mockup` | 100 | 2026-10-20 |
 
@@ -278,13 +281,18 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Section | Eval | With | Without | Gain | Skill loaded | Recorded |
 |---|---|---|---|---|---|---|
 | Lead with the point | **no eval** | | | | | |
+| What needs the reader goes first | `plain-writing-guesses-first` | – | – | – | – | – |
 | Plain words, short sentences | `plain-writing-upgrade-notes` | 100 | 80 | 20 | 6/6 | 2026-10-16 |
 | Concise is not vague | `plain-writing-issue-reply` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Concise is not vague | `plain-writing-readme-config` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Concise is not vague | `plain-writing-release-notes` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Concise is not vague | `plain-writing-upgrade-notes` | 100 | 80 | 20 | 6/6 | 2026-10-16 |
+| Let pictures carry what they show | `plain-writing-draw-it` | – | – | – | – | – |
 | Let pictures carry what they show | `plain-writing-spec-screen` | 100 | 67 | 33 | 6/6 | 2026-10-16 |
 | Shape for scanning | **no eval** | | | | | |
+| Fit a narrow screen | `plain-writing-narrow-tables` | – | – | – | – | – |
+| Files written mainly for skills | **no eval** | | | | | |
+| One fact, one place | `plain-writing-one-place` | – | – | – | – | – |
 | Before handing it over | **no eval** | | | | | |
 
 Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-message`
@@ -601,4 +609,4 @@ Stays quiet on: `security-skip-generic-aspnet`
 | Where this writes | **no eval** | | | | | |
 | Workflow | `user-stories-merge-and-split` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
 | Scope boundaries | `user-stories-merge-and-split` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
-| Output | **no eval** | | | | | |
+| Output | `user-stories-merge-and-split` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
