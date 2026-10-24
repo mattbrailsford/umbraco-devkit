@@ -1,45 +1,37 @@
 #!/usr/bin/env bash
 set -euo pipefail
-mkdir -p src/Controllers docs
-cat > src/Controllers/StockController.cs <<'CS'
-using Asp.Versioning;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Umbraco.Cms.Api.Management.Controllers;
-using Umbraco.Cms.Web.Common.Authorization;
+mkdir -p docs/notes docs/proposals
+cat > docs/notes/caching.md <<'MD'
+caching for the package's product feed (rebuilt from content on every request today, ~400ms on big sites)
 
-namespace Acme.Stock.Controllers;
+option 1: IMemoryCache
+- per server. load balanced = each server has its own copy, so editors see stale feeds on other servers until expiry unless we also hook a cache refresher
+- invalidate: remove key from a ContentPublishedNotification handler, but only on the server that published
+- memory: whole feed in process, ~20MB on the biggest customer site
+- no new dependency
+- works on Umbraco 15 and 16
+- effort: small, half a day
 
-// Base route: /umbraco/management/api/v1/acme-stock
-[ApiVersion("1.0")]
-[VersionedApiBackOfficeRoute("acme-stock")]
-[ApiExplorerSettings(GroupName = "Acme Stock")]
-public class StockController : ManagementApiControllerBase
-{
-    // Lists stock levels, paged. skip >= 0, take 1-200 (default 50).
-    // 200: { total: int, items: [{ productKey: Guid, sku: string, level: int, reserved: int, updatedUtc: DateTime }] }
-    // 400 ProblemDetails when take is out of range.
-    [HttpGet("levels")]
-    [Authorize(Policy = AuthorizationPolicies.SectionAccessContent)]
-    public Task<IActionResult> GetLevels(int skip = 0, int take = 50) => throw null!;
+option 2: Umbraco AppCaches.RuntimeCache
+- per server, but Umbraco's distributed cache refreshers clear it on every server, so load balancing is handled if we add a custom ICacheRefresher
+- invalidate: ClearByKey from our cache refresher, runs on all servers
+- memory: same as option 1, ~20MB
+- no new dependency
+- works on Umbraco 15 and 16
+- effort: medium, 1-2 days (cache refresher + payload)
 
-    // One product's level. 200 as one item above. 404 when the product has no stock record.
-    [HttpGet("levels/{productKey:guid}")]
-    [Authorize(Policy = AuthorizationPolicies.SectionAccessContent)]
-    public Task<IActionResult> GetLevel(Guid productKey) => throw null!;
+option 3: HybridCache (Microsoft.Extensions.Caching.Hybrid)
+- in-memory plus optional distributed second level; tag-based invalidation
+- load balanced: only consistent if a distributed backend (Redis) is configured, otherwise same as option 1
+- memory: ~20MB per server plus Redis if used
+- new dependency: Microsoft.Extensions.Caching.Hybrid 9.x; Umbraco 16 already uses it, Umbraco 15 doesn't, so we'd ship it ourselves there
+- effort: medium, 2 days
 
-    // Sets a level. Body: { level: int (>= 0), reason: string (max 200 chars) }.
-    // 204 on success. 400 ProblemDetails for a negative level or a long reason.
-    // 404 when the product doesn't exist. 409 when reserved > new level.
-    [HttpPut("levels/{productKey:guid}")]
-    [Authorize(Policy = AuthorizationPolicies.SectionAccessSettings)]
-    public Task<IActionResult> SetLevel(Guid productKey, SetLevelRequest body) => throw null!;
-
-    // Reserves stock for an order. Body: { orderId: string, quantity: int (1-1000) }.
-    // 200: { reservationId: Guid, expiresUtc: DateTime } (reservations expire after 15 minutes).
-    // 409 when quantity > level - reserved. 404 when the product doesn't exist.
-    [HttpPost("levels/{productKey:guid}/reservations")]
-    [Authorize(Policy = AuthorizationPolicies.SectionAccessContent)]
-    public Task<IActionResult> Reserve(Guid productKey, ReserveRequest body) => throw null!;
-}
-CS
+option 4: IDistributedCache with Redis
+- one shared copy, consistent across servers
+- invalidate: remove key once, every server sees it
+- memory: none in process; network hop on every read (~2-5ms)
+- new dependency: Microsoft.Extensions.Caching.StackExchangeRedis, and every customer needs a Redis instance, which most Umbraco Cloud sites don't have
+- works on Umbraco 15 and 16
+- effort: large, 3-4 days including docs for setting up Redis
+MD
