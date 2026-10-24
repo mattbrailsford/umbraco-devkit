@@ -90,7 +90,8 @@ other text around it. Before saving, list the file's open comments
 removing:
 
 - **The comment that prompted the change:** add `--move "<new text>"` to its reply, so it
-  stays pinned beside what replaced its text.
+  stays pinned beside what replaced its text. The thread keeps the text it was first made
+  on, struck through as "Was:", so the comment still makes sense.
 - **Any other open comment on removed text:** reply saying the text is gone and why, with
   `--done`. Don't leave it to be found later.
 

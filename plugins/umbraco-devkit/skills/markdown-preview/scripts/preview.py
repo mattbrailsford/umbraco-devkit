@@ -142,6 +142,10 @@ aside summary { display: none; }
 .reply-box.active textarea { min-height: 64px; resize: vertical; }
 .reply-actions { display: none; text-align: right; margin-top: 6px; }
 .reply-box.active .reply-actions { display: block; }
+.msg-was { margin: 4px 0 2px; padding-left: 8px; border-left: 2px solid var(--border); color: var(--muted); font-size: 13px;
+           white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.msg-was.open { white-space: normal; }
+.msg-was s { text-decoration-color: color-mix(in srgb, var(--muted) 70%, transparent); }
 .msg-quote { margin: 4px 0 2px; padding-left: 8px; border-left: 2px solid var(--border); color: var(--muted); font-size: 13px; }
 .link-btn { border: 0; background: none; padding: 0; color: var(--muted); font-size: 12px; cursor: pointer; }
 .link-btn:hover { color: var(--link); text-decoration: underline; }
@@ -670,7 +674,9 @@ async function renderComments() {
     const label = c.status === 'deferred' && c.owner ? `For ${esc(c.owner)}` : STATE[c.status];
     const head = `<span class="state ${c.status}">${label}</span>${action}`;
     const you = user.login || 'You';
-    thread.innerHTML = [message('you', you, c.created, c.body, { head, quote })]
+    const was = c.original && c.original !== c.quote
+      ? `<div class="msg-was" title="Click to show it all"><b>Was:</b> <s>${esc(c.original)}</s></div>` : '';
+    thread.innerHTML = [message('you', you, c.created, c.body, { head, quote: was + quote })]
       .concat(c.replies.map(r => r.author === 'you' ? message('you', you, r.created, r.body, {}) : message('claude', 'Claude', r.created, r.body, {})))
       .join('');
     thread.querySelectorAll('.msg.you').forEach((m, i, all) => i === all.length - 1 && c.status === 'draft' && m.classList.add('pending'));
@@ -700,6 +706,7 @@ async function renderComments() {
       foot.innerHTML = `<button class="btn resolve${c.status === 'addressed' ? ' primary' : ''}">Resolve conversation</button>`;
       thread.append(foot);
     }
+    thread.querySelector('.msg-was')?.addEventListener('click', e => e.currentTarget.classList.toggle('open'));
     thread.querySelector('.del')?.addEventListener('click', async () => { await post('/__comments/delete', { id: c.id }); renderComments(); });
     thread.querySelector('.edit')?.addEventListener('click', () => editDraft(thread, c));
     if (c.status === 'draft') {
@@ -1281,6 +1288,7 @@ def comments_cli(argv):
         c["status"] = "addressed" if args.done else "deferred" if args.defer else "replied"
         c["owner"] = args.defer
         if args.move:
+            c.setdefault("original", c["quote"])  # what the reader actually commented on
             c["quote"], c["prefix"], c["suffix"] = args.move, "", ""
     store.update(args.id, reply)
     outcome = " and marked it done" if args.done else f" and left it for {args.defer}" if args.defer else ""
@@ -1307,6 +1315,8 @@ def print_comments(items):
     for c in items:
         print(f"[{c['id']}] {c['path'].lstrip('/')} ({STATUS_NOTE[c['status']].format(owner=c.get('owner'))})")
         print(f"  on: \"{c['quote']}\"")
+        if c.get("original"):
+            print(f"  originally on: \"{c['original']}\"")
         if c.get("section"):
             print(f"  in section: {c['section']}")
         print(f"  context: ...{c['prefix']}[{c['quote']}]{c['suffix']}...")
