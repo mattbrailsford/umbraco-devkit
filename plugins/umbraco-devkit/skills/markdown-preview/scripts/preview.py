@@ -71,7 +71,7 @@ aside summary { display: none; }
   aside { position: static; max-height: none; }
   aside summary { display: block; cursor: pointer; padding: 8px 0; font-weight: 600; color: var(--link); }
 }
-.files a.current { background: var(--hover); font-weight: 600; box-shadow: inset 2px 0 0 var(--link); }
+.files a.current { background: var(--hover); font-weight: 600; box-shadow: inset 1px 0 0 var(--link); }
 .crumbs { font-size: 20px; margin-bottom: 16px; word-break: break-all; }
 .crumbs a { color: var(--link); text-decoration: none; }
 .crumbs a:hover { text-decoration: underline; }
@@ -90,8 +90,8 @@ aside summary { display: none; }
 #status { position: fixed; top: 8px; right: 8px; padding: 4px 10px; border-radius: 6px; font-size: 12px; display: none; }
 #status.error { display: block; background: #d1242f; color: #fff; }
 #status.busy { display: block; background: #0969da; color: #fff; }
-:root { --pending: #9a6700; --pending-bg: #fff8c5; --done: #1a7f37; --accent-bg: #ddf4ff; --deferred: #8250df; }
-@media (prefers-color-scheme: dark) { :root { --pending: #d29922; --pending-bg: #bb800926; --done: #3fb950; --accent-bg: #388bfd1a; --deferred: #ab7df8; } }
+:root { --pending: #0969da; --pending-bg: #ddf4ff; --done: #1a7f37; --accent-bg: #ddf4ff; --deferred: #8250df; --waiting: #bc4c00; }
+@media (prefers-color-scheme: dark) { :root { --pending: #4493f8; --pending-bg: #388bfd26; --done: #3fb950; --accent-bg: #388bfd1a; --deferred: #ab7df8; --waiting: #f0883e; } }
 .box-header { display: flex; justify-content: space-between; }
 #doc { overflow: visible; }
 #doc .box-header { border-radius: 6px 6px 0 0; }
@@ -111,7 +111,7 @@ aside summary { display: none; }
 #content .hot > .add-btn { display: block; }
 #sel-btn { position: absolute; display: none; z-index: 5; padding: 4px 10px; border: 0; border-radius: 6px; background: var(--link); color: #fff; font-size: 12px; cursor: pointer; }
 .thread { border: 1px solid var(--border); border-radius: 8px; margin: 8px 0 16px; background: var(--bg); font-size: 14px; line-height: 1.5; overflow: hidden; }
-.thread.draft { border-color: var(--pending); border-left-width: 3px; }
+.thread.draft { border-color: var(--pending); }
 .thread .msg { display: flex; gap: 10px; padding: 12px 14px; }
 .thread .msg + .msg { border-top: 1px solid var(--border); }
 .thread .msg.claude { background: var(--header); }
@@ -125,13 +125,17 @@ aside summary { display: none; }
 .msg-head .state { margin-left: auto; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
 .state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .state.draft { color: var(--pending); }
-.state.sent, .state.working { color: var(--link); }
-.state.replied { color: var(--pending); }
+.state.sent, .state.working { color: var(--muted); }
+.state.replied { color: var(--waiting); }
 .state.deferred { color: var(--deferred); }
 .state.working::before { animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .25; } }
 .state.resolved { color: var(--done); }
 .msg-body { margin-top: 2px; overflow-wrap: anywhere; }
+#content .msg-body > :first-child { margin-top: 0; }
+#content .msg-body > :last-child { margin-bottom: 0; }
+#content .msg-body p, #content .msg-body ul, #content .msg-body ol, #content .msg-body pre { margin: 0 0 8px; }
+#content .msg-body pre { padding: 8px 12px; }
 .thread.draft:not(.editing) .msg.pending .msg-body { cursor: text; border-radius: 4px; margin-left: -4px; padding: 0 4px; }
 .thread.draft:not(.editing) .msg.pending .msg-body:hover { background: var(--pending-bg); }
 .reply-box { border-top: 1px solid var(--border); padding: 8px 14px 8px 48px; }
@@ -139,16 +143,27 @@ aside summary { display: none; }
 .thread-actions:first-of-type, .msg + .thread-actions { border-top: 1px solid var(--border); padding-top: 10px; }
 .thread-actions .btn { margin-left: 0; }
 .reply-box textarea { width: 100%; box-sizing: border-box; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; resize: none; }
-.reply-box.active textarea { min-height: 64px; resize: vertical; }
+.reply-box.active textarea { min-height: 64px; }
 .reply-actions { display: none; text-align: right; margin-top: 6px; }
 .reply-box.active .reply-actions { display: block; }
-.msg-was { margin: 4px 0 2px; padding-left: 8px; border-left: 2px solid var(--border); color: var(--muted); font-size: 13px;
+.msg-was { margin: 4px 0 2px; padding-left: 8px; border-left: 1px solid var(--border); color: var(--muted); font-size: 13px;
            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
 .msg-was.open { white-space: normal; }
 .msg-was s { text-decoration-color: color-mix(in srgb, var(--muted) 70%, transparent); }
-.msg-quote { margin: 4px 0 2px; padding-left: 8px; border-left: 2px solid var(--border); color: var(--muted); font-size: 13px; }
-.link-btn { border: 0; background: none; padding: 0; color: var(--muted); font-size: 12px; cursor: pointer; }
-.link-btn:hover { color: var(--link); text-decoration: underline; }
+.msg-quote { margin: 4px 0 2px; padding-left: 8px; border-left: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+.btn.danger { margin-left: 0; color: #d1242f; }
+.btn.danger:hover { background: #d1242f; border-color: #d1242f; color: #fff; }
+.msg-head { align-items: center; }
+.state-icon { margin-left: auto; display: inline-flex; padding: 4px; }
+.state-icon.draft { color: var(--pending); }
+.state-icon.sent { color: var(--muted); }
+.state-icon.working { color: var(--link); }
+.state-icon.working svg { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.state-icon.replied { color: var(--waiting); }
+.state-icon.addressed, .state-icon.resolved { color: var(--done); }
+.state-icon.deferred { color: var(--deferred); }
+@media (prefers-reduced-motion: reduce) { .state-icon.working svg { animation: none; } }
 .thread .summary { display: none; padding: 8px 14px; color: var(--muted); font-size: 13px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .thread .summary:hover { color: var(--fg); }
 .thread .summary .tick { color: var(--done); font-weight: 600; margin-right: 4px; }
@@ -164,7 +179,26 @@ aside summary { display: none; }
 #content .orphans h4 { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
 mark.cmark { background: var(--pending-bg); color: inherit; border-bottom: 2px solid var(--pending); padding: 0 1px; }
 .comment-form { padding: 12px 14px; display: flex; gap: 10px; }
-.thread.editing .msg-body textarea, .comment-form textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; resize: vertical; }
+.md-input { position: relative; }
+.md-input textarea { position: relative; z-index: 1; background: transparent !important; color: transparent !important; caret-color: var(--fg); line-height: 1.5; }
+.md-input textarea::placeholder { color: var(--muted); }
+.md-input textarea::selection { color: transparent; background: color-mix(in srgb, var(--link) 30%, transparent); }
+.md-layer { position: absolute; inset: 0; box-sizing: border-box; border-style: solid; border-color: transparent; overflow: hidden;
+            white-space: pre-wrap; overflow-wrap: break-word; color: var(--fg); background: var(--bg); border-radius: 6px; pointer-events: none; }
+.md-layer .hm, .md-layer .hf { color: var(--muted); }
+.md-layer .hb { color: var(--fg); }
+.md-layer .hc { color: var(--deferred); }
+.md-layer .hl { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+.md-layer .hh, .md-layer .hh .hb { color: var(--link); }
+.md-layer .hs { background: color-mix(in srgb, #3fb950 15%, transparent); }
+.form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+.btn.suggest { margin-left: 0; }
+.suggestion { margin: 6px 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.suggestion .sg-head { padding: 4px 10px; background: var(--header); border-bottom: 1px solid var(--border); color: var(--muted); font-family: -apple-system, sans-serif; }
+.suggestion .sg-del, .suggestion .sg-add { padding: 2px 10px; white-space: pre-wrap; }
+.suggestion .sg-del { background: color-mix(in srgb, #f85149 15%, transparent); }
+.suggestion .sg-add { background: color-mix(in srgb, #3fb950 15%, transparent); }
+.thread.editing .msg-body textarea, .comment-form textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; resize: none; }
 .btn { padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--header); color: var(--fg); font: 500 13px/20px sans-serif; cursor: pointer; margin-left: 6px; }
 .btn.primary { background: #1f883d; border-color: #1f883d; color: #fff; }
 #sendbar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: none; align-items: center; gap: 12px; padding: 10px 12px 10px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 10; }
@@ -176,6 +210,37 @@ mark.cmark { background: var(--pending-bg); color: inherit; border-bottom: 2px s
 @keyframes pop { 0% { transform: scale(.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes flash { from { box-shadow: 0 0 0 4px var(--link); } }
 kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--header); font: 11px/16px ui-monospace, monospace; color: var(--fg); }
+#overview .ov-box .box-header { padding: 8px 16px; font-size: 13px; display: flex; align-items: center; justify-content: space-between; }
+#overview .ov-box { overflow: visible; }
+#overview .ov-box .box-header { border-radius: 6px 6px 0 0; }
+#overview .ov-order { position: relative; display: inline-flex; }
+#overview .ov-order-btn { display: flex; padding: 2px; border: 0; border-radius: 4px; background: none; color: var(--muted); cursor: pointer; }
+#overview .ov-order-btn:hover { color: var(--fg); background: var(--hover); }
+#overview .ov-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 5; min-width: 150px; padding: 4px; border: 1px solid var(--border);
+                     border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+#overview .ov-menu[hidden] { display: none; }
+#overview .ov-menu button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 8px; border: 0; border-radius: 6px;
+                            background: none; color: var(--fg); font: 400 13px -apple-system, sans-serif; text-align: left; cursor: pointer; }
+#overview .ov-menu button:hover { background: var(--hover); }
+#overview .ov-menu button svg { color: var(--muted); }
+#overview .ov-menu button.on { font-weight: 600; }
+#overview .ov-menu button.on::after { content: "✓"; margin-left: auto; color: var(--link); }
+#overview .ov-item { align-items: flex-start; }
+#overview .ov-item:first-of-type { border-top: 0; }
+#overview .ov-item .icon { margin-top: 2px; }
+#overview .ov-item .icon.addressed { fill: var(--done); }
+#overview .ov-item .icon.replied { fill: var(--waiting); }
+#overview .ov-item .icon.draft { fill: var(--pending); }
+#overview .ov-item .icon.sent, #overview .ov-item .icon.working { fill: var(--muted); }
+#overview .ov-item .icon.deferred { fill: var(--deferred); }
+#overview .ov-body { min-width: 0; flex: 1; }
+#overview .ov-text { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#overview .ov-item:hover .ov-text { color: var(--link); }
+#overview .ov-meta { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#overview .ov-none, #overview .ov-more { display: block; width: 100%; padding: 8px 16px; border: 0; border-top: 1px solid var(--border);
+                                         background: none; color: var(--muted); font-size: 12px; text-align: left; }
+#overview .ov-more { cursor: pointer; }
+#overview .ov-more:hover { color: var(--link); background: var(--hover); }
 #keys-hint { position: fixed; left: 16px; bottom: 16px; border: 0; background: none; color: var(--muted); font-size: 12px; cursor: pointer; }
 #keys-hint:hover { color: var(--fg); }
 #keys { position: fixed; left: 16px; bottom: 44px; display: none; width: 320px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 11; font-size: 13px; }
@@ -192,7 +257,8 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 <main>
 <nav class="crumbs">__CRUMBS__</nav>
 <div class="layout">
-<aside><details id="filebox"><summary>Files in this folder</summary><div id="files"></div></details></aside>
+<aside><details id="filebox"><summary>Files in this folder</summary><div id="files"></div></details>
+<div id="overview"></div></aside>
 <div class="box" id="doc" hidden>
   <div class="box-header"><span>__DOCNAME__</span><span class="count" id="count"></span></div>
   <article id="content" class="markdown-body"></article>
@@ -293,6 +359,116 @@ function blockText(el) {
     img.replaceWith(` [image: ${img.alt || decodeURIComponent((img.getAttribute('src') || '').split('/').pop())}] `));
   return norm(copy.textContent);
 }
+
+// Light Markdown colouring for comment boxes: a coloured copy of the text sits behind a
+// see-through box, matched to it in font, padding and wrapping. Only colour changes, never
+// weight or width, so the two always line up.
+function hlInline(t) {
+  const re = /(`[^`]+`)|(\\*\\*[^*]+\\*\\*)|(\\[[^\\]]+\\]\\([^)\\s]*\\))|(\\b_[^_\\s][^_]*_\\b)/g;
+  let out = '', i = 0, m;
+  const mark = x => '<span class="hm">' + esc(x) + '</span>';
+  while ((m = re.exec(t))) {
+    const s = m[0];
+    out += esc(t.slice(i, m.index));
+    if (m[1]) out += mark('`') + '<span class="hc">' + esc(s.slice(1, -1)) + '</span>' + mark('`');
+    else if (m[2]) out += mark('**') + '<span class="hb">' + esc(s.slice(2, -2)) + '</span>' + mark('**');
+    else if (m[3]) {
+      const k = s.indexOf('](');
+      out += mark('[') + '<span class="hl">' + esc(s.slice(1, k)) + '</span>' + mark('](' + s.slice(k + 2, -1) + ')');
+    } else out += mark('_') + '<span class="hb">' + esc(s.slice(1, -1)) + '</span>' + mark('_');
+    i = m.index + s.length;
+  }
+  return out + esc(t.slice(i));
+}
+
+function highlightMarkdown(text) {
+  let fence = null;
+  return text.split('\\n').map(line => {
+    if (/^```/.test(line)) {
+      const opening = fence === null;
+      fence = opening ? line.slice(3).trim() : null;
+      return '<span class="hf">' + esc(line) + '</span>';
+    }
+    if (fence === 'suggestion') return '<span class="hs">' + (esc(line) || ' ') + '</span>';
+    if (fence !== null) return '<span class="hc">' + esc(line) + '</span>';
+    const heading = line.match(/^(#{1,6})(\\s.*)$/);
+    if (heading) return '<span class="hm">' + heading[1] + '</span><span class="hh">' + hlInline(heading[2]) + '</span>';
+    const list = line.match(/^(\\s*)([-*+]|\\d+\\.)(\\s.*)$/);
+    return list ? esc(list[1]) + '<span class="hm">' + esc(list[2]) + '</span>' + hlInline(list[3]) : hlInline(line);
+  }).join('\\n') + '\\n ';  // a trailing space keeps a final empty line its height
+}
+
+function attachHighlight(box) {
+  if (box.parentElement.classList.contains('md-input')) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'md-input';
+  const layer = document.createElement('div');
+  layer.className = 'md-layer';
+  layer.setAttribute('aria-hidden', 'true');
+  box.before(wrap);
+  wrap.append(layer, box);
+  const cs = getComputedStyle(box);
+  for (const k of ['padding', 'borderWidth', 'fontFamily', 'fontSize', 'lineHeight', 'letterSpacing'])
+    layer.style[k] = cs[k];
+  const paint = () => { layer.innerHTML = highlightMarkdown(box.value); layer.scrollTop = box.scrollTop; };
+  box.addEventListener('input', paint);
+  box.addEventListener('scroll', () => { layer.scrollTop = box.scrollTop; });
+  new MutationObserver(paint).observe(box, { attributes: true, attributeFilter: ['style'] });
+  box.paint = paint;
+  paint();
+}
+
+function autoGrow(box) {
+  box.style.height = 'auto';
+  box.style.height = Math.min(box.scrollHeight + 2, innerHeight / 2) + 'px';
+  box.style.overflowY = box.scrollHeight + 2 > innerHeight / 2 ? 'auto' : 'hidden';
+  box.paint?.();
+}
+content.addEventListener('input', e => e.target.matches('.thread textarea') && autoGrow(e.target));
+
+// Put text in place the way typing would, so undo and the box's growth both keep up.
+function typeInto(box, text, selectFrom, selectTo) {
+  const start = box.selectionStart;
+  box.focus();
+  if (!document.execCommand('insertText', false, text)) box.setRangeText(text, box.selectionStart, box.selectionEnd, 'end');
+  if (selectFrom !== undefined) box.setSelectionRange(start + selectFrom, start + selectTo);
+  autoGrow(box);
+}
+
+// Wrap the selection in a Markdown mark, or take it off again if it's already there.
+function toggleMark(box, mark, placeholder) {
+  const { selectionStart: a, selectionEnd: b, value } = box;
+  const sel = value.slice(a, b);
+  if (value.slice(a - mark.length, a) === mark && value.slice(b, b + mark.length) === mark) {
+    box.setSelectionRange(a - mark.length, b + mark.length);
+    return typeInto(box, sel, 0, sel.length);
+  }
+  const text = sel || placeholder;
+  typeInto(box, mark + text + mark, mark.length, mark.length + text.length);
+}
+
+const SHORTCUT_MARKS = { b: ['**', 'bold'], i: ['_', 'italic'], e: ['`', 'code'] };
+content.addEventListener('keydown', e => {
+  const box = e.target;
+  if (!box.matches('.thread textarea') || !(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey) return;
+  const key = e.key.toLowerCase();
+  if (SHORTCUT_MARKS[key]) {
+    e.preventDefault();
+    toggleMark(box, ...SHORTCUT_MARKS[key]);
+  } else if (key === 'k') {
+    e.preventDefault();
+    const text = box.value.slice(box.selectionStart, box.selectionEnd) || 'link text';
+    typeInto(box, `[${text}](url)`, text.length + 3, text.length + 6);  // "url" selected, ready to paste
+  }
+});
+content.addEventListener('paste', e => {
+  const box = e.target;
+  if (!box.matches('.thread textarea') || box.selectionStart === box.selectionEnd) return;
+  const url = (e.clipboardData?.getData('text/plain') || '').trim();
+  if (!/^https?:\/\/\S+$/.test(url)) return;
+  e.preventDefault();
+  typeInto(box, `[${box.value.slice(box.selectionStart, box.selectionEnd)}](${url})`);
+});
 
 function submitOnEnter(box, submit, cancel) {
   box.addEventListener('keydown', e => {
@@ -398,11 +574,23 @@ function openForm(block, quote, prefix, suffix) {
   const thread = document.createElement('div');
   thread.className = 'thread new';
   const quoteLine = quote !== blockText(block) ? `<div class="msg-quote">${esc(quote)}</div>` : '';
-  thread.innerHTML = `<div class="comment-form">${avatar('you')}<div class="msg-main">${quoteLine}<textarea placeholder="Leave a comment · Enter to add, Shift+Enter for a new line"></textarea>
-    <div style="text-align:right;margin-top:6px"><button class="btn cancel">Cancel</button><button class="btn primary add">Add comment</button></div></div></div>`;
+  thread.innerHTML = `<div class="comment-form">${avatar('you')}<div class="msg-main">${quoteLine}<textarea placeholder="Leave a comment · Enter to add, Shift+Enter for a new line · ⌘B ⌘I ⌘E ⌘K to format"></textarea>
+    <div class="form-actions"><button class="btn suggest" title="Write the exact new wording">± Suggest a change</button><span>
+    <button class="btn cancel">Cancel</button><button class="btn primary add">Add comment</button></span></div></div></div>`;
   place(block, thread);
   const box = thread.querySelector('textarea');
+  attachHighlight(box);
   box.focus();
+  // As on GitHub: a suggestion block holding the current wording, ready to edit.
+  thread.querySelector('.suggest').onclick = () => {
+    const before = box.value.slice(0, box.selectionStart);
+    const block = '```suggestion\\n' + quote + '\\n```';
+    box.value = before + (before && !before.endsWith('\\n') ? '\\n' : '') + block + box.value.slice(box.selectionEnd);
+    const start = box.value.indexOf(block) + '```suggestion\\n'.length;
+    box.focus();
+    box.setSelectionRange(start, start + quote.length);
+    autoGrow(box);
+  };
   submitOnEnter(box, () => thread.querySelector('.add').click(), () => thread.querySelector('.cancel').click());
   thread.querySelector('.cancel').onclick = () => removeThread(thread);
   thread.querySelector('.add').onclick = async () => {
@@ -472,7 +660,7 @@ const SHORTCUTS = [
   ['j / ↓', 'Next line'], ['k / ↑', 'Previous line'], ['c / Enter', 'Comment on the line'],
   ['n', 'Next open comment'], ['p', 'Previous open comment'], ['e', 'Edit your pending comment on the line'],
   ['r', 'Reply on the line'], ['Shift+S', 'Send pending comments to Claude'],
-  ['Enter', 'Add or save, in a comment box'], ['Shift+Enter', 'New line, in a comment box'], ['Esc', 'Cancel, or close this list'],
+  ['Enter', 'Add or save, in a comment box'], ['⌘B / ⌘I / ⌘E / ⌘K', 'Bold, italic, code, link, in a comment box'], ['Shift+Enter', 'New line, in a comment box'], ['Esc', 'Cancel, or close this list'],
   ['?', 'Show or hide this list'],
 ];
 const help = document.getElementById('keys');
@@ -490,7 +678,7 @@ document.addEventListener('keydown', e => {
     j: () => moveLine(1), ArrowDown: () => moveLine(1), k: () => moveLine(-1), ArrowUp: () => moveLine(-1),
     c: () => hot && openForm(hot, blockText(hot), '', ''), Enter: () => hot && openForm(hot, blockText(hot), '', ''),
     n: () => moveThread(1), p: () => moveThread(-1),
-    e: () => threadOf(hot)?.querySelector('.edit')?.click(),
+    e: () => threadOf(hot)?.querySelector('.msg.pending .msg-body')?.click(),
     r: () => {
       const thread = threadOf(hot);
       if (thread?.classList.contains('resolved'))
@@ -551,6 +739,15 @@ function findBlock(c) {
 }
 
 // Only the reader resolves: Claude's best is "addressed", which waits on their check.
+const STATE_ICON = {
+  draft: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.75" stroke-dasharray="2.5 2"/></svg>',
+  sent: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 7 9M14 2l-4.5 12L7 9 2 6.5z"/></svg>',
+  working: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.25a5.75 5.75 0 1 0 5.75 5.75" class="spin-arc"/></svg>',
+  replied: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 3.5h11v7H8l-3 2.5v-2.5H2.5z"/><path d="M8 5.75v1.5M8 8.75h.01"/></svg>',
+  addressed: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5.75"/><path d="m5.5 8 1.75 1.75L10.75 6"/></svg>',
+  deferred: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8h9M8.5 4.5 12 8l-3.5 3.5"/><path d="M14 3.5v9"/></svg>',
+  resolved: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg>',
+};
 const STATE = { draft: 'Pending', sent: 'Sent', working: 'Claude is on it', replied: 'Waiting on you',
                 addressed: 'Done, please check', deferred: 'Left for a later step', resolved: 'Resolved' };
 const TICK = '<svg viewBox="0 0 16 16" width="14" height="14"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>';
@@ -571,10 +768,42 @@ function ago(iso) {
   return hours < 24 ? `${hours} h ago` : new Date(iso).toLocaleDateString('en-GB');
 }
 
+const drawn = new Map();  // comment text -> GitHub's HTML for it
+const SUGGESTION = /```suggestion\\n([\\s\\S]*?)\\n?```/;
+
+function bodyHtml(body, was) {
+  const m = body.match(SUGGESTION);
+  const text = m ? body.replace(SUGGESTION, '').trim() : body;
+  const prose = !text ? '' : drawn.has(text) ? drawn.get(text)
+    : `<p>${esc(text).replace(/\\n/g, '<br>')}</p>`;
+  const diff = !m ? '' : `<div class="suggestion"><div class="sg-head">Suggested change</div>`
+    + (was ? `<div class="sg-del">- ${esc(was)}</div>` : '') + `<div class="sg-add">+ ${esc(m[1])}</div></div>`;
+  return { html: prose + diff, text };
+}
+
 function message(who, name, when, body, extra) {
+  const { html, text } = bodyHtml(body, extra.was);
   return `<div class="msg ${who}">${avatar(who)}<div class="msg-main"><div class="msg-head"><b>${esc(name)}</b>`
     + `<span class="when">${ago(when)}</span>${extra.head || ''}</div>${extra.quote || ''}`
-    + `<div class="msg-body">${esc(body).replace(/\\n/g, '<br>')}</div></div></div>`;
+    + `<div class="msg-body" data-md="${esc(text)}" data-raw="${esc(body)}" data-was="${esc(extra.was || '')}">${html}</div></div></div>`;
+}
+
+// Draw any comment text not drawn yet, in one call to GitHub, then put it in place.
+async function drawComments() {
+  const bodies = [...content.querySelectorAll('.thread .msg-body[data-md]')];
+  const todo = [...new Set(bodies.map(b => b.dataset.md).filter(t => t && !drawn.has(t)))];
+  if (todo.length) {
+    try {
+      const res = await fetch('/__md', { method: 'POST', body: JSON.stringify({ texts: todo }) });
+      if (!res.ok) return;
+      (await res.json()).html.forEach((h, i) => drawn.set(todo[i], h));
+    } catch { return; }
+  }
+  for (const b of bodies) {
+    if (!b.dataset.md || !drawn.has(b.dataset.md) || b.closest('.editing')) continue;
+    b.innerHTML = bodyHtml(b.dataset.raw, b.dataset.was).html;
+  }
+  layoutRowThreads();
 }
 
 // Highlight a few selected words in the doc, so the thread needn't repeat them.
@@ -604,14 +833,20 @@ function pendingText(c) {
 function editDraft(thread, c) {
   const body = thread.querySelector('.msg.pending .msg-body');
   thread.classList.add('editing');
-  body.innerHTML = `<textarea></textarea><div style="text-align:right;margin-top:6px">
-    <button class="btn cancel">Cancel</button><button class="btn primary save">Save</button></div>`;
+  body.innerHTML = `<textarea></textarea><div class="form-actions"><button class="btn danger del">Delete</button><span>
+    <button class="btn cancel">Cancel</button><button class="btn primary save">Save</button></span></div>`;
   const box = body.querySelector('textarea');
+  attachHighlight(box);
   box.value = pendingText(c);
+  autoGrow(box);
   box.focus();
   box.setSelectionRange(box.value.length, box.value.length);
   const done = () => { thread.classList.remove('editing'); renderComments(); };
   body.querySelector('.cancel').onclick = done;
+  body.querySelector('.del').onclick = async () => {
+    await post('/__comments/delete', { id: c.id });
+    done();
+  };
   body.querySelector('.save').onclick = async () => {
     if (box.value.trim()) await post('/__comments/edit', { id: c.id, body: box.value.trim() });
     done();
@@ -664,20 +899,25 @@ async function renderComments() {
     }
     if (!block && c.status === 'resolved') continue;
     const thread = document.createElement('div');
+    thread.id = 'comment-' + c.id;
     thread.className = 'thread ' + c.status + (lineGone ? ' line-removed' : block ? '' : ' outdated');
     // Whole-line comments sit right under their line; only a picked-out phrase, or text
     // that's since been edited away, needs quoting.
     const partial = block && !lineGone && c.quote !== blockText(block);
     const marked = partial && c.status !== 'resolved' && markQuote(block, c.quote);
     const quote = !block || lineGone || (partial && !marked) ? `<div class="msg-quote">${esc(c.quote)}</div>` : '';
-    const action = c.status === 'draft' ? '<button class="link-btn edit">Edit</button><button class="link-btn del">Delete</button>' : '';
+    const action = '';
     const label = c.status === 'deferred' && c.owner ? `For ${esc(c.owner)}` : STATE[c.status];
-    const head = `<span class="state ${c.status}">${label}</span>${action}`;
+    const head = `<span class="state-icon ${c.status}" title="${label}" aria-label="${label}" role="img">${STATE_ICON[c.status]}</span>${action}`;
     const you = user.login || 'You';
     const was = c.original && c.original !== c.quote
       ? `<div class="msg-was" title="Click to show it all"><b>Was:</b> <s>${esc(c.original)}</s></div>` : '';
-    thread.innerHTML = [message('you', you, c.created, c.body, { head, quote: was + quote })]
-      .concat(c.replies.map(r => r.author === 'you' ? message('you', you, r.created, r.body, {}) : message('claude', 'Claude', r.created, r.body, {})))
+    const lastIsMine = c.replies.length && c.replies[c.replies.length - 1].author === 'you';
+    const replyPending = c.status === 'draft' && lastIsMine;
+    thread.innerHTML = [message('you', you, c.created, c.body, { head: replyPending ? '' : head, quote: was + quote, was: c.original || c.quote })]
+      .concat(c.replies.map((r, i) => r.author === 'you'
+        ? message('you', you, r.created, r.body, { head: replyPending && i === c.replies.length - 1 ? head : '' })
+        : message('claude', 'Claude', r.created, r.body, {})))
       .join('');
     thread.querySelectorAll('.msg.you').forEach((m, i, all) => i === all.length - 1 && c.status === 'draft' && m.classList.add('pending'));
     // Answer Claude, or reopen a resolved thread, from the bottom of the thread.
@@ -687,6 +927,7 @@ async function renderComments() {
       reply.innerHTML = `<textarea rows="1" placeholder="${c.status === 'resolved' ? 'Reply to reopen…' : 'Reply…'}"></textarea>
         <div class="reply-actions"><button class="btn cancel">Cancel</button><button class="btn primary send">Reply</button></div>`;
       const box = reply.querySelector('textarea');
+      attachHighlight(box);
       box.onfocus = () => reply.classList.add('active');
       reply.querySelector('.cancel').onclick = () => { box.value = ''; reply.classList.remove('active'); };
       reply.querySelector('.send').onclick = async () => {
@@ -707,8 +948,6 @@ async function renderComments() {
       thread.append(foot);
     }
     thread.querySelector('.msg-was')?.addEventListener('click', e => e.currentTarget.classList.toggle('open'));
-    thread.querySelector('.del')?.addEventListener('click', async () => { await post('/__comments/delete', { id: c.id }); renderComments(); });
-    thread.querySelector('.edit')?.addEventListener('click', () => editDraft(thread, c));
     if (c.status === 'draft') {
       const text = thread.querySelector('.msg.pending .msg-body');
       text.title = 'Click to edit';
@@ -757,6 +996,8 @@ async function renderComments() {
     pin.innerHTML = TICK + (+pin.dataset.count > 1 ? pin.dataset.count : '');
   }
   placePins();
+  drawComments();
+  renderOverview();
   lastStatus = Object.fromEntries(comments.map(c => [c.id, c.status]));
   const open = comments.filter(c => c.status !== 'resolved').length;
   const toCheck = comments.filter(c => c.status === 'addressed').length;
@@ -811,7 +1052,8 @@ async function load() {
     }
     scrollTo(0, y);
     showStatus('');
-    if (location.hash && renderCount === 1) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    if (location.hash && renderCount === 1)
+      location.hash.startsWith('#comment-') ? jumpToComment() : document.getElementById(location.hash.slice(1))?.scrollIntoView();
   } catch (e) {
     showStatus(e.message, 'error');
   }
@@ -833,6 +1075,95 @@ async function poll() {
 poll();
 
 // Redraw threads and the file list's comment counts without touching the doc itself.
+// Every open comment in scope, as one quiet list: the ones waiting on the reader first, each
+// a line of text with its status and place under it. Ones with Claude or a later step fold
+// into a single line at the end.
+const MINE = ['addressed', 'replied', 'draft'];
+const LABEL = { addressed: 'To check', replied: 'Waiting on you', draft: 'Not sent', sent: 'With Claude',
+                working: 'With Claude', deferred: 'Later step' };
+let showOthers = false;
+let orderBy = (() => { try { return localStorage.getItem('commentOrder') || 'doc'; } catch { return 'doc'; } })();
+
+const ORDERS = {
+  doc: { label: 'In doc order', icon: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3.5h7M2 8h7M2 12.5h4M12.5 2.5v10.5M10.5 11l2 2 2-2"/></svg>' },
+  latest: { label: 'Latest first', icon: '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.75V8l2.25 1.5"/></svg>' },
+};
+const lastActivity = c => (c.replies.length ? c.replies[c.replies.length - 1].created : c.created) || '';
+function sortComments(list) {
+  if (orderBy === 'latest') return list.sort((a, b) => lastActivity(b).localeCompare(lastActivity(a)));
+  const key = c => c.place || [];
+  return list.sort((a, b) => {
+    for (let i = 0; i < 4; i++) {
+      const x = key(a)[i], y = key(b)[i];
+      if (x !== y) return typeof x === 'number' ? x - y : String(x).localeCompare(String(y));
+    }
+    return 0;
+  });
+}
+
+const ICON_COMMENT = '<svg class="icon" viewBox="0 0 16 16" width="16" height="16"><path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>';
+
+function snippet(text) {
+  return text.replace(SUGGESTION, '± suggested change')
+    .replace(/\\[([^\\]]*)\\]\\([^)]*\\)/g, '$1').replace(/[*_`#>]+/g, '').replace(/^\\s*[-+] /gm, '').replace(/\\s+/g, ' ').trim();
+}
+
+function overviewItem(c) {
+  const last = c.replies.length ? c.replies[c.replies.length - 1] : { body: c.body, created: c.created };
+  const here = c.path === docPath;
+  const where = [here ? '' : c.path.split('/').pop(), c.section].filter(Boolean).join(' › ');
+  const label = c.status === 'deferred' && c.owner ? `For ${c.owner}` : LABEL[c.status];
+  return `<a class="ov-item" href="${here ? '' : encodeURI(c.path)}#comment-${c.id}" title="${esc(label)}">`
+    + ICON_COMMENT.replace('class="icon"', `class="icon ${c.status}"`)
+    + `<span class="ov-body"><span class="ov-text">${esc(snippet(last.body))}</span>`
+    + `<span class="ov-meta">${[where, ago(last.created)].filter(Boolean).map(esc).join(' · ')}</span></span></a>`;
+}
+
+async function renderOverview() {
+  const box = document.getElementById('overview');
+  if (!canComment) return box.replaceChildren();
+  const open = JSON.parse(await fetchText('/__comments?open=1'))
+    .filter(c => !scoped || c.path.startsWith(home));
+  if (!open.length) return box.replaceChildren();
+  const mine = sortComments(open.filter(c => MINE.includes(c.status)));
+  const others = sortComments(open.filter(c => !MINE.includes(c.status)));
+  box.innerHTML = `<div class="box files ov-box"><div class="box-header">Comments`
+    + `<span class="ov-order"><button class="ov-order-btn" title="Order: ${ORDERS[orderBy].label}" aria-haspopup="true">${ORDERS[orderBy].icon}</button>`
+    + `<span class="ov-menu" hidden>${Object.entries(ORDERS).map(([key, o]) =>
+        `<button data-order="${key}"${key === orderBy ? ' class="on"' : ''}>${o.icon}${o.label}</button>`).join('')}</span></span></div>`
+    + (mine.length ? mine.map(overviewItem).join('') : '<div class="ov-none">Nothing waiting on you.</div>')
+    + (others.length ? `<button class="ov-more" title="Sent, with Claude, or left for a later step">`
+      + `${showOthers ? 'Hide' : `${others.length} more,`} not waiting on you ${showOthers ? '▾' : '▸'}</button>`
+      + (showOthers ? others.map(overviewItem).join('') : '') : '') + '</div>';
+  box.querySelector('.ov-more')?.addEventListener('click', () => { showOthers = !showOthers; renderOverview(); });
+  const menu = box.querySelector('.ov-menu');
+  box.querySelector('.ov-order-btn').addEventListener('click', e => { e.stopPropagation(); menu.hidden = !menu.hidden; });
+  menu.querySelectorAll('[data-order]').forEach(b => b.addEventListener('click', () => {
+    orderBy = b.dataset.order;
+    try { localStorage.setItem('commentOrder', orderBy); } catch {}
+    renderOverview();
+  }));
+  box.querySelectorAll('.ov-item[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    history.replaceState(null, '', a.getAttribute('href'));
+    jumpToComment();
+  }));
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ov-order')) document.querySelectorAll('.ov-menu').forEach(m => { m.hidden = true; });
+});
+
+function jumpToComment() {
+  const t = location.hash.startsWith('#comment-') && document.getElementById(location.hash.slice(1));
+  if (!t) return;
+  t.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  t.classList.remove('flash');
+  void t.offsetWidth;
+  t.classList.add('flash');
+}
+addEventListener('hashchange', jumpToComment);
+
 async function refreshComments() {
   if (!canComment || content.hidden || !content.innerHTML) return;
   document.getElementById('files').innerHTML = await fetchText('/__list?path=' + encodeURIComponent(folderPath)
@@ -840,7 +1171,6 @@ async function refreshComments() {
       + (scoped ? '&home=' + encodeURIComponent(home) : ''));
   await renderComments();
 }
-events.onerror = () => showStatus('Preview server stopped', 'error');
 </script>
 </body>
 </html>
@@ -867,10 +1197,20 @@ class Renderer:
             if self.context:
                 body["context"] = self.context
             html_out = self.post(body) if self.token else self.post_with_gh(body)
-            if len(self.cache) > 50:
+            if len(self.cache) > 500:
                 self.cache.clear()
             self.cache[key] = html_out
             return html_out
+
+    SPLIT = "@@umbraco-devkit-split@@"
+
+    def render_many(self, texts):
+        """Draw several short texts (comments) in one call to GitHub, split back apart after."""
+        joined = self.render(f"\n\n{self.SPLIT}\n\n".join(texts))
+        parts = joined.split(f"<p>{self.SPLIT}</p>")
+        if len(parts) != len(texts):  # a text that swallowed the marker: draw them one by one
+            parts = [self.render(t) for t in texts]
+        return [p.strip() for p in parts]
 
     def post(self, body):
         headers = {"Authorization": f"Bearer {self.token}", "Accept": "application/vnd.github+json",
@@ -951,6 +1291,36 @@ def breadcrumbs(root, url_path):
              for name, href in trail[:-1]]
     items.append(f'<span class="here" data-path="{html.escape(trail[-1][1])}">{html.escape(trail[-1][0])}</span>')
     return '<span class="sep">/</span>'.join(items)
+
+
+def doc_positions(root, items):
+    """Sort keys putting comments in reading order: files as their folder's README lists them
+    (then by name), then top to bottom within a file. A comment's spot is found from the first
+    words of its text in the Markdown, allowing for formatting between them; failing that,
+    from its section heading; failing that, it goes at the end of its file."""
+    sources, places = {}, []
+    for c in items:
+        path = os.path.join(root, c["path"].lstrip("/"))
+        folder, name = os.path.dirname(path), os.path.basename(path)
+        order = reading_order(folder)
+        file_rank = order.index(name) if name in order else len(order)
+        if path not in sources:
+            try:
+                with open(path, encoding="utf-8") as f:
+                    sources[path] = f.read()
+            except OSError:
+                sources[path] = ""
+        text = sources[path]
+        at = -1
+        for probe in (c.get("original") or c["quote"], c["quote"], c.get("section", "")):
+            words = re.findall(r"\w+", probe or "")[:5]
+            if words:
+                m = re.search(r"\W+".join(map(re.escape, words)), text)
+                if m:
+                    at = m.start()
+                    break
+        places.append([folder, file_rank, name, at if at >= 0 else len(text)])
+    return places
 
 
 def reading_order(folder):
@@ -1131,6 +1501,10 @@ def make_handler(root, css, renderer, comments, user, waiter_file, tabs):
                 items = comments.load()
                 if "drafts" in query:
                     items = [c for c in items if c["status"] == "draft"]
+                elif "open" in query:
+                    items = [c for c in items if c["status"] != "resolved"]
+                    for c, place in zip(items, doc_positions(root, items)):
+                        c["place"] = place
                 else:
                     items = [c for c in items if c["path"] == query.get("path", [""])[0]]
                 return self.send(200, json.dumps(items), "application/json")
@@ -1174,6 +1548,11 @@ def make_handler(root, css, renderer, comments, user, waiter_file, tabs):
             length = int(self.headers.get("Content-Length") or 0)
             try:
                 data = json.loads(self.rfile.read(length) or b"{}")
+                if url.path == "/__md":
+                    try:
+                        return self.send(200, json.dumps({"html": renderer.render_many(data["texts"])}), "application/json")
+                    except Exception as e:
+                        return self.send(502, str(e), "text/plain")
                 if url.path == "/__open":
                     return self.send(200, "reused" if tabs.open(data["path"]) else "none", "text/plain")
                 if url.path == "/__comments":
@@ -1321,6 +1700,8 @@ def print_comments(items):
             print(f"  in section: {c['section']}")
         print(f"  context: ...{c['prefix']}[{c['quote']}]{c['suffix']}...")
         print(f"  says: {c['body']}")
+        if "```suggestion" in c["body"]:
+            print("  (has a suggested change: use its wording exactly, keeping the line's own formatting)")
         for r in c["replies"]:
             print(f"  {'Reviewer' if r['author'] == 'you' else 'Claude'} replied: {r['body']}")
 

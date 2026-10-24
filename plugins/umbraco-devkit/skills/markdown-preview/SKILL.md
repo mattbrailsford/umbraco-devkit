@@ -77,6 +77,10 @@ reader resolves a comment. The most Claude does is mark it done, for them to che
    "Waiting on you". Their answer comes back in a later batch with the whole thread.
 4. **Just an acknowledgement** ("looks great"): reply briefly with `--done`.
 
+- **A suggested change** (a ```` ```suggestion ```` block, as on GitHub) is the reader's exact
+  new wording. Use it word for word, keeping the line's own Markdown (links, code, bold)
+  where the words carry over, then reply with `--done`.
+
 - A change that settles a decision gets a line in `DECISION-LOG.md`, as every phase's does.
 - Replies are a sentence or two: what changed, or the one question. The reader sees them
   beside the line.
@@ -128,8 +132,8 @@ A phase that writes a doc a person reviews (`BRIEF.md`, `ARCHITECTURE.md`, `SPEC
 - macOS, `python3` (part of Xcode's command line tools, which git already needs) and `gh`,
   signed in. `gh auth status` says whether it is.
 - Internet access: GitHub draws the page, and the styles, Mermaid and math load from a CDN.
-- The file's text goes to GitHub's Markdown API, including plans that aren't committed.
-  Nothing else is sent anywhere. The `gh` sign-in is read once and kept in memory only.
+- The file's text, and the text of comments on it, go to GitHub's Markdown API to be drawn,
+  including plans that aren't committed. Nothing else is sent anywhere. The `gh` sign-in is read once and kept in memory only.
 - Comments are kept in the worktree's git folder (`markdown-preview/comments.json` under
   `git rev-parse --git-dir`). They're never committed, and removing the worktree removes them.
 
