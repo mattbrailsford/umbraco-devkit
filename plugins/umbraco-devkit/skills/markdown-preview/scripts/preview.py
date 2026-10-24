@@ -241,6 +241,8 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
                                          background: none; color: var(--muted); font-size: 12px; text-align: left; }
 #overview .ov-more { cursor: pointer; }
 #overview .ov-more:hover { color: var(--link); background: var(--hover); }
+#content { transition: opacity .15s; }
+#content.leaving { opacity: .35; }
 #keys-hint { position: fixed; left: 16px; bottom: 16px; border: 0; background: none; color: var(--muted); font-size: 12px; cursor: pointer; }
 #keys-hint:hover { color: var(--fg); }
 #keys { position: fixed; left: 16px; bottom: 44px; display: none; width: 320px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 11; font-size: 13px; }
@@ -260,7 +262,7 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 <aside><details id="filebox"><summary>Files in this folder</summary><div id="files"></div></details>
 <div id="overview"></div></aside>
 <div class="box" id="doc" hidden>
-  <div class="box-header"><span>__DOCNAME__</span><span class="count" id="count"></span></div>
+  <div class="box-header"><span id="docname">__DOCNAME__</span><span class="count" id="count"></span></div>
   <article id="content" class="markdown-body"></article>
 </div>
 </div>
@@ -276,7 +278,7 @@ window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] 
 </script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
 <script>
-const pagePath = __PATH__;
+let pagePath = __PATH__;
 // A scoped tab (opened on a plan folder, say) keeps its scope as you follow links inside it.
 function tabSetting(name, fallback) {
   const given = new URLSearchParams(location.search).get(name);
@@ -284,17 +286,19 @@ function tabSetting(name, fallback) {
   catch { return given || fallback; }
 }
 const home = tabSetting('home', '/');
-const scoped = home !== '/' && (pagePath + '/').startsWith(home);
+let scoped = home !== '/' && (pagePath + '/').startsWith(home);
 // Comments are on inside the scope (or everywhere, unscoped) unless the tab was opened read-only.
-const canComment = tabSetting('comments', 'on') !== 'off' && (home === '/' || scoped);
-if (scoped) {
-  // Drop the path trail above the scope's folder, and the separator after each dropped part.
+let canComment = tabSetting('comments', 'on') !== 'off' && (home === '/' || scoped);
+// Drop the path trail above the scope's folder, and the separator after each dropped part.
+function trimCrumbs() {
+  if (!scoped) return;
   document.querySelectorAll('.crumbs [data-path]').forEach(el => {
     if (el.dataset.path.length < home.length) { el.nextElementSibling?.remove(); el.remove(); }
   });
 }
-const isFolder = pagePath.endsWith('/');
-const folderPath = pagePath.slice(0, pagePath.lastIndexOf('/') + 1);
+trimCrumbs();
+let isFolder = pagePath.endsWith('/');
+let folderPath = pagePath.slice(0, pagePath.lastIndexOf('/') + 1);
 // The file list sits beside the content on wide screens; on narrow ones it folds away.
 document.getElementById('filebox').open = matchMedia('(min-width: 901px)').matches;
 const content = document.getElementById('content');
@@ -341,7 +345,16 @@ async function fetchText(url) {
 }
 
 // ---- Review comments: drafts pile up on the page, then go to Claude in one batch. ----
-const docPath = isFolder ? pagePath + 'README.md' : pagePath;
+let docPath = isFolder ? pagePath + 'README.md' : pagePath;
+
+function setPage(path) {
+  pagePath = path;
+  scoped = home !== '/' && (pagePath + '/').startsWith(home);
+  canComment = tabSetting('comments', 'on') !== 'off' && (home === '/' || scoped);
+  isFolder = pagePath.endsWith('/');
+  folderPath = pagePath.slice(0, pagePath.lastIndexOf('/') + 1);
+  docPath = isFolder ? pagePath + 'README.md' : pagePath;
+}
 const user = __USER__;
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const norm = s => s.replace(/\\s+/g, ' ').trim();
@@ -1026,12 +1039,14 @@ document.getElementById('sendbtn').onclick = async () => {
   renderComments();
 };
 
+let pageFresh = true;
+
 async function load() {
   // Don't wipe a comment someone is halfway through writing.
   if (document.querySelector('.thread.new textarea')?.value || document.querySelector('.thread.editing')) return setTimeout(load, 1000);
   showStatus('Rendering…', 'busy');
   try {
-    const y = scrollY;
+    const y = pageFresh ? 0 : scrollY;
     document.getElementById('files').innerHTML = await fetchText('/__list?path=' + encodeURIComponent(folderPath)
       + '&current=' + encodeURIComponent(isFolder ? 'README.md' : pagePath.slice(folderPath.length))
       + (scoped ? '&home=' + encodeURIComponent(home) : ''));
@@ -1052,18 +1067,63 @@ async function load() {
     }
     scrollTo(0, y);
     showStatus('');
-    if (location.hash && renderCount === 1)
+    if (pageFresh && location.hash)
       location.hash.startsWith('#comment-') ? jumpToComment() : document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    pageFresh = false;
   } catch (e) {
     showStatus(e.message, 'error');
   }
 }
 
+// Going to another file swaps the page's parts in place (path trail, file list, doc) rather
+// than reloading, with a quick fade. Anything that can't be swapped falls back to a reload.
+let navigating = false;
+async function navigate(href, push = true) {
+  const u = new URL(href, location.href);
+  navigating = true;
+  content.classList.add('leaving');
+  try {
+    const res = await fetch(u.pathname + u.search);
+    const html = await res.text();
+    const path = html.match(/let pagePath = (".*?");/);
+    if (!res.ok || !path) throw new Error('not a preview page');
+    const next = new DOMParser().parseFromString(html, 'text/html');
+    if (push) history.pushState(null, '', u.pathname + u.search + u.hash);
+    document.title = next.title;
+    document.querySelector('.crumbs').innerHTML = next.querySelector('.crumbs').innerHTML;
+    document.getElementById('docname').textContent = next.getElementById('docname').textContent;
+    setPage(JSON.parse(path[1]));
+    trimCrumbs();
+    document.getElementById('keys-hint').hidden = !canComment;
+    setHot(null);
+    pageFresh = true;
+    seen = JSON.parse(await fetchText('/__changes?path=' + encodeURIComponent(pagePath)));
+    await load();
+  } catch {
+    location.assign(u.href);
+  } finally {
+    content.classList.remove('leaving');
+    navigating = false;
+  }
+}
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href]');
+  if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target) return;
+  const u = new URL(a.href, location.href);
+  if (u.origin !== location.origin || u.pathname.startsWith('/__') || !/(\.md|\/)$/.test(u.pathname)) return;
+  if (u.pathname === location.pathname && u.search === location.search) return;  // an anchor on this page
+  e.preventDefault();
+  navigate(u.href);
+});
+addEventListener('popstate', () => navigate(location.href, false));
+
 let seen = null;
 async function poll() {
+  if (navigating) return setTimeout(poll, 400);
   try {
     const now = JSON.parse(await fetchText('/__changes?path=' + encodeURIComponent(pagePath)));
-    if (now.navigate) return location.assign(now.navigate);
+    if (now.navigate) { await navigate(now.navigate); return setTimeout(poll, 400); }
     if (status.className === 'error' && status.textContent === 'Preview server stopped') showStatus('');
     if (!seen || now.doc !== seen.doc) { seen = now; await load(); }
     else if (now.comments !== seen.comments) { seen = now; await refreshComments(); }
