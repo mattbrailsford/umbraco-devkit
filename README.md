@@ -133,7 +133,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 
 | I want to... | Run |
 |---|---|
-| See a plan file or folder as GitHub will show it, refreshing as it changes ("show me the brief") | [`/markdown-preview`](plugins/umbraco-devkit/skills/markdown-preview/SKILL.md) |
+| See a plan file or folder as GitHub will show it, refreshing as it changes, and comment on it for Claude to fix ("show me the brief") | [`/markdown-preview`](plugins/umbraco-devkit/skills/markdown-preview/SKILL.md) |
 
 ### Learn from a session
 

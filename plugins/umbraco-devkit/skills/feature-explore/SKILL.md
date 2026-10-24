@@ -81,6 +81,8 @@ than going fully freeform.
    extending an existing Umbraco extension point (property editor, dashboard, content app,
    notification handler) or introducing a new one — that framing shapes several of the
    interview questions below.
+5. Check `BRIEF.md` and `README.md` for open review comments, following `markdown-preview`'s
+   "Open comments on your files". Each one is input to this run.
 
 ## Assume, then show
 

@@ -29,6 +29,8 @@ Every other skill you run works around those flows and never changes code itself
   `pr-demo` starts a PR on the demo site so you can click through it yourself.
   `markdown-preview` opens a plan file or folder in the browser, drawn by GitHub and
   refreshed as it changes; the planning steps offer it once they've written their file.
+  You can comment on any line there and send the batch to Claude, which fixes the doc and
+  replies on each comment.
   `dependency-review` sorts Dependabot PRs, security alerts, and out-of-date packages by what
   each touches, and hands chosen bumps to `quick-fix`.
 - **Tidies up after.** `feature-close` moves a closed plan out of the plans folder once
@@ -65,6 +67,10 @@ Three rules make this work:
 - **One owner per file.** Two steps, or two sessions, never edit the same file, so there's
   nothing to merge-conflict over.
 - **Stop, don't guess.** A step missing its input sends you back to the step that owns it.
+
+Review comments left in `markdown-preview` follow the same ownership. A comment on a file the
+running step doesn't own is left for the step that does, and that step picks it up as input
+the next time it runs. Comments are kept in the worktree's git folder, never in the plan.
 
 Outside the feature folders, `feature-design` also owns `docs/mockups/starters/`: mockup
 starters for a product's own screens (a Copilot sidebar, a flow editor) that the general

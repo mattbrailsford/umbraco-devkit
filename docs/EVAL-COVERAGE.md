@@ -33,8 +33,9 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
+- [`feature-design`](#feature-design): `feature-design-open-comments`
 - [`feature-plan`](#feature-plan): `feature-plan-offers-preview`
-- [`markdown-preview`](#markdown-preview): `markdown-preview-open-plan` `markdown-preview-show-brief`
+- [`markdown-preview`](#markdown-preview): `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -51,7 +52,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
 | [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 7 | 0 | – | – |
+| [`feature-design`](#feature-design) | workflow | Not run | – | 8 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Not run | – | 3 | 0 | – | – |
@@ -62,7 +63,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`markdown-preview`](#markdown-preview) | workflow | Not run | – | 2 | 0 | – | – |
+| [`markdown-preview`](#markdown-preview) | workflow | Not run | – | 4 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 5 | 0 | – | – |
@@ -196,6 +197,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `feature-design-mockup-modal-property-layout` | 100 | 2026-10-20 |
 | `feature-design-mockups-email-without-ui` | 100 | 2026-10-20 |
 | `feature-design-nfr-targets` | 100 | 2026-10-18 |
+| `feature-design-open-comments` | – | – |
 | `feature-design-stops-without-brief` | 100 | 2026-10-16 |
 
 ### `feature-explore`
@@ -274,6 +276,8 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `markdown-preview-comments-fix` | – | – |
+| `markdown-preview-comments-unclear` | – | – |
 | `markdown-preview-open-plan` | – | – |
 | `markdown-preview-show-brief` | – | – |
 
