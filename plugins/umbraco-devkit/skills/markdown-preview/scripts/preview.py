@@ -135,6 +135,9 @@ aside summary { display: none; }
 .thread.draft:not(.editing) .msg.pending .msg-body { cursor: text; border-radius: 4px; margin-left: -4px; padding: 0 4px; }
 .thread.draft:not(.editing) .msg.pending .msg-body:hover { background: var(--pending-bg); }
 .reply-box { border-top: 1px solid var(--border); padding: 8px 14px 8px 48px; }
+.thread-actions { padding: 0 14px 10px 48px; }
+.thread-actions:first-of-type, .msg + .thread-actions { border-top: 1px solid var(--border); padding-top: 10px; }
+.thread-actions .btn { margin-left: 0; }
 .reply-box textarea { width: 100%; box-sizing: border-box; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; resize: none; }
 .reply-box.active textarea { min-height: 64px; resize: vertical; }
 .reply-actions { display: none; text-align: right; margin-top: 6px; }
@@ -663,8 +666,7 @@ async function renderComments() {
     const partial = block && !lineGone && c.quote !== blockText(block);
     const marked = partial && c.status !== 'resolved' && markQuote(block, c.quote);
     const quote = !block || lineGone || (partial && !marked) ? `<div class="msg-quote">${esc(c.quote)}</div>` : '';
-    const action = c.status === 'draft' ? '<button class="link-btn edit">Edit</button><button class="link-btn del">Delete</button>'
-      : c.status !== 'resolved' ? '<button class="link-btn resolve">Resolve</button>' : '';
+    const action = c.status === 'draft' ? '<button class="link-btn edit">Edit</button><button class="link-btn del">Delete</button>' : '';
     const label = c.status === 'deferred' && c.owner ? `For ${esc(c.owner)}` : STATE[c.status];
     const head = `<span class="state ${c.status}">${label}</span>${action}`;
     const you = user.login || 'You';
@@ -691,6 +693,12 @@ async function renderComments() {
       };
       submitOnEnter(box, () => reply.querySelector('.send').click(), () => { reply.querySelector('.cancel').click(); box.blur(); });
       thread.append(reply);
+    }
+    if (c.status !== 'draft' && c.status !== 'resolved') {
+      const foot = document.createElement('div');
+      foot.className = 'thread-actions';
+      foot.innerHTML = `<button class="btn resolve${c.status === 'addressed' ? ' primary' : ''}">Resolve conversation</button>`;
+      thread.append(foot);
     }
     thread.querySelector('.del')?.addEventListener('click', async () => { await post('/__comments/delete', { id: c.id }); renderComments(); });
     thread.querySelector('.edit')?.addEventListener('click', () => editDraft(thread, c));
