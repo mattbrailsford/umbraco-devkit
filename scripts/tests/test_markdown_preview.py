@@ -1,0 +1,377 @@
+"""Tests for the markdown-preview skill's scripts.
+
+Standard library only, and no network: GitHub's renderer is swapped for a stand-in. Run with
+`scripts/check-skill-scripts.sh`, or `python3 -m unittest discover -s scripts/tests`.
+"""
+import http.client
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+import unittest
+import urllib.parse
+
+SCRIPTS = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..",
+                                        "plugins", "umbraco-devkit", "skills", "markdown-preview", "scripts"))
+sys.path.insert(0, SCRIPTS)
+
+import comments  # noqa: E402
+import folders  # noqa: E402
+import server  # noqa: E402
+import worktree  # noqa: E402
+
+
+def read(path):
+    with open(path, encoding="utf-8") as f:
+        return f.read()
+
+
+def write(path, text):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(text)
+
+
+class TempRepo(unittest.TestCase):
+    """Each test gets a throwaway repo: a folder with a `.git` folder, and a small plan."""
+
+    def setUp(self):
+        self.root = os.path.realpath(tempfile.mkdtemp(prefix="mdpreview-"))
+        self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
+        os.makedirs(os.path.join(self.root, ".git"))
+        self.plan = os.path.join(self.root, "docs", "plans", "retries")
+        write(os.path.join(self.plan, "README.md"),
+              "# Retries\n\n1. [BRIEF.md](./BRIEF.md)\n2. [SPEC.md](SPEC.md)\n3. [PLAN.md](./PLAN.md)\n\n"
+              "See [the repo](../README.md) and [GitHub](https://github.com).\n")
+        write(os.path.join(self.plan, "BRIEF.md"),
+              "# Brief\n\n## Problem\n\nWebhooks **fail silently** when the receiver is down.\n\n## Goals\n\n- Retry with backoff.\n")
+        write(os.path.join(self.plan, "SPEC.md"), "# Spec\n\n- Five attempts.\n")
+        write(os.path.join(self.plan, "notes.md"), "# Notes\n")
+        self.store = comments.Comments(worktree.state_paths(self.root).comments)
+
+
+class WorktreeTests(TempRepo):
+    def test_finds_the_repo_from_inside_it(self):
+        self.assertEqual(worktree.find_git(self.plan), (self.root, os.path.join(self.root, ".git")))
+
+    def test_finds_a_linked_worktree_through_its_git_file(self):
+        linked = os.path.join(self.root, "linked")
+        gitdir = os.path.join(self.root, ".git", "worktrees", "linked")
+        os.makedirs(gitdir)
+        write(os.path.join(linked, ".git"), f"gitdir: {gitdir}\n")
+        self.assertEqual(worktree.find_git(linked), (linked, gitdir))
+
+    def test_outside_a_repo_finds_nothing(self):
+        outside = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, outside)
+        self.assertEqual(worktree.find_git(outside), (None, None))
+
+    def test_comments_live_in_the_git_folder(self):
+        self.assertEqual(worktree.state_paths(self.root).comments,
+                         os.path.join(self.root, ".git", "markdown-preview", "comments.json"))
+
+    def test_pid_alive(self):
+        pid_file = os.path.join(self.root, "pid")
+        write(pid_file, str(os.getpid()))
+        self.assertTrue(worktree.pid_alive(pid_file))
+        write(pid_file, "not a pid")
+        self.assertFalse(worktree.pid_alive(pid_file))
+        self.assertFalse(worktree.pid_alive(os.path.join(self.root, "missing")))
+
+
+class CommentStoreTests(TempRepo):
+    brief = "/docs/plans/retries/BRIEF.md"
+
+    def add(self, quote="Retry with backoff.", body="Why?"):
+        return self.store.add(self.brief, quote, body, section="Goals")
+
+    def test_ids_count_up(self):
+        self.assertEqual([self.add()["id"] for _ in range(3)], ["c1", "c2", "c3"])
+
+    def test_only_a_pending_comment_can_be_edited(self):
+        c = self.add()
+        self.store.edit(c["id"], "Why not?")
+        self.assertEqual(self.store.load()[0]["body"], "Why not?")
+        self.store.send_drafts()
+        with self.assertRaises(ValueError):
+            self.store.edit(c["id"], "Too late")
+
+    def test_a_reply_reopens_the_thread_and_can_be_withdrawn(self):
+        c = self.add()
+        self.store.send_drafts()
+        self.store.claude_reply(c["id"], "Which part?")
+        self.store.reader_reply(c["id"], "The 2 h step")
+        self.assertEqual(self.store.load()[0]["status"], "draft")
+        self.store.edit(c["id"], "The 6 h step")  # edits the reply, not the comment
+        self.assertEqual(self.store.load()[0]["replies"][-1]["body"], "The 6 h step")
+        self.assertEqual(self.store.load()[0]["body"], "Why?")
+        self.store.delete(c["id"])  # withdraws only the reply
+        item = self.store.load()[0]
+        self.assertEqual((item["status"], len(item["replies"])), ("replied", 1))
+
+    def test_deleting_a_pending_comment_removes_it(self):
+        c = self.add()
+        self.store.delete(c["id"])
+        self.assertEqual(self.store.load(), [])
+
+    def test_claude_claims_a_sent_batch(self):
+        self.add()
+        self.add(body="And this?")
+        self.assertEqual(self.store.claim_sent(), [])  # nothing sent yet
+        self.store.send_drafts()
+        self.assertEqual([c["status"] for c in self.store.claim_sent()], ["working", "working"])
+        self.assertEqual(self.store.claim_sent(), [])
+
+    def test_claude_reply_outcomes(self):
+        a, b, c = self.add(), self.add(), self.add()
+        self.store.claude_reply(a["id"], "Done", done=True)
+        self.store.claude_reply(b["id"], "Left for feature-design.", defer="feature-design")
+        self.store.claude_reply(c["id"], "Which one?")
+        statuses = {x["id"]: (x["status"], x["owner"]) for x in self.store.load()}
+        self.assertEqual(statuses, {"c1": ("addressed", None), "c2": ("deferred", "feature-design"), "c3": ("replied", None)})
+
+    def test_moving_keeps_the_first_text_only(self):
+        c = self.add(quote="TODO: decide")
+        self.store.claude_reply(c["id"], "Decided", done=True, move="We decided A.")
+        self.store.claude_reply(c["id"], "Reworded", done=True, move="We chose A.")
+        item = self.store.load()[0]
+        self.assertEqual((item["quote"], item["original"]), ("We chose A.", "TODO: decide"))
+
+    def test_unresolved_under_a_folder(self):
+        self.add()
+        self.store.add("/docs/other/X.md", "x", "elsewhere")
+        done = self.add()
+        self.store.resolve(done["id"])
+        self.assertEqual([c["path"] for c in self.store.unresolved(under="/docs/plans/")], [self.brief])
+        self.assertEqual(self.store.open_counts(), {self.brief: 1, "/docs/other/X.md": 1})
+
+    def test_describe_says_whose_move_it_is(self):
+        c = self.store.add(self.brief, "Retry with backoff.", "```suggestion\nRetry twice.\n```", section="Goals")
+        self.store.claude_reply(c["id"], "Left for later.", defer="feature-plan")
+        text = comments.describe(self.store.load())
+        self.assertIn("(left for feature-plan)", text)
+        self.assertIn("in section: Goals", text)
+        self.assertIn("has a suggested change", text)
+
+    def test_changes_from_two_processes_are_never_lost(self):
+        # The page server and Claude's commands write the same file at once: a read-change-write
+        # without the file lock loses one side's change.
+        c = self.add()
+        code = ("import sys; sys.path.insert(0, %r); import comments; s = comments.Comments(%r)\n"
+                "for i in range(40): s.claude_reply('c1', f'{sys.argv[1]}-{i}')") % (SCRIPTS, self.store.path)
+        procs = [subprocess.Popen([sys.executable, "-c", code, name]) for name in ("a", "b")]
+        for p in procs:
+            self.assertEqual(p.wait(timeout=60), 0)
+        self.assertEqual(len(self.store.load()[0]["replies"]), 80)
+
+
+class FolderTests(TempRepo):
+    def test_reading_order_follows_the_readme(self):
+        # Missing files, links out of the folder and web links are skipped.
+        write(os.path.join(self.plan, "README.md"), read(os.path.join(self.plan, "README.md")) + "- [GONE.md](GONE.md)\n")
+        self.assertEqual(folders.reading_order(self.plan), ["BRIEF.md", "SPEC.md"])
+
+    def test_file_list_puts_folders_then_reading_order_then_the_rest(self):
+        os.makedirs(os.path.join(self.plan, "diagrams"))
+        listing = folders.folder_listing(self.plan, "/docs/plans/retries/", "BRIEF.md", {"/docs/plans/retries/SPEC.md": 2})
+        names = re.findall(r"</svg>([^<]+)", listing)
+        self.assertEqual(names, ["..", "diagrams", "BRIEF.md", "SPEC.md", "notes.md", "README.md"])
+        self.assertIn('class="current"', listing)
+        self.assertIn('<span class="dot" title="Open comments">2</span>', listing)
+
+    def test_no_way_up_from_the_top_of_the_scope(self):
+        listing = folders.folder_listing(self.plan, "/docs/plans/retries/", "", {}, home="/docs/plans/retries/")
+        self.assertNotIn(">..<", listing)
+
+    def test_doc_position_reads_through_formatting_and_falls_back(self):
+        root, brief = self.root, "/docs/plans/retries/BRIEF.md"
+        place = lambda **c: folders.doc_position(root, {"path": brief, "quote": "", **c})
+        problem = place(quote="Webhooks fail silently when the receiver is down.")  # "**" between words in the file
+        goals = place(quote="Retry with backoff.")
+        by_section = place(quote="Text that's gone", section="Goals")
+        gone = place(quote="Text that's gone")
+        self.assertLess(problem[3], goals[3])
+        self.assertLess(by_section[3], goals[3])
+        self.assertEqual(gone[3], len(read(os.path.join(root, brief.lstrip("/")))))
+        spec = folders.doc_position(root, {"path": "/docs/plans/retries/SPEC.md", "quote": "Five attempts."})
+        self.assertLess(problem[:2], spec[:2])  # BRIEF.md comes before SPEC.md in the README
+
+    def test_breadcrumbs_carry_their_paths(self):
+        trail = folders.breadcrumbs(self.root, "/docs/plans/retries/BRIEF.md")
+        self.assertEqual(re.findall(r'data-path="([^"]+)"', trail), ["/", "/docs/", "/docs/plans/", "/docs/plans/retries/", "/docs/plans/retries/BRIEF.md"])
+
+    def test_change_marker_notices_edits_and_new_files(self):
+        brief = os.path.join(self.plan, "BRIEF.md")
+        before = folders.change_marker(brief)
+        time.sleep(0.01)
+        write(brief, "# Changed\n")
+        after_edit = folders.change_marker(brief)
+        write(os.path.join(self.plan, "NEW.md"), "x")
+        self.assertNotEqual(before, after_edit)
+        self.assertNotEqual(after_edit, folders.change_marker(brief))
+
+
+class CommandTests(TempRepo):
+    def run_cli(self, *args, timeout=20):
+        return subprocess.run([sys.executable, os.path.join(SCRIPTS, "preview.py"), *args, "--root", self.root],
+                              capture_output=True, text=True, timeout=timeout, cwd=self.root)
+
+    def test_reply_flags(self):
+        self.store.add("/docs/plans/retries/BRIEF.md", "Retry with backoff.", "Why?")
+        out = self.run_cli("reply", "c1", "Done.", "--done", "--move", "Retry three times.")
+        self.assertIn("marked it done (moved to its new text)", out.stdout)
+        item = self.store.load()[0]
+        self.assertEqual((item["status"], item["quote"]), ("addressed", "Retry three times."))
+        self.assertNotEqual(self.run_cli("reply", "c1", "x", "--done", "--defer", "feature-plan").returncode, 0)
+
+    def test_listings(self):
+        brief, spec = "/docs/plans/retries/BRIEF.md", "/docs/plans/retries/SPEC.md"
+        self.store.add(brief, "Retry with backoff.", "Sent one")
+        self.store.send_drafts()
+        self.store.add(spec, "Five attempts.", "Unsent one")
+        self.assertIn("Sent one", self.run_cli("comments").stdout)
+        self.assertNotIn("Unsent one", self.run_cli("comments").stdout)
+        self.assertIn("No open comments.", self.run_cli("comments", "--file", os.path.join(self.plan, "SPEC.md")).stdout)
+        folder = self.run_cli("comments", "--folder", self.plan).stdout
+        self.assertIn("Sent one", folder)
+        self.assertIn("written by the reader but not sent yet", folder)
+        self.assertIn("Sent one", self.run_cli("comments", "--folder", self.root).stdout)  # the whole worktree
+
+    def test_wait_returns_the_batch_and_only_one_waits(self):
+        script = os.path.join(SCRIPTS, "preview.py")
+        waiter = subprocess.Popen([sys.executable, script, "wait", "--root", self.root], stdout=subprocess.PIPE, text=True, cwd=self.root)
+        self.addCleanup(lambda: waiter.poll() is None and waiter.kill())
+        for _ in range(50):
+            if worktree.pid_alive(worktree.state_paths(self.root).helper):
+                break
+            time.sleep(0.1)
+        self.assertIn("Already waiting", self.run_cli("wait").stdout)
+        self.store.add("/docs/plans/retries/BRIEF.md", "Retry with backoff.", "Over to you")
+        self.store.send_drafts()
+        out, _ = waiter.communicate(timeout=20)
+        self.assertIn("The reviewer sent 1 comment", out)
+        self.assertIn("Over to you", out)
+        self.assertEqual(self.store.load()[0]["status"], "working")
+
+
+class FakeRenderer:
+    def render(self, text):
+        return "<h1>Drawn</h1><p>" + text[:40] + "</p>"
+
+    def render_many(self, texts):
+        return [f"<p>{t}</p>" for t in texts]
+
+
+class ServerTests(TempRepo):
+    def setUp(self):
+        super().setUp()
+        paths = worktree.state_paths(self.root)
+        self.srv = server.PreviewServer(0, root=self.root, css="/* css */", renderer=FakeRenderer(),
+                                        comments=self.store, user={"login": "someone"}, helper_file=paths.helper)
+        threading.Thread(target=self.srv.serve_forever, daemon=True).start()
+        self.addCleanup(self.srv.server_close)
+        self.addCleanup(self.srv.shutdown)
+
+    def request(self, method, path, body=None):
+        conn = http.client.HTTPConnection("127.0.0.1", self.srv.port, timeout=10)
+        conn.request(method, path, json.dumps(body) if body is not None else None)
+        res = conn.getresponse()
+        data = res.read().decode()
+        conn.close()
+        return res.status, res.getheader("Content-Type"), res.getheader("Location"), data
+
+    def test_a_markdown_file_gets_the_filled_in_page(self):
+        status, _, _, page = self.request("GET", "/docs/plans/retries/BRIEF.md")
+        self.assertEqual(status, 200)
+        self.assertNotRegex(page, r"\{\{\w+\}\}")
+        boot = json.loads(re.search(r'<script id="boot" type="application/json">(.*?)</script>', page).group(1))
+        self.assertEqual(boot, {"path": "/docs/plans/retries/BRIEF.md", "user": {"login": "someone"}})
+        self.assertIn("/* css */", page)
+
+    def test_a_folder_without_its_slash_redirects(self):
+        status, _, location, _ = self.request("GET", "/docs/plans/retries")
+        self.assertEqual((status, location), (301, "/docs/plans/retries/"))
+
+    def test_page_files_are_served_and_nothing_else(self):
+        status, ctype, _, _ = self.request("GET", "/__page/app.js")
+        self.assertEqual((status, ctype.split(";")[0]), (200, "text/javascript"))
+        for path in ("/__page/../preview.py", "/__page/preview.py", "/__page/missing.js"):
+            self.assertEqual(self.request("GET", path)[0], 404, path)
+
+    def test_nothing_outside_the_worktree(self):
+        for path in ("/../../etc/passwd", "/%2e%2e/%2e%2e/etc/passwd", "/__render?path=/../../etc/passwd"):
+            self.assertEqual(self.request("GET", path)[0], 404, path)
+
+    def test_render_and_comments_round_trip(self):
+        brief = "/docs/plans/retries/BRIEF.md"
+        self.assertIn("<h1>Drawn</h1>", self.request("GET", "/__render?path=" + urllib.parse.quote(brief))[3])
+        self.assertEqual(self.request("POST", "/__comments", {"path": brief, "quote": "Retry with backoff.", "body": "Why?"})[0], 200)
+        self.assertEqual(self.request("POST", "/__comments", {"path": "/nope.md", "quote": "x", "body": "x"})[0], 400)
+        self.assertEqual(len(json.loads(self.request("GET", "/__comments?drafts=1")[3])), 1)
+        self.request("POST", "/__comments/send", {})
+        self.assertEqual(self.request("POST", "/__comments/edit", {"id": "c1", "body": "Late"})[0], 400)
+        open_items = json.loads(self.request("GET", "/__comments?open=1")[3])
+        self.assertEqual(len(open_items[0]["place"]), 4)
+        self.assertEqual(self.request("POST", "/__nope", {})[0], 404)
+
+    def test_changes_markers_move_with_the_doc_and_the_comments(self):
+        url = "/__changes?path=" + urllib.parse.quote("/docs/plans/retries/BRIEF.md")
+        first = json.loads(self.request("GET", url)[3])
+        time.sleep(0.01)
+        write(os.path.join(self.plan, "BRIEF.md"), "# Edited\n")
+        second = json.loads(self.request("GET", url)[3])
+        self.store.add("/docs/plans/retries/BRIEF.md", "Edited", "x")
+        third = json.loads(self.request("GET", url)[3])
+        self.assertNotEqual(first["doc"], second["doc"])
+        self.assertEqual(second["doc"], third["doc"])
+        self.assertNotEqual(second["comments"], third["comments"])
+
+    def test_an_open_tab_is_reused(self):
+        self.assertEqual(self.request("POST", "/__open", {"path": "docs/plans/retries/SPEC.md"})[3], "none")
+        self.request("GET", "/__changes?path=" + urllib.parse.quote("/docs/plans/retries/BRIEF.md"))  # a tab checks in
+        self.assertEqual(self.request("POST", "/__open", {"path": "docs/plans/retries/SPEC.md"})[3], "reused")
+        marks = json.loads(self.request("GET", "/__changes?path=" + urllib.parse.quote("/docs/plans/retries/BRIEF.md"))[3])
+        self.assertEqual(marks["navigate"], "/docs/plans/retries/SPEC.md")
+
+
+class PageScriptTests(unittest.TestCase):
+    page_dir = os.path.join(SCRIPTS, "page")
+
+    def scripts(self):
+        return sorted(f for f in os.listdir(self.page_dir) if f.endswith(".js"))
+
+    @unittest.skipUnless(shutil.which("node"), "needs node")
+    def test_scripts_parse(self):
+        for name in self.scripts():
+            with tempfile.NamedTemporaryFile("w", suffix=".mjs", delete=False) as f:
+                f.write(read(os.path.join(self.page_dir, name)))
+            self.addCleanup(os.remove, f.name)
+            result = subprocess.run(["node", "--check", f.name], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, f"{name}: {result.stderr}")
+
+    def test_every_import_is_exported(self):
+        # The page has no build step to catch a renamed or missing export.
+        exports = {}
+        for name in self.scripts():
+            src = read(os.path.join(self.page_dir, name))
+            exports[name] = set(re.findall(r"^export (?:async )?(?:function|const|let) ([\w$]+)", src, re.M))
+        for name in self.scripts():
+            src = read(os.path.join(self.page_dir, name))
+            for names, module in re.findall(r"^import \{([^}]+)\} from '\./([\w-]+\.js)';", src, re.M):
+                self.assertIn(module, exports, f"{name} imports from missing {module}")
+                for wanted in (n.strip() for n in names.split(",")):
+                    self.assertIn(wanted, exports[module], f"{name} imports {wanted}, which {module} doesn't export")
+
+    def test_index_loads_files_that_exist(self):
+        index = read(os.path.join(self.page_dir, "index.html"))
+        for ref in re.findall(r'/__page/([\w.-]+)', index):
+            self.assertTrue(os.path.isfile(os.path.join(self.page_dir, ref)), ref)
+
+
+if __name__ == "__main__":
+    unittest.main()

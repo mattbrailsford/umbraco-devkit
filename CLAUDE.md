@@ -38,7 +38,7 @@ plugins/umbraco-devkit/
   agents/{builder,reviewer,issue-triager}.md      # subagents
   evals/<case>/{prompt.md,graders/}               # `claude plugin eval` cases; results/ is gitignored
 settings.example.json   # copy-by-hand example for consumers; NOT installed by the plugin
-scripts/                # check-*.sh + their allowlists; repo-only, not shipped
+scripts/                # check-*.sh + their allowlists, tests/; repo-only, not shipped
 .claude/skills/review-skill-links/  # repo-only skill: cross-reference review; not shipped
 .claude/skills/write-skill-eval/    # repo-only skill: write and prove an eval case; not shipped
 .github/workflows/checks.yml        # runs the check scripts below on every PR
@@ -88,8 +88,9 @@ Naming a new skill or agent:
 
 ## No build, lint, or test step
 
-Everything is Markdown plus two hand-written JSON manifests. There is no .NET code here.
-Don't run `dotnet build` or apply C# conventions to this repo. Checks that do exist:
+Everything is Markdown plus two hand-written JSON manifests, apart from the few scripts some
+skills ship (stdlib Python, tested by `scripts/tests/`). There is no .NET code here. Don't run
+`dotnet build` or apply C# conventions to this repo. Checks that do exist:
 
 ```bash
 jq . .claude-plugin/marketplace.json
@@ -100,6 +101,7 @@ scripts/check-version.sh      # version only in plugin.json, and bumped if shipp
 scripts/check-frontmatter.sh  # skill/agent headers parse, names match, descriptions fit
 scripts/check-skill-callers.sh # no skill changes behavior based on which skill started it
 scripts/check-evals.sh        # every skill has an eval
+scripts/check-skill-scripts.sh # tests for the scripts skills ship
 scripts/eval-coverage.sh --check # docs/EVAL-COVERAGE.md is current and every # covers: is valid
 ```
 
