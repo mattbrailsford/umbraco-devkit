@@ -472,5 +472,6 @@ of this phase's output — it's an unfinished one, and noting the gap is not a s
 closing it.
 
 Otherwise, note any `TODO` in `ARCHITECTURE.md`/`SPEC.md`, any screen mockup the human hasn't
-approved yet, and any project starter created or refreshed in `docs/mockups/starters/`, then:
-`Suggested next: feature-plan.`
+approved yet, and any project starter created or refreshed in `docs/mockups/starters/`. Offer
+to open `ARCHITECTURE.md` in a live preview, following `markdown-preview`'s "Offering a
+preview". Then: `Suggested next: feature-plan.`

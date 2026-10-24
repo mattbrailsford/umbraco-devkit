@@ -115,6 +115,7 @@ blocks task Y, why a slice was deferred).
 
 ## Hand off
 
-Summarize: N stories, M tasks, S spec files generated, the first parallel group, then:
+Summarize: N stories, M tasks, S spec files generated, the first parallel group. Offer to
+open `PLAN.md` in a live preview, following `markdown-preview`'s "Offering a preview". Then:
 `Suggested next: feature-build — specs are in place and pending.` For a large or risky plan,
 mention `feature-interrogate` as an optional stress-test before that first build.

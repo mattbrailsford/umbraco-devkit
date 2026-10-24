@@ -129,6 +129,12 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 | Move to a new Umbraco major, task by task, still reviewed | [`/major-upgrade`](plugins/umbraco-devkit/skills/major-upgrade/SKILL.md) |
 | Get a finished package listed on the Umbraco Marketplace | [`/umbraco-marketplace`](plugins/umbraco-devkit/skills/umbraco-marketplace/SKILL.md) |
 
+### Read a doc
+
+| I want to... | Run |
+|---|---|
+| See a plan file or folder as GitHub will show it, refreshing as it changes ("show me the brief") | [`/markdown-preview`](plugins/umbraco-devkit/skills/markdown-preview/SKILL.md) |
+
 ### Learn from a session
 
 | I want to... | Run |

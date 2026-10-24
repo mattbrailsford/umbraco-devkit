@@ -34,7 +34,7 @@ These decide what belongs in this repo. Check a new rule, skill, or section agai
 .claude-plugin/marketplace.json                   # marketplace manifest (lists the plugin)
 plugins/umbraco-devkit/
   .claude-plugin/plugin.json                      # plugin manifest
-  skills/<name>/SKILL.md                          # one folder per skill (+ references/, templates/)
+  skills/<name>/SKILL.md                          # one folder per skill (+ references/, templates/, scripts/)
   agents/{builder,reviewer,issue-triager}.md      # subagents
   evals/<case>/{prompt.md,graders/}               # `claude plugin eval` cases; results/ is gitignored
 settings.example.json   # copy-by-hand example for consumers; NOT installed by the plugin

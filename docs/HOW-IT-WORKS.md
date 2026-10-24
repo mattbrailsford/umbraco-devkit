@@ -27,6 +27,8 @@ Every other skill you run works around those flows and never changes code itself
   `decision-review` pulls out what a human should look at after it's built — the same job,
   run at opposite ends of the pipeline. `pr-describe` writes the PR description, and
   `pr-demo` starts a PR on the demo site so you can click through it yourself.
+  `markdown-preview` opens a plan file or folder in the browser, drawn by GitHub and
+  refreshed as it changes; the planning steps offer it once they've written their file.
   `dependency-review` sorts Dependabot PRs, security alerts, and out-of-date packages by what
   each touches, and hands chosen bumps to `quick-fix`.
 - **Tidies up after.** `feature-close` moves a closed plan out of the plans folder once

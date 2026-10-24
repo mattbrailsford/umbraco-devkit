@@ -33,6 +33,8 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
+- [`feature-plan`](#feature-plan): `feature-plan-offers-preview`
+- [`markdown-preview`](#markdown-preview): `markdown-preview-open-plan` `markdown-preview-show-brief`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -52,7 +54,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`feature-design`](#feature-design) | workflow | Keeps its rules | – | 7 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-plan`](#feature-plan) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`feature-plan`](#feature-plan) | workflow | Not run | – | 3 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -60,6 +62,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`markdown-preview`](#markdown-preview) | workflow | Not run | – | 2 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 5 | 0 | – | – |
@@ -211,6 +214,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `feature-plan-offers-preview` | – | – |
 | `feature-plan-stops-without-design` | 100 | 2026-10-20 |
 | `feature-plan-stops-without-mockup` | 100 | 2026-10-20 |
 
@@ -265,6 +269,13 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 |---|---|---|
 | `major-upgrade-offers-stopgaps` | 100 | 2026-10-23 |
 | `major-upgrade-version-mismatch` | 100 | 2026-10-23 |
+
+### `markdown-preview`
+
+| Eval | Score | Recorded |
+|---|---|---|
+| `markdown-preview-open-plan` | – | – |
+| `markdown-preview-show-brief` | – | – |
 
 ### `plain-writing`
 
