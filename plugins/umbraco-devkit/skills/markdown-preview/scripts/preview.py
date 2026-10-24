@@ -4,7 +4,9 @@
 Usage:
   preview.py <file-or-folder> [--scope [DIR]] [--no-comments] [--root DIR] [--port N] [--no-open]
   preview.py wait                       block until the reviewer sends comments, then print them
-  preview.py comments [--file PATH...]  list comments waiting on Claude, or open ones on PATH
+  preview.py comments [--file PATH... | --folder DIR]
+                                        list comments waiting on Claude, or every open one on
+                                        PATH, or anywhere under DIR (a plan folder, say)
   preview.py reply ID TEXT [--done | --defer STEP] [--move TEXT]
 
 Renders through GitHub's Markdown API (with the `gh` CLI's sign-in), serves the page on
@@ -1680,6 +1682,7 @@ def comments_cli(argv):
     outcome.add_argument("--defer", metavar="STEP", help="another step owns the file; leave it for STEP")
     parser.add_argument("--move", metavar="TEXT", help="re-pin the comment to TEXT, which replaced what it was on")
     parser.add_argument("--file", action="append", help="comments: open comments on this file instead")
+    parser.add_argument("--folder", help="comments: every open comment on files under this folder, unsent ones too")
     parser.add_argument("--root", help="worktree (default: the one holding the current folder)")
     args = parser.parse_args(argv)
     root = os.path.realpath(args.root or git_root(os.getcwd()) or os.getcwd())
@@ -1709,6 +1712,15 @@ def comments_cli(argv):
         return
 
     if args.command == "comments":
+        if args.folder:
+            # The gate before a step moves on: anything not resolved, including comments the
+            # reader wrote but hasn't sent yet.
+            prefix = "/" + os.path.relpath(os.path.realpath(args.folder), root).replace(os.sep, "/").strip("./") + "/"
+            items = [c for c in store.load() if c["path"].startswith(prefix) and c["status"] != "resolved"]
+            if not items:
+                print("No open comments.")
+            print_comments(items)
+            return
         if args.file:
             # Everything still open on these files, whoever it's waiting on; drafts aren't sent yet.
             wanted = {"/" + os.path.relpath(os.path.realpath(f), root).replace(os.sep, "/") for f in args.file}
@@ -1746,6 +1758,7 @@ def helper_running(waiter_file):
 # How each status reads to Claude in a listing: whose move it is.
 STATUS_NOTE = {
     "sent": "new, for you", "working": "new, for you", "deferred": "left for {owner}",
+    "draft": "written by the reader but not sent yet",
     "replied": "waiting on the reader's answer", "addressed": "done, waiting on the reader's check",
 }
 

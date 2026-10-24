@@ -57,8 +57,9 @@ tracks completion via issues instead of an in-doc checklist.
    without a mockup can't be approved, so it can't be planned.
 3. Read any existing `STORIES.md`/`PLAN.md`. Re-entrant: reconcile and extend; never silently
    drop or renumber completed (`- [x]`) tasks.
-4. Check `STORIES.md` and `PLAN.md` for open review comments, following `markdown-preview`'s
-   "Open comments on your files". Each one is input to this run.
+4. Check the whole plan folder for unresolved review comments, following `markdown-preview`'s
+   "Comments before moving on". Open ones on `STORIES.md` and `PLAN.md` are input to this
+   run.
 
 ## Stories
 

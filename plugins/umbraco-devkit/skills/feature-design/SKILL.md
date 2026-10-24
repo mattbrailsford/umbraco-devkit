@@ -77,8 +77,9 @@ go straight to "Project starters".
 3. Read the project's `CLAUDE.md` for existing architectural conventions (folder structure,
    namespace rules, extension patterns already in use) — a new feature should extend the
    grain of the codebase, not fight it.
-4. Check `ARCHITECTURE.md` and `SPEC.md` for open review comments, following
-   `markdown-preview`'s "Open comments on your files". Each one is input to this run.
+4. Check the whole plan folder for unresolved review comments, following `markdown-preview`'s
+   "Comments before moving on". Open ones on `ARCHITECTURE.md` and `SPEC.md` are input to
+   this run.
 
 ## Connected-pattern check
 

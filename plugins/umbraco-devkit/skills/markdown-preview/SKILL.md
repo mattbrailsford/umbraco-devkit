@@ -6,8 +6,8 @@ description: >-
   its README. Readers comment on any line and send the comments to Claude in one batch, and
   Claude fixes the doc and replies on each. Use when the user asks to see, show, open, view or
   preview a doc ("show me the brief", "open the plan", "preview the spec"), or says "go
-  through my comments". Also owns when a phase offers a preview, and how a step picks up open
-  comments left on its files.
+  through my comments". Also owns when a phase offers a preview, how a step picks up open
+  comments left on its files, and the check for unresolved comments before a step moves on.
 user-invocable: true
 argument-hint: [file or folder, optional]
 ---
@@ -115,6 +115,25 @@ Each comment listed as new, or left for this step, is part of this run's input. 
 under "Review comments" as part of the step's normal work, and reply on it. The rest are
 waiting on the reader; leave them, apart from "Check before removing text". This reads the
 comments straight from the worktree, so the preview needn't be open.
+
+## Comments before moving on
+
+A step that builds on a plan folder (`feature-design`, `feature-plan`, `feature-build`), or
+archives one (`feature-close`), first checks the whole folder for anything unresolved:
+
+```bash
+python3 <this skill's folder>/scripts/preview.py comments --folder <plan folder>
+```
+
+- **New, or left for this step:** input to this run, under "Open comments on your files".
+- **Left for an earlier step** (one parked for `feature-design` when `feature-plan` runs):
+  stop, and send the user to that step. It's that step's question to settle, not this one's
+  to guess at.
+- **Waiting on the reader:** their answer ("Waiting on you"), their check ("Done, please
+  check"), or a comment they wrote but didn't send. List them in one message and ask whether
+  to deal with them first or carry on. One question, not one per comment; "carry on" is a
+  fine answer. If this step already asks the user something before starting, ask it there.
+- **Nothing open:** carry on without mentioning it.
 
 ## Offering a preview
 

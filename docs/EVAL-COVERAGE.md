@@ -33,8 +33,9 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
+- [`feature-build`](#feature-build): `feature-build-open-comments`
 - [`feature-design`](#feature-design): `feature-design-open-comments`
-- [`feature-plan`](#feature-plan): `feature-plan-offers-preview`
+- [`feature-plan`](#feature-plan): `feature-plan-earlier-step-comment` `feature-plan-offers-preview`
 - [`markdown-preview`](#markdown-preview): `markdown-preview-comments-decision` `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
@@ -50,12 +51,12 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +100 | 2 | 0 | 4/9 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
-| [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 3 | 0 | – | – |
+| [`feature-build`](#feature-build) | workflow | Not run | – | 4 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-design`](#feature-design) | workflow | Not run | – | 8 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-plan`](#feature-plan) | workflow | Not run | – | 3 | 0 | – | – |
+| [`feature-plan`](#feature-plan) | workflow | Not run | – | 4 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -178,6 +179,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Eval | Score | Recorded |
 |---|---|---|
 | `feature-build-asks-before-trunk` | 100 | 2026-10-16 |
+| `feature-build-open-comments` | – | – |
 | `feature-build-rethink-after-three-rounds` | 100 | 2026-10-20 |
 | `feature-build-stops-without-checklist` | 100 | 2026-10-16 |
 
@@ -216,6 +218,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `feature-plan-earlier-step-comment` | – | – |
 | `feature-plan-offers-preview` | – | – |
 | `feature-plan-stops-without-design` | 100 | 2026-10-20 |
 | `feature-plan-stops-without-mockup` | 100 | 2026-10-20 |
