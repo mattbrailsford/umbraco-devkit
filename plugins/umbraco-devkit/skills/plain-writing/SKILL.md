@@ -43,6 +43,18 @@ done their part.
   gives the options.
 - Open the list with a count in bold, "**2 guesses need your OK.**", inside a
   `> [!IMPORTANT]` callout.
+- End the guess's last line with a backslash. In a Markdown file GitHub joins a plain line
+  break into one line, so without it *If not:* runs on after the guess:
+
+  ```md
+  > [!IMPORTANT]
+  > **2 guesses need your OK.**
+  >
+  > 1. Up to 10,000 rows per file.\
+  >    *If not:* a higher limit needs a background job.
+  > 2. A row whose source already exists is skipped.\
+  >    *If not:* overwrite it, or let the editor choose.
+  ```
 - Nothing scattered: a guess sits only in this list, not also in the section it's about.
   Once the reader agrees, it moves into its section as a plain fact and leaves the list.
 - Nothing to check: leave the list out. Don't write "nothing needs you".
