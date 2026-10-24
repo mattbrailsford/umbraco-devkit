@@ -81,6 +81,8 @@ than going fully freeform.
    extending an existing Umbraco extension point (property editor, dashboard, content app,
    notification handler) or introducing a new one — that framing shapes several of the
    interview questions below.
+5. Check `BRIEF.md` and `README.md` for open review comments, following `markdown-preview`'s
+   "Open comments on your files". Each one is input to this run.
 
 ## Assume, then show
 
@@ -185,5 +187,6 @@ just this one), write it to `.claude/memory/` instead (type: `decision`) — see
 
 ## Hand off
 
-State what's still `TODO`, then: `Suggested next: feature-design — or re-run feature-explore
+State what's still `TODO`. Offer to open `BRIEF.md` in a live preview, following
+`markdown-preview`'s "Offering a preview". Then: `Suggested next: feature-design — or re-run feature-explore
 to close open questions first.`

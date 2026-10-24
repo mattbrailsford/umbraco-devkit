@@ -57,6 +57,9 @@ tracks completion via issues instead of an in-doc checklist.
    without a mockup can't be approved, so it can't be planned.
 3. Read any existing `STORIES.md`/`PLAN.md`. Re-entrant: reconcile and extend; never silently
    drop or renumber completed (`- [x]`) tasks.
+4. Check the whole plan folder for unresolved review comments, following `markdown-preview`'s
+   "Comments before moving on". Open ones on `STORIES.md` and `PLAN.md` are input to this
+   run.
 
 ## Stories
 
@@ -115,6 +118,7 @@ blocks task Y, why a slice was deferred).
 
 ## Hand off
 
-Summarize: N stories, M tasks, S spec files generated, the first parallel group, then:
+Summarize: N stories, M tasks, S spec files generated, the first parallel group. Offer to
+open `PLAN.md` in a live preview, following `markdown-preview`'s "Offering a preview". Then:
 `Suggested next: feature-build — specs are in place and pending.` For a large or risky plan,
 mention `feature-interrogate` as an optional stress-test before that first build.

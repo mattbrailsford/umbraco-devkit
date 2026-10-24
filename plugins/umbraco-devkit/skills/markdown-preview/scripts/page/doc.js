@@ -1,0 +1,200 @@
+// The drawn doc: finishing GitHub's HTML, the lines ("blocks") comments attach to, how a
+// comment finds its line again, and the line under the pointer or keyboard ("hot").
+import { $, content, norm } from './state.js';
+import { openForm } from './threads.js';
+
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'default' });
+let renderCount = 0;
+
+// GitHub finishes several things in the browser; repeat them after each render.
+export function enhance() {
+  const seen = {};
+  content.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(h => {
+    let slug = h.textContent.trim().toLowerCase().replace(/[^\p{L}\p{N}\s_-]/gu, '').replace(/\s/g, '-');
+    const n = seen[slug] = (seen[slug] ?? -1) + 1;
+    if (n) slug += '-' + n;
+    h.id = slug;
+  });
+  content.querySelectorAll('[id^="user-content-"]').forEach(el => el.id = el.id.slice(13));
+  content.querySelectorAll('a[href^="#user-content-"]').forEach(a => a.setAttribute('href', '#' + a.getAttribute('href').slice(14)));
+
+  // Diagrams and math are pinned by their source, kept before they're drawn over.
+  const run = ++renderCount;
+  content.querySelectorAll('div.highlight-source-mermaid > pre').forEach(async (pre, i) => {
+    pre.dataset.source = 'Diagram: ' + norm(pre.textContent);
+    try { pre.innerHTML = (await mermaid.render(`mermaid-${run}-${i}`, pre.textContent)).svg; } catch (e) { console.error(e); }
+  });
+  content.querySelectorAll('math-renderer').forEach(m => { m.dataset.tex = norm(m.textContent); });
+  if (window.MathJax?.typesetPromise) {
+    MathJax.typesetClear([content]);
+    MathJax.typesetPromise([content]).catch(console.error);
+  }
+}
+
+// ---------- blocks: the things a comment can be on ----------
+
+// What a line "says", for pinning: source for diagrams and math, a label for images, a list
+// item's own text without its nested list, and a table row by its column names.
+export function blockText(el) {
+  if (el.matches('tr')) return rowText(el);
+  if (el.dataset.source) return el.dataset.source;
+  if (el.dataset.tex) return el.dataset.tex;
+  const copy = el.cloneNode(true);
+  copy.querySelectorAll('.add-btn, .thread, .resolved-pin').forEach(x => x.remove());
+  if (el.matches('li')) copy.querySelectorAll(':scope > ul, :scope > ol').forEach(x => x.remove());
+  copy.querySelectorAll('[data-tex]').forEach(m => m.replaceWith(m.dataset.tex));
+  copy.querySelectorAll('img').forEach(img =>
+    img.replaceWith(` [image: ${img.alt || decodeURIComponent((img.getAttribute('src') || '').split('/').pop())}] `));
+  return norm(copy.textContent);
+}
+
+// Pinned as "Column: value · Column: value", so a short row reads clearly to Claude and two
+// look-alike rows don't get mixed up. The header row stands for the whole table.
+function rowText(tr) {
+  const cells = [...tr.cells].map(c => norm(c.textContent));
+  if (tr.closest('thead')) return 'Table: ' + cells.join(' | ');
+  const heads = [...(tr.closest('table').tHead?.rows[0]?.cells || [])].map(c => norm(c.textContent));
+  return cells.map((c, i) => heads[i] ? `${heads[i]}: ${c}` : c).join(' · ');
+}
+
+// The element a table's gutter items (the row "+", resolved ticks) are measured against.
+export function tableBox(row) {
+  return row.closest('markdown-accessiblity-table') || row.closest('table');
+}
+
+// The heading of the section a block sits in (or the block itself, if it's a heading).
+export function sectionOf(block) {
+  let el = block;
+  while (el.parentElement && el.parentElement !== content) el = el.parentElement;
+  for (; el; el = el.previousElementSibling)
+    if (el.matches('h1, h2, h3, h4, h5, h6')) return blockText(el);
+  return '';
+}
+
+export function markBlocks() {
+  const kinds = 'p, li, h1, h2, h3, h4, h5, h6, pre, tr, math-renderer.js-display-math';
+  content.querySelectorAll(kinds).forEach(el => {
+    if (el.matches('li') && el.querySelector(':scope > p')) return;
+    // Skip hidden headings, and anything inside a block already taken (a table's cells, say).
+    if (el.matches('.sr-only') || el.parentElement.closest('[data-block]:not(li)')) return;
+    if (el.matches('math-renderer') && el.closest('p')) return;
+    el.dataset.block = '';
+    if (el.matches('tr')) return;  // rows share one floating "+" (see setHot)
+    const btn = document.createElement('button');
+    btn.className = 'add-btn';
+    btn.textContent = '+';
+    btn.title = 'Comment on this';
+    btn.onclick = e => { e.stopPropagation(); openForm(el, blockText(el), '', ''); };
+    el.prepend(btn);
+  });
+}
+
+// The block a comment is on: by its text with the words around it, then by its text, then,
+// if the text was edited, the block sharing most of its words (when most are shared).
+export function findBlock(c) {
+  if (!c.quote) return null;
+  const blocks = [...content.querySelectorAll('[data-block]')].map(el => [el, blockText(el)]);
+  const exact = blocks.find(([, t]) => t.includes(c.prefix + c.quote + c.suffix));
+  const loose = blocks.find(([, t]) => t.includes(c.quote));
+  if (exact || loose) return (exact || loose)[0];
+  const words = new Set(c.quote.toLowerCase().split(' '));
+  let best = null, bestScore = 0.5;
+  for (const [el, t] of blocks) {
+    const shared = t.toLowerCase().split(' ').filter(w => words.has(w)).length / words.size;
+    if (shared > bestScore) [best, bestScore] = [el, shared];
+  }
+  return best;
+}
+
+export function findHeading(text) {
+  return [...content.querySelectorAll('h1[data-block], h2[data-block], h3[data-block], h4[data-block], h5[data-block], h6[data-block]')]
+    .find(h => blockText(h) === text) || null;
+}
+
+// Highlight a few selected words in the doc, so the thread needn't repeat them.
+export function markQuote(block, quote) {
+  const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => n.parentElement.closest('.thread, .add-btn, .resolved-pin') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+  });
+  for (let n; (n = walker.nextNode());) {
+    const at = n.nodeValue.indexOf(quote);
+    if (at < 0) continue;
+    const range = document.createRange();
+    range.setStart(n, at);
+    range.setEnd(n, at + quote.length);
+    const mark = document.createElement('mark');
+    mark.className = 'cmark';
+    range.surroundContents(mark);
+    return true;
+  }
+  return false;
+}
+
+export function clearQuoteMarks() {
+  content.querySelectorAll('mark.cmark').forEach(m => m.replaceWith(...m.childNodes));
+  content.normalize();
+}
+
+// ---------- the hot line: under the pointer, or picked with j/k ----------
+
+export let hot = null;
+const rowAdd = $('row-add');
+rowAdd.onclick = () => hot && openForm(hot, blockText(hot), '', '');
+
+export function setHot(block) {
+  hot?.classList.remove('hot');
+  hot = block;
+  hot?.classList.add('hot');
+  // A table row can't hold a "+" of its own (a table clips anything outside it when it
+  // scrolls sideways), so rows share one floating "+" that follows the current row.
+  if (hot?.matches('tr')) {
+    const r = hot.getBoundingClientRect();
+    const left = tableBox(hot).getBoundingClientRect().left;
+    rowAdd.style.left = (left + scrollX - 26) + 'px';
+    rowAdd.style.top = (r.top + scrollY + Math.min(r.height, 28) / 2 - 10) + 'px';
+    rowAdd.style.display = 'block';
+  } else {
+    rowAdd.style.display = 'none';
+  }
+}
+
+content.addEventListener('mouseover', e => {
+  const block = e.target.closest('[data-block]');
+  // Crossing the gap between the text and its "+" passes over no block; keep the last one
+  // lit so the button stays put long enough to click.
+  if (!block || block === hot) return;
+  setHot(block);
+});
+content.addEventListener('mouseleave', e => { if (e.relatedTarget !== rowAdd) setHot(null); });
+
+// A plain click on a line starts a comment too. Dragging or double-clicking to select text
+// leaves a selection, which goes to the "Comment" button instead; links and controls keep
+// their own clicks.
+content.addEventListener('click', e => {
+  if (getSelection().toString().trim()) return;
+  if (e.target.closest('a, button, input, textarea, .thread, .resolved-pin')) return;
+  const block = e.target.closest('[data-block]');
+  if (block) openForm(block, blockText(block), '', '');
+});
+
+// Selecting words in a line offers a "Comment" button for just those words.
+const selBtn = $('sel-btn');
+document.addEventListener('mouseup', e => {
+  if (e.target === selBtn) return;
+  const sel = getSelection();
+  const text = norm(sel.toString());
+  const block = sel.anchorNode?.parentElement?.closest('[data-block]');
+  if (!text || !block || !content.contains(block)) { selBtn.style.display = 'none'; return; }
+  const rect = sel.getRangeAt(0).getBoundingClientRect();
+  selBtn.style.left = (rect.right + scrollX + 6) + 'px';
+  selBtn.style.top = (rect.top + scrollY - 4) + 'px';
+  selBtn.style.display = 'block';
+  selBtn.onclick = () => {
+    const full = blockText(block);
+    const at = Math.max(0, full.indexOf(text));
+    selBtn.style.display = 'none';
+    openForm(block, text, full.slice(Math.max(0, at - 30), at), full.slice(at + text.length, at + text.length + 30));
+  };
+});
+selBtn.addEventListener('mousedown', e => e.preventDefault());
