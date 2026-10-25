@@ -387,6 +387,24 @@ class ServerTests(TempRepo):
         self.assertEqual(marks, {"BRIEF.md": "needed", "SPEC.md": "signed"})
 
 
+    def test_a_folder_with_a_space_in_its_name(self):
+        # The page and Claude's commands must name a file the same way, or a comment made on
+        # the page never shows in `comments --file`.
+        write(os.path.join(self.root, "docs", "my plan", "BRIEF.md"), "# Brief\n\nShip it.\n")
+        page = self.request("GET", "/docs/my%20plan/BRIEF.md")[3]
+        boot = json.loads(re.search(r'<script id="boot" type="application/json">(.*?)</script>', page).group(1))
+        self.assertEqual(boot["path"], "/docs/my plan/BRIEF.md")
+        self.assertEqual(self.request("GET", "/docs/my%20plan")[2], "/docs/my%20plan/")
+        self.assertEqual(self.request("POST", "/__comments", {"path": boot["path"], "quote": "Ship it.", "body": "When?"})[0], 200)
+        self.store.send_drafts()
+        listed = subprocess.run([sys.executable, os.path.join(SCRIPTS, "preview.py"), "comments", "--root", self.root,
+                                 "--file", os.path.join(self.root, "docs", "my plan", "BRIEF.md")], capture_output=True, text=True).stdout
+        self.assertIn("When?", listed)
+        listing = self.request("GET", "/__list?path=" + urllib.parse.quote("/docs/my plan/"))[3]
+        self.assertIn('href="/docs/my%20plan/BRIEF.md"', listing)
+        self.assertIn('<span class="dot" title="Open comments">1</span>', listing)
+
+
 class SignOffTests(TempRepo):
     def setUp(self):
         super().setUp()

@@ -2,6 +2,10 @@
 
 It listens on 127.0.0.1 only, serves files from one worktree and refuses anything outside
 it. Requests starting `/__` are the page's own; anything else is a file or folder.
+
+Paths are decoded once, where they come in (the request's own path, or a query or body
+value), and stay plain from there: "/docs/my plan/BRIEF.md", never "my%20plan". Comments,
+sign-offs and Claude's commands all key files that way.
 """
 import html
 import json
@@ -68,9 +72,9 @@ class Handler(BaseHTTPRequestHandler):
 
     # ---------- plumbing ----------
 
-    def resolve(self, url_path):
-        """Map a URL path to a file or folder in the worktree, or None (missing, or outside it)."""
-        full = os.path.realpath(os.path.join(self.server.root, urllib.parse.unquote(url_path).lstrip("/")))
+    def resolve(self, path):
+        """Map a plain path to a file or folder in the worktree, or None (missing, or outside it)."""
+        full = os.path.realpath(os.path.join(self.server.root, path.lstrip("/")))
         return full if inside(full, self.server.root) and os.path.exists(full) else None
 
     def send(self, status, body, content_type="text/html; charset=utf-8"):
@@ -93,7 +97,7 @@ class Handler(BaseHTTPRequestHandler):
             return route(self)
         if url.path.startswith("/__page/"):
             return self.page_file(url.path[len("/__page/"):])
-        return self.worktree_file(url.path)
+        return self.worktree_file(urllib.parse.unquote(url.path))
 
     def do_POST(self):
         route = POST_ROUTES.get(urllib.parse.urlparse(self.path).path)
@@ -114,11 +118,10 @@ class Handler(BaseHTTPRequestHandler):
 
     # ---------- pages and files ----------
 
-    def page(self, url_path, docname):
+    def page(self, path, docname):
         """The preview page, filled in for one file or folder."""
-        unquoted = urllib.parse.unquote(url_path)
-        boot = json.dumps({"path": url_path, "user": self.server.user}).replace("</", "<\\/")
-        fill = {"title": html.escape(unquoted), "github_css": self.server.css, "crumbs": breadcrumbs(self.server.root, unquoted),
+        boot = json.dumps({"path": path, "user": self.server.user}).replace("</", "<\\/")
+        fill = {"title": html.escape(path), "github_css": self.server.css, "crumbs": breadcrumbs(self.server.root, path),
                 "docname": html.escape(docname), "boot": boot}
         self.send(200, re.sub(r"\{\{(\w+)\}\}", lambda m: fill[m.group(1)], self.server.template))
 
@@ -133,20 +136,20 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(404, "Not found", "text/plain")
         self.send(200, body, "text/javascript; charset=utf-8" if name.endswith(".js") else "text/css; charset=utf-8")
 
-    def worktree_file(self, url_path):
+    def worktree_file(self, path):
         """A folder or Markdown file gets the preview page; anything else (an image, say) is sent as is."""
-        found = self.resolve(url_path)
+        found = self.resolve(path)
         if not found:
             return self.send(404, "Not found", "text/plain")
         if os.path.isdir(found):
-            if not url_path.endswith("/"):
+            if not path.endswith("/"):
                 self.send_response(301)
-                self.send_header("Location", url_path + "/")
+                self.send_header("Location", urllib.parse.quote(path + "/"))
                 self.end_headers()
                 return
-            return self.page(url_path, "README.md")
+            return self.page(path, "README.md")
         if found.endswith(".md"):
-            return self.page(url_path, os.path.basename(found))
+            return self.page(path, os.path.basename(found))
         with open(found, "rb") as f:
             self.send(200, f.read(), mimetypes.guess_type(found)[0] or "application/octet-stream")
 
@@ -180,7 +183,7 @@ class Handler(BaseHTTPRequestHandler):
         asked = self.server.signoffs.load()
         for e in os.scandir(found):
             if e.is_file() and e.name.endswith(".md"):
-                key = urllib.parse.unquote(url_path) + e.name
+                key = url_path + e.name
                 self.server.seen.ensure(key, e.path)
                 if self.server.seen.before(key, e.path) is not None:
                     changed.add(e.name)
@@ -196,7 +199,7 @@ class Handler(BaseHTTPRequestHandler):
             return
         if not os.path.isfile(found):
             return self.send(404, "Not found", "text/plain")
-        url_path = urllib.parse.unquote(self.query["path"])
+        url_path = self.query["path"]
         self.server.seen.ensure(url_path, found)
         old = self.server.seen.before(url_path, found)
         try:
@@ -229,7 +232,7 @@ class Handler(BaseHTTPRequestHandler):
         found = self.target()
         if not found:
             return
-        path = urllib.parse.unquote(self.query["path"])
+        path = self.query["path"]
         state, at = self.server.signoffs.state(path, found) if os.path.isfile(found) else (None, None)
         open_comments = len([c for c in self.server.comments.unresolved() if c["path"] == path])
         self.send_json({"state": state, "at": at, "open": open_comments})
@@ -244,7 +247,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def post_signoff(self):
         """The reader signs off a doc: only once its comments are all resolved."""
-        path = urllib.parse.unquote(self.data["path"])
+        path = self.data["path"]
         found = self.resolve(path)
         if not found or not os.path.isfile(found):
             raise BadRequest("no such file")
