@@ -48,11 +48,17 @@ aside summary { display: none; }
 #row-add { position: absolute; z-index: 4; }
 #content tr.thread-row > td { padding: 8px; background: var(--bg); }
 #content .row-thread { position: absolute; left: 9px; right: 0; margin: 0; z-index: 2; }
-#content .hot { background: var(--accent-bg); border-radius: 4px; cursor: pointer; }
+#content .hot { background: var(--accent-bg); border-radius: 4px; cursor: text; }  /* text can be picked out to comment on; the "+" is the button */
 #content .thread { cursor: auto; }
 .add-btn { position: absolute; left: -26px; top: 2px; width: 20px; height: 20px; border-radius: 6px; border: 0; background: var(--link); color: #fff; font: 600 14px/20px sans-serif; cursor: pointer; display: none; padding: 0; }
 #content .hot > .add-btn { display: block; }
-#sel-btn { position: absolute; display: none; z-index: 5; padding: 4px 10px; border: 0; border-radius: 6px; background: var(--link); color: #fff; font-size: 12px; cursor: pointer; }
+/* Picking out words offers a small comment button above them, like a tooltip. */
+#sel-btn { position: absolute; display: none; z-index: 5; padding: 6px; border: 0; border-radius: 6px; background: #25292e; color: #fff;
+           box-shadow: 0 4px 12px rgba(0,0,0,.25); cursor: pointer; line-height: 0; transform: translateX(-50%); }
+#sel-btn::after { content: ""; position: absolute; left: 50%; bottom: -5px; margin-left: -5px; border: 5px solid transparent; border-bottom: 0; border-top-color: #25292e; }
+#sel-btn:hover { background: var(--link); }
+#sel-btn:hover::after { border-top-color: var(--link); }
+@media (prefers-color-scheme: dark) { #sel-btn { background: #3d444d; } #sel-btn::after { border-top-color: #3d444d; } }
 .thread { border: 1px solid var(--border); border-radius: 8px; margin: 8px 0 16px; background: var(--bg); font-size: 14px; line-height: 1.5; overflow: hidden; }
 .thread.draft { border-color: var(--pending); }
 .thread .msg { display: flex; gap: 10px; padding: 12px 14px; }

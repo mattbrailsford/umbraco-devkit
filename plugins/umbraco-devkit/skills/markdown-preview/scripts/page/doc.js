@@ -231,7 +231,7 @@ content.addEventListener('click', e => {
   if (block) openForm(block, blockText(block), '', '');
 });
 
-// Selecting words in a line offers a "Comment" button for just those words.
+// Selecting words in a line offers a comment button, above them, for just those words.
 const selBtn = $('sel-btn');
 document.addEventListener('mouseup', e => {
   if (e.target === selBtn) return;
@@ -250,8 +250,10 @@ document.addEventListener('mouseup', e => {
   const text = words.join(' ');
   if (!text) { selBtn.style.display = 'none'; return; }
   const rect = range.getBoundingClientRect();
-  selBtn.style.left = (rect.right + scrollX + 6) + 'px';
-  selBtn.style.top = (rect.top + scrollY - 4) + 'px';
+  // Centred above the end of the selection, pointing at it.
+  const end = [...range.getClientRects()].at(-1) || rect;
+  selBtn.style.left = (end.right + scrollX - 4) + 'px';
+  selBtn.style.top = (end.top + scrollY - 38) + 'px';
   selBtn.style.display = 'block';
   selBtn.onclick = () => {
     const at = Math.max(0, full.indexOf(text));
