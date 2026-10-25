@@ -154,7 +154,7 @@ mark.cmark { background: var(--pending-bg); color: inherit; border-bottom: 2px s
 @keyframes flash { from { box-shadow: 0 0 0 4px var(--link); } }
 kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--header); font: 11px/16px ui-monospace, monospace; color: var(--fg); }
 /* The open-comments count opens a list of them, like GitHub's select menus. */
-#count { position: relative; }
+#count { position: relative; display: flex; align-items: center; }
 .cm-btn { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; margin: -2px -6px; border: 0; border-radius: 6px; background: none; color: var(--muted); font: inherit; cursor: pointer; }
 .cm-btn:hover, .cm-btn[aria-expanded="true"] { color: var(--fg); background: var(--hover); }
 .cm-btn .caret { fill: currentColor; }
