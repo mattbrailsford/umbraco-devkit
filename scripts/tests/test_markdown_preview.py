@@ -442,6 +442,19 @@ class SignOffTests(TempRepo):
         self.assertEqual(self.signoffs.claim_all_signed(self.root), [self.spec, self.brief])
         self.assertIsNone(self.signoffs.claim_all_signed(self.root))
 
+    def test_looking_never_rewrites_the_file(self):
+        # The waiting helper looks every second, and open pages redraw whenever the file
+        # changes: a rewrite on every look closed the reply box on a reopened thread.
+        self.signoffs.request([self.spec])
+        self.signoffs.sign(self.spec, self.root + self.spec)
+        self.signoffs.claim_all_signed(self.root)
+        before = self.signoffs.mtime()
+        time.sleep(0.01)
+        self.assertIsNone(self.signoffs.claim_all_signed(self.root))
+        self.assertEqual(self.store.claim_sent(), [])
+        self.assertEqual(self.signoffs.mtime(), before)
+        self.assertIsNone(self.store.mtime())
+
 
 class SeenTests(TempRepo):
     def test_copies_are_kept_until_comments_are_sent(self):

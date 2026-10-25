@@ -36,11 +36,15 @@ class JsonStore:
         os.replace(tmp, self.path)  # readers never see a half-written file
 
     def change(self, fn):
-        """Run fn(data) on the stored data and save it, with no other change in between."""
+        """Run fn(data) on the stored data and save it, with no other change in between. Saved
+        only if fn changed something: open pages redraw whenever the file does, and a redraw
+        closes whatever the reader has open."""
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
         with self.lock, open(self.path + ".lock", "a") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
             data = self.load()
+            before = json.dumps(data, sort_keys=True)
             result = fn(data)
-            self._save(data)
+            if json.dumps(data, sort_keys=True) != before:
+                self._save(data)
             return result
