@@ -180,7 +180,7 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #overview .ov-text { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #overview .ov-item:hover .ov-text { color: var(--link); }
 #overview .ov-meta { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#overview .ov-none, #overview .ov-more { display: block; width: 100%; padding: 8px 16px; border: 0; border-top: 1px solid var(--border);
+#overview .ov-none, #overview .ov-more { display: block; box-sizing: border-box; width: 100%; padding: 8px 16px; border: 0; border-top: 1px solid var(--border);
                                          background: none; color: var(--muted); font-size: 12px; text-align: left; }
 #overview .ov-more { cursor: pointer; }
 #overview .ov-more:hover { color: var(--link); background: var(--hover); }
