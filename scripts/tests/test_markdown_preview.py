@@ -22,6 +22,7 @@ sys.path.insert(0, SCRIPTS)
 
 import comments  # noqa: E402
 import folders  # noqa: E402
+import seen  # noqa: E402
 import server  # noqa: E402
 import worktree  # noqa: E402
 
@@ -259,7 +260,8 @@ class ServerTests(TempRepo):
         super().setUp()
         paths = worktree.state_paths(self.root)
         self.srv = server.PreviewServer(0, root=self.root, css="/* css */", renderer=FakeRenderer(),
-                                        comments=self.store, user={"login": "someone"}, helper_file=paths.helper)
+                                        comments=self.store, seen=seen.Seen(paths.seen), user={"login": "someone"},
+                                        helper_file=paths.helper)
         threading.Thread(target=self.srv.serve_forever, daemon=True).start()
         self.addCleanup(self.srv.server_close)
         self.addCleanup(self.srv.shutdown)
@@ -323,6 +325,38 @@ class ServerTests(TempRepo):
         self.assertEqual(self.request("POST", "/__open", {"path": "docs/plans/retries/SPEC.md"})[3], "reused")
         marks = json.loads(self.request("GET", "/__changes?path=" + urllib.parse.quote("/docs/plans/retries/BRIEF.md"))[3])
         self.assertEqual(marks["navigate"], "/docs/plans/retries/SPEC.md")
+
+
+    def test_changes_since_the_reader_last_looked(self):
+        brief = "/docs/plans/retries/BRIEF.md"
+        url = "/__seen?path=" + urllib.parse.quote(brief)
+        self.assertEqual(json.loads(self.request("GET", url)[3]), {})  # first look: kept as seen
+        write(os.path.join(self.plan, "BRIEF.md"), "# Brief, edited\n")
+        self.assertIn("<h1>Drawn</h1><p># Brief\n", json.loads(self.request("GET", url)[3])["html"])
+        self.assertEqual(self.request("POST", "/__seen", {"path": brief})[0], 200)
+        self.assertEqual(json.loads(self.request("GET", url)[3]), {})
+        self.assertEqual(self.request("POST", "/__seen", {"path": "/../../etc/passwd"})[0], 400)
+
+    def test_file_list_marks_changed_docs(self):
+        listing = "/__list?path=" + urllib.parse.quote("/docs/plans/retries/")
+        self.assertNotIn('class="changed"', self.request("GET", listing)[3])  # seeing the folder keeps copies
+        write(os.path.join(self.plan, "SPEC.md"), "# Spec\n\n- Six attempts.\n")
+        changed = re.findall(r'</svg>([^<]+)<span class="changed"', self.request("GET", listing)[3])
+        self.assertEqual(changed, ["SPEC.md"])
+
+
+class SeenTests(TempRepo):
+    def test_copies_are_kept_until_marked(self):
+        store = seen.Seen(worktree.state_paths(self.root).seen)
+        spec, url = os.path.join(self.plan, "SPEC.md"), "/docs/plans/retries/SPEC.md"
+        self.assertIsNone(store.before(url, spec))  # nothing kept yet
+        store.ensure(url, spec)
+        write(spec, "# Spec v2\n")
+        store.ensure(url, spec)  # doesn't replace the copy
+        self.assertEqual(store.before(url, spec), "# Spec\n\n- Five attempts.\n")
+        store.mark(url, spec)
+        self.assertIsNone(store.before(url, spec))
+        self.assertTrue(store.folder.startswith(os.path.join(self.root, ".git")))
 
 
 class PageScriptTests(unittest.TestCase):

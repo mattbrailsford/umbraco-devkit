@@ -4,6 +4,7 @@
 import { $, content, fetchText, page, setPage, showStatus } from './state.js';
 import { enhance, markBlocks, setHot } from './doc.js';
 import { renderComments } from './threads.js';
+import { showChanges } from './changes.js';
 import { jumpToComment } from './overview.js';
 import { showKeysHint } from './keys.js';
 import './editor.js';
@@ -44,10 +45,9 @@ async function load() {
       content.innerHTML = text;
       box.hidden = false;
       enhance();
-      if (page.canComment) {
-        markBlocks();
-        await renderComments();
-      }
+      if (page.canComment) markBlocks();
+      await showChanges();
+      if (page.canComment) await renderComments();
     }
     scrollTo(0, y);
     showStatus('');
@@ -65,6 +65,9 @@ async function refreshComments() {
   await loadFileList();
   await renderComments();
 }
+
+// Marking a doc as seen clears its mark in the file list too.
+document.addEventListener('seen', loadFileList);
 
 // ---------- moving between files ----------
 // Swaps the page's parts in place (path trail, file list, doc) rather than reloading, with

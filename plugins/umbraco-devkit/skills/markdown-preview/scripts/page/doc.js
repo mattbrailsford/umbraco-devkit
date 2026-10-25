@@ -19,17 +19,21 @@ export function enhance() {
   content.querySelectorAll('[id^="user-content-"]').forEach(el => el.id = el.id.slice(13));
   content.querySelectorAll('a[href^="#user-content-"]').forEach(a => a.setAttribute('href', '#' + a.getAttribute('href').slice(14)));
 
-  // Diagrams and math are pinned by their source, kept before they're drawn over.
+  pinSources(content);
   const run = ++renderCount;
   content.querySelectorAll('div.highlight-source-mermaid > pre').forEach(async (pre, i) => {
-    pre.dataset.source = 'Diagram: ' + norm(pre.textContent);
     try { pre.innerHTML = (await mermaid.render(`mermaid-${run}-${i}`, pre.textContent)).svg; } catch (e) { console.error(e); }
   });
-  content.querySelectorAll('math-renderer').forEach(m => { m.dataset.tex = norm(m.textContent); });
   if (window.MathJax?.typesetPromise) {
     MathJax.typesetClear([content]);
     MathJax.typesetPromise([content]).catch(console.error);
   }
+}
+
+// Diagrams and math are pinned by their source, kept before they're drawn over.
+export function pinSources(root) {
+  root.querySelectorAll('div.highlight-source-mermaid > pre').forEach(pre => { pre.dataset.source = 'Diagram: ' + norm(pre.textContent); });
+  root.querySelectorAll('math-renderer').forEach(m => { m.dataset.tex = norm(m.textContent); });
 }
 
 // ---------- blocks: the things a comment can be on ----------
@@ -72,13 +76,23 @@ export function sectionOf(block) {
   return '';
 }
 
-export function markBlocks() {
+// The blocks in a drawn doc, in order. Also used on an older copy, to compare the two.
+export function blockElements(root) {
   const kinds = 'p, li, h1, h2, h3, h4, h5, h6, pre, tr, math-renderer.js-display-math';
-  content.querySelectorAll(kinds).forEach(el => {
+  const picked = [], holders = [];
+  root.querySelectorAll(kinds).forEach(el => {
     if (el.matches('li') && el.querySelector(':scope > p')) return;
     // Skip hidden headings, and anything inside a block already taken (a table's cells, say).
-    if (el.matches('.sr-only') || el.parentElement.closest('[data-block]:not(li)')) return;
+    if (el.matches('.sr-only') || holders.some(b => b.contains(el))) return;
     if (el.matches('math-renderer') && el.closest('p')) return;
+    picked.push(el);
+    if (!el.matches('li')) holders.push(el);
+  });
+  return picked;
+}
+
+export function markBlocks() {
+  blockElements(content).forEach(el => {
     el.dataset.block = '';
     if (el.matches('tr')) return;  // rows share one floating "+" (see setHot)
     const btn = document.createElement('button');

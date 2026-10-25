@@ -1,5 +1,5 @@
 """Folders and files as the page shows them: the path trail, the file list, reading order,
-where a comment sits in its file, and when a page needs redrawing."""
+and when a page needs redrawing."""
 import html
 import os
 import re
@@ -45,9 +45,10 @@ def reading_order(folder):
     return order
 
 
-def folder_listing(folder, url_path, current, counts, home="/"):
+def folder_listing(folder, url_path, current, counts, home="/", changed=()):
     """The file list: folders first, as on GitHub; then files in the README's reading order;
-    then the rest by name. No way up from the top of the scope."""
+    then the rest by name. No way up from the top of the scope. Files in `changed` get a
+    mark: they've changed since the reader last looked."""
     entries = [e for e in os.scandir(folder) if not e.name.startswith(".")]
     order = reading_order(folder)
     entries.sort(key=lambda e: (not e.is_dir(), e.name not in order,
@@ -60,6 +61,8 @@ def folder_listing(folder, url_path, current, counts, home="/"):
         cls = ' class="current"' if e.name == current else ""
         count = counts.get(url_path + e.name)
         dot = f'<span class="dot" title="Open comments">{count}</span>' if count else ""
+        if e.name in changed:
+            dot = '<span class="changed" title="Changed since you last looked"></span>' + dot
         rows.append(f'<a href="{href}"{cls}>{ICON_DIR if e.is_dir() else ICON_FILE}{html.escape(e.name)}{dot}</a>')
     return f'<div class="box files">{"".join(rows)}</div>'
 

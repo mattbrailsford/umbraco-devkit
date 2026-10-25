@@ -37,11 +37,12 @@ class Tabs:
 class PreviewServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, port, *, root, css, renderer, comments, user, helper_file):
+    def __init__(self, port, *, root, css, renderer, comments, seen, user, helper_file):
         self.root = root
         self.css = css
         self.renderer = renderer
         self.comments = comments
+        self.seen = seen
         self.user = user
         self.helper_file = helper_file
         self.tabs = Tabs()
@@ -171,9 +172,33 @@ class Handler(BaseHTTPRequestHandler):
 
     def get_list(self):
         found = self.target()
-        if found:
-            self.send(200, folder_listing(found, self.query["path"], self.query.get("current", ""),
-                                          self.server.comments.open_counts(), self.query.get("home", "/")))
+        if not found:
+            return
+        # Seeing a folder counts as seeing its docs as they are, so a later change to one shows.
+        url_path, changed = self.query["path"], set()
+        for e in os.scandir(found):
+            if e.is_file() and e.name.endswith(".md"):
+                key = urllib.parse.unquote(url_path) + e.name
+                self.server.seen.ensure(key, e.path)
+                if self.server.seen.before(key, e.path) is not None:
+                    changed.add(e.name)
+        self.send(200, folder_listing(found, url_path, self.query.get("current", ""),
+                                      self.server.comments.open_counts(), self.query.get("home", "/"), changed))
+
+    def get_seen(self):
+        """The doc as the reader last saw it, drawn, if it's changed since: {"html": ...}, else {}."""
+        found = self.target()
+        if not found:
+            return
+        if not os.path.isfile(found):
+            return self.send(404, "Not found", "text/plain")
+        url_path = urllib.parse.unquote(self.query["path"])
+        self.server.seen.ensure(url_path, found)
+        old = self.server.seen.before(url_path, found)
+        try:
+            self.send_json({} if old is None else {"html": self.server.renderer.render(old)})
+        except Exception as e:  # GitHub unreachable: the page just shows no changes
+            self.send(502, str(e), "text/plain")
 
     def get_changes(self):
         """What the page polls: markers that change when the doc or the comments do, and a page
@@ -201,6 +226,13 @@ class Handler(BaseHTTPRequestHandler):
             raise
         except Exception as e:
             self.send(502, str(e), "text/plain")
+
+    def post_seen(self):
+        found = self.resolve(self.data["path"])
+        if not found or not os.path.isfile(found):
+            raise BadRequest("no such file")
+        self.server.seen.mark(urllib.parse.unquote(self.data["path"]), found)
+        self.ok()
 
     def post_open(self):
         self.send(200, "reused" if self.server.tabs.open(self.data["path"]) else "none", "text/plain")
@@ -243,10 +275,12 @@ GET_ROUTES = {
     "/__list": Handler.get_list,
     "/__changes": Handler.get_changes,
     "/__comments": Handler.get_comments,
+    "/__seen": Handler.get_seen,
 }
 POST_ROUTES = {
     "/__md": Handler.post_markdown,
     "/__open": Handler.post_open,
+    "/__seen": Handler.post_seen,
     "/__comments": Handler.post_comment,
     "/__comments/send": Handler.post_send,
     "/__comments/resolve": Handler.post_resolve,

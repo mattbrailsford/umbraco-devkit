@@ -190,3 +190,23 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #keys dt.keys-group { grid-column: 1 / -1; margin-top: 6px; font-weight: 600; }
 #keys dd { margin: 0; color: var(--muted); }
 #sendbar .note { color: var(--muted); }
+
+/* Changes since the reader last looked, like GitHub's rich diff: added blocks tinted green,
+   removed ones tinted red and struck through. */
+:root { --changed: #9a6700; --added-bg: #dafbe1; --removed: #d1242f; --removed-bg: #ffebe9; }
+@media (prefers-color-scheme: dark) { :root { --changed: #d29922; --added-bg: #2ea04326; --removed: #f85149; --removed-bg: #f851491a; } }
+.doc-title { display: flex; align-items: center; gap: 12px; min-width: 0; }
+#changes { display: flex; align-items: center; gap: 8px; font-weight: 400; font-size: 13px; }
+#changes:empty { display: none; }
+#changes button { padding: 1px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; cursor: pointer; }
+#changes .ch-count { border-color: transparent; background: none; color: var(--changed); padding: 1px 4px; }
+#changes .ch-count::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--changed); }
+#changes button:hover { background: var(--hover); }
+#content .diff-added, #content .diff-removed { border-radius: 4px; box-shadow: 0 0 0 4px var(--tint); background: var(--tint); }
+#content .diff-added { --tint: var(--added-bg); }
+#content .diff-removed { --tint: var(--removed-bg); color: var(--muted); text-decoration: line-through; text-decoration-color: var(--removed); }
+#content tr.diff-added, #content tr.diff-removed { box-shadow: none; }
+#content .diff-removed-wrap { margin-bottom: 16px; }
+#content table.diff-removed-wrap { display: table; }
+.files .changed { width: 8px; height: 8px; margin-left: auto; border-radius: 50%; background: var(--changed); flex: none; }
+.files .changed + .dot { margin-left: 0; }

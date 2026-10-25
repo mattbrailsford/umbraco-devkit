@@ -7,7 +7,7 @@ from collections import namedtuple
 # Things that only matter while running (the server's port, the waiting helper) live here.
 STATE_DIR = os.path.join(tempfile.gettempdir(), "umbraco-devkit-preview")
 
-StatePaths = namedtuple("StatePaths", "server comments helper")
+StatePaths = namedtuple("StatePaths", "server comments helper seen")
 
 
 def find_git(start):
@@ -34,16 +34,19 @@ def git_root(directory):
 
 
 def state_paths(root):
-    """Where a worktree's server details, comments and waiting helper are kept.
+    """Where a worktree's server details, comments, waiting helper and copies of what the
+    reader last saw are kept.
 
-    Comments go in the worktree's git folder: never committed, kept across restarts, and
+    Comments and copies go in the worktree's git folder: never committed, kept across restarts, and
     removed with the worktree. Outside a repo they fall back to the temp folder.
     """
     key = hashlib.sha1(root.encode()).hexdigest()[:16]
     git_dir = find_git(root)[1]
     comments = (os.path.join(git_dir, "markdown-preview", "comments.json") if git_dir
                 else os.path.join(STATE_DIR, key + "-comments.json"))
-    return StatePaths(os.path.join(STATE_DIR, key + ".json"), comments, os.path.join(STATE_DIR, key + "-waiter.pid"))
+    seen = (os.path.join(git_dir, "markdown-preview", "seen") if git_dir
+            else os.path.join(STATE_DIR, key + "-seen"))
+    return StatePaths(os.path.join(STATE_DIR, key + ".json"), comments, os.path.join(STATE_DIR, key + "-waiter.pid"), seen)
 
 
 def pid_alive(pid_file):

@@ -19,9 +19,9 @@ the new page rather than opening another. The server stops once its worktree is 
 Comments live in the worktree's git folder, so they're never committed and any step can read
 them without the server running.
 
-The parts: server.py (the web server), comments.py (the comment store), folders.py (file
-lists, reading order), rendering.py (GitHub's renderer), worktree.py (finding things), and
-page/ (the page itself).
+The parts: server.py (the web server), comments.py (the comment store), seen.py (what the
+reader last saw, for marking changes), folders.py (file lists, reading order), rendering.py
+(GitHub's renderer), worktree.py (finding things), and page/ (the page itself).
 """
 import argparse
 import atexit
@@ -37,6 +37,7 @@ import webbrowser
 
 from comments import Comments, describe
 from rendering import Renderer, fetch_css, github_user, repo_context
+from seen import Seen
 from server import PreviewServer
 from worktree import STATE_DIR, git_root, inside, pid_alive, state_paths
 
@@ -172,7 +173,8 @@ def open_command(argv):
         return
 
     server = PreviewServer(args.port, root=root, css=fetch_css(), renderer=Renderer(repo_context(start_dir)),
-                           comments=Comments(paths.comments), user=github_user(), helper_file=paths.helper)
+                           comments=Comments(paths.comments), seen=Seen(paths.seen), user=github_user(),
+                           helper_file=paths.helper)
     os.makedirs(STATE_DIR, exist_ok=True)
     with open(paths.server, "w") as f:
         json.dump({"root": root, "port": server.port, "pid": os.getpid()}, f)
