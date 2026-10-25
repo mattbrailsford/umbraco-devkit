@@ -51,8 +51,6 @@ class PreviewServer(ThreadingHTTPServer):
         self.user = user
         self.helper_file = helper_file
         self.tabs = Tabs()
-        with open(os.path.join(PAGE_DIR, "index.html"), encoding="utf-8") as f:
-            self.template = f.read()
         super().__init__(("127.0.0.1", port), Handler)
 
     @property
@@ -123,7 +121,11 @@ class Handler(BaseHTTPRequestHandler):
         boot = json.dumps({"path": path, "user": self.server.user}).replace("</", "<\\/")
         fill = {"title": html.escape(path), "github_css": self.server.css, "crumbs": breadcrumbs(self.server.root, path),
                 "docname": html.escape(docname), "boot": boot}
-        self.send(200, re.sub(r"\{\{(\w+)\}\}", lambda m: fill[m.group(1)], self.server.template))
+        # Read each time, as the page's scripts and styles are, so a running server never mixes
+        # an old page with new ones.
+        with open(os.path.join(PAGE_DIR, "index.html"), encoding="utf-8") as f:
+            template = f.read()
+        self.send(200, re.sub(r"\{\{(\w+)\}\}", lambda m: fill[m.group(1)], template))
 
     def page_file(self, name):
         """The page's own scripts and styles, from page/."""
