@@ -1,5 +1,5 @@
 ---
-description: feature-plan checks the sign-offs feature-design asked for, and before planning asks whether to wait for ARCHITECTURE.md's sign-off or carry on, rather than planning without mentioning it.
+description: feature-plan checks the approvals feature-design asked for, and before planning asks whether to wait for ARCHITECTURE.md's approval or carry on, rather than planning without mentioning it.
 tags: [feature-plan, markdown-preview, workflow]
 max_turns: 20
 timeout_seconds: 600

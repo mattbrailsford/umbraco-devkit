@@ -5,7 +5,7 @@ it. Requests starting `/__` are the page's own; anything else is a file or folde
 
 Paths are decoded once, where they come in (the request's own path, or a query or body
 value), and stay plain from there: "/docs/my plan/BRIEF.md", never "my%20plan". Comments,
-sign-offs and Claude's commands all key files that way.
+approvals and Claude's commands all key files that way.
 """
 import html
 import json
@@ -41,13 +41,13 @@ class Tabs:
 class PreviewServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, port, *, root, css, renderer, comments, seen, signoffs, user, helper_file):
+    def __init__(self, port, *, root, css, renderer, comments, seen, approvals, user, helper_file):
         self.root = root
         self.css = css
         self.renderer = renderer
         self.comments = comments
         self.seen = seen
-        self.signoffs = signoffs
+        self.approvals = approvals
         self.user = user
         self.helper_file = helper_file
         self.tabs = Tabs()
@@ -179,17 +179,17 @@ class Handler(BaseHTTPRequestHandler):
         if not found:
             return
         # Seeing a folder counts as seeing its docs as they are, so a later change to one shows.
-        url_path, changed, signoffs = self.query["path"], set(), {}
-        asked = self.server.signoffs.load()
+        url_path, changed, approvals = self.query["path"], set(), {}
+        asked = self.server.approvals.load()
         for e in os.scandir(found):
             if e.is_file() and e.name.endswith(".md"):
                 key = url_path + e.name
                 self.server.seen.ensure(key, e.path)
                 if self.server.seen.before(key, e.path) is not None:
                     changed.add(e.name)
-                signoffs[e.name] = self.server.signoffs.state(key, e.path, asked)[0]
+                approvals[e.name] = self.server.approvals.state(key, e.path, asked)[0]
         self.send(200, folder_listing(found, url_path, self.query.get("current", ""),
-                                      self.server.comments.open_counts(), self.query.get("home", "/"), changed, signoffs))
+                                      self.server.comments.open_counts(), self.query.get("home", "/"), changed, approvals))
 
     def get_seen(self):
         """The doc as it was when the reader last sent comments (or first saw it), drawn, if
@@ -215,7 +215,7 @@ class Handler(BaseHTTPRequestHandler):
             return
         tabs = self.server.tabs
         marks = {"doc": repr((change_marker(found), self.server.seen.version())),
-                 "comments": repr((self.server.comments.mtime(), self.server.signoffs.mtime()))}
+                 "comments": repr((self.server.comments.mtime(), self.server.approvals.mtime()))}
         tabs.seen = time.time()
         if tabs.go_to:
             marks["navigate"], tabs.go_to = tabs.go_to, None
@@ -227,13 +227,13 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(store.drafts())
         self.send_json(store.on_file(self.query.get("path", "")))
 
-    def get_signoff(self):
-        """Whether this doc is asked to be signed off, and where that stands."""
+    def get_approval(self):
+        """Whether this doc is asked to be approved, and where that stands."""
         found = self.target()
         if not found:
             return
         path = self.query["path"]
-        state, at = self.server.signoffs.state(path, found) if os.path.isfile(found) else (None, None)
+        state, at = self.server.approvals.state(path, found) if os.path.isfile(found) else (None, None)
         open_comments = len([c for c in self.server.comments.unresolved() if c["path"] == path])
         self.send_json({"state": state, "at": at, "open": open_comments})
 
@@ -245,15 +245,15 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:
             self.send(502, str(e), "text/plain")
 
-    def post_signoff(self):
-        """The reader signs off a doc: only once its comments are all resolved."""
+    def post_approve(self):
+        """The reader approves a doc: only once its comments are all resolved."""
         path = self.data["path"]
         found = self.resolve(path)
         if not found or not os.path.isfile(found):
             raise BadRequest("no such file")
         if any(c["path"] == path for c in self.server.comments.unresolved()):
             raise BadRequest("resolve the open comments first")
-        self.server.signoffs.sign(path, found)
+        self.server.approvals.approve(path, found)
         self.ok()
 
     def post_open(self):
@@ -299,12 +299,12 @@ GET_ROUTES = {
     "/__changes": Handler.get_changes,
     "/__comments": Handler.get_comments,
     "/__seen": Handler.get_seen,
-    "/__signoff": Handler.get_signoff,
+    "/__approve": Handler.get_approval,
 }
 POST_ROUTES = {
     "/__md": Handler.post_markdown,
     "/__open": Handler.post_open,
-    "/__signoff": Handler.post_signoff,
+    "/__approve": Handler.post_approve,
     "/__comments": Handler.post_comment,
     "/__comments/send": Handler.post_send,
     "/__comments/resolve": Handler.post_resolve,

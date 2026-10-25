@@ -7,8 +7,8 @@ description: >-
   Claude fixes the doc and replies on each. Use when the user asks to see, show, open, view or
   preview a doc ("show me the brief", "open the plan", "preview the spec"), or says "go
   through my comments". Also owns when a phase offers a preview, how a step picks up open
-  comments left on its files, which docs a step asks the reader to sign off, and the check
-  for unresolved comments and sign-offs before a step moves on.
+  comments left on its files, which docs a step asks the reader to approve, and the check
+  for unresolved comments and approvals before a step moves on.
 user-invocable: true
 argument-hint: [file or folder, optional]
 ---
@@ -60,7 +60,7 @@ python3 <this skill's folder>/scripts/preview.py wait
 
 The reader leaves comments on lines, table rows, diagrams or picked-out words, then clicks
 "Send to Claude". The helper's background run then finishes, and its output is the batch. (It
-also finishes once every doc asked for is signed off; see "Sign-off".)
+also finishes once every doc asked for is approved; see "Approval".)
 "Go through my comments" means the same: `scripts/preview.py comments` prints the batch.
 
 Answer every comment in the batch, then start the helper again for the next one. Only the
@@ -124,11 +124,11 @@ comments straight from the worktree, so the preview needn't be open.
 
 A step that builds on a plan folder (`feature-design`, `feature-plan`, `feature-build`), or
 archives one (`feature-close`), first checks the whole folder for anything unresolved, and
-whether the last step's docs were signed off:
+whether the last step's docs were approved:
 
 ```bash
 python3 <this skill's folder>/scripts/preview.py comments --folder <plan folder>
-python3 <this skill's folder>/scripts/preview.py signoff
+python3 <this skill's folder>/scripts/preview.py approval
 ```
 
 - **New, or left for this step:** input to this run, under "Open comments on your files".
@@ -139,33 +139,33 @@ python3 <this skill's folder>/scripts/preview.py signoff
   check"), or a comment they wrote but didn't send. List them in one message and ask whether
   to deal with them first or carry on. One question, not one per comment; "carry on" is a
   fine answer. If this step already asks the user something before starting, ask it there.
-- **A doc asked for sign-off isn't signed off** (still waiting, or changed since): name it in
-  that same question. Signing off is the reader's call, so "carry on" is still a fine answer.
-- **Nothing open, and no sign-off waiting (or none asked for):** carry on without mentioning
+- **A doc asked for approval isn't approved** (still waiting, or changed since): name it in
+  that same question. Approving is the reader's call, so "carry on" is still a fine answer.
+- **Nothing open, and no approval waiting (or none asked for):** carry on without mentioning
   it.
 
-## Sign-off
+## Approval
 
-A step's Hand off asks the reader to sign off the docs it owns, as a PR is approved on
-GitHub. Only when a preview has been opened this session; without one, the usual Hand off is
-the sign-off.
+A step's Hand off asks the reader to approve the docs it owns, as a PR is approved on
+GitHub. Only when a preview has been opened this session; without one, the usual Hand off
+stands in for it.
 
 ```bash
-python3 <this skill's folder>/scripts/preview.py signoff --request <file> [<file>...] --step <step>
+python3 <this skill's folder>/scripts/preview.py approval --request <file> [<file>...] --step <step>
 ```
 
-| Step | Asks sign-off on |
+| Step | Asks for approval on |
 | --- | --- |
 | `feature-explore` | `BRIEF.md` |
 | `feature-design` | `SPEC.md` and `ARCHITECTURE.md` |
 | `feature-plan` | `PLAN.md` |
 
 - Each ask replaces the last, so the page only marks this step's docs. Say in the Hand off
-  which docs are waiting for sign-off.
-- The reader signs off on the page, once a doc's comments are all resolved. Claude never
-  signs off: as with resolving, there's no command for it.
-- A doc changed after sign-off needs signing off again. The page shows which.
-- The helper also wakes once every doc asked for is signed off. Say so in one line, give the
+  which docs are waiting for approval.
+- The reader approves on the page, once a doc's comments are all resolved. Claude never
+  approves: as with resolving, there's no command for it.
+- A doc changed after approval needs approving again. The page shows which.
+- The helper also wakes once every doc asked for is approved. Say so in one line, give the
   suggested next step, and start the helper again. Don't start the next step unasked.
 
 ## Offering a preview
@@ -189,7 +189,7 @@ A phase that writes a doc a person reviews (`BRIEF.md`, `ARCHITECTURE.md`, `SPEC
 - Comments are kept in the worktree's git folder (`markdown-preview/comments.json` under
   `git rev-parse --git-dir`), and so is a copy of each doc as it was when the reader last sent
   comments (`markdown-preview/seen/`), which the page compares against to mark what's changed,
-  and the sign-offs (`markdown-preview/signoffs.json`). None of it is ever committed, and
+  and the approvals (`markdown-preview/approvals.json`). None of it is ever committed, and
   removing the worktree removes it.
 
 ## *How close it is to GitHub*

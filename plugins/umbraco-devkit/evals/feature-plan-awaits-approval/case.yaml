@@ -1,4 +1,4 @@
 schema_version: "1.1"
-name: feature-plan-awaits-signoff
+name: feature-plan-awaits-approval
 context:
   scaffold_script: fixture.sh

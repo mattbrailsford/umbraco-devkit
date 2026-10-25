@@ -35,8 +35,8 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
 - [`feature-build`](#feature-build): `feature-build-open-comments`
 - [`feature-design`](#feature-design): `feature-design-open-comments`
-- [`feature-plan`](#feature-plan): `feature-plan-awaits-signoff` `feature-plan-earlier-step-comment` `feature-plan-offers-preview`
-- [`markdown-preview`](#markdown-preview): `feature-plan-awaits-signoff` `markdown-preview-comments-decision` `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
+- [`feature-plan`](#feature-plan): `feature-plan-awaits-approval` `feature-plan-earlier-step-comment` `feature-plan-offers-preview`
+- [`markdown-preview`](#markdown-preview): `feature-plan-awaits-approval` `markdown-preview-comments-decision` `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -218,7 +218,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-plan-awaits-signoff` | – | – |
+| `feature-plan-awaits-approval` | – | – |
 | `feature-plan-earlier-step-comment` | – | – |
 | `feature-plan-offers-preview` | – | – |
 | `feature-plan-stops-without-design` | 100 | 2026-10-20 |
@@ -280,7 +280,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-plan-awaits-signoff` | – | – |
+| `feature-plan-awaits-approval` | – | – |
 | `markdown-preview-comments-decision` | – | – |
 | `markdown-preview-comments-fix` | – | – |
 | `markdown-preview-comments-unclear` | – | – |

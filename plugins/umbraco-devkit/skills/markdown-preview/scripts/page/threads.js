@@ -8,7 +8,7 @@ import { $, ago, avatar, content, esc, fetchText, page, post, replay } from './s
 import { blockText, clearQuoteMarks, findBlock, findHeading, markQuote, sectionOf, tableBox } from './doc.js';
 import { attachHighlight, autoGrow, prepareBox, submitOnEnter } from './editor.js';
 import { renderCommentMenu } from './comment-menu.js';
-import { renderSignOff } from './signoff.js';
+import { renderApproval } from './approve.js';
 import { updateSendBar } from './sendbar.js';
 
 const svg = body => '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" '
@@ -326,7 +326,7 @@ export async function renderComments() {
   placePins();
   drawComments();
   renderCommentMenu(comments);
-  renderSignOff();
+  renderApproval();
   lastStatus = Object.fromEntries(comments.map(c => [c.id, c.status]));
   await updateSendBar();
 }

@@ -45,20 +45,20 @@ def reading_order(folder):
     return order
 
 
-# Sign-off shows as a badge on a doc's icon: an empty ring while it's wanted (orange once a
-# signed doc has changed), a green tick once it's signed.
-SIGNOFF_TITLE = {"needed": "Needs your sign-off", "signed": "Signed off by you", "changed": "Changed since you signed it off"}
+# Approval shows as a badge on a doc's icon: an empty ring while it's wanted (orange once a
+# approved doc has changed), a green tick once it's approved.
+APPROVAL_TITLE = {"needed": "Needs your approval", "approved": "Approved by you", "changed": "Changed since you approved it"}
 BADGE_TICK = ('<svg viewBox="0 0 16 16" width="8" height="8"><path fill="currentColor" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 '
               '7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 '
               '1.06 0Z"/></svg>')
 
 
-def folder_listing(folder, url_path, current, counts, home="/", changed=(), signoffs=None):
+def folder_listing(folder, url_path, current, counts, home="/", changed=(), approvals=None):
     """The file list: folders first, as on GitHub; then files in the README's reading order;
     then the rest by name. No way up from the top of the scope. At the end of a file's row:
     a dot if it's `changed` since the reader last sent comments, and its open comments. A
-    doc's sign-off state, from `signoffs` ({name: state}), badges its icon."""
-    signoffs = signoffs or {}
+    doc's approval state, from `approvals` ({name: state}), badges its icon."""
+    approvals = approvals or {}
     entries = [e for e in os.scandir(folder) if not e.name.startswith(".")]
     order = reading_order(folder)
     entries.sort(key=lambda e: (not e.is_dir(), e.name not in order,
@@ -68,13 +68,13 @@ def folder_listing(folder, url_path, current, counts, home="/", changed=(), sign
         rows.append(f'<a href="{urllib.parse.quote(url_path)}..">{ICON_DIR}..</a>')
     for e in entries:
         href = urllib.parse.quote(url_path + e.name) + ("/" if e.is_dir() else "")
-        state = signoffs.get(e.name)
-        classes = " ".join(filter(None, ["current" if e.name == current else "", f"so-{state}" if state else ""]))
+        state = approvals.get(e.name)
+        classes = " ".join(filter(None, ["current" if e.name == current else "", f"ap-{state}" if state else ""]))
         cls = f' class="{classes}"' if classes else ""
         icon = ICON_DIR if e.is_dir() else ICON_FILE
         if state:
-            cls += f' title="{SIGNOFF_TITLE[state]}"'
-            icon = f'<span class="fileicon">{icon}<span class="badge">{BADGE_TICK if state == "signed" else ""}</span></span>'
+            cls += f' title="{APPROVAL_TITLE[state]}"'
+            icon = f'<span class="fileicon">{icon}<span class="badge">{BADGE_TICK if state == "approved" else ""}</span></span>'
         count = counts.get(url_path + e.name)
         marks = ('<span class="changed" title="Changed since you sent comments"></span>' if e.name in changed else "") \
             + (f'<span class="dot" title="Open comments">{count}</span>' if count else "")

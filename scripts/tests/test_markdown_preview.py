@@ -24,7 +24,7 @@ import comments  # noqa: E402
 import folders  # noqa: E402
 import seen  # noqa: E402
 import server  # noqa: E402
-import signoffs  # noqa: E402
+import approvals  # noqa: E402
 import worktree  # noqa: E402
 
 
@@ -231,26 +231,26 @@ class CommandTests(TempRepo):
         self.assertIn("written by the reader but not sent yet", folder)
         self.assertIn("Sent one", self.run_cli("comments", "--folder", self.root).stdout)  # the whole worktree
 
-    def test_signoff_commands(self):
-        self.assertIn("No sign-off asked for.", self.run_cli("signoff").stdout)
-        out = self.run_cli("signoff", "--request", os.path.join(self.plan, "SPEC.md"), os.path.join(self.plan, "BRIEF.md"), "--step", "feature-design")
-        self.assertIn("Asked the reviewer to sign off docs/plans/retries/SPEC.md, docs/plans/retries/BRIEF.md.", out.stdout)
-        self.assertNotEqual(self.run_cli("signoff", "--request", os.path.join(self.plan, "GONE.md")).returncode, 0)
-        signoffs.SignOffs(worktree.state_paths(self.root).signoffs).sign("/docs/plans/retries/SPEC.md", os.path.join(self.plan, "SPEC.md"))
-        listing = self.run_cli("signoff").stdout
-        self.assertIn("docs/plans/retries/SPEC.md: signed off", listing)
-        self.assertIn("docs/plans/retries/BRIEF.md: waiting for the reviewer's sign-off", listing)
+    def test_approval_commands(self):
+        self.assertIn("No approval asked for.", self.run_cli("approval").stdout)
+        out = self.run_cli("approval", "--request", os.path.join(self.plan, "SPEC.md"), os.path.join(self.plan, "BRIEF.md"), "--step", "feature-design")
+        self.assertIn("Asked the reviewer to approve docs/plans/retries/SPEC.md, docs/plans/retries/BRIEF.md.", out.stdout)
+        self.assertNotEqual(self.run_cli("approval", "--request", os.path.join(self.plan, "GONE.md")).returncode, 0)
+        approvals.Approvals(worktree.state_paths(self.root).approvals).approve("/docs/plans/retries/SPEC.md", os.path.join(self.plan, "SPEC.md"))
+        listing = self.run_cli("approval").stdout
+        self.assertIn("docs/plans/retries/SPEC.md: approved", listing)
+        self.assertIn("docs/plans/retries/BRIEF.md: waiting for the reviewer's approval", listing)
 
-    def test_wait_wakes_when_everything_asked_for_is_signed(self):
-        store = signoffs.SignOffs(worktree.state_paths(self.root).signoffs)
+    def test_wait_wakes_when_everything_asked_for_is_approved(self):
+        store = approvals.Approvals(worktree.state_paths(self.root).approvals)
         store.request(["/docs/plans/retries/SPEC.md"])
         waiter = subprocess.Popen([sys.executable, os.path.join(SCRIPTS, "preview.py"), "wait", "--root", self.root],
                                   stdout=subprocess.PIPE, text=True, cwd=self.root)
         self.addCleanup(lambda: waiter.poll() is None and waiter.kill())
         time.sleep(1.5)
-        store.sign("/docs/plans/retries/SPEC.md", os.path.join(self.plan, "SPEC.md"))
+        store.approve("/docs/plans/retries/SPEC.md", os.path.join(self.plan, "SPEC.md"))
         out, _ = waiter.communicate(timeout=20)
-        self.assertIn("The reviewer signed off docs/plans/retries/SPEC.md. Everything asked for is signed off.", out)
+        self.assertIn("The reviewer approved docs/plans/retries/SPEC.md. Everything asked for is approved.", out)
 
     def test_wait_returns_the_batch_and_only_one_waits(self):
         script = os.path.join(SCRIPTS, "preview.py")
@@ -283,7 +283,7 @@ class ServerTests(TempRepo):
         paths = worktree.state_paths(self.root)
         self.srv = server.PreviewServer(0, root=self.root, css="/* css */", renderer=FakeRenderer(),
                                         comments=self.store, seen=seen.Seen(paths.seen),
-                                        signoffs=signoffs.SignOffs(paths.signoffs), user={"login": "someone"},
+                                        approvals=approvals.Approvals(paths.approvals), user={"login": "someone"},
                                         helper_file=paths.helper)
         threading.Thread(target=self.srv.serve_forever, daemon=True).start()
         self.addCleanup(self.srv.server_close)
@@ -372,19 +372,19 @@ class ServerTests(TempRepo):
 
     def test_sign_off_after_comments_are_resolved(self):
         spec = "/docs/plans/retries/SPEC.md"
-        state = lambda: json.loads(self.request("GET", "/__signoff?path=" + urllib.parse.quote(spec))[3])
+        state = lambda: json.loads(self.request("GET", "/__approve?path=" + urllib.parse.quote(spec))[3])
         self.assertIsNone(state()["state"])
-        self.assertEqual(self.request("POST", "/__signoff", {"path": spec})[0], 400)  # nobody asked
-        signoffs.SignOffs(worktree.state_paths(self.root).signoffs).request([spec, "/docs/plans/retries/BRIEF.md"], "feature-design")
+        self.assertEqual(self.request("POST", "/__approve", {"path": spec})[0], 400)  # nobody asked
+        approvals.Approvals(worktree.state_paths(self.root).approvals).request([spec, "/docs/plans/retries/BRIEF.md"], "feature-design")
         self.store.add(spec, "Five attempts.", "Why five?")
         self.assertEqual(state(), {"state": "needed", "at": None, "open": 1})
-        self.assertEqual(self.request("POST", "/__signoff", {"path": spec})[0], 400)  # a comment's open
+        self.assertEqual(self.request("POST", "/__approve", {"path": spec})[0], 400)  # a comment's open
         self.store.resolve("c1")
-        self.assertEqual(self.request("POST", "/__signoff", {"path": spec})[0], 200)
-        self.assertEqual(state()["state"], "signed")
+        self.assertEqual(self.request("POST", "/__approve", {"path": spec})[0], 200)
+        self.assertEqual(state()["state"], "approved")
         listing = self.request("GET", "/__list?path=" + urllib.parse.quote("/docs/plans/retries/"))[3]
-        marks = {name: state for state, name in re.findall(r'class="[^"]*so-(\w+)"[^>]*><span class="fileicon">.*?</span></span>([\w.]+)<', listing)}
-        self.assertEqual(marks, {"BRIEF.md": "needed", "SPEC.md": "signed"})
+        marks = {name: state for state, name in re.findall(r'class="[^"]*ap-(\w+)"[^>]*><span class="fileicon">.*?</span></span>([\w.]+)<', listing)}
+        self.assertEqual(marks, {"BRIEF.md": "needed", "SPEC.md": "approved"})
 
 
     def test_a_folder_with_a_space_in_its_name(self):
@@ -405,54 +405,54 @@ class ServerTests(TempRepo):
         self.assertIn('<span class="dot" title="Open comments">1</span>', listing)
 
 
-class SignOffTests(TempRepo):
+class ApprovalTests(TempRepo):
     def setUp(self):
         super().setUp()
-        self.signoffs = signoffs.SignOffs(worktree.state_paths(self.root).signoffs)
+        self.approvals = approvals.Approvals(worktree.state_paths(self.root).approvals)
         self.spec, self.brief = "/docs/plans/retries/SPEC.md", "/docs/plans/retries/BRIEF.md"
 
     def state(self, path):
-        return self.signoffs.state(path, self.root + path)[0]
+        return self.approvals.state(path, self.root + path)[0]
 
     def test_a_sign_off_goes_stale_when_the_doc_changes(self):
-        self.signoffs.request([self.spec])
+        self.approvals.request([self.spec])
         self.assertEqual(self.state(self.spec), "needed")
-        self.signoffs.sign(self.spec, self.root + self.spec)
-        self.assertEqual(self.state(self.spec), "signed")
+        self.approvals.approve(self.spec, self.root + self.spec)
+        self.assertEqual(self.state(self.spec), "approved")
         write(self.root + self.spec, "# Spec\n\n- Six attempts.\n")
         self.assertEqual(self.state(self.spec), "changed")
         self.assertIsNone(self.state(self.brief))
         with self.assertRaises(ValueError):
-            self.signoffs.sign(self.brief, self.root + self.brief)
+            self.approvals.approve(self.brief, self.root + self.brief)
 
     def test_a_new_ask_replaces_the_last(self):
-        self.signoffs.request([self.brief], "feature-explore")
-        self.signoffs.sign(self.brief, self.root + self.brief)
-        self.signoffs.request([self.spec], "feature-design")
+        self.approvals.request([self.brief], "feature-explore")
+        self.approvals.approve(self.brief, self.root + self.brief)
+        self.approvals.request([self.spec], "feature-design")
         self.assertIsNone(self.state(self.brief))
         self.assertEqual(self.state(self.spec), "needed")
 
-    def test_claude_hears_once_when_all_are_signed(self):
-        self.assertIsNone(self.signoffs.claim_all_signed(self.root))
-        self.assertFalse(os.path.exists(self.signoffs.path))  # looking doesn't create the file
-        self.signoffs.request([self.spec, self.brief])
-        self.signoffs.sign(self.spec, self.root + self.spec)
-        self.assertIsNone(self.signoffs.claim_all_signed(self.root))  # one still to go
-        self.signoffs.sign(self.brief, self.root + self.brief)
-        self.assertEqual(self.signoffs.claim_all_signed(self.root), [self.spec, self.brief])
-        self.assertIsNone(self.signoffs.claim_all_signed(self.root))
+    def test_claude_hears_once_when_all_are_approved(self):
+        self.assertIsNone(self.approvals.claim_all_approved(self.root))
+        self.assertFalse(os.path.exists(self.approvals.path))  # looking doesn't create the file
+        self.approvals.request([self.spec, self.brief])
+        self.approvals.approve(self.spec, self.root + self.spec)
+        self.assertIsNone(self.approvals.claim_all_approved(self.root))  # one still to go
+        self.approvals.approve(self.brief, self.root + self.brief)
+        self.assertEqual(self.approvals.claim_all_approved(self.root), [self.spec, self.brief])
+        self.assertIsNone(self.approvals.claim_all_approved(self.root))
 
     def test_looking_never_rewrites_the_file(self):
         # The waiting helper looks every second, and open pages redraw whenever the file
         # changes: a rewrite on every look closed the reply box on a reopened thread.
-        self.signoffs.request([self.spec])
-        self.signoffs.sign(self.spec, self.root + self.spec)
-        self.signoffs.claim_all_signed(self.root)
-        before = self.signoffs.mtime()
+        self.approvals.request([self.spec])
+        self.approvals.approve(self.spec, self.root + self.spec)
+        self.approvals.claim_all_approved(self.root)
+        before = self.approvals.mtime()
         time.sleep(0.01)
-        self.assertIsNone(self.signoffs.claim_all_signed(self.root))
+        self.assertIsNone(self.approvals.claim_all_approved(self.root))
         self.assertEqual(self.store.claim_sent(), [])
-        self.assertEqual(self.signoffs.mtime(), before)
+        self.assertEqual(self.approvals.mtime(), before)
         self.assertIsNone(self.store.mtime())
 
 

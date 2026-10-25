@@ -5,7 +5,7 @@ import { quoteInto } from './editor.js';
 import { openForm } from './threads.js';
 import { commentMenuOpen, toggleCommentMenu } from './comment-menu.js';
 import { stepChange, toggleChanges } from './changes.js';
-import { signOff } from './signoff.js';
+import { approve } from './approve.js';
 
 const SHORTCUTS = [
   ['j / ↓', 'Next line'], ['k / ↑', 'Previous line'], ['c / Enter', 'Comment on the line'],
@@ -13,7 +13,7 @@ const SHORTCUTS = [
   ['r', 'Reply on the line, quoting any selected text'], ['Shift+S', 'Send pending comments to Claude'],
   ['o', 'Open the list of open comments (↑ ↓ Enter inside)'],
   ['] / [', 'Next or previous change since you sent comments'], ['d', 'Show or hide the change marks'],
-  ['⌘⇧Enter', 'Sign off the doc'],
+  ['⌘⇧Enter', 'Approve the doc'],
   ['?', 'Show or hide this list'], ['Esc', 'Cancel, or close this list'],
 ];
 // In a comment box: GitHub's own keys.
@@ -89,8 +89,8 @@ const KEYS = {
 
 document.addEventListener('keydown', e => {
   if (e.target.closest('textarea, input')) return;
-  // GitHub submits a review with ⌘⇧Enter; here it signs off.
-  if (e.key === 'Enter' && e.shiftKey && (e.metaKey || e.ctrlKey)) { e.preventDefault(); return signOff(); }
+  // GitHub submits a review with ⌘⇧Enter; here it approves.
+  if (e.key === 'Enter' && e.shiftKey && (e.metaKey || e.ctrlKey)) { e.preventDefault(); return approve(); }
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   // The open comments menu has the arrow keys and Enter to itself.
   if (commentMenuOpen() && ['ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) return;

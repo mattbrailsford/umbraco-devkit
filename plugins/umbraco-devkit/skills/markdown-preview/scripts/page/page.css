@@ -221,22 +221,22 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 .files .marks { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .files .changed { width: 8px; height: 8px; border-radius: 50%; background: var(--changed); flex: none; }
 
-/* Sign-off as a badge on the doc's icon, cut out from the row behind it. */
+/* Approval as a badge on the doc's icon, cut out from the row behind it. */
 .files .fileicon { position: relative; display: flex; flex: none; }
 .files .badge { position: absolute; right: -4px; bottom: -3px; display: flex; align-items: center; justify-content: center;
                 width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; box-shadow: 0 0 0 2px var(--row-bg, var(--bg)); }
-.files .so-needed .badge { border: 1.5px solid var(--muted); background: var(--bg); }
-.files .so-changed .badge { border: 1.5px solid var(--changed); background: var(--bg); }
-.files .so-signed .badge { background: var(--done); color: #fff; }
+.files .ap-needed .badge { border: 1.5px solid var(--muted); background: var(--bg); }
+.files .ap-changed .badge { border: 1.5px solid var(--changed); background: var(--bg); }
+.files .ap-approved .badge { background: var(--done); color: #fff; }
 .files a.current, .files a:hover { --row-bg: var(--hover); }
 
-/* Sign-off in the doc's header, like GitHub's Approve. */
+/* Approval in the doc's header, like GitHub's Approve. */
 .doc-actions { display: flex; align-items: center; gap: 16px; }
-#signoff:empty { display: none; }
-.so-btn { height: 26px; padding: 0 12px; border: 1px solid rgba(31,35,40,.15); border-radius: 6px; background: var(--done); color: #fff;
+#approval:empty { display: none; }
+.ap-btn { height: 26px; padding: 0 12px; border: 1px solid rgba(31,35,40,.15); border-radius: 6px; background: var(--done); color: #fff;
           font: 500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; cursor: pointer; }
-.so-btn:hover { filter: brightness(1.08); }
-.so-btn.again { background: var(--changed); }
-.so-btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
-.so-done { display: inline-flex; align-items: center; gap: 6px; color: var(--done); font-size: 13px; font-weight: 600; }
+.ap-btn:hover { filter: brightness(1.08); }
+.ap-btn.again { background: var(--changed); }
+.ap-btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+.ap-done { display: inline-flex; align-items: center; gap: 6px; color: var(--done); font-size: 13px; font-weight: 600; }
 .btn:disabled { opacity: .5; cursor: not-allowed; }

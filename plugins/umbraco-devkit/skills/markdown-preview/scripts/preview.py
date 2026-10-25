@@ -8,22 +8,22 @@ Usage:
                                         list comments waiting on Claude, or every open one on
                                         PATH, or anywhere under DIR (a plan folder, say)
   preview.py reply ID TEXT [--done | --defer STEP] [--move TEXT]
-  preview.py signoff [--request FILE... [--step NAME]]
-                                        ask the reader to sign off these docs, or list where
-                                        the sign-offs asked for stand
+  preview.py approval [--request FILE... [--step NAME]]
+                                        ask the reader to approve these docs, or list where
+                                        the approvals asked for stand
 
 Renders through GitHub's Markdown API (with the `gh` CLI's sign-in), serves the page on
 127.0.0.1 and refreshes it in place whenever the file changes on disk. A folder opens
 GitHub-style: its file list beside its README. Readers can leave review comments on any
-line, then send them to Claude in one batch, and sign off the docs a step asks them to.
+line, then send them to Claude in one batch, and approve the docs a step asks them to.
 
 One server runs per git worktree; asking again reuses it, and an open preview tab is sent to
 the new page rather than opening another. The server stops once its worktree is removed.
 Comments live in the worktree's git folder, so they're never committed and any step can read
 them without the server running.
 
-The parts: server.py (the web server), comments.py (the comment store), signoffs.py (docs
-the reader is asked to sign off), store.py (the locked file both use), seen.py (what the
+The parts: server.py (the web server), comments.py (the comment store), approvals.py (docs
+the reader is asked to approve), store.py (the locked file both use), seen.py (what the
 reader last saw, for marking changes), folders.py (file lists, reading order), rendering.py
 (GitHub's renderer), worktree.py (finding things), and page/ (the page itself).
 """
@@ -40,7 +40,7 @@ import urllib.request
 import webbrowser
 
 from comments import Comments, describe
-from signoffs import SignOffs
+from approvals import Approvals
 from rendering import Renderer, fetch_css, github_user, repo_context
 from seen import Seen
 from server import PreviewServer
@@ -50,11 +50,11 @@ from worktree import STATE_DIR, git_root, inside, pid_alive, state_paths
 # ---------- Claude's comment commands ----------
 
 def comments_command(argv):
-    """`wait` blocks until the reviewer sends a batch, or signs off every doc asked for, then
+    """`wait` blocks until the reviewer sends a batch, or approves every doc asked for, then
     prints it and exits, so a background run of it wakes Claude. `comments` lists what's
-    waiting; `reply` answers one; `signoff` asks for sign-offs or lists them."""
-    parser = argparse.ArgumentParser(prog="preview.py wait|comments|reply|signoff")
-    parser.add_argument("command", choices=["wait", "comments", "reply", "signoff"])
+    waiting; `reply` answers one; `approval` asks for approvals or lists them."""
+    parser = argparse.ArgumentParser(prog="preview.py wait|comments|reply|approval")
+    parser.add_argument("command", choices=["wait", "comments", "reply", "approval"])
     parser.add_argument("id", nargs="?")
     parser.add_argument("text", nargs="?")
     # No --resolve: only the reader resolves. --done hands it back to them to check.
@@ -64,14 +64,14 @@ def comments_command(argv):
     parser.add_argument("--move", metavar="TEXT", help="re-pin the comment to TEXT, which replaced what it was on")
     parser.add_argument("--file", action="append", help="comments: open comments on this file instead")
     parser.add_argument("--folder", help="comments: every open comment on files under this folder, unsent ones too")
-    parser.add_argument("--request", nargs="+", metavar="FILE", help="signoff: ask for sign-off on these docs, replacing the last ask")
-    parser.add_argument("--step", help="signoff: the step asking")
+    parser.add_argument("--request", nargs="+", metavar="FILE", help="approval: ask for approval on these docs, replacing the last ask")
+    parser.add_argument("--step", help="approval: the step asking")
     parser.add_argument("--root", help="worktree (default: the one holding the current folder)")
     args = parser.parse_args(argv)
     root = os.path.realpath(args.root or git_root(os.getcwd()) or os.getcwd())
     paths = state_paths(root)
     store = Comments(paths.comments)
-    signoffs = SignOffs(paths.signoffs)
+    approvals = Approvals(paths.approvals)
 
     def url_path(p):
         rel = os.path.relpath(os.path.realpath(p), root).replace(os.sep, "/")
@@ -90,26 +90,26 @@ def comments_command(argv):
                 batch = store.claim_sent()
                 print(f"The reviewer sent {len(batch)} comment{'s' if len(batch) > 1 else ''}:")
                 return print(describe(batch))
-            signed = signoffs.claim_all_signed(root)
-            if signed:
-                return print("The reviewer signed off " + ", ".join(p.lstrip("/") for p in signed)
-                             + ". Everything asked for is signed off.")
+            approved = approvals.claim_all_approved(root)
+            if approved:
+                return print("The reviewer approved " + ", ".join(p.lstrip("/") for p in approved)
+                             + ". Everything asked for is approved.")
             time.sleep(1)
 
-    if args.command == "signoff":
+    if args.command == "approval":
         if args.request:
             wanted = [url_path(f) for f in args.request]
             missing = [f for f, p in zip(args.request, wanted) if not os.path.isfile(root + p)]
             if missing:
                 sys.exit("Not found: " + ", ".join(missing))
-            signoffs.request(wanted, args.step)
-            return print("Asked the reviewer to sign off " + ", ".join(p.lstrip("/") for p in wanted) + ".")
-        states = signoffs.states(root)
+            approvals.request(wanted, args.step)
+            return print("Asked the reviewer to approve " + ", ".join(p.lstrip("/") for p in wanted) + ".")
+        states = approvals.states(root)
         if not states:
-            return print("No sign-off asked for.")
-        note = {"needed": "waiting for the reviewer's sign-off", "signed": "signed off",
-                "changed": "signed off, but changed since: needs signing off again"}
-        return print("\n".join(f"{p.lstrip('/')}: {note[s]}" + (f" ({at})" if s == "signed" else "") for p, s, at in states))
+            return print("No approval asked for.")
+        note = {"needed": "waiting for the reviewer's approval", "approved": "approved",
+                "changed": "approved, but changed since: needs approving again"}
+        return print("\n".join(f"{p.lstrip('/')}: {note[s]}" + (f" ({at})" if s == "approved" else "") for p, s, at in states))
 
     if args.command == "comments":
         if args.folder:
@@ -202,7 +202,7 @@ def open_command(argv):
         return
 
     server = PreviewServer(args.port, root=root, css=fetch_css(), renderer=Renderer(repo_context(start_dir)),
-                           comments=Comments(paths.comments), seen=Seen(paths.seen), signoffs=SignOffs(paths.signoffs),
+                           comments=Comments(paths.comments), seen=Seen(paths.seen), approvals=Approvals(paths.approvals),
                            user=github_user(),
                            helper_file=paths.helper)
     os.makedirs(STATE_DIR, exist_ok=True)
@@ -230,7 +230,7 @@ def open_command(argv):
 
 
 def main():
-    if len(sys.argv) > 1 and sys.argv[1] in ("wait", "comments", "reply", "signoff"):
+    if len(sys.argv) > 1 and sys.argv[1] in ("wait", "comments", "reply", "approval"):
         return comments_command(sys.argv[1:])
     open_command(sys.argv[1:])
 

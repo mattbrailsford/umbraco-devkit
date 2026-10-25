@@ -77,9 +77,9 @@ cat > docs/plans/tag-filters/DECISION-LOG.md <<'MD'
 MD
 git init -q -b main
 mkdir -p .git/markdown-preview
-# feature-design asked for sign-off on both its docs; only SPEC.md is signed off.
+# feature-design asked for approval on both its docs; only SPEC.md is approved.
 spec_hash="$(shasum -a 256 docs/plans/tag-filters/SPEC.md | cut -d' ' -f1)"
-cat > .git/markdown-preview/signoffs.json <<JSON
+cat > .git/markdown-preview/approvals.json <<JSON
 {"step": "feature-design", "requested": ["/docs/plans/tag-filters/SPEC.md", "/docs/plans/tag-filters/ARCHITECTURE.md"],
- "signed": {"/docs/plans/tag-filters/SPEC.md": {"hash": "$spec_hash", "at": "2026-10-24T10:00:00"}}, "told": false}
+ "approved": {"/docs/plans/tag-filters/SPEC.md": {"hash": "$spec_hash", "at": "2026-10-24T10:00:00"}}, "told": false}
 JSON

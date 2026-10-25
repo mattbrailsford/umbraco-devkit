@@ -9,7 +9,7 @@ carries no source line numbers. Its status says whose move it is:
     replied    Claude asked something; waiting on the reader
     addressed  Claude made the change; waiting on the reader's check
     deferred   another step owns the file; left for that step (`owner`)
-    resolved   the reader signed it off. Only the reader resolves.
+    resolved   the reader closed it. Only the reader resolves.
 
 The page server and Claude's commands both change the file (see store.py).
 """
