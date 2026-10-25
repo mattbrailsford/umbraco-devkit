@@ -77,8 +77,8 @@ go straight to "Project starters".
 3. Read the project's `CLAUDE.md` for existing architectural conventions (folder structure,
    namespace rules, extension patterns already in use) — a new feature should extend the
    grain of the codebase, not fight it.
-4. Check the whole plan folder for unresolved review comments, following `markdown-preview`'s
-   "Comments before moving on". Open ones on `ARCHITECTURE.md` and `SPEC.md` are input to
+4. Check the whole plan folder for unresolved review comments and sign-offs, following
+   `markdown-preview`'s "Comments before moving on". Open ones on `ARCHITECTURE.md` and `SPEC.md` are input to
    this run.
 
 ## Connected-pattern check
@@ -477,4 +477,5 @@ closing it.
 Otherwise, note any `TODO` in `ARCHITECTURE.md`/`SPEC.md`, any screen mockup the human hasn't
 approved yet, and any project starter created or refreshed in `docs/mockups/starters/`. Offer
 to open `ARCHITECTURE.md` in a live preview, following `markdown-preview`'s "Offering a
-preview". Then: `Suggested next: feature-plan.`
+preview". With a preview open, ask for sign-off on `SPEC.md` and `ARCHITECTURE.md`, following
+its "Sign-off". Then: `Suggested next: feature-plan.`

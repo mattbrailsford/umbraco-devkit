@@ -40,7 +40,7 @@ aside summary { display: none; }
 #doc .box-header { border-radius: 6px 6px 0 0; align-items: center; }
 
 .box-header .count { font-weight: 400; color: var(--muted); }
-.files .dot { margin-left: auto; min-width: 18px; padding: 0 6px; border-radius: 10px; background: var(--link); color: #fff; font-size: 12px; text-align: center; }
+.files .dot { min-width: 18px; padding: 0 6px; border-radius: 10px; background: var(--link); color: #fff; font-size: 12px; text-align: center; }
 /* Hover a block to get a "+" in the gutter, like a PR diff line. */
 #content [data-block] { position: relative; }
 #content math-renderer[data-block] { display: block; }
@@ -216,5 +216,21 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #content tr.diff-added, #content tr.diff-removed { box-shadow: none; }
 #content .diff-removed-wrap { margin-bottom: 16px; }
 #content table.diff-removed-wrap { display: table; }
-.files .changed { width: 8px; height: 8px; margin-left: auto; border-radius: 50%; background: var(--changed); flex: none; }
-.files .changed + .dot { margin-left: 0; }
+
+/* The end of a file row: changed, open comments, sign-off, in that order. */
+.files .marks { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.files .changed { width: 8px; height: 8px; border-radius: 50%; background: var(--changed); flex: none; }
+.files .signoff { flex: none; }
+.files .signoff.needed { color: var(--muted); }
+.files .signoff.stale { color: var(--changed); }
+.files .signoff.signed { fill: var(--done); }
+
+/* Sign-off in the doc's header, like GitHub's Approve. */
+.doc-actions { display: flex; align-items: center; gap: 16px; }
+#signoff:empty { display: none; }
+.so-btn { height: 26px; padding: 0 12px; border: 1px solid rgba(31,35,40,.15); border-radius: 6px; background: var(--done); color: #fff;
+          font: 500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; cursor: pointer; }
+.so-btn:hover { filter: brightness(1.08); }
+.so-btn.again { background: var(--changed); }
+.so-btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+.so-done { display: inline-flex; align-items: center; gap: 6px; color: var(--done); font-size: 13px; font-weight: 600; }

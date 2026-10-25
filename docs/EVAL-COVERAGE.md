@@ -35,8 +35,8 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
 - [`feature-build`](#feature-build): `feature-build-open-comments`
 - [`feature-design`](#feature-design): `feature-design-open-comments`
-- [`feature-plan`](#feature-plan): `feature-plan-earlier-step-comment` `feature-plan-offers-preview`
-- [`markdown-preview`](#markdown-preview): `markdown-preview-comments-decision` `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
+- [`feature-plan`](#feature-plan): `feature-plan-awaits-signoff` `feature-plan-earlier-step-comment` `feature-plan-offers-preview`
+- [`markdown-preview`](#markdown-preview): `feature-plan-awaits-signoff` `markdown-preview-comments-decision` `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -56,7 +56,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`feature-design`](#feature-design) | workflow | Not run | – | 8 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-plan`](#feature-plan) | workflow | Not run | – | 4 | 0 | – | – |
+| [`feature-plan`](#feature-plan) | workflow | Not run | – | 5 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -64,7 +64,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`markdown-preview`](#markdown-preview) | workflow | Not run | – | 5 | 0 | – | – |
+| [`markdown-preview`](#markdown-preview) | workflow | Not run | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 5 | 0 | – | – |
@@ -218,6 +218,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `feature-plan-awaits-signoff` | – | – |
 | `feature-plan-earlier-step-comment` | – | – |
 | `feature-plan-offers-preview` | – | – |
 | `feature-plan-stops-without-design` | 100 | 2026-10-20 |
@@ -279,6 +280,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `feature-plan-awaits-signoff` | – | – |
 | `markdown-preview-comments-decision` | – | – |
 | `markdown-preview-comments-fix` | – | – |
 | `markdown-preview-comments-unclear` | – | – |

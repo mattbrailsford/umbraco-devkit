@@ -37,12 +37,13 @@ class Tabs:
 class PreviewServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, port, *, root, css, renderer, comments, seen, user, helper_file):
+    def __init__(self, port, *, root, css, renderer, comments, seen, signoffs, user, helper_file):
         self.root = root
         self.css = css
         self.renderer = renderer
         self.comments = comments
         self.seen = seen
+        self.signoffs = signoffs
         self.user = user
         self.helper_file = helper_file
         self.tabs = Tabs()
@@ -175,15 +176,17 @@ class Handler(BaseHTTPRequestHandler):
         if not found:
             return
         # Seeing a folder counts as seeing its docs as they are, so a later change to one shows.
-        url_path, changed = self.query["path"], set()
+        url_path, changed, signoffs = self.query["path"], set(), {}
+        asked = self.server.signoffs.load()
         for e in os.scandir(found):
             if e.is_file() and e.name.endswith(".md"):
                 key = urllib.parse.unquote(url_path) + e.name
                 self.server.seen.ensure(key, e.path)
                 if self.server.seen.before(key, e.path) is not None:
                     changed.add(e.name)
+                signoffs[e.name] = self.server.signoffs.state(key, e.path, asked)[0]
         self.send(200, folder_listing(found, url_path, self.query.get("current", ""),
-                                      self.server.comments.open_counts(), self.query.get("home", "/"), changed))
+                                      self.server.comments.open_counts(), self.query.get("home", "/"), changed, signoffs))
 
     def get_seen(self):
         """The doc as it was when the reader last sent comments (or first saw it), drawn, if
@@ -208,7 +211,8 @@ class Handler(BaseHTTPRequestHandler):
         if not found:
             return
         tabs = self.server.tabs
-        marks = {"doc": repr((change_marker(found), self.server.seen.version())), "comments": repr(self.server.comments.mtime())}
+        marks = {"doc": repr((change_marker(found), self.server.seen.version())),
+                 "comments": repr((self.server.comments.mtime(), self.server.signoffs.mtime()))}
         tabs.seen = time.time()
         if tabs.go_to:
             marks["navigate"], tabs.go_to = tabs.go_to, None
@@ -220,6 +224,16 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(store.drafts())
         self.send_json(store.on_file(self.query.get("path", "")))
 
+    def get_signoff(self):
+        """Whether this doc is asked to be signed off, and where that stands."""
+        found = self.target()
+        if not found:
+            return
+        path = urllib.parse.unquote(self.query["path"])
+        state, at = self.server.signoffs.state(path, found) if os.path.isfile(found) else (None, None)
+        open_comments = len([c for c in self.server.comments.unresolved() if c["path"] == path])
+        self.send_json({"state": state, "at": at, "open": open_comments})
+
     def post_markdown(self):
         try:
             self.send_json({"html": self.server.renderer.render_many(self.data["texts"])})
@@ -227,6 +241,17 @@ class Handler(BaseHTTPRequestHandler):
             raise
         except Exception as e:
             self.send(502, str(e), "text/plain")
+
+    def post_signoff(self):
+        """The reader signs off a doc: only once its comments are all resolved."""
+        path = urllib.parse.unquote(self.data["path"])
+        found = self.resolve(path)
+        if not found or not os.path.isfile(found):
+            raise BadRequest("no such file")
+        if any(c["path"] == path for c in self.server.comments.unresolved()):
+            raise BadRequest("resolve the open comments first")
+        self.server.signoffs.sign(path, found)
+        self.ok()
 
     def post_open(self):
         self.send(200, "reused" if self.server.tabs.open(self.data["path"]) else "none", "text/plain")
@@ -271,10 +296,12 @@ GET_ROUTES = {
     "/__changes": Handler.get_changes,
     "/__comments": Handler.get_comments,
     "/__seen": Handler.get_seen,
+    "/__signoff": Handler.get_signoff,
 }
 POST_ROUTES = {
     "/__md": Handler.post_markdown,
     "/__open": Handler.post_open,
+    "/__signoff": Handler.post_signoff,
     "/__comments": Handler.post_comment,
     "/__comments/send": Handler.post_send,
     "/__comments/resolve": Handler.post_resolve,

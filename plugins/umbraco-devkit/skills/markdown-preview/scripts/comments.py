@@ -11,54 +11,14 @@ carries no source line numbers. Its status says whose move it is:
     deferred   another step owns the file; left for that step (`owner`)
     resolved   the reader signed it off. Only the reader resolves.
 
-The page server and Claude's commands both change the file, from separate processes, so
-every change holds a file lock for its whole read-change-write.
+The page server and Claude's commands both change the file (see store.py).
 """
-import fcntl
-import json
-import os
-import threading
-import time
+from store import JsonStore, now
 
 OPEN = ("draft", "sent", "working", "replied", "addressed", "deferred")
 
 
-def now():
-    return time.strftime("%Y-%m-%dT%H:%M:%S")
-
-
-class Comments:
-    def __init__(self, path):
-        self.path = path
-        self.lock = threading.Lock()  # flock is per process; this covers the server's threads
-
-    def mtime(self):
-        return os.stat(self.path).st_mtime_ns if os.path.exists(self.path) else None
-
-    def load(self):
-        try:
-            with open(self.path) as f:
-                return json.load(f)
-        except (FileNotFoundError, ValueError):
-            return []
-
-    def _save(self, items):
-        os.makedirs(os.path.dirname(self.path), exist_ok=True)
-        tmp = f"{self.path}.{os.getpid()}.tmp"
-        with open(tmp, "w") as f:
-            json.dump(items, f, indent=1)
-        os.replace(tmp, self.path)  # readers never see a half-written file
-
-    def change(self, fn):
-        """Run fn(items) on the stored list and save it, with no other change in between."""
-        os.makedirs(os.path.dirname(self.path), exist_ok=True)
-        with self.lock, open(self.path + ".lock", "a") as lock:
-            fcntl.flock(lock, fcntl.LOCK_EX)
-            items = self.load()
-            result = fn(items)
-            self._save(items)
-            return result
-
+class Comments(JsonStore):
     def update(self, comment_id, fn):
         def update(items):
             for c in items:

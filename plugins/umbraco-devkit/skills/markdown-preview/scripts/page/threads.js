@@ -8,6 +8,7 @@ import { $, ago, avatar, content, esc, fetchText, page, post, replay } from './s
 import { blockText, clearQuoteMarks, findBlock, findHeading, markQuote, sectionOf, tableBox } from './doc.js';
 import { attachHighlight, autoGrow, prepareBox, submitOnEnter } from './editor.js';
 import { renderOverview } from './overview.js';
+import { renderSignOff } from './signoff.js';
 
 const svg = body => '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" '
   + `stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
@@ -321,6 +322,7 @@ export async function renderComments() {
   placePins();
   drawComments();
   renderOverview(comments);
+  renderSignOff();
   lastStatus = Object.fromEntries(comments.map(c => [c.id, c.status]));
   await updateSendBar();
 }
