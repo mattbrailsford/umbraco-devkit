@@ -1,5 +1,5 @@
 // Comment boxes: growing as you type, light Markdown colouring, formatting shortcuts and
-// Enter to submit.
+// ⌘Enter to submit.
 import { content, esc } from './state.js';
 
 // ---------- colouring: a coloured copy of the text sits behind a see-through box ----------
@@ -152,10 +152,10 @@ content.addEventListener('paste', e => {
   typeInto(box, `[${box.value.slice(box.selectionStart, box.selectionEnd)}](${url})`);
 });
 
-// Enter or ⌘Enter (GitHub's key) adds it; Shift+Enter is a new line.
+// As on GitHub: ⌘Enter (Ctrl+Enter elsewhere) adds it, and Enter is a new line.
 export function submitOnEnter(box, submit, cancel) {
   box.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); submit(); }
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); }
     if (e.key === 'Escape') { e.preventDefault(); cancel(); }
   });
 }

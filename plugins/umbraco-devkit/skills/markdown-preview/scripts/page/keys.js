@@ -12,7 +12,7 @@ const SHORTCUTS = [
 ];
 // In a comment box: GitHub's own keys.
 const BOX_SHORTCUTS = [
-  ['Enter / ⌘Enter', 'Add or save'], ['Shift+Enter', 'New line'],
+  ['⌘Enter', 'Add or save'],
   ['⌘B / ⌘I / ⌘E', 'Bold, italic, code'], ['⌘K', 'Link (or paste a web address over text)'],
   ['⌘⇧7 / ⌘⇧8', 'Numbered or bulleted list'], ['⌘⇧.', 'Quote'], ['⌘G', 'Suggest a change'],
 ];
