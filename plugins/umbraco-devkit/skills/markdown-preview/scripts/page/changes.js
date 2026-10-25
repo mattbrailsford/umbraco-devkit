@@ -105,9 +105,9 @@ export async function showChanges() {
   const oldTexts = oldBlocks.map(blockText), newTexts = newBlocks.map(blockText);
 
   // A run of removed and added blocks between unchanged ones is one change. Within it, an added
-  // block that rewords a removed one is shown as an edit, old above new. Other removed blocks
-  // go back where they stood: before the next edit after them, else before the next unchanged
-  // block, else at the end.
+  // block that rewords a removed one is an edit. Other removed blocks go back where they stood,
+  // using the edits around them as landmarks: before the next edit, else after the last one;
+  // with no edits in the run, above the run's new blocks, as what they replaced.
   const ops = diff(oldTexts, newTexts);
   const count = { added: 0, removed: 0 };
   let last = null;
@@ -115,17 +115,18 @@ export async function showChanges() {
     if (ops[k][0] === 'same') { last = newBlocks[ops[k][2]]; k++; continue; }
     const removed = [], added = [];
     for (; k < ops.length && ops[k][0] !== 'same'; k++) (ops[k][0] === 'add' ? added : removed).push(ops[k][0] === 'add' ? ops[k][2] : ops[k][1]);
-    const pairs = new Map(), editOf = new Map();  // new index -> old index; old index -> its shown old version
+    const pairs = new Map(), taken = new Set();  // new index -> old index
     for (const j of added) {
-      const at = removed.findIndex(i => !editOf.has(i) && edited(oldBlocks[i], newBlocks[j], oldTexts[i], newTexts[j]));
-      if (at >= 0) { pairs.set(j, removed[at]); editOf.set(removed[at], null); }
+      const i = removed.find(i => !taken.has(i) && edited(oldBlocks[i], newBlocks[j], oldTexts[i], newTexts[j]));
+      if (i !== undefined) { pairs.set(j, i); taken.add(i); }
     }
-    const shown = [];
+    const shown = [], start = new Map(), end = new Map();  // old index of an edit -> its first and last shown element
     for (const j of added) {
       const el = newBlocks[j];
       if (pairs.has(j)) {
         const g = showEdit(oldBlocks[pairs.get(j)], el, count);
-        editOf.set(pairs.get(j), g || el);
+        start.set(pairs.get(j), g || el);
+        end.set(pairs.get(j), el);
         if (g) shown.push(g);
       } else {
         el.classList.add('diff-added');
@@ -133,13 +134,17 @@ export async function showChanges() {
       }
       shown.push(el);
     }
+    const edits = [...start.keys()].sort((x, y) => x - y);
     const nextSame = ops[k] ? newBlocks[ops[k][2]] : null;
-    let tail = added.length ? newBlocks[added.at(-1)] : last;
-    for (const i of removed.filter(i => !editOf.has(i))) {
-      const after = [...editOf.keys()].filter(o => o > i).sort((x, y) => x - y)[0];
-      const before = after !== undefined ? editOf.get(after) : nextSame;
-      const g = ghost(oldBlocks[i], before || tail);
-      if (before) before.before(g); else if (tail) { tail.after(g); tail = g; } else content.append(g);
+    let after = null;  // where the last one went, so a few in a row keep their order
+    for (const i of removed.filter(i => !taken.has(i))) {
+      const next = edits.find(o => o > i), prev = edits.findLast(o => o < i);
+      const anchor = next !== undefined ? start.get(next) : prev === undefined ? (added.length ? newBlocks[added[0]] : nextSame) : null;
+      const g = ghost(oldBlocks[i], anchor || end.get(prev) || last);
+      const ref = after || end.get(prev) || last;
+      if (anchor) anchor.before(g);
+      else if (ref) { ref.after(g); after = g; }
+      else { content.prepend(g); after = g; }
       count.removed++;
       shown.push(g);
     }
