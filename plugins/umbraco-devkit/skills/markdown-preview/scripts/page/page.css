@@ -48,7 +48,10 @@ aside summary { display: none; }
 #row-add { position: absolute; z-index: 4; }
 #content tr.thread-row > td { padding: 8px; background: var(--bg); }
 #content .row-thread { position: absolute; left: 9px; right: 0; margin: 0; z-index: 2; }
-#content .hot { background: var(--accent-bg); border-radius: 4px; cursor: text; }  /* text can be picked out to comment on; the gutter button is the button */
+#content .hot { background: var(--accent-bg); border-radius: 4px; cursor: text; }  /* text can be picked out to comment on */
+/* Images, diagrams and maths can't be picked out, only clicked to comment on. */
+#content .hot img, #content .hot svg, #content .hot[data-source], #content .hot [data-source], #content .hot[data-tex], #content .hot [data-tex],
+#content .hot mjx-container { cursor: pointer; }
 #content .thread { cursor: auto; }
 .add-btn { position: absolute; left: -30px; top: 0; width: 24px; height: 24px; border-radius: 6px; border: 0; background: var(--link); color: #fff; cursor: pointer; display: none; padding: 0; }
 .add-btn svg { display: block; margin: auto; }
