@@ -442,10 +442,16 @@ reader might want to undo>
 
 ## What changes
 
+**<Area: Server / Backoffice / an integration>**
+
 ```text
-<the new and changed files as `diagrams`' file tree in plan form: each file under its real
-folder, its job in a trailing comment. Backend and backoffice client both.>
+<that area's new and changed files as `diagrams`' file tree in plan form, starting at the
+area's real path (even when the client sits inside the project folder), each file's job in
+a trailing comment>
 ```
+
+<one labelled tree per area the feature touches, in the same areas and order as PLAN.md's
+headings will use>
 
 - **<Cache / Events / Audit log / ...>:** <an effect that isn't a file, in a few words>
 
