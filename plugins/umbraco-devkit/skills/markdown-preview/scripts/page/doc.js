@@ -197,15 +197,24 @@ const selBtn = $('sel-btn');
 document.addEventListener('mouseup', e => {
   if (e.target === selBtn) return;
   const sel = getSelection();
-  const text = norm(sel.toString());
   const block = sel.anchorNode?.parentElement?.closest('[data-block]');
-  if (!text || !block || !content.contains(block)) { selBtn.style.display = 'none'; return; }
-  const rect = sel.getRangeAt(0).getBoundingClientRect();
+  if (!norm(sel.toString()) || !block || !content.contains(block)) { selBtn.style.display = 'none'; return; }
+  // A comment is on one block, so a selection running into the next stops at this one's edge.
+  const range = sel.getRangeAt(0).cloneRange();
+  if (!block.contains(range.startContainer)) range.setStart(block, 0);
+  if (!block.contains(range.endContainer)) range.setEnd(block, block.childNodes.length);
+  if (range.toString() !== sel.toString()) { sel.removeAllRanges(); sel.addRange(range); }
+  const full = blockText(block);
+  // Trim anything the block's own text doesn't have (a nested list, the "+" button) off the ends.
+  let words = norm(range.toString()).replace(/^\+\s*/, '').split(' ');
+  while (words.length && !full.includes(words.join(' '))) words = words.slice(0, -1);
+  const text = words.join(' ');
+  if (!text) { selBtn.style.display = 'none'; return; }
+  const rect = range.getBoundingClientRect();
   selBtn.style.left = (rect.right + scrollX + 6) + 'px';
   selBtn.style.top = (rect.top + scrollY - 4) + 'px';
   selBtn.style.display = 'block';
   selBtn.onclick = () => {
-    const full = blockText(block);
     const at = Math.max(0, full.indexOf(text));
     selBtn.style.display = 'none';
     openForm(block, text, full.slice(Math.max(0, at - 30), at), full.slice(at + text.length, at + text.length + 30));
