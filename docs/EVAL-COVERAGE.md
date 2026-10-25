@@ -17,11 +17,11 @@ These evals gain, but the skill mostly didn't load, so the gain may come from el
 Fewer than 50% of the skill's sections have an eval, so most of its rules are unproven.
 
 - [`umbraco-env-sync`](#umbraco-env-sync): 24 of 31 sections have no eval.
+- [`diagrams`](#diagrams): 19 of 24 sections have no eval.
 - [`umbraco-extensibility`](#umbraco-extensibility): 17 of 23 sections have no eval.
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): 8 of 11 sections have no eval.
 - [`umbraco-performance`](#umbraco-performance): 6 of 10 sections have no eval.
 - [`bdd-specs`](#bdd-specs): 5 of 6 sections have no eval.
-- [`diagrams`](#diagrams): 5 of 9 sections have no eval.
 - [`ef-core-data`](#ef-core-data): 5 of 7 sections have no eval.
 - [`git-workflow`](#git-workflow): 5 of 8 sections have no eval.
 - [`umbraco-package-conventions`](#umbraco-package-conventions): 5 of 6 sections have no eval.
@@ -39,6 +39,7 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
+- [`diagrams`](#diagrams): `diagrams-text-views-plan`
 - [`feature-plan`](#feature-plan): `feature-plan-area-headings`
 - [`plain-writing`](#plain-writing): `plain-writing-draw-it` `plain-writing-guesses-first` `plain-writing-narrow-tables` `plain-writing-one-place`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
@@ -53,7 +54,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`change-backport`](#change-backport) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`decision-review`](#decision-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`diagrams`](#diagrams) | knowledge | Proven | +100 | 2 | 0 | 4/9 | 1 |
+| [`diagrams`](#diagrams) | knowledge | Proven | +100 | 3 | 0 | 5/24 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
 | [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -149,12 +150,27 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | When to draw one | **no eval** | | | | | |
 | Hand-placed SVG, not Mermaid | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
 | Pick the type | **no eval** | | | | | |
+| Text views | `diagrams-text-views-plan` | – | – | – | – | – |
 | Start from the template | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
 | Lay it out by hand | **no eval** | | | | | |
 | Colours come from classes | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
 | Show what changed | **no eval** | | | | | |
 | Check it | **no eval** | | | | | |
 | Embed it | `diagrams-architecture-flow` | 100 | 0 | 100 | 3/3 | 2026-10-23 |
+| Contents | **no eval** | | | | | |
+| Picture or text view | **no eval** | | | | | |
+| Plan or change | **no eval** | | | | | |
+| Reading rules for every view | **no eval** | | | | | |
+| Pseudocode — an algorithm or business rule | **no eval** | | | | | |
+| Call chain — who calls whom | **no eval** | | | | | |
+| Shallow file tree — where code lives | **no eval** | | | | | |
+| Database table — columns and types | **no eval** | | | | | |
+| Lit component tree — how a backoffice screen is built | **no eval** | | | | | |
+| Manifest / composer registration — how an extension is registered | **no eval** | | | | | |
+| Backoffice registrations — what appears in the backoffice | **no eval** | | | | | |
+| Settings — configuration | **no eval** | | | | | |
+| Management API endpoints — routes | **no eval** | | | | | |
+| Data structure / contract — a type's shape | **no eval** | | | | | |
 
 No section: `diagrams-update-keeps-layout`
 

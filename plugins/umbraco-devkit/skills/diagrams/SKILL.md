@@ -1,12 +1,11 @@
 ---
 name: diagrams
 description: >-
-  How to draw a diagram or chart that goes in a plan file, PR description or doc: a
-  hand-placed SVG that takes its colours from one shared stylesheet and follows the reader's
-  light or dark mode. Covers flowcharts, sequence, state, data-model, layer, deployment,
-  dependency, component-tree, before/after and timeline diagrams, and bar and line charts.
-  Use whenever a diagram or chart goes into a Markdown file a person reads. Not for
-  backoffice screen mockups or screenshots.
+  How to show structure in a plan file, PR description or doc: a hand-placed SVG diagram or
+  chart that takes its colours from one shared stylesheet and follows the reader's light or
+  dark mode, or a text view in a code block (file tree, call chain, component tree, table
+  columns, settings, routes, a type's shape). Use whenever a diagram, chart or text view goes
+  into a Markdown file a person reads. Not for backoffice screen mockups or screenshots.
 ---
 
 # Diagrams
@@ -20,7 +19,7 @@ file, and link it from the Markdown.
 - **Draw** when a section explains structure, flow, order or change: more than two parts
   talking to each other, a branch or retry, a lifecycle, a before/after refactor, numbers
   worth comparing.
-- **Skip** it when a sentence, a table or a short `diff` block says it as well. A one-file
+- **Skip** it when a sentence or a text view (see "Text views") says it as well. A one-file
   fix needs no picture.
 - **One idea per diagram.** A flow and a data model are two diagrams, not one.
 - **The text under a diagram covers only what it can't show** (follow `plain-writing`'s "Let
@@ -30,7 +29,8 @@ file, and link it from the Markdown.
 
 Draw every diagram as an `.svg` file with each box and line placed by coordinates. That
 includes small ones: boxes and arrows typed as text in a code block (`A ──▶ B`) are a
-diagram too, and go in an SVG. Don't use Mermaid, PlantUML, D2 or Graphviz either, even
+diagram too, and go in an SVG. A tree drawn with tree lines (`├──`) is a text view, not a
+diagram. Don't use Mermaid, PlantUML, D2 or Graphviz either, even
 though GitHub renders some of them inline:
 
 - Their automatic layout decides where boxes go, so long flows come out as tall, thin strips
@@ -60,6 +60,19 @@ Pick by the question the reader has. Each type has a worked example in
 | When does each thing happen, and how far apart? | Timeline | `timeline.svg` |
 | How do these numbers compare? | Bar chart | `bar-chart.svg` |
 | How did this measure change over time? | Line chart | `line-chart.svg` |
+
+## Text views
+
+Some structure is clearer as text than as a picture, because the exact name, type or value is
+the point: a file tree, a call chain, a Lit component tree, a table's columns, the manifest or
+composer registration, settings, Management API routes, a type's shape, pseudocode for a
+rule. `references/text-views.md` has the shape of each and when a picture replaces it; read
+it before writing one.
+
+- **In a plan or doc**, a text view shows the shape as it will be, in its own language, with
+  no `+` or `-`.
+- **In a PR**, it shows the change as a `diff` against the old shape.
+- **Use one only where it replaces prose** or carries an exact value the reader needs.
 
 ## Start from the template
 

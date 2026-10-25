@@ -415,6 +415,11 @@ opens with the diagram of the main flow, under its one-line summary.
 Tables follow `plain-writing`'s "Fit a narrow screen": short cells only. Decisions, rules and
 endpoints are lists.
 
+Where an exact name, type or value matters, use a text view from `diagrams` (its "Text
+views") in the plan form, with no `+` or `-`: the database table for the data model, a file
+tree for where new code goes, settings as `appsettings.json`, a data contract's shape, and
+endpoints at contract depth in `SPEC.md`. Use one only where it replaces prose.
+
 `ARCHITECTURE.md`:
 
 ```md
@@ -441,8 +446,9 @@ reader might want to undo>
 |---|---|
 | <Backoffice / Server / Database / Cache / Events / ...> | <a short sentence: the class, table, extension or setting> |
 
-<Database: entities, relationships, SQL Server and SQLite, or "none: reads and writes existing
-Umbraco data via <service>". A data model with more than one table also gets its diagram.>
+<Data model: each new or changed table as `diagrams`' database table view, its relationships
+and SQL Server and SQLite notes, or "none: reads and writes existing Umbraco data via
+<service>". A data model with more than one table also gets its diagram.>
 
 Not touched: <each connected system this kind of change usually touches that doesn't apply
 here, with a few words on why: "Deploy (no connector), search index (not indexed)". One line.>
@@ -466,7 +472,10 @@ Base path: `<shared prefix>`
 - **<status>** `<response shape>`
 - **<status>** <when, in a few words>
 
-<one block per route, or "None.">
+<one block per route, the contract depth of `diagrams`' endpoints view, or "None.">
+
+## Settings
+<new settings as `diagrams`' settings view, or leave the section out>
 
 ## Rules
 - **R1** <one observable rule a test can check: validation, permissions, limits, what
