@@ -249,11 +249,13 @@ document.addEventListener('mouseup', e => {
   while (words.length && !full.includes(words.join(' '))) words = words.slice(0, -1);
   const text = words.join(' ');
   if (!text) { selBtn.style.display = 'none'; return; }
-  const rect = range.getBoundingClientRect();
-  // Centred above the end of the selection, pointing at it.
-  const end = [...range.getClientRects()].at(-1) || rect;
-  selBtn.style.left = (end.right + scrollX - 4) + 'px';
-  selBtn.style.top = (end.top + scrollY - 38) + 'px';
+  // Centred above the selection: over its first line, if it wraps onto more than one.
+  const lines = [...range.getClientRects()].filter(r => r.width);
+  const top = Math.min(...lines.map(r => r.top));
+  const first = lines.filter(r => r.top < top + 4);
+  const left = Math.min(...first.map(r => r.left)), right = Math.max(...first.map(r => r.right));
+  selBtn.style.left = ((left + right) / 2 + scrollX) + 'px';
+  selBtn.style.top = (top + scrollY - 38) + 'px';
   selBtn.style.display = 'block';
   selBtn.onclick = () => {
     const at = Math.max(0, full.indexOf(text));
