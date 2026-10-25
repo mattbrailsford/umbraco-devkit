@@ -248,7 +248,10 @@ function buildThread(c, { block, lineGone }) {
   if (c.status !== 'draft' && c.status !== 'resolved') {
     const foot = document.createElement('div');
     foot.className = 'thread-actions';
-    foot.innerHTML = `<button class="btn resolve${c.status === 'addressed' ? ' primary' : ''}">Resolve conversation</button>`;
+    // Not while it's with Claude: its reply would only reopen it.
+    const busy = c.status === 'sent' || c.status === 'working';
+    foot.innerHTML = `<button class="btn resolve${c.status === 'addressed' ? ' primary' : ''}"`
+      + `${busy ? ' disabled title="Claude is on it. Resolve once it replies."' : ''}>Resolve conversation</button>`;
     foot.querySelector('.resolve').onclick = async () => { await post('/__comments/resolve', { id: c.id }); renderComments(); };
     thread.append(foot);
   }
