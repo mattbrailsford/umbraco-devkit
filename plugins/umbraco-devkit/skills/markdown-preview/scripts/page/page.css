@@ -202,6 +202,10 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #changes .ch-count { border-color: transparent; background: none; color: var(--changed); padding: 1px 4px; }
 #changes .ch-count::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--changed); }
 #changes button:hover { background: var(--hover); }
+#changes .ch-eye { display: flex; padding: 3px; border-color: transparent; background: none; color: var(--muted); }
+#changes .ch-eye:hover { color: var(--fg); }
+#content.hide-changes .diff-removed, #content.hide-changes .diff-removed-wrap { display: none; }
+#content.hide-changes .diff-added { background: none; box-shadow: none; }
 #content .diff-added, #content .diff-removed { border-radius: 4px; box-shadow: 0 0 0 4px var(--tint); background: var(--tint); }
 #content .diff-added { --tint: var(--added-bg); }
 #content .diff-removed { --tint: var(--removed-bg); color: var(--muted); text-decoration: line-through; text-decoration-color: var(--removed); }
