@@ -383,7 +383,7 @@ class ServerTests(TempRepo):
         self.assertEqual(self.request("POST", "/__signoff", {"path": spec})[0], 200)
         self.assertEqual(state()["state"], "signed")
         listing = self.request("GET", "/__list?path=" + urllib.parse.quote("/docs/plans/retries/"))[3]
-        marks = dict(re.findall(r'</svg>([\w.]+)<span class="marks">.*?class="signoff (\w+)"', listing))
+        marks = {name: state for state, name in re.findall(r'class="[^"]*so-(\w+)"[^>]*><span class="fileicon">.*?</span></span>([\w.]+)<', listing)}
         self.assertEqual(marks, {"BRIEF.md": "needed", "SPEC.md": "signed"})
 
 

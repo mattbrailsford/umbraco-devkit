@@ -45,24 +45,19 @@ def reading_order(folder):
     return order
 
 
-# Sign-off marks at the end of a file's row: wanted (an outline, orange once a signed doc has
-# changed), or done (a green tick).
-SIGNOFF_MARK = {
-    "needed": '<svg class="signoff needed" viewBox="0 0 16 16" width="16" height="16"><title>Needs your sign-off</title>'
-              '<circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
-    "changed": '<svg class="signoff stale" viewBox="0 0 16 16" width="16" height="16"><title>Changed since you signed it off</title>'
-               '<circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
-    "signed": '<svg class="signoff signed" viewBox="0 0 16 16" width="16" height="16"><title>Signed off by you</title>'
-              '<path d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16Zm3.78-9.72a.751.751 0 0 0-.018-1.042.751.751 0 0 0-1.042-.018L6.75 '
-              '9.19 5.28 7.72a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042l2 2a.75.75 0 0 0 1.06 0Z"/></svg>',
-}
+# Sign-off shows as a badge on a doc's icon: an empty ring while it's wanted (orange once a
+# signed doc has changed), a green tick once it's signed, with the row faintly tinted.
+SIGNOFF_TITLE = {"needed": "Needs your sign-off", "signed": "Signed off by you", "changed": "Changed since you signed it off"}
+BADGE_TICK = ('<svg viewBox="0 0 16 16" width="8" height="8"><path fill="currentColor" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 '
+              '7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 '
+              '1.06 0Z"/></svg>')
 
 
 def folder_listing(folder, url_path, current, counts, home="/", changed=(), signoffs=None):
     """The file list: folders first, as on GitHub; then files in the README's reading order;
     then the rest by name. No way up from the top of the scope. At the end of a file's row:
-    a dot if it's `changed` since the reader last sent comments, its open comments, and its
-    sign-off state, from `signoffs` ({name: state})."""
+    a dot if it's `changed` since the reader last sent comments, and its open comments. A
+    doc's sign-off state, from `signoffs` ({name: state}), badges its icon."""
     signoffs = signoffs or {}
     entries = [e for e in os.scandir(folder) if not e.name.startswith(".")]
     order = reading_order(folder)
@@ -73,13 +68,18 @@ def folder_listing(folder, url_path, current, counts, home="/", changed=(), sign
         rows.append(f'<a href="{urllib.parse.quote(url_path)}..">{ICON_DIR}..</a>')
     for e in entries:
         href = urllib.parse.quote(url_path + e.name) + ("/" if e.is_dir() else "")
-        cls = ' class="current"' if e.name == current else ""
+        state = signoffs.get(e.name)
+        classes = " ".join(filter(None, ["current" if e.name == current else "", f"so-{state}" if state else ""]))
+        cls = f' class="{classes}"' if classes else ""
+        icon = ICON_DIR if e.is_dir() else ICON_FILE
+        if state:
+            cls += f' title="{SIGNOFF_TITLE[state]}"'
+            icon = f'<span class="fileicon">{icon}<span class="badge">{BADGE_TICK if state == "signed" else ""}</span></span>'
         count = counts.get(url_path + e.name)
         marks = ('<span class="changed" title="Changed since you sent comments"></span>' if e.name in changed else "") \
-            + (f'<span class="dot" title="Open comments">{count}</span>' if count else "") \
-            + SIGNOFF_MARK.get(signoffs.get(e.name), "")
+            + (f'<span class="dot" title="Open comments">{count}</span>' if count else "")
         marks = f'<span class="marks">{marks}</span>' if marks else ""
-        rows.append(f'<a href="{href}"{cls}>{ICON_DIR if e.is_dir() else ICON_FILE}{html.escape(e.name)}{marks}</a>')
+        rows.append(f'<a href="{href}"{cls}>{icon}{html.escape(e.name)}{marks}</a>')
     return f'<div class="box files">{"".join(rows)}</div>'
 
 
