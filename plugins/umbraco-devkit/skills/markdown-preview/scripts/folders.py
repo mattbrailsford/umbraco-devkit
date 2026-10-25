@@ -48,7 +48,7 @@ def reading_order(folder):
 def folder_listing(folder, url_path, current, counts, home="/", changed=()):
     """The file list: folders first, as on GitHub; then files in the README's reading order;
     then the rest by name. No way up from the top of the scope. Files in `changed` get a
-    mark: they've changed since the reader last looked."""
+    mark: they've changed since the reader last sent comments."""
     entries = [e for e in os.scandir(folder) if not e.name.startswith(".")]
     order = reading_order(folder)
     entries.sort(key=lambda e: (not e.is_dir(), e.name not in order,
@@ -62,7 +62,7 @@ def folder_listing(folder, url_path, current, counts, home="/", changed=()):
         count = counts.get(url_path + e.name)
         dot = f'<span class="dot" title="Open comments">{count}</span>' if count else ""
         if e.name in changed:
-            dot = '<span class="changed" title="Changed since you last looked"></span>' + dot
+            dot = '<span class="changed" title="Changed since you sent comments"></span>' + dot
         rows.append(f'<a href="{href}"{cls}>{ICON_DIR if e.is_dir() else ICON_FILE}{html.escape(e.name)}{dot}</a>')
     return f'<div class="box files">{"".join(rows)}</div>'
 

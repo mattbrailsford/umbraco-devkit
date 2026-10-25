@@ -1,9 +1,9 @@
-// What's changed since the reader last looked, like GitHub's rich diff: new blocks are
-// tinted green, and removed ones come back tinted red and struck through, so an edited line
-// shows as its old wording above its new. The doc's header counts the changes and steps
-// through them; the eye hides the marks for a clean read without losing them, and "Mark as
-// seen" clears them.
-import { $, content, fetchText, page, post, replay } from './state.js';
+// What's changed since the reader last sent comments (or first opened the doc), like
+// GitHub's rich diff: new blocks are tinted green, and removed ones come back tinted red and
+// struck through, so an edited line shows as its old wording above its new. Sending comments
+// starts afresh, so what's marked is Claude's answer to them. The doc's header shows a
+// diffstat that steps through the changes, and an eye that hides the marks for a clean read.
+import { $, content, fetchText, page, replay } from './state.js';
 import { blockElements, blockText, pinSources } from './doc.js';
 
 let marks = [];  // the first element of each change, in doc order, for stepping through
@@ -98,20 +98,21 @@ export async function showChanges() {
   if (!marks.length) return;
   step = -1;
 
+  const added = content.querySelectorAll('.diff-added').length;
+  const removed = content.querySelectorAll('.diff-removed').length;
+  // Five squares split green and red, as in GitHub's diffstat.
+  const green = Math.round(5 * added / (added + removed));
+  const squares = Array.from({ length: 5 }, (_, k) => `<i class="${k < green ? 'add' : 'del'}"></i>`).join('');
   const note = $('changes');
-  note.innerHTML = `<button class="ch-count" title="Go to the next change">${marks.length} change${marks.length > 1 ? 's' : ''} since you last looked</button>`
-    + '<button class="ch-eye"></button><button class="ch-seen">Mark as seen</button>';
+  note.innerHTML = `<button class="ch-step" title="Changed since you sent comments: ${marks.length} place${marks.length > 1 ? 's' : ''}. Click to step through.">`
+    + (added ? `<span class="add">+${added}</span>` : '') + (removed ? `<span class="del">\u2212${removed}</span>` : '')
+    + `<span class="squares">${squares}</span></button><button class="ch-eye"></button>`;
   setHidden(hidden);
   note.querySelector('.ch-eye').onclick = () => setHidden(!hidden);
-  note.querySelector('.ch-count').onclick = () => {
+  note.querySelector('.ch-step').onclick = () => {
     if (hidden) setHidden(false);  // going to a change means wanting to see it
     step = (step + 1) % marks.length;
     marks[step].scrollIntoView({ block: 'center', behavior: 'smooth' });
     replay(marks[step], 'flash');
-  };
-  note.querySelector('.ch-seen').onclick = async () => {
-    await post('/__seen', { path: page.docPath });
-    clear();
-    document.dispatchEvent(new Event('seen'));
   };
 }

@@ -17,9 +17,9 @@ argument-hint: [file or folder, optional]
 Show a doc the way GitHub will, while it's still on disk, and let the reader comment on it
 in place. GitHub turns the Markdown into HTML, so what the reader sees here is what they'll
 see in a PR or on the repo. The page refreshes each time the file is saved, so a comment can
-be fixed while the reader watches. Whatever changed since the reader last looked is marked,
-added text in green and removed text struck through in red, until they mark it as seen. So
-they can check every edit, not just the line they commented on.
+be fixed while the reader watches. Whatever changed since the reader last sent comments is
+marked, added text in green and removed text struck through in red, so they can check every
+edit made in answer, not just the line they commented on.
 
 ## Pick what to open
 
@@ -156,9 +156,9 @@ A phase that writes a doc a person reviews (`BRIEF.md`, `ARCHITECTURE.md`, `SPEC
 - The file's text, and the text of comments on it, go to GitHub's Markdown API to be drawn,
   including plans that aren't committed. Nothing else is sent anywhere. The `gh` sign-in is read once and kept in memory only.
 - Comments are kept in the worktree's git folder (`markdown-preview/comments.json` under
-  `git rev-parse --git-dir`), and so is a copy of each doc as the reader last saw it
-  (`markdown-preview/seen/`), which the page compares against to mark what's changed. Neither
-  is ever committed, and removing the worktree removes both.
+  `git rev-parse --git-dir`), and so is a copy of each doc as it was when the reader last sent
+  comments (`markdown-preview/seen/`), which the page compares against to mark what's changed.
+  Neither is ever committed, and removing the worktree removes both.
 
 ## *How close it is to GitHub*
 

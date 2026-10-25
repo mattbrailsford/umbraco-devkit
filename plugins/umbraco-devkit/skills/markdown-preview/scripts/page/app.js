@@ -66,9 +66,6 @@ async function refreshComments() {
   await renderComments();
 }
 
-// Marking a doc as seen clears its mark in the file list too.
-document.addEventListener('seen', loadFileList);
-
 // ---------- moving between files ----------
 // Swaps the page's parts in place (path trail, file list, doc) rather than reloading, with
 // a quick fade. Anything that can't be swapped falls back to a normal load.

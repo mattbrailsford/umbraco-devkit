@@ -37,7 +37,7 @@ aside summary { display: none; }
 @media (prefers-color-scheme: dark) { :root { --pending: #4493f8; --pending-bg: #388bfd26; --done: #3fb950; --accent-bg: #388bfd1a; --deferred: #ab7df8; --waiting: #f0883e; } }
 .box-header { display: flex; justify-content: space-between; }
 #doc { overflow: visible; }
-#doc .box-header { border-radius: 6px 6px 0 0; }
+#doc .box-header { border-radius: 6px 6px 0 0; align-items: center; }
 
 .box-header .count { font-weight: 400; color: var(--muted); }
 .files .dot { margin-left: auto; min-width: 18px; padding: 0 6px; border-radius: 10px; background: var(--link); color: #fff; font-size: 12px; text-align: center; }
@@ -191,19 +191,23 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #keys dd { margin: 0; color: var(--muted); }
 #sendbar .note { color: var(--muted); }
 
-/* Changes since the reader last looked, like GitHub's rich diff: added blocks tinted green,
+/* Changes since the reader last sent comments, like GitHub's rich diff: added blocks tinted green,
    removed ones tinted red and struck through. */
-:root { --changed: #9a6700; --added-bg: #dafbe1; --removed: #d1242f; --removed-bg: #ffebe9; }
-@media (prefers-color-scheme: dark) { :root { --changed: #d29922; --added-bg: #2ea04326; --removed: #f85149; --removed-bg: #f851491a; } }
+:root { --changed: #9a6700; --added: #1a7f37; --added-bg: #dafbe1; --removed: #d1242f; --removed-bg: #ffebe9; }
+@media (prefers-color-scheme: dark) { :root { --changed: #d29922; --added: #3fb950; --added-bg: #2ea04326; --removed: #f85149; --removed-bg: #f851491a; } }
 .doc-title { display: flex; align-items: center; gap: 12px; min-width: 0; }
-#changes { display: flex; align-items: center; gap: 8px; font-weight: 400; font-size: 13px; }
+#changes { display: inline-flex; align-items: stretch; height: 24px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+           font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
 #changes:empty { display: none; }
-#changes button { padding: 1px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; cursor: pointer; }
-#changes .ch-count { border-color: transparent; background: none; color: var(--changed); padding: 1px 4px; }
-#changes .ch-count::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--changed); }
-#changes button:hover { background: var(--hover); }
-#changes .ch-eye { display: flex; padding: 3px; border-color: transparent; background: none; color: var(--muted); }
-#changes .ch-eye:hover { color: var(--fg); }
+#changes button { display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; border: 0; background: var(--bg); color: var(--muted); font: inherit; cursor: pointer; }
+#changes button:hover { background: var(--hover); color: var(--fg); }
+#changes .ch-eye { padding: 0 6px; border-left: 1px solid var(--border); }
+#changes .add { color: var(--added); }
+#changes .del { color: var(--removed); }
+#changes .squares { display: inline-flex; gap: 1px; }
+#changes .squares i { width: 7px; height: 7px; border-radius: 1px; background: var(--removed); }
+#changes .squares i.add { background: var(--added); }
+#changes:has(.ch-eye[aria-pressed="true"]) .ch-step { opacity: .55; }
 #content.hide-changes .diff-removed, #content.hide-changes .diff-removed-wrap { display: none; }
 #content.hide-changes .diff-added { background: none; box-shadow: none; }
 #content .diff-added, #content .diff-removed { border-radius: 4px; box-shadow: 0 0 0 4px var(--tint); background: var(--tint); }

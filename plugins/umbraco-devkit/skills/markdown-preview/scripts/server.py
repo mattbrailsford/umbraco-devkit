@@ -186,7 +186,8 @@ class Handler(BaseHTTPRequestHandler):
                                       self.server.comments.open_counts(), self.query.get("home", "/"), changed))
 
     def get_seen(self):
-        """The doc as the reader last saw it, drawn, if it's changed since: {"html": ...}, else {}."""
+        """The doc as it was when the reader last sent comments (or first saw it), drawn, if
+        it's changed since: {"html": ...}, else {}."""
         found = self.target()
         if not found:
             return
@@ -207,7 +208,7 @@ class Handler(BaseHTTPRequestHandler):
         if not found:
             return
         tabs = self.server.tabs
-        marks = {"doc": repr(change_marker(found)), "comments": repr(self.server.comments.mtime())}
+        marks = {"doc": repr((change_marker(found), self.server.seen.version())), "comments": repr(self.server.comments.mtime())}
         tabs.seen = time.time()
         if tabs.go_to:
             marks["navigate"], tabs.go_to = tabs.go_to, None
@@ -227,13 +228,6 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:
             self.send(502, str(e), "text/plain")
 
-    def post_seen(self):
-        found = self.resolve(self.data["path"])
-        if not found or not os.path.isfile(found):
-            raise BadRequest("no such file")
-        self.server.seen.mark(urllib.parse.unquote(self.data["path"]), found)
-        self.ok()
-
     def post_open(self):
         self.send(200, "reused" if self.server.tabs.open(self.data["path"]) else "none", "text/plain")
 
@@ -248,6 +242,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send(200, "ok", "text/plain")
 
     def post_send(self):
+        self.server.seen.mark_all(self.server.root)  # before Claude can start on them
         self.server.comments.send_drafts()
         self.ok()
 
@@ -280,7 +275,6 @@ GET_ROUTES = {
 POST_ROUTES = {
     "/__md": Handler.post_markdown,
     "/__open": Handler.post_open,
-    "/__seen": Handler.post_seen,
     "/__comments": Handler.post_comment,
     "/__comments/send": Handler.post_send,
     "/__comments/resolve": Handler.post_resolve,

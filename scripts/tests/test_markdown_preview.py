@@ -327,15 +327,17 @@ class ServerTests(TempRepo):
         self.assertEqual(marks["navigate"], "/docs/plans/retries/SPEC.md")
 
 
-    def test_changes_since_the_reader_last_looked(self):
+    def test_changes_since_comments_were_sent(self):
         brief = "/docs/plans/retries/BRIEF.md"
         url = "/__seen?path=" + urllib.parse.quote(brief)
-        self.assertEqual(json.loads(self.request("GET", url)[3]), {})  # first look: kept as seen
+        marker = "/__changes?path=" + urllib.parse.quote(brief)
+        self.assertEqual(json.loads(self.request("GET", url)[3]), {})  # first look: kept as it is
         write(os.path.join(self.plan, "BRIEF.md"), "# Brief, edited\n")
         self.assertIn("<h1>Drawn</h1><p># Brief\n", json.loads(self.request("GET", url)[3])["html"])
-        self.assertEqual(self.request("POST", "/__seen", {"path": brief})[0], 200)
+        before = json.loads(self.request("GET", marker)[3])["doc"]
+        self.request("POST", "/__comments/send", {})  # sending starts afresh, and open pages redraw
         self.assertEqual(json.loads(self.request("GET", url)[3]), {})
-        self.assertEqual(self.request("POST", "/__seen", {"path": "/../../etc/passwd"})[0], 400)
+        self.assertNotEqual(json.loads(self.request("GET", marker)[3])["doc"], before)
 
     def test_file_list_marks_changed_docs(self):
         listing = "/__list?path=" + urllib.parse.quote("/docs/plans/retries/")
@@ -346,7 +348,7 @@ class ServerTests(TempRepo):
 
 
 class SeenTests(TempRepo):
-    def test_copies_are_kept_until_marked(self):
+    def test_copies_are_kept_until_comments_are_sent(self):
         store = seen.Seen(worktree.state_paths(self.root).seen)
         spec, url = os.path.join(self.plan, "SPEC.md"), "/docs/plans/retries/SPEC.md"
         self.assertIsNone(store.before(url, spec))  # nothing kept yet
@@ -354,7 +356,7 @@ class SeenTests(TempRepo):
         write(spec, "# Spec v2\n")
         store.ensure(url, spec)  # doesn't replace the copy
         self.assertEqual(store.before(url, spec), "# Spec\n\n- Five attempts.\n")
-        store.mark(url, spec)
+        store.mark_all(self.root)
         self.assertIsNone(store.before(url, spec))
         self.assertTrue(store.folder.startswith(os.path.join(self.root, ".git")))
 
