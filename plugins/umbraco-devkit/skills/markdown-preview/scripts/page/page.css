@@ -220,6 +220,8 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #content code:has(> mark.ch-old) { background: var(--removed-word); }  /* the chip's own grey would hide it */
 #content code:has(> mark.ch-new) { background: var(--added-word); }
 #content.hide-changes mark.ch-new { background: none; }
+#content del.ch-del { color: var(--muted); text-decoration-color: var(--removed); background: var(--removed-word); border-radius: 3px; }
+#content.hide-changes del.ch-del { display: none; }
 #content.hide-changes code:has(> mark.ch-new) { background: var(--bgColor-neutral-muted); }
 #content .diff-removed-wrap { margin-bottom: 16px; }
 #content table.diff-removed-wrap { display: table; }

@@ -1,11 +1,13 @@
 // What's changed since the reader last sent comments (or first opened the doc), like
 // GitHub's rich diff: new blocks are tinted green, and removed ones come back tinted red and
-// struck through. An edited block shows both versions, old above new, each tinted, with just
-// the changed words picked out, so neither is struck through and the change is easy to find. Sending comments
+// struck through. An edited block that only gained words, or only lost them, shows once with
+// the change marked in place; one that did both shows both versions, old above new, each
+// tinted, with just the changed words picked out. Sending comments
 // starts afresh, so what's marked is Claude's answer to them. The doc's header shows a
 // diffstat that steps through the changes, and an eye that hides the marks for a clean read.
 import { $, content, fetchText, page, replay } from './state.js';
-import { blockElements, blockText, ownText, pinSources, wrapText } from './doc.js';
+import { blockElements, blockText, insertText, ownText, pinSources, wrapText } from './doc.js';
+import { diff, wordChanges } from './diff.js';
 
 let marks = [];  // the first element of each change, in doc order, for stepping through
 let step = -1;
@@ -25,76 +27,12 @@ function setHidden(value) {
   eye.setAttribute('aria-pressed', String(hidden));
 }
 
-// Longest common run of block texts between old and new: what's left over was removed or
-// added. On a tie the remove comes first, so an edited line reads old, then new.
-function diff(a, b) {
-  const n = a.length, m = b.length;
-  const lcs = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
-  for (let i = n - 1; i >= 0; i--)
-    for (let j = m - 1; j >= 0; j--)
-      lcs[i][j] = a[i] === b[j] ? lcs[i + 1][j + 1] + 1 : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
-  const ops = [];
-  let i = 0, j = 0;
-  while (i < n || j < m) {
-    if (i < n && j < m && a[i] === b[j]) { ops.push(['same', i++, j++]); continue; }
-    if (j < m && (i === n || lcs[i][j + 1] > lcs[i + 1][j])) ops.push(['add', null, j++]);
-    else ops.push(['remove', i++, null]);
-  }
-  return ops;
-}
-
 // Whether an added block is a reworded removed one: the same kind of block, sharing a fair
 // share of its words. Diagrams, maths and code are shown whole instead.
 function edited(oldEl, newEl, oldText, newText) {
   if (oldEl.tagName !== newEl.tagName || newEl.matches('pre') || newEl.dataset.source || newEl.dataset.tex) return false;
   const a = new Set(oldText.toLowerCase().match(/\w+/g)), b = new Set(newText.toLowerCase().match(/\w+/g));
   return [...a].filter(w => b.has(w)).length / Math.max(a.size, b.size, 1) >= 0.3;
-}
-
-// Pick out the words that differ between an edit's two versions. Words and punctuation are
-// separate pieces, so "h." and "h," still match on the "h".
-const PIECE = /[\p{L}\p{N}_'’-]+|[^\s\p{L}\p{N}_'’-]+/gu;
-
-// The changed pieces on each side. A match of a piece or two stranded between two changes is
-// folded into them, as diff tools' semantic clean-up does, so an edit reads as one swap rather
-// than flicking between changed and unchanged.
-function changedPieces(a, b) {
-  const segs = [];
-  for (const [kind, i, j] of diff(a, b)) {
-    const type = kind === 'same' ? 'same' : 'change';
-    if (segs.at(-1)?.type !== type) segs.push({ type, a: [], b: [] });
-    if (i !== null) segs.at(-1).a.push(i);
-    if (j !== null) segs.at(-1).b.push(j);
-  }
-  const size = seg => seg.a.length + seg.b.length;
-  for (let k = 1; k < segs.length - 1; k++) {
-    const [before, same, after] = [segs[k - 1], segs[k], segs[k + 1]];
-    const n = same.a.length;
-    if (same.type !== 'same' || before.type !== 'change' || after.type !== 'change' || n > 2 || n > size(before) || n > size(after)) continue;
-    before.a.push(...same.a, ...after.a);
-    before.b.push(...same.b, ...after.b);
-    segs.splice(k, 2);
-    k = Math.max(0, k - 2);
-  }
-  const changed = segs.filter(seg => seg.type === 'change');
-  return { a: changed.flatMap(seg => seg.a), b: changed.flatMap(seg => seg.b) };
-}
-
-function markWords(oldEl, newEl) {
-  const pieces = el => [...ownText(el).matchAll(PIECE)].map(m => [m[0], m.index, m.index + m[0].length]);
-  const a = pieces(oldEl), b = pieces(newEl);
-  // Runs of changed pieces become one mark each, spaces between them included.
-  const spans = (list, changed) => {
-    const out = [];
-    for (const k of [...changed].sort((x, y) => x - y)) {
-      const last = out.at(-1);
-      if (last && last.k === k - 1) { last[1] = list[k][2]; last.k = k; } else out.push(Object.assign([list[k][1], list[k][2]], { k }));
-    }
-    return out;
-  };
-  const changed = changedPieces(a.map(p => p[0]), b.map(p => p[0]));
-  wrapText(oldEl, spans(a, changed.a), 'ch-old');
-  wrapText(newEl, spans(b, changed.b), 'ch-new');
 }
 
 // A removed block, shown struck through (or, as an edit's old version, just tinted). A list
@@ -114,8 +52,37 @@ function ghost(old, anchor, edit = false) {
   return wrap;
 }
 
+// Show an edit. Returns the old version if it's shown too, and counts what it adds and removes.
+function showEdit(oldEl, newEl, count) {
+  const changes = wordChanges(ownText(oldEl), ownText(newEl));
+  const gained = changes.some(c => c.new), lost = changes.some(c => c.old);
+  if (gained && lost) {
+    const g = ghost(oldEl, newEl, true);
+    newEl.before(g);
+    newEl.classList.add('diff-added', 'edited');
+    wrapText(g, changes.filter(c => c.old).map(c => c.old), 'ch-old');
+    wrapText(newEl, changes.filter(c => c.new).map(c => c.new), 'ch-new');
+    count.added++; count.removed++;
+    return g;
+  }
+  // One-way: the block once, words added marked green, words taken out put back struck through.
+  newEl.classList.add('diff-inline');
+  if (gained) { wrapText(newEl, changes.map(c => c.new), 'ch-new'); count.added++; return null; }
+  const text = ownText(oldEl);
+  for (const c of [...changes].reverse()) {  // last first, so earlier offsets stay right
+    const put = text.slice(...c.put), lead = put.match(/^\s*/)[0], trail = put.match(/\s*$/)[0];
+    const del = document.createElement('del');
+    del.className = 'ch-del';
+    del.textContent = put.trim();
+    insertText(newEl, c.at, [lead, del, trail].filter(Boolean));
+  }
+  count.removed++;
+  return null;
+}
+
 function clear() {
-  content.querySelectorAll('.diff-removed, .diff-removed-wrap').forEach(el => el.remove());
+  content.querySelectorAll('.diff-removed, .diff-removed-wrap, del.ch-del').forEach(el => el.remove());
+  content.querySelectorAll('.diff-inline').forEach(el => el.classList.remove('diff-inline'));
   content.querySelectorAll('.diff-added').forEach(el => el.classList.remove('diff-added', 'edited'));
   content.querySelectorAll('mark.ch-new').forEach(m => m.replaceWith(...m.childNodes));
   content.normalize();
@@ -141,6 +108,7 @@ export async function showChanges() {
   // go back where they stood: before the next edit after them, else before the next unchanged
   // block, else at the end.
   const ops = diff(oldTexts, newTexts);
+  const count = { added: 0, removed: 0 };
   let last = null;
   for (let k = 0; k < ops.length;) {
     if (ops[k][0] === 'same') { last = newBlocks[ops[k][2]]; k++; continue; }
@@ -154,14 +122,13 @@ export async function showChanges() {
     const shown = [];
     for (const j of added) {
       const el = newBlocks[j];
-      el.classList.add('diff-added');
       if (pairs.has(j)) {
-        const g = ghost(oldBlocks[pairs.get(j)], el, true);
-        el.before(g);
-        el.classList.add('edited');
-        markWords(g, el);
-        editOf.set(pairs.get(j), g);
-        shown.push(g);
+        const g = showEdit(oldBlocks[pairs.get(j)], el, count);
+        editOf.set(pairs.get(j), g || el);
+        if (g) shown.push(g);
+      } else {
+        el.classList.add('diff-added');
+        count.added++;
       }
       shown.push(el);
     }
@@ -172,6 +139,7 @@ export async function showChanges() {
       const before = after !== undefined ? editOf.get(after) : nextSame;
       const g = ghost(oldBlocks[i], before || tail);
       if (before) before.before(g); else if (tail) { tail.after(g); tail = g; } else content.append(g);
+      count.removed++;
       shown.push(g);
     }
     if (added.length) last = newBlocks[added.at(-1)];
@@ -180,8 +148,7 @@ export async function showChanges() {
   if (!marks.length) return;
   step = -1;
 
-  const added = content.querySelectorAll('.diff-added').length;
-  const removed = content.querySelectorAll('.diff-removed').length;
+  const { added, removed } = count;
   // Five squares split green and red, as in GitHub's diffstat.
   const green = Math.round(5 * added / (added + removed));
   const squares = Array.from({ length: 5 }, (_, k) => `<i class="${k < green ? 'add' : 'del'}"></i>`).join('');

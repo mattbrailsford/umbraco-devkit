@@ -45,7 +45,7 @@ export function blockText(el) {
   if (el.dataset.source) return el.dataset.source;
   if (el.dataset.tex) return el.dataset.tex;
   const copy = el.cloneNode(true);
-  copy.querySelectorAll('.add-btn, .thread, .resolved-pin').forEach(x => x.remove());
+  copy.querySelectorAll('.add-btn, .thread, .resolved-pin, del.ch-del').forEach(x => x.remove());  // not words put back to show a cut
   if (el.matches('li')) copy.querySelectorAll(':scope > ul, :scope > ol').forEach(x => x.remove());
   copy.querySelectorAll('[data-tex]').forEach(m => m.replaceWith(m.dataset.tex));
   copy.querySelectorAll('img').forEach(img =>
@@ -131,7 +131,7 @@ export function findHeading(text) {
 function ownTextNodes(block) {
   const nested = block.matches('li') ? [...block.querySelectorAll(':scope > ul, :scope > ol')] : [];
   const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, {
-    acceptNode: n => n.parentElement.closest('.thread, .add-btn, .resolved-pin') || nested.some(l => l.contains(n))
+    acceptNode: n => n.parentElement.closest('.thread, .add-btn, .resolved-pin, del.ch-del') || nested.some(l => l.contains(n))
       ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
   });
   const nodes = [];
@@ -164,6 +164,19 @@ export function wrapText(block, ranges, className) {
     range.surroundContents(mark);
   }
   return cuts.length > 0;
+}
+
+// Put nodes (or text) into a block's own text at an offset in ownText.
+export function insertText(block, offset, nodes) {
+  let at = 0;
+  for (const n of ownTextNodes(block)) {
+    if (offset <= at + n.nodeValue.length) {
+      n.splitText(offset - at).before(...nodes);
+      return;
+    }
+    at += n.nodeValue.length;
+  }
+  block.append(...nodes);
 }
 
 export function markQuote(block, quote) {

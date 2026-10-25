@@ -485,6 +485,44 @@ class PageScriptTests(unittest.TestCase):
             result = subprocess.run(["node", "--check", f.name], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, f"{name}: {result.stderr}")
 
+    @unittest.skipUnless(shutil.which("node"), "needs node")
+    def test_word_changes(self):
+        # The page's diff, run directly: what an edited block marks on each side, and where
+        # words that were only taken out go back in.
+        cases = [
+            # (old, new, marked in old, marked in new, and for a block that only lost words, the new
+            #  text with them put back in {})
+            ("Backoff: 30 min, 2 h.", "Backoff: 30 min, 2 h, 6 h.", [], [", 6 h"], None),
+            ("30 min, then 2 h.", "30 min, 2 h, then 6 h.", ["then"], [", then 6 h"], None),
+            ("a, b and c.", "a and c.", [", b"], [], "a{, b} and c."),
+            ("Big red dog", "red dog", ["Big"], [], "{Big }red dog"),
+            ("a big dog", "a dog", ["big"], [], "a{ big} dog"),
+            ("in the backoffice, newest first.", "in the backoffice.", [", newest first"], [], "in the backoffice{, newest first}."),
+            ("Editors can't change it.", "Editors can't tune it.", ["change"], ["tune"], None),
+            ("A load-balanced site.", "A load-balanced cluster.", ["site"], ["cluster"], None),
+            ("Same.", "Same.", [], [], None),
+        ]
+        script = """
+import { wordChanges, diff } from '%s';
+const cases = JSON.parse(process.argv[1]);
+const out = cases.map(([o, n]) => {
+  const c = wordChanges(o, n);
+  let put = n;
+  for (const x of c.filter(x => x.put).reverse()) put = put.slice(0, x.at) + '{' + o.slice(...x.put) + '}' + put.slice(x.at);
+  return [c.filter(x => x.old).map(x => o.slice(...x.old)), c.filter(x => x.new).map(x => n.slice(...x.new)), c.some(x => x.put) && !c.some(x => x.new) ? put : null];
+});
+out.push(diff(['a', 'b', 'c'], ['a', 'c', 'b']));
+console.log(JSON.stringify(out));
+""" % os.path.join(SCRIPTS, "page", "diff.js")
+        result = subprocess.run(["node", "--input-type=module", "-e", script, json.dumps([c[:2] for c in cases])],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        *got, moved = json.loads(result.stdout)
+        for case, (old, new, put) in zip(cases, got):
+            self.assertEqual((old, new, put), case[2:], case[:2])
+        # A moved bullet reads as taken out of one place and put in another.
+        self.assertEqual([op[0] for op in moved], ["same", "remove", "same", "add"])
+
     def test_every_import_is_exported(self):
         # The page has no build step to catch a renamed or missing export.
         exports = {}
