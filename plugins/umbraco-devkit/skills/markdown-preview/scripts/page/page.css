@@ -41,16 +41,17 @@ aside summary { display: none; }
 
 .box-header .count { font-weight: 400; color: var(--muted); }
 .files .dot { min-width: 18px; padding: 0 6px; border-radius: 10px; background: var(--link); color: #fff; font-size: 12px; text-align: center; }
-/* Hover a block to get a "+" in the gutter, like a PR diff line. */
+/* Hover a block to get a comment button in the gutter, as on a PR's lines. */
 #content [data-block] { position: relative; }
 #content math-renderer[data-block] { display: block; }
 #content markdown-accessiblity-table { display: block; position: relative; }
 #row-add { position: absolute; z-index: 4; }
 #content tr.thread-row > td { padding: 8px; background: var(--bg); }
 #content .row-thread { position: absolute; left: 9px; right: 0; margin: 0; z-index: 2; }
-#content .hot { background: var(--accent-bg); border-radius: 4px; cursor: text; }  /* text can be picked out to comment on; the "+" is the button */
+#content .hot { background: var(--accent-bg); border-radius: 4px; cursor: text; }  /* text can be picked out to comment on; the gutter button is the button */
 #content .thread { cursor: auto; }
-.add-btn { position: absolute; left: -26px; top: 2px; width: 20px; height: 20px; border-radius: 6px; border: 0; background: var(--link); color: #fff; font: 600 14px/20px sans-serif; cursor: pointer; display: none; padding: 0; }
+.add-btn { position: absolute; left: -26px; top: 2px; width: 20px; height: 20px; border-radius: 6px; border: 0; background: var(--link); color: #fff; cursor: pointer; display: none; padding: 0; }
+.add-btn svg { display: block; margin: auto; }
 #content .hot > .add-btn { display: block; }
 /* Picking out words offers a small comment button above them, like a tooltip. */
 #sel-btn { position: absolute; display: none; z-index: 5; padding: 6px; border: 0; border-radius: 6px; background: #25292e; color: #fff;

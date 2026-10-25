@@ -4,6 +4,13 @@ import { $, content, norm } from './state.js';
 import { openForm } from './threads.js';
 
 const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+// The comment icon on every way in: a line's button in the margin, a table row's, and the one
+// over picked-out words.
+export const commentIcon = size => `<svg viewBox="0 0 16 16" width="${size}" height="${size}" aria-hidden="true"><path fill="currentColor" `
+  + 'd="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 '
+  + '13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 '
+  + '0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>';
 mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'default' });
 let renderCount = 0;
 
@@ -62,7 +69,7 @@ function rowText(tr) {
   return cells.map((c, i) => heads[i] ? `${heads[i]}: ${c}` : c).join(' · ');
 }
 
-// The element a table's gutter items (the row "+", resolved ticks) are measured against.
+// The element a table's gutter items (the row's comment button, resolved ticks) are measured against.
 export function tableBox(row) {
   return row.closest('markdown-accessiblity-table') || row.closest('table');
 }
@@ -94,10 +101,10 @@ export function blockElements(root) {
 export function markBlocks() {
   blockElements(content).forEach(el => {
     el.dataset.block = '';
-    if (el.matches('tr')) return;  // rows share one floating "+" (see setHot)
+    if (el.matches('tr')) return;  // rows share one floating button (see setHot)
     const btn = document.createElement('button');
     btn.className = 'add-btn';
-    btn.textContent = '+';
+    btn.innerHTML = commentIcon(12);
     btn.title = 'Comment on this';
     btn.onclick = e => { e.stopPropagation(); openForm(el, blockText(el), '', ''); };
     el.prepend(btn);
@@ -193,14 +200,15 @@ export function clearQuoteMarks() {
 
 export let hot = null;
 const rowAdd = $('row-add');
+rowAdd.innerHTML = commentIcon(12);
 rowAdd.onclick = () => hot && openForm(hot, blockText(hot), '', '');
 
 export function setHot(block) {
   hot?.classList.remove('hot');
   hot = block;
   hot?.classList.add('hot');
-  // A table row can't hold a "+" of its own (a table clips anything outside it when it
-  // scrolls sideways), so rows share one floating "+" that follows the current row.
+  // A table row can't hold a button of its own (a table clips anything outside it when it
+  // scrolls sideways), so rows share one floating button that follows the current row.
   if (hot?.matches('tr')) {
     const r = hot.getBoundingClientRect();
     const left = tableBox(hot).getBoundingClientRect().left;
@@ -214,7 +222,7 @@ export function setHot(block) {
 
 content.addEventListener('mouseover', e => {
   const block = e.target.closest('[data-block]');
-  // Crossing the gap between the text and its "+" passes over no block; keep the last one
+  // Crossing the gap between the text and its button passes over no block; keep the last one
   // lit so the button stays put long enough to click.
   if (!block || block === hot) return;
   setHot(block);
@@ -233,6 +241,7 @@ content.addEventListener('click', e => {
 
 // Selecting words in a line offers a comment button, above them, for just those words.
 const selBtn = $('sel-btn');
+selBtn.innerHTML = commentIcon(16);
 document.addEventListener('mouseup', e => {
   if (e.target === selBtn) return;
   const sel = getSelection();
@@ -244,8 +253,8 @@ document.addEventListener('mouseup', e => {
   if (!block.contains(range.endContainer)) range.setEnd(block, block.childNodes.length);
   if (range.toString() !== sel.toString()) { sel.removeAllRanges(); sel.addRange(range); }
   const full = blockText(block);
-  // Trim anything the block's own text doesn't have (a nested list, the "+" button) off the ends.
-  let words = norm(range.toString()).replace(/^\+\s*/, '').split(' ');
+  // Trim anything the block's own text doesn't have (a nested list, say) off the ends.
+  let words = norm(range.toString()).split(' ');
   while (words.length && !full.includes(words.join(' '))) words = words.slice(0, -1);
   const text = words.join(' ');
   if (!text) { selBtn.style.display = 'none'; return; }
