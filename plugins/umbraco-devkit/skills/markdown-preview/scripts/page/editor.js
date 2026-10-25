@@ -24,7 +24,7 @@ function hlInline(t) {
   return out + esc(t.slice(i));
 }
 
-export function highlightMarkdown(text) {
+function highlightMarkdown(text) {
   let fence = null;
   return text.split('\n').map(line => {
     if (/^```/.test(line)) {

@@ -102,7 +102,7 @@ function removeThread(thread) {
 // A thread inside a table cell could only be as wide as the table, so a row's thread floats
 // at full width over an empty slot row sized to match. Two passes: size each slot to its
 // thread, then line each thread up with its slot (growing one slot moves those below it).
-export function layoutRowThreads() {
+function layoutRowThreads() {
   const threads = [...content.querySelectorAll('.row-thread')].filter(t => t.slotRow);
   for (const t of threads) {
     const shown = getComputedStyle(t).display !== 'none';

@@ -23,7 +23,7 @@ export function diff(a, b) {
 // word keeps its apostrophes and hyphens ("can't", "load-balanced").
 const PIECE = /[\p{L}\p{N}_'’-]+|[^\s\p{L}\p{N}_'’-]+/gu;
 
-export const pieces = text => [...text.matchAll(PIECE)].map(m => [m[0], m.index, m.index + m[0].length]);
+const pieces = text => [...text.matchAll(PIECE)].map(m => [m[0], m.index, m.index + m[0].length]);
 
 // What changed between two versions of a block's text, as a list of changes, each with the
 // stretch of old text it replaced and the new text that replaced it ([start, end), or null

@@ -1,13 +1,14 @@
 // The drawn doc: finishing GitHub's HTML, the lines ("blocks") comments attach to, how a
 // comment finds its line again, and the line under the pointer or keyboard ("hot").
 import { $, content, norm } from './state.js';
+import { ownText, wrapText } from './text.js';
 import { openForm } from './threads.js';
 
 const dark = matchMedia('(prefers-color-scheme: dark)').matches;
 
 // The comment icon on every way in: a line's button in the margin, a table row's, and the one
 // over picked-out words.
-export const commentIcon = size => `<svg viewBox="0 0 16 16" width="${size}" height="${size}" aria-hidden="true"><path fill="currentColor" `
+const commentIcon = size => `<svg viewBox="0 0 16 16" width="${size}" height="${size}" aria-hidden="true"><path fill="currentColor" `
   + 'd="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 '
   + '13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 '
   + '0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>';
@@ -134,58 +135,6 @@ export function findHeading(text) {
 }
 
 // Highlight a few selected words in the doc, so the thread needn't repeat them.
-// The text nodes a block shows as its own: not a thread, a button, or a list item's nested list.
-function ownTextNodes(block) {
-  const nested = block.matches('li') ? [...block.querySelectorAll(':scope > ul, :scope > ol')] : [];
-  const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, {
-    acceptNode: n => n.parentElement.closest('.thread, .add-btn, .resolved-pin, del.ch-del') || nested.some(l => l.contains(n))
-      ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
-  });
-  const nodes = [];
-  for (let n; (n = walker.nextNode());) nodes.push(n);
-  return nodes;
-}
-
-export const ownText = block => ownTextNodes(block).map(n => n.nodeValue).join('');
-
-// Wrap stretches of a block's own text ([start, end) in ownText) in marks, even where a
-// stretch runs across bold, a link or code.
-export function wrapText(block, ranges, className) {
-  const cuts = [];
-  let offset = 0;
-  for (const n of ownTextNodes(block)) {
-    const len = n.nodeValue.length;
-    for (const [a, b] of ranges) {
-      const from = Math.max(a, offset), to = Math.min(b, offset + len);
-      if (from < to) cuts.push([n, from - offset, to - offset]);
-    }
-    offset += len;
-  }
-  // Last first, so splitting a text node leaves the earlier offsets in it as they were.
-  for (const [n, from, to] of cuts.reverse()) {
-    const range = document.createRange();
-    range.setStart(n, from);
-    range.setEnd(n, to);
-    const mark = document.createElement('mark');
-    mark.className = className;
-    range.surroundContents(mark);
-  }
-  return cuts.length > 0;
-}
-
-// Put nodes (or text) into a block's own text at an offset in ownText.
-export function insertText(block, offset, nodes) {
-  let at = 0;
-  for (const n of ownTextNodes(block)) {
-    if (offset <= at + n.nodeValue.length) {
-      n.splitText(offset - at).before(...nodes);
-      return;
-    }
-    at += n.nodeValue.length;
-  }
-  block.append(...nodes);
-}
-
 export function markQuote(block, quote) {
   const words = quote.trim().split(/\s+/).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   const found = words[0] && ownText(block).match(new RegExp(words.join('\\s+')));

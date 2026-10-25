@@ -6,7 +6,8 @@
 // starts afresh, so what's marked is Claude's answer to them. The doc's header shows a
 // diffstat that steps through the changes, and an eye that hides the marks for a clean read.
 import { $, content, fetchText, page, replay } from './state.js';
-import { blockElements, blockText, insertText, ownText, pinSources, wrapText } from './doc.js';
+import { blockElements, blockText, pinSources } from './doc.js';
+import { insertText, ownText, wrapText } from './text.js';
 import { diff, wordChanges } from './diff.js';
 
 let marks = [];  // the first element of each change, in doc order, for stepping through
