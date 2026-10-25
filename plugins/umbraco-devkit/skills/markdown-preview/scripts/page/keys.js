@@ -1,18 +1,24 @@
 // Keyboard shortcuts while reading, and the "?" list of them.
 import { $, content, page, replay } from './state.js';
 import { blockText, hot, setHot } from './doc.js';
+import { quoteInto } from './editor.js';
 import { openForm } from './threads.js';
 
 const SHORTCUTS = [
   ['j / ↓', 'Next line'], ['k / ↑', 'Previous line'], ['c / Enter', 'Comment on the line'],
   ['n', 'Next open comment'], ['p', 'Previous open comment'], ['e', 'Edit your pending comment on the line'],
-  ['r', 'Reply on the line'], ['Shift+S', 'Send pending comments to Claude'],
-  ['Enter', 'Add or save, in a comment box'], ['⌘B / ⌘I / ⌘E / ⌘K', 'Bold, italic, code, link, in a comment box'],
-  ['Shift+Enter', 'New line, in a comment box'], ['Esc', 'Cancel, or close this list'], ['?', 'Show or hide this list'],
+  ['r', 'Reply on the line, quoting any selected text'], ['Shift+S', 'Send pending comments to Claude'],
+  ['?', 'Show or hide this list'], ['Esc', 'Cancel, or close this list'],
+];
+// In a comment box: GitHub's own keys.
+const BOX_SHORTCUTS = [
+  ['Enter / ⌘Enter', 'Add or save'], ['Shift+Enter', 'New line'],
+  ['⌘B / ⌘I / ⌘E', 'Bold, italic, code'], ['⌘K', 'Link (or paste a web address over text)'],
+  ['⌘⇧7 / ⌘⇧8', 'Numbered or bulleted list'], ['⌘⇧.', 'Quote'], ['⌘G', 'Suggest a change'],
 ];
 const help = $('keys');
-help.querySelector('dl').innerHTML = SHORTCUTS
-  .map(([k, v]) => `<dt>${k.split(' / ').map(x => `<kbd>${x}</kbd>`).join(' ')}</dt><dd>${v}</dd>`).join('');
+const rows = list => list.map(([k, v]) => `<dt>${k.split(' / ').map(x => `<kbd>${x}</kbd>`).join(' ')}</dt><dd>${v}</dd>`).join('');
+help.querySelector('dl').innerHTML = rows(SHORTCUTS) + '<dt class="keys-group">In a comment box</dt>' + rows(BOX_SHORTCUTS);
 $('keys-hint').onclick = () => help.classList.toggle('show');
 
 // The shortcuts only mean anything where comments are on.
@@ -52,10 +58,20 @@ const KEYS = {
   n: () => moveThread(1), p: () => moveThread(-1),
   e: () => threadOf(hot)?.querySelector('.msg.pending .msg-body')?.click(),
   r: () => {
-    const thread = threadOf(hot);
+    // As on GitHub: selected text is quoted into the reply. The thread is the one the selection
+    // sits in or under, else the current line's.
+    const sel = getSelection();
+    const text = sel.toString().trim();
+    const node = text && sel.anchorNode;
+    const at = node && content.contains(node) ? (node.nodeType === 1 ? node : node.parentElement) : null;
+    const block = at ? at.closest('[data-block]') : hot;
+    const thread = at?.closest('.thread:not(.new)') || threadOf(block);
     if (thread?.classList.contains('resolved'))
-      [...content.querySelectorAll('.resolved-pin')].find(p => p.row === hot || p.parentElement === hot)?.click();
-    thread?.querySelector('.reply-box textarea')?.focus();
+      [...content.querySelectorAll('.resolved-pin')].find(p => p.row === block || p.parentElement === block)?.click();
+    const box = thread?.querySelector('.reply-box textarea');
+    if (!box) return;
+    if (text) quoteInto(box, text);
+    else box.focus();
   },
   S: () => $('sendbar').classList.contains('show') && $('sendbtn').click(),
   '?': () => help.classList.toggle('show'),

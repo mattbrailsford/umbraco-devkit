@@ -136,14 +136,14 @@ export function openForm(block, quote, prefix, suffix) {
   thread.className = 'thread new';
   const quoteLine = quote !== blockText(block) ? `<div class="msg-quote">${esc(quote)}</div>` : '';
   thread.innerHTML = `<div class="comment-form">${avatar('you')}<div class="msg-main">${quoteLine}`
-    + '<textarea placeholder="Leave a comment · Enter to add, Shift+Enter for a new line · ⌘B ⌘I ⌘E ⌘K to format"></textarea>'
+    + '<textarea placeholder="Leave a comment · Enter to add, Shift+Enter for a new line · ⌘B ⌘I ⌘K to format"></textarea>'
     + '<div class="form-actions"><button class="btn suggest" title="Write the exact new wording">± Suggest a change</button><span>'
     + '<button class="btn cancel">Cancel</button><button class="btn primary add">Add comment</button></span></div></div></div>';
   place(block, thread);
   const box = thread.querySelector('textarea');
   prepareBox(box);
   // As on GitHub: a suggestion block holding the current wording, ready to edit.
-  thread.querySelector('.suggest').onclick = () => {
+  thread.querySelector('.suggest').onclick = box.suggest = () => {
     const before = box.value.slice(0, box.selectionStart);
     const suggestion = '```suggestion\n' + quote + '\n```';
     box.value = before + (before && !before.endsWith('\n') ? '\n' : '') + suggestion + box.value.slice(box.selectionEnd);

@@ -93,19 +93,53 @@ function toggleMark(box, mark, placeholder) {
   typeInto(box, mark + text + mark, mark.length, mark.length + text.length);
 }
 
-const SHORTCUT_MARKS = { b: ['**', 'bold'], i: ['_', 'italic'], e: ['`', 'code'] };
-content.addEventListener('keydown', e => {
-  const box = e.target;
-  if (!box.matches('.thread textarea') || !(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey) return;
-  const key = e.key.toLowerCase();
-  if (SHORTCUT_MARKS[key]) {
-    e.preventDefault();
-    toggleMark(box, ...SHORTCUT_MARKS[key]);
-  } else if (key === 'k') {
-    e.preventDefault();
+// Start or end every selected line with a list or quote marker.
+function toggleLines(box, kind) {
+  const { value } = box;
+  const a = value.lastIndexOf('\n', box.selectionStart - 1) + 1;
+  const end = value.indexOf('\n', box.selectionEnd);
+  const b = end < 0 ? value.length : end;
+  const lines = value.slice(a, b).split('\n');
+  const pattern = { ol: /^\d+\. /, ul: /^- /, quote: /^> ?/ }[kind];
+  const marker = i => ({ ol: `${i + 1}. `, ul: '- ', quote: '> ' }[kind]);
+  const on = lines.every(l => pattern.test(l));
+  const out = lines.map((l, i) => on ? l.replace(pattern, '') : marker(i) + l).join('\n');
+  const selected = box.selectionStart !== box.selectionEnd;
+  box.setSelectionRange(a, b);
+  // Keep a selection selected, so pressing again takes the markers off again.
+  if (selected) typeInto(box, out, 0, out.length);
+  else typeInto(box, out);
+}
+
+// Quote text into a box, as GitHub's R does, leaving the cursor on a fresh line below it.
+export function quoteInto(box, text) {
+  box.focus();
+  const before = box.value.slice(0, box.selectionStart);
+  const gap = before && !before.endsWith('\n\n') ? (before.endsWith('\n') ? '\n' : '\n\n') : '';
+  typeInto(box, gap + text.split('\n').map(l => '> ' + l).join('\n') + '\n\n');
+}
+
+// The same keys as GitHub's comment box. An action that returns false leaves the key to the browser.
+const SHORTCUT_KEYS = {
+  b: box => toggleMark(box, '**', 'bold'),
+  i: box => toggleMark(box, '_', 'italic'),
+  e: box => toggleMark(box, '`', 'code'),
+  k: box => {
     const text = box.value.slice(box.selectionStart, box.selectionEnd) || 'link text';
     typeInto(box, `[${text}](url)`, text.length + 3, text.length + 6);  // "url" selected, ready to paste
-  }
+  },
+  g: box => box.suggest ? box.suggest() : false,
+};
+const SHIFT_SHORTCUT_KEYS = {  // by key position, since Shift changes the character
+  Digit7: box => toggleLines(box, 'ol'),
+  Digit8: box => toggleLines(box, 'ul'),
+  Period: box => toggleLines(box, 'quote'),
+};
+content.addEventListener('keydown', e => {
+  const box = e.target;
+  if (!box.matches('.thread textarea') || !(e.metaKey || e.ctrlKey) || e.altKey) return;
+  const action = e.shiftKey ? SHIFT_SHORTCUT_KEYS[e.code] : SHORTCUT_KEYS[e.key.toLowerCase()];
+  if (action && action(box) !== false) e.preventDefault();
 });
 
 // Pasting a web address over selected text makes it a link.
@@ -118,6 +152,7 @@ content.addEventListener('paste', e => {
   typeInto(box, `[${box.value.slice(box.selectionStart, box.selectionEnd)}](${url})`);
 });
 
+// Enter or ⌘Enter (GitHub's key) adds it; Shift+Enter is a new line.
 export function submitOnEnter(box, submit, cancel) {
   box.addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); submit(); }

@@ -188,10 +188,11 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #content.leaving { opacity: .35; }
 #keys-hint { position: fixed; left: 16px; bottom: 16px; border: 0; background: none; color: var(--muted); font-size: 12px; cursor: pointer; }
 #keys-hint:hover { color: var(--fg); }
-#keys { position: fixed; left: 16px; bottom: 44px; display: none; width: 320px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 11; font-size: 13px; }
+#keys { position: fixed; left: 16px; bottom: 44px; display: none; width: 360px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 11; font-size: 13px; }
 #keys.show { display: block; }
 #keys .keys-head { font-weight: 600; margin-bottom: 8px; }
 #keys dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; }
 #keys dt { white-space: nowrap; }
+#keys dt.keys-group { grid-column: 1 / -1; margin-top: 6px; font-weight: 600; }
 #keys dd { margin: 0; color: var(--muted); }
 #sendbar .note { color: var(--muted); }
