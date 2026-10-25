@@ -188,19 +188,6 @@ class FolderTests(TempRepo):
         listing = folders.folder_listing(self.plan, "/docs/plans/retries/", "", {}, home="/docs/plans/retries/")
         self.assertNotIn(">..<", listing)
 
-    def test_doc_position_reads_through_formatting_and_falls_back(self):
-        root, brief = self.root, "/docs/plans/retries/BRIEF.md"
-        place = lambda **c: folders.doc_position(root, {"path": brief, "quote": "", **c})
-        problem = place(quote="Webhooks fail silently when the receiver is down.")  # "**" between words in the file
-        goals = place(quote="Retry with backoff.")
-        by_section = place(quote="Text that's gone", section="Goals")
-        gone = place(quote="Text that's gone")
-        self.assertLess(problem[3], goals[3])
-        self.assertLess(by_section[3], goals[3])
-        self.assertEqual(gone[3], len(read(os.path.join(root, brief.lstrip("/")))))
-        spec = folders.doc_position(root, {"path": "/docs/plans/retries/SPEC.md", "quote": "Five attempts."})
-        self.assertLess(problem[:2], spec[:2])  # BRIEF.md comes before SPEC.md in the README
-
     def test_breadcrumbs_carry_their_paths(self):
         trail = folders.breadcrumbs(self.root, "/docs/plans/retries/BRIEF.md")
         self.assertEqual(re.findall(r'data-path="([^"]+)"', trail), ["/", "/docs/", "/docs/plans/", "/docs/plans/retries/", "/docs/plans/retries/BRIEF.md"])
@@ -315,8 +302,7 @@ class ServerTests(TempRepo):
         self.assertEqual(len(json.loads(self.request("GET", "/__comments?drafts=1")[3])), 1)
         self.request("POST", "/__comments/send", {})
         self.assertEqual(self.request("POST", "/__comments/edit", {"id": "c1", "body": "Late"})[0], 400)
-        open_items = json.loads(self.request("GET", "/__comments?open=1")[3])
-        self.assertEqual(len(open_items[0]["place"]), 4)
+        self.assertEqual(len(json.loads(self.request("GET", "/__comments?path=" + urllib.parse.quote(brief))[3])), 1)
         self.assertEqual(self.request("POST", "/__nope", {})[0], 404)
 
     def test_changes_markers_move_with_the_doc_and_the_comments(self):

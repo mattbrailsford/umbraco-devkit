@@ -153,37 +153,31 @@ mark.cmark { background: var(--pending-bg); color: inherit; border-bottom: 2px s
 @keyframes pop { 0% { transform: scale(.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 @keyframes flash { from { box-shadow: 0 0 0 4px var(--link); } }
 kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--header); font: 11px/16px ui-monospace, monospace; color: var(--fg); }
-#overview .ov-box .box-header { padding: 8px 16px; font-size: 13px; display: flex; align-items: center; justify-content: space-between; }
-#overview .ov-box { overflow: visible; }
-#overview .ov-box .box-header { border-radius: 6px 6px 0 0; }
-#overview .ov-order { position: relative; display: inline-flex; }
-#overview .ov-order-btn { display: flex; padding: 2px; border: 0; border-radius: 4px; background: none; color: var(--muted); cursor: pointer; }
-#overview .ov-order-btn:hover { color: var(--fg); background: var(--hover); }
-#overview .ov-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 5; min-width: 150px; padding: 4px; border: 1px solid var(--border);
-                     border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
-#overview .ov-menu[hidden] { display: none; }
-#overview .ov-menu button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 8px; border: 0; border-radius: 6px;
-                            background: none; color: var(--fg); font: 400 13px -apple-system, sans-serif; text-align: left; cursor: pointer; }
-#overview .ov-menu button:hover { background: var(--hover); }
-#overview .ov-menu button svg { color: var(--muted); }
-#overview .ov-menu button.on { font-weight: 600; }
-#overview .ov-menu button.on::after { content: "✓"; margin-left: auto; color: var(--link); }
-#overview .ov-item { align-items: flex-start; }
-#overview .ov-item:first-of-type { border-top: 0; }
-#overview .ov-item .icon { margin-top: 2px; }
-#overview .ov-item .icon.addressed { fill: var(--done); }
-#overview .ov-item .icon.replied { fill: var(--waiting); }
-#overview .ov-item .icon.draft { fill: var(--pending); }
-#overview .ov-item .icon.sent, #overview .ov-item .icon.working { fill: var(--muted); }
-#overview .ov-item .icon.deferred { fill: var(--deferred); }
-#overview .ov-body { min-width: 0; flex: 1; }
-#overview .ov-text { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#overview .ov-item:hover .ov-text { color: var(--link); }
-#overview .ov-meta { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#overview .ov-none, #overview .ov-more { display: block; box-sizing: border-box; width: 100%; padding: 8px 16px; border: 0; border-top: 1px solid var(--border);
-                                         background: none; color: var(--muted); font-size: 12px; text-align: left; }
-#overview .ov-more { cursor: pointer; }
-#overview .ov-more:hover { color: var(--link); background: var(--hover); }
+/* The open-comments count opens a list of them, like GitHub's select menus. */
+#count { position: relative; }
+.cm-btn { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; margin: -2px -6px; border: 0; border-radius: 6px; background: none; color: var(--muted); font: inherit; cursor: pointer; }
+.cm-btn:hover, .cm-btn[aria-expanded="true"] { color: var(--fg); background: var(--hover); }
+.cm-btn .caret { fill: currentColor; }
+.cm-menu { position: absolute; right: -6px; top: calc(100% + 8px); z-index: 6; width: 340px; border: 1px solid var(--border); border-radius: 8px;
+           background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); overflow: hidden; font-size: 14px; }
+.cm-menu[hidden] { display: none; }
+.cm-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; border-bottom: 1px solid var(--border); font-weight: 600; color: var(--fg); font-size: 13px; }
+.cm-order { display: flex; padding: 4px; border: 0; border-radius: 6px; background: none; color: var(--muted); cursor: pointer; }
+.cm-order:hover { color: var(--fg); background: var(--hover); }
+.cm-list { max-height: min(420px, 60vh); overflow-y: auto; }
+.cm-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 16px; color: var(--fg); text-decoration: none; border-top: 1px solid var(--border); }
+.cm-item:first-child { border-top: 0; }
+.cm-item:hover { background: var(--hover); }
+.cm-item:hover .cm-text { color: var(--link); }
+.cm-item .icon { margin-top: 2px; }
+.cm-item .icon.addressed { fill: var(--done); }
+.cm-item .icon.replied { fill: var(--waiting); }
+.cm-item .icon.draft { fill: var(--pending); }
+.cm-item .icon.sent, .cm-item .icon.working { fill: var(--muted); }
+.cm-item .icon.deferred { fill: var(--deferred); }
+.cm-body { min-width: 0; flex: 1; }
+.cm-text { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cm-meta { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #content { transition: opacity .15s; }
 #content.leaving { opacity: .35; }
 #keys-hint { position: fixed; left: 16px; bottom: 16px; border: 0; background: none; color: var(--muted); font-size: 12px; cursor: pointer; }

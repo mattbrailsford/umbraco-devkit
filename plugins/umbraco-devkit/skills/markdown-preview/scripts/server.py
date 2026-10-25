@@ -12,7 +12,7 @@ import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from folders import breadcrumbs, change_marker, doc_position, folder_listing
+from folders import breadcrumbs, change_marker, folder_listing
 from worktree import inside, pid_alive
 
 PAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "page")
@@ -192,11 +192,6 @@ class Handler(BaseHTTPRequestHandler):
         store = self.server.comments
         if "drafts" in self.query:
             return self.send_json(store.drafts())
-        if "open" in self.query:
-            items, sources = store.unresolved(), {}
-            for c in items:
-                c["place"] = doc_position(self.server.root, c, sources)
-            return self.send_json(items)
         self.send_json(store.on_file(self.query.get("path", "")))
 
     def post_markdown(self):

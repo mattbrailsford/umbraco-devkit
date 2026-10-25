@@ -320,11 +320,8 @@ export async function renderComments() {
   }
   placePins();
   drawComments();
-  renderOverview();
+  renderOverview(comments);
   lastStatus = Object.fromEntries(comments.map(c => [c.id, c.status]));
-  const open = comments.filter(c => c.status !== 'resolved').length;
-  const toCheck = comments.filter(c => c.status === 'addressed').length;
-  $('count').textContent = !open ? '' : `${open} open comment${open > 1 ? 's' : ''}` + (toCheck ? ` · ${toCheck} to check` : '');
   await updateSendBar();
 }
 

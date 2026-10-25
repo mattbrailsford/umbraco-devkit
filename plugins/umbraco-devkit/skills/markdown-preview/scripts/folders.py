@@ -64,30 +64,6 @@ def folder_listing(folder, url_path, current, counts, home="/"):
     return f'<div class="box files">{"".join(rows)}</div>'
 
 
-def doc_position(root, comment, sources=None):
-    """A sort key putting comments in reading order: [folder, file's rank in its README,
-    file, offset in the file]. The offset is where the first words of the comment's text
-    appear in the Markdown, allowing for formatting between them; failing that, its section
-    heading; failing that, the end of the file."""
-    sources = {} if sources is None else sources
-    path = os.path.join(root, comment["path"].lstrip("/"))
-    folder, name = os.path.dirname(path), os.path.basename(path)
-    order = reading_order(folder)
-    if path not in sources:
-        try:
-            with open(path, encoding="utf-8") as f:
-                sources[path] = f.read()
-        except OSError:
-            sources[path] = ""
-    text = sources[path]
-    for probe in (comment.get("original") or comment["quote"], comment["quote"], comment.get("section", "")):
-        words = re.findall(r"\w+", probe or "")[:5]
-        m = words and re.search(r"\W+".join(map(re.escape, words)), text)
-        if m:
-            return [folder, order.index(name) if name in order else len(order), name, m.start()]
-    return [folder, order.index(name) if name in order else len(order), name, len(text)]
-
-
 def change_marker(path):
     """Something that changes whenever the page for `path` needs redrawing: the folder's file
     names, and the shown file's (or a folder's README's) modified time."""
