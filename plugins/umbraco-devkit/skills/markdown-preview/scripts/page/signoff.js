@@ -18,11 +18,16 @@ export async function renderSignOff() {
   const again = s.state === 'changed';
   const blocked = s.open > 0;
   const title = blocked ? `Resolve the ${s.open} open comment${s.open > 1 ? 's' : ''} first`
-    : again ? 'Changed since you signed it off' : 'Approve this doc, so the next step can start';
+    : again ? 'Changed since you signed it off (⌘⇧Enter)' : 'Approve this doc, so the next step can start (⌘⇧Enter)';
   slot.innerHTML = `<button class="so-btn${again ? ' again' : ''}" title="${esc(title)}"${blocked ? ' disabled' : ''}>`
     + `${again ? 'Sign off again' : 'Sign off'}</button>`;
-  slot.querySelector('button').onclick = async () => {
-    await post('/__signoff', { path: page.docPath });
-    renderSignOff();
-  };
+  slot.querySelector('button').onclick = signOff;
+}
+
+// ⌘⇧Enter, as GitHub's submit-review key: only when the button's there and usable.
+export async function signOff() {
+  const btn = $('signoff').querySelector('.so-btn');
+  if (!btn || btn.disabled) return;
+  await post('/__signoff', { path: page.docPath });
+  renderSignOff();
 }

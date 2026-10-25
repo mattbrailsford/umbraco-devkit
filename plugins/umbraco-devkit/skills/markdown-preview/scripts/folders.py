@@ -46,7 +46,7 @@ def reading_order(folder):
 
 
 # Sign-off shows as a badge on a doc's icon: an empty ring while it's wanted (orange once a
-# signed doc has changed), a green tick once it's signed, with the row faintly tinted.
+# signed doc has changed), a green tick once it's signed.
 SIGNOFF_TITLE = {"needed": "Needs your sign-off", "signed": "Signed off by you", "changed": "Changed since you signed it off"}
 BADGE_TICK = ('<svg viewBox="0 0 16 16" width="8" height="8"><path fill="currentColor" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 '
               '7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 '

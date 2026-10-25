@@ -56,7 +56,7 @@ function draw() {
     + `<button class="cm-order" title="${ORDERS[orderBy].label}: click for ${ORDERS[next].label.toLowerCase()}">${ORDERS[orderBy].icon}</button></div>`
     + `<div class="cm-list">${sortComments([...open]).map(item).join('')}</div></div>`;
 
-  count.querySelector('.cm-btn').onclick = () => { menuOpen = !menuOpen; draw(); };
+  count.querySelector('.cm-btn').onclick = () => toggleCommentMenu();
   count.querySelector('.cm-order').onclick = () => {
     orderBy = next;
     try { localStorage.setItem('commentOrder', orderBy); } catch {}
@@ -73,7 +73,7 @@ function draw() {
 }
 
 // Called with this doc's comments whenever they're drawn.
-export function renderOverview(comments) {
+export function renderCommentMenu(comments) {
   open = comments.filter(c => c.status !== 'resolved');
   draw();
 }
@@ -81,6 +81,26 @@ export function renderOverview(comments) {
 function close() {
   if (menuOpen) { menuOpen = false; draw(); }
 }
+
+// Opened from the keyboard, the first comment takes focus, ready for the arrow keys.
+export function toggleCommentMenu(fromKeyboard = false) {
+  if (!open.length) return;
+  menuOpen = !menuOpen;
+  draw();
+  if (menuOpen && fromKeyboard) $('count').querySelector('.cm-item')?.focus();
+}
+
+export const commentMenuOpen = () => menuOpen;
+
+// Inside the menu, ↑ and ↓ move between comments and Enter goes to one, as in GitHub's menus.
+document.addEventListener('keydown', e => {
+  if (!menuOpen || (e.key !== 'ArrowDown' && e.key !== 'ArrowUp')) return;
+  const items = [...$('count').querySelectorAll('.cm-item')];
+  const at = items.indexOf(document.activeElement);
+  const next = items[e.key === 'ArrowDown' ? Math.min(items.length - 1, at + 1) : Math.max(0, at - 1)];
+  e.preventDefault();
+  next?.focus();
+});
 // The event's path, not e.target: a click inside redraws the menu, taking its target off the page.
 document.addEventListener('click', e => { if (!e.composedPath().some(el => el.id === 'count')) close(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });

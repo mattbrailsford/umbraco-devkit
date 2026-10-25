@@ -3,11 +3,17 @@ import { $, content, page, replay } from './state.js';
 import { blockText, hot, setHot } from './doc.js';
 import { quoteInto } from './editor.js';
 import { openForm } from './threads.js';
+import { commentMenuOpen, toggleCommentMenu } from './comment-menu.js';
+import { stepChange, toggleChanges } from './changes.js';
+import { signOff } from './signoff.js';
 
 const SHORTCUTS = [
   ['j / ↓', 'Next line'], ['k / ↑', 'Previous line'], ['c / Enter', 'Comment on the line'],
   ['n', 'Next open comment'], ['p', 'Previous open comment'], ['e', 'Edit your pending comment on the line'],
   ['r', 'Reply on the line, quoting any selected text'], ['Shift+S', 'Send pending comments to Claude'],
+  ['o', 'Open the list of open comments (↑ ↓ Enter inside)'],
+  ['] / [', 'Next or previous change since you sent comments'], ['d', 'Show or hide the change marks'],
+  ['⌘⇧Enter', 'Sign off the doc'],
   ['?', 'Show or hide this list'], ['Esc', 'Cancel, or close this list'],
 ];
 // In a comment box: GitHub's own keys.
@@ -75,11 +81,19 @@ const KEYS = {
   },
   S: () => $('sendbar').classList.contains('show') && $('sendbtn').click(),
   '?': () => help.classList.toggle('show'),
+  o: () => toggleCommentMenu(true),
+  ']': () => stepChange(1), '[': () => stepChange(-1),
+  d: () => toggleChanges(),
   Escape: () => { help.classList.remove('show'); setHot(null); },
 };
 
 document.addEventListener('keydown', e => {
-  if (e.target.closest('textarea, input') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target.closest('textarea, input')) return;
+  // GitHub submits a review with ⌘⇧Enter; here it signs off.
+  if (e.key === 'Enter' && e.shiftKey && (e.metaKey || e.ctrlKey)) { e.preventDefault(); return signOff(); }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  // The open comments menu has the arrow keys and Enter to itself.
+  if (commentMenuOpen() && ['ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) return;
   const action = KEYS[e.key];
   if (!action) return;
   // Arrow keys still scroll the page until you've started moving between lines.

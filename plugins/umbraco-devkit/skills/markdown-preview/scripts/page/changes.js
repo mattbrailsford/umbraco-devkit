@@ -20,7 +20,7 @@ function setHidden(value) {
   const eye = $('changes').querySelector('.ch-eye');
   if (!eye) return;
   eye.innerHTML = hidden ? EYE_OFF : EYE;
-  eye.title = hidden ? 'Show the changes' : 'Hide the changes, to read the doc as it is';
+  eye.title = hidden ? 'Show the changes (d)' : 'Hide the changes, to read the doc as it is (d)';
   eye.setAttribute('aria-pressed', String(hidden));
 }
 
@@ -104,15 +104,23 @@ export async function showChanges() {
   const green = Math.round(5 * added / (added + removed));
   const squares = Array.from({ length: 5 }, (_, k) => `<i class="${k < green ? 'add' : 'del'}"></i>`).join('');
   const note = $('changes');
-  note.innerHTML = `<button class="ch-step" title="Changed since you sent comments: ${marks.length} place${marks.length > 1 ? 's' : ''}. Click to step through.">`
+  note.innerHTML = `<button class="ch-step" title="Changed since you sent comments: ${marks.length} place${marks.length > 1 ? 's' : ''}. Click, or press ], to step through.">`
     + (added ? `<span class="add">+${added}</span>` : '') + (removed ? `<span class="del">\u2212${removed}</span>` : '')
     + `<span class="squares">${squares}</span></button><button class="ch-eye"></button>`;
   setHidden(hidden);
-  note.querySelector('.ch-eye').onclick = () => setHidden(!hidden);
-  note.querySelector('.ch-step').onclick = () => {
-    if (hidden) setHidden(false);  // going to a change means wanting to see it
-    step = (step + 1) % marks.length;
-    marks[step].scrollIntoView({ block: 'center', behavior: 'smooth' });
-    replay(marks[step], 'flash');
-  };
+  note.querySelector('.ch-eye').onclick = () => toggleChanges();
+  note.querySelector('.ch-step').onclick = () => stepChange(1);
+}
+
+// Go to the next (or previous) change, showing the marks if they're hidden.
+export function stepChange(dir) {
+  if (!marks.length) return;
+  if (hidden) setHidden(false);  // going to a change means wanting to see it
+  step = (step + dir + marks.length) % marks.length;
+  marks[step].scrollIntoView({ block: 'center', behavior: 'smooth' });
+  replay(marks[step], 'flash');
+}
+
+export function toggleChanges() {
+  if (marks.length) setHidden(!hidden);
 }

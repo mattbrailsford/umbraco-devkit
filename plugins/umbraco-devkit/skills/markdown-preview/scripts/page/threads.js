@@ -7,8 +7,9 @@
 import { $, ago, avatar, content, esc, fetchText, page, post, replay } from './state.js';
 import { blockText, clearQuoteMarks, findBlock, findHeading, markQuote, sectionOf, tableBox } from './doc.js';
 import { attachHighlight, autoGrow, prepareBox, submitOnEnter } from './editor.js';
-import { renderOverview } from './overview.js';
+import { renderCommentMenu } from './comment-menu.js';
 import { renderSignOff } from './signoff.js';
+import { updateSendBar } from './sendbar.js';
 
 const svg = body => '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" '
   + `stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
@@ -321,33 +322,8 @@ export async function renderComments() {
   }
   placePins();
   drawComments();
-  renderOverview(comments);
+  renderCommentMenu(comments);
   renderSignOff();
   lastStatus = Object.fromEntries(comments.map(c => [c.id, c.status]));
   await updateSendBar();
 }
-
-// ---------- "Send to Claude" ----------
-
-async function updateSendBar() {
-  const drafts = JSON.parse(await fetchText('/__comments?drafts=1')).length;
-  const bar = $('sendbar');
-  if (drafts) {
-    $('sendnote').textContent = `${drafts} pending comment${drafts > 1 ? 's' : ''}`;
-    $('sendbtn').style.display = '';
-    bar.classList.add('show');
-  } else if (!bar.dataset.sent) {
-    bar.classList.remove('show');
-  }
-}
-
-$('sendbtn').onclick = async () => {
-  await post('/__comments/send', {});
-  const bar = $('sendbar');
-  bar.dataset.sent = '1';
-  const listening = (await fetchText('/__listening')) === '1';
-  $('sendnote').textContent = listening ? 'Sent. Claude is picking them up.' : 'Sent. Tell Claude: "go through my comments".';
-  $('sendbtn').style.display = 'none';
-  setTimeout(() => { delete bar.dataset.sent; bar.classList.remove('show'); }, 8000);
-  renderComments();
-};

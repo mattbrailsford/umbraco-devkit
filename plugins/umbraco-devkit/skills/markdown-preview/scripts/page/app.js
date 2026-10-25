@@ -5,7 +5,7 @@ import { $, content, fetchText, page, setPage, showStatus } from './state.js';
 import { enhance, markBlocks, setHot } from './doc.js';
 import { renderComments } from './threads.js';
 import { showChanges } from './changes.js';
-import { jumpToComment } from './overview.js';
+import { jumpToComment } from './comment-menu.js';
 import { showKeysHint } from './keys.js';
 import './editor.js';
 

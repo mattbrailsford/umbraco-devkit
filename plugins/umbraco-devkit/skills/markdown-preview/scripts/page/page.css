@@ -221,14 +221,13 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 .files .marks { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .files .changed { width: 8px; height: 8px; border-radius: 50%; background: var(--changed); flex: none; }
 
-/* Sign-off as a badge on the doc's icon, cut out from the row behind it; signed rows tinted. */
+/* Sign-off as a badge on the doc's icon, cut out from the row behind it. */
 .files .fileicon { position: relative; display: flex; flex: none; }
 .files .badge { position: absolute; right: -4px; bottom: -3px; display: flex; align-items: center; justify-content: center;
                 width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; box-shadow: 0 0 0 2px var(--row-bg, var(--bg)); }
 .files .so-needed .badge { border: 1.5px solid var(--muted); background: var(--bg); }
 .files .so-changed .badge { border: 1.5px solid var(--changed); background: var(--bg); }
 .files .so-signed .badge { background: var(--done); color: #fff; }
-.files a.so-signed { --row-bg: color-mix(in srgb, var(--done) 8%, var(--bg)); background: var(--row-bg); }
 .files a.current, .files a:hover { --row-bg: var(--hover); }
 
 /* Sign-off in the doc's header, like GitHub's Approve. */
