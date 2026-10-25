@@ -37,7 +37,7 @@ aside summary { display: none; }
 @media (prefers-color-scheme: dark) { :root { --pending: #4493f8; --pending-bg: #388bfd26; --done: #3fb950; --accent-bg: #388bfd1a; --deferred: #ab7df8; --waiting: #f0883e; } }
 .box-header { display: flex; justify-content: space-between; }
 #doc { overflow: visible; }
-#doc .box-header { border-radius: 6px 6px 0 0; align-items: center; }
+#doc .box-header { border-radius: 6px 6px 0 0; align-items: center; min-height: 26px; }  /* as tall as its buttons, so it never jumps */
 
 .box-header .count { font-weight: 400; color: var(--muted); }
 .files .dot { min-width: 18px; padding: 0 6px; border-radius: 10px; background: var(--link); color: #fff; font-size: 12px; text-align: center; }
