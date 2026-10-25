@@ -24,7 +24,7 @@ const STATE_ICON = {
 };
 const STATE = { draft: 'Pending', sent: 'Sent', working: 'Claude is on it', replied: 'Waiting on you',
                 addressed: 'Done, please check', deferred: 'Left for a later step', resolved: 'Resolved' };
-const TICK = '<svg viewBox="0 0 16 16" width="14" height="14"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>';
+const TICK = '<svg viewBox="0 0 16 16" width="16" height="16"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>';
 
 export const SUGGESTION = /```suggestion\n([\s\S]*?)\n?```/;
 

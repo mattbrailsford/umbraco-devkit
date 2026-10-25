@@ -104,7 +104,7 @@ export function markBlocks() {
     if (el.matches('tr')) return;  // rows share one floating button (see setHot)
     const btn = document.createElement('button');
     btn.className = 'add-btn';
-    btn.innerHTML = commentIcon(12);
+    btn.innerHTML = commentIcon(16);
     btn.title = 'Comment on this';
     btn.onclick = e => { e.stopPropagation(); openForm(el, blockText(el), '', ''); };
     el.prepend(btn);
@@ -200,7 +200,7 @@ export function clearQuoteMarks() {
 
 export let hot = null;
 const rowAdd = $('row-add');
-rowAdd.innerHTML = commentIcon(12);
+rowAdd.innerHTML = commentIcon(16);
 rowAdd.onclick = () => hot && openForm(hot, blockText(hot), '', '');
 
 export function setHot(block) {
@@ -212,8 +212,8 @@ export function setHot(block) {
   if (hot?.matches('tr')) {
     const r = hot.getBoundingClientRect();
     const left = tableBox(hot).getBoundingClientRect().left;
-    rowAdd.style.left = (left + scrollX - 26) + 'px';
-    rowAdd.style.top = (r.top + scrollY + Math.min(r.height, 28) / 2 - 10) + 'px';
+    rowAdd.style.left = (left + scrollX - 30) + 'px';
+    rowAdd.style.top = (r.top + scrollY + Math.min(r.height, 28) / 2 - 12) + 'px';
     rowAdd.style.display = 'block';
   } else {
     rowAdd.style.display = 'none';
