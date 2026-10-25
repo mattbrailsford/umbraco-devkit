@@ -1,10 +1,11 @@
 // What's changed since the reader last sent comments (or first opened the doc), like
 // GitHub's rich diff: new blocks are tinted green, and removed ones come back tinted red and
-// struck through, so an edited line shows as its old wording above its new. Sending comments
+// struck through. An edited block shows both versions, old above new, each tinted, with just
+// the changed words picked out, so neither is struck through and the change is easy to find. Sending comments
 // starts afresh, so what's marked is Claude's answer to them. The doc's header shows a
 // diffstat that steps through the changes, and an eye that hides the marks for a clean read.
 import { $, content, fetchText, page, replay } from './state.js';
-import { blockElements, blockText, pinSources } from './doc.js';
+import { blockElements, blockText, ownText, pinSources, wrapText } from './doc.js';
 
 let marks = [];  // the first element of each change, in doc order, for stepping through
 let step = -1;
@@ -42,13 +43,40 @@ function diff(a, b) {
   return ops;
 }
 
-// A removed block, shown struck through. A list item or table row keeps a list or table around it.
-function ghost(old, anchor) {
+// Whether an added block is a reworded removed one: the same kind of block, sharing a fair
+// share of its words. Diagrams, maths and code are shown whole instead.
+function edited(oldEl, newEl, oldText, newText) {
+  if (oldEl.tagName !== newEl.tagName || newEl.matches('pre') || newEl.dataset.source || newEl.dataset.tex) return false;
+  const a = new Set(oldText.toLowerCase().match(/\w+/g)), b = new Set(newText.toLowerCase().match(/\w+/g));
+  return [...a].filter(w => b.has(w)).length / Math.max(a.size, b.size, 1) >= 0.3;
+}
+
+// Pick out the words that differ between an edit's two versions: runs of changed words in each.
+function markWords(oldEl, newEl) {
+  const words = el => [...ownText(el).matchAll(/\S+/g)].map(m => [m[0], m.index, m.index + m[0].length]);
+  const a = words(oldEl), b = words(newEl);
+  const spans = (list, changed) => {
+    const out = [];
+    for (const k of changed) {
+      const last = out.at(-1);
+      if (last && last.k === k - 1) { last[1] = list[k][2]; last.k = k; } else out.push(Object.assign([list[k][1], list[k][2]], { k }));
+    }
+    return out;
+  };
+  const ops = diff(a.map(w => w[0]), b.map(w => w[0]));
+  wrapText(oldEl, spans(a, ops.filter(o => o[0] === 'remove').map(o => o[1])), 'ch-old');
+  wrapText(newEl, spans(b, ops.filter(o => o[0] === 'add').map(o => o[2])), 'ch-new');
+}
+
+// A removed block, shown struck through (or, as an edit's old version, just tinted). A list
+// item or table row keeps a list or table around it.
+function ghost(old, anchor, edit = false) {
   const g = old.cloneNode(true);
   g.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
   g.removeAttribute('id');
   if (g.matches('li')) g.querySelectorAll(':scope > ul, :scope > ol').forEach(x => x.remove());
   g.classList.add('diff-removed');
+  if (edit) g.classList.add('edited');
   const fits = (g.matches('li') === !!anchor?.matches('li')) && (g.matches('tr') === !!anchor?.matches('tr'));
   if (fits) return g;
   const wrap = document.createElement(g.matches('tr') ? 'table' : g.matches('li') ? 'ul' : 'div');
@@ -59,7 +87,9 @@ function ghost(old, anchor) {
 
 function clear() {
   content.querySelectorAll('.diff-removed, .diff-removed-wrap').forEach(el => el.remove());
-  content.querySelectorAll('.diff-added').forEach(el => el.classList.remove('diff-added'));
+  content.querySelectorAll('.diff-added').forEach(el => el.classList.remove('diff-added', 'edited'));
+  content.querySelectorAll('mark.ch-new').forEach(m => m.replaceWith(...m.childNodes));
+  content.normalize();
   marks = [];
   $('changes').replaceChildren();
 }
@@ -77,23 +107,46 @@ export async function showChanges() {
   const oldBlocks = blockElements(old), newBlocks = blockElements(content);
   const oldTexts = oldBlocks.map(blockText), newTexts = newBlocks.map(blockText);
 
-  // Removed blocks go just before the next block still there; a run of removes and adds is
-  // one change.
-  let pending = [], last = null, inRun = false;
-  const startRun = el => { if (!inRun) marks.push(el); inRun = true; };
-  for (const [kind, i, j] of diff(oldTexts, newTexts)) {
-    if (kind === 'remove') { pending.push(oldBlocks[i]); continue; }
-    const el = newBlocks[j];
-    for (const p of pending) { const g = ghost(p, el); el.before(g); startRun(g); }
-    pending = [];
-    if (kind === 'add') { el.classList.add('diff-added'); startRun(el); }
-    else inRun = false;
-    last = el;
-  }
-  for (const p of pending.reverse()) {
-    const g = ghost(p, last);
-    last ? last.after(g) : content.append(g);
-    startRun(g);
+  // A run of removed and added blocks between unchanged ones is one change. Within it, an added
+  // block that rewords a removed one is shown as an edit, old above new. Other removed blocks
+  // go back where they stood: before the next edit after them, else before the next unchanged
+  // block, else at the end.
+  const ops = diff(oldTexts, newTexts);
+  let last = null;
+  for (let k = 0; k < ops.length;) {
+    if (ops[k][0] === 'same') { last = newBlocks[ops[k][2]]; k++; continue; }
+    const removed = [], added = [];
+    for (; k < ops.length && ops[k][0] !== 'same'; k++) (ops[k][0] === 'add' ? added : removed).push(ops[k][0] === 'add' ? ops[k][2] : ops[k][1]);
+    const pairs = new Map(), editOf = new Map();  // new index -> old index; old index -> its shown old version
+    for (const j of added) {
+      const at = removed.findIndex(i => !editOf.has(i) && edited(oldBlocks[i], newBlocks[j], oldTexts[i], newTexts[j]));
+      if (at >= 0) { pairs.set(j, removed[at]); editOf.set(removed[at], null); }
+    }
+    const shown = [];
+    for (const j of added) {
+      const el = newBlocks[j];
+      el.classList.add('diff-added');
+      if (pairs.has(j)) {
+        const g = ghost(oldBlocks[pairs.get(j)], el, true);
+        el.before(g);
+        el.classList.add('edited');
+        markWords(g, el);
+        editOf.set(pairs.get(j), g);
+        shown.push(g);
+      }
+      shown.push(el);
+    }
+    const nextSame = ops[k] ? newBlocks[ops[k][2]] : null;
+    let tail = added.length ? newBlocks[added.at(-1)] : last;
+    for (const i of removed.filter(i => !editOf.has(i))) {
+      const after = [...editOf.keys()].filter(o => o > i).sort((x, y) => x - y)[0];
+      const before = after !== undefined ? editOf.get(after) : nextSame;
+      const g = ghost(oldBlocks[i], before || tail);
+      if (before) before.before(g); else if (tail) { tail.after(g); tail = g; } else content.append(g);
+      shown.push(g);
+    }
+    if (added.length) last = newBlocks[added.at(-1)];
+    marks.push(shown.sort((x, y) => x.compareDocumentPosition(y) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1)[0]);
   }
   if (!marks.length) return;
   step = -1;

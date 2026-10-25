@@ -127,24 +127,50 @@ export function findHeading(text) {
 }
 
 // Highlight a few selected words in the doc, so the thread needn't repeat them.
-export function markQuote(block, quote) {
+// The text nodes a block shows as its own: not a thread, a button, or a list item's nested list.
+function ownTextNodes(block) {
+  const nested = block.matches('li') ? [...block.querySelectorAll(':scope > ul, :scope > ol')] : [];
   const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, {
-    acceptNode: n => n.parentElement.closest('.thread, .add-btn, .resolved-pin') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+    acceptNode: n => n.parentElement.closest('.thread, .add-btn, .resolved-pin') || nested.some(l => l.contains(n))
+      ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
   });
-  for (let n; (n = walker.nextNode());) {
-    const at = n.nodeValue.indexOf(quote);
-    if (at < 0) continue;
-    const range = document.createRange();
-    range.setStart(n, at);
-    range.setEnd(n, at + quote.length);
-    const mark = document.createElement('mark');
-    mark.className = 'cmark';
-    range.surroundContents(mark);
-    return true;
-  }
-  return false;
+  const nodes = [];
+  for (let n; (n = walker.nextNode());) nodes.push(n);
+  return nodes;
 }
 
+export const ownText = block => ownTextNodes(block).map(n => n.nodeValue).join('');
+
+// Wrap stretches of a block's own text ([start, end) in ownText) in marks, even where a
+// stretch runs across bold, a link or code.
+export function wrapText(block, ranges, className) {
+  const cuts = [];
+  let offset = 0;
+  for (const n of ownTextNodes(block)) {
+    const len = n.nodeValue.length;
+    for (const [a, b] of ranges) {
+      const from = Math.max(a, offset), to = Math.min(b, offset + len);
+      if (from < to) cuts.push([n, from - offset, to - offset]);
+    }
+    offset += len;
+  }
+  // Last first, so splitting a text node leaves the earlier offsets in it as they were.
+  for (const [n, from, to] of cuts.reverse()) {
+    const range = document.createRange();
+    range.setStart(n, from);
+    range.setEnd(n, to);
+    const mark = document.createElement('mark');
+    mark.className = className;
+    range.surroundContents(mark);
+  }
+  return cuts.length > 0;
+}
+
+export function markQuote(block, quote) {
+  const words = quote.trim().split(/\s+/).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const found = words[0] && ownText(block).match(new RegExp(words.join('\\s+')));
+  return !!found && wrapText(block, [[found.index, found.index + found[0].length]], 'cmark');
+}
 export function clearQuoteMarks() {
   content.querySelectorAll('mark.cmark').forEach(m => m.replaceWith(...m.childNodes));
   content.normalize();

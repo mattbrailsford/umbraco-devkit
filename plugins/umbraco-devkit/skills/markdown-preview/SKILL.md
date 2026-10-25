@@ -19,8 +19,9 @@ Show a doc the way GitHub will, while it's still on disk, and let the reader com
 in place. GitHub turns the Markdown into HTML, so what the reader sees here is what they'll
 see in a PR or on the repo. The page refreshes each time the file is saved, so a comment can
 be fixed while the reader watches. Whatever changed since the reader last sent comments is
-marked, added text in green and removed text struck through in red, so they can check every
-edit made in answer, not just the line they commented on.
+marked: added text in green, removed text struck through in red, and an edited paragraph
+shown old above new with just the changed words picked out. So they can check every edit
+made in answer, not just the line they commented on.
 
 ## Pick what to open
 

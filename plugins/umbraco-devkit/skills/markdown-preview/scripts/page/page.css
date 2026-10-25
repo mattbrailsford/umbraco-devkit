@@ -193,8 +193,8 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 
 /* Changes since the reader last sent comments, like GitHub's rich diff: added blocks tinted green,
    removed ones tinted red and struck through. */
-:root { --changed: #9a6700; --added: #1a7f37; --added-bg: #dafbe1; --removed: #d1242f; --removed-bg: #ffebe9; }
-@media (prefers-color-scheme: dark) { :root { --changed: #d29922; --added: #3fb950; --added-bg: #2ea04326; --removed: #f85149; --removed-bg: #f851491a; } }
+:root { --changed: #9a6700; --added: #1a7f37; --added-bg: #dafbe1; --added-word: #aceebb; --removed: #d1242f; --removed-bg: #ffebe9; --removed-word: #ffcecb; }
+@media (prefers-color-scheme: dark) { :root { --changed: #d29922; --added: #3fb950; --added-bg: #2ea04326; --added-word: #2ea04366; --removed: #f85149; --removed-bg: #f851491a; --removed-word: #f8514966; } }
 .doc-title { display: flex; align-items: center; gap: 12px; min-width: 0; }
 #changes { display: inline-flex; align-items: stretch; height: 24px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
            font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
@@ -214,6 +214,10 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #content .diff-added { --tint: var(--added-bg); }
 #content .diff-removed { --tint: var(--removed-bg); color: var(--muted); text-decoration: line-through; text-decoration-color: var(--removed); }
 #content tr.diff-added, #content tr.diff-removed { box-shadow: none; }
+#content .diff-removed.edited { color: inherit; text-decoration: none; }
+#content mark.ch-old { background: var(--removed-word); color: inherit; border-radius: 3px; }
+#content mark.ch-new { background: var(--added-word); color: inherit; border-radius: 3px; }
+#content.hide-changes mark.ch-new { background: none; }
 #content .diff-removed-wrap { margin-bottom: 16px; }
 #content table.diff-removed-wrap { display: table; }
 
