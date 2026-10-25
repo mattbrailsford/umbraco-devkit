@@ -442,16 +442,22 @@ reader might want to undo>
 
 ## What changes
 
-| Part | Change |
-|---|---|
-| <Backoffice / Server / Database / Cache / Events / ...> | <a short sentence: the class, table, extension or setting> |
+```text
+<the new and changed files as `diagrams`' file tree in plan form: each file under its real
+folder, its job in a trailing comment. Backend and backoffice client both.>
+```
 
-<Data model: each new or changed table as `diagrams`' database table view, its relationships
-and SQL Server and SQLite notes, or "none: reads and writes existing Umbraco data via
-<service>". A data model with more than one table also gets its diagram.>
+- **<Cache / Events / Audit log / ...>:** <an effect that isn't a file, in a few words>
 
 Not touched: <each connected system this kind of change usually touches that doesn't apply
 here, with a few words on why: "Deploy (no connector), search index (not indexed)". One line.>
+
+## Data model
+
+<each new or changed table as `diagrams`' database table view, the new or changed columns
+marked in its Change column, its relationships, and SQL Server and SQLite notes. A data model
+with more than one table also gets its diagram. Leave the section out when the feature reads
+and writes only existing Umbraco data, and say which service it uses in "What changes".>
 ```
 
 `SPEC.md`:
