@@ -217,7 +217,10 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 #content .diff-removed.edited { color: inherit; text-decoration: none; }
 #content mark.ch-old { background: var(--removed-word); color: inherit; border-radius: 3px; }
 #content mark.ch-new { background: var(--added-word); color: inherit; border-radius: 3px; }
+#content code:has(> mark.ch-old) { background: var(--removed-word); }  /* the chip's own grey would hide it */
+#content code:has(> mark.ch-new) { background: var(--added-word); }
 #content.hide-changes mark.ch-new { background: none; }
+#content.hide-changes code:has(> mark.ch-new) { background: var(--bgColor-neutral-muted); }
 #content .diff-removed-wrap { margin-bottom: 16px; }
 #content table.diff-removed-wrap { display: table; }
 

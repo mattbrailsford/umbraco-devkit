@@ -51,21 +51,50 @@ function edited(oldEl, newEl, oldText, newText) {
   return [...a].filter(w => b.has(w)).length / Math.max(a.size, b.size, 1) >= 0.3;
 }
 
-// Pick out the words that differ between an edit's two versions: runs of changed words in each.
+// Pick out the words that differ between an edit's two versions. Words and punctuation are
+// separate pieces, so "h." and "h," still match on the "h".
+const PIECE = /[\p{L}\p{N}_'’-]+|[^\s\p{L}\p{N}_'’-]+/gu;
+
+// The changed pieces on each side. A match of a piece or two stranded between two changes is
+// folded into them, as diff tools' semantic clean-up does, so an edit reads as one swap rather
+// than flicking between changed and unchanged.
+function changedPieces(a, b) {
+  const segs = [];
+  for (const [kind, i, j] of diff(a, b)) {
+    const type = kind === 'same' ? 'same' : 'change';
+    if (segs.at(-1)?.type !== type) segs.push({ type, a: [], b: [] });
+    if (i !== null) segs.at(-1).a.push(i);
+    if (j !== null) segs.at(-1).b.push(j);
+  }
+  const size = seg => seg.a.length + seg.b.length;
+  for (let k = 1; k < segs.length - 1; k++) {
+    const [before, same, after] = [segs[k - 1], segs[k], segs[k + 1]];
+    const n = same.a.length;
+    if (same.type !== 'same' || before.type !== 'change' || after.type !== 'change' || n > 2 || n > size(before) || n > size(after)) continue;
+    before.a.push(...same.a, ...after.a);
+    before.b.push(...same.b, ...after.b);
+    segs.splice(k, 2);
+    k = Math.max(0, k - 2);
+  }
+  const changed = segs.filter(seg => seg.type === 'change');
+  return { a: changed.flatMap(seg => seg.a), b: changed.flatMap(seg => seg.b) };
+}
+
 function markWords(oldEl, newEl) {
-  const words = el => [...ownText(el).matchAll(/\S+/g)].map(m => [m[0], m.index, m.index + m[0].length]);
-  const a = words(oldEl), b = words(newEl);
+  const pieces = el => [...ownText(el).matchAll(PIECE)].map(m => [m[0], m.index, m.index + m[0].length]);
+  const a = pieces(oldEl), b = pieces(newEl);
+  // Runs of changed pieces become one mark each, spaces between them included.
   const spans = (list, changed) => {
     const out = [];
-    for (const k of changed) {
+    for (const k of [...changed].sort((x, y) => x - y)) {
       const last = out.at(-1);
       if (last && last.k === k - 1) { last[1] = list[k][2]; last.k = k; } else out.push(Object.assign([list[k][1], list[k][2]], { k }));
     }
     return out;
   };
-  const ops = diff(a.map(w => w[0]), b.map(w => w[0]));
-  wrapText(oldEl, spans(a, ops.filter(o => o[0] === 'remove').map(o => o[1])), 'ch-old');
-  wrapText(newEl, spans(b, ops.filter(o => o[0] === 'add').map(o => o[2])), 'ch-new');
+  const changed = changedPieces(a.map(p => p[0]), b.map(p => p[0]));
+  wrapText(oldEl, spans(a, changed.a), 'ch-old');
+  wrapText(newEl, spans(b, changed.b), 'ch-new');
 }
 
 // A removed block, shown struck through (or, as an edit's old version, just tinted). A list
