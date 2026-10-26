@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: feature-plan-earlier-step-comment
+context:
+  scaffold_script: fixture.sh

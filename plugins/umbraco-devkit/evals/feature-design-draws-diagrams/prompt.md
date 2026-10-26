@@ -1,5 +1,5 @@
 ---
-description: feature-design draws the feature's flow as an SVG in the plan folder's diagrams/ and links it from ARCHITECTURE.md.
+description: feature-design draws the feature's flow as an SVG in the plan folder's diagrams/, links it from ARCHITECTURE.md, and offers a live preview.
 tags: [feature-design, workflow]
 max_turns: 40
 timeout_seconds: 1200
