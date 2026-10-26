@@ -57,6 +57,8 @@ python3 <this skill's folder>/scripts/preview.py wait
   saying one is already waiting. Never stop a running server to open another file.
 - The script prints the page's URL. Give it to the user.
 - The server stops when the session ends, when it's killed, or once its worktree is removed.
+  The helper then stops by itself within a minute, saying the preview has stopped. Don't start
+  it again unless the preview is opened again.
 
 ## Review comments
 
