@@ -4,6 +4,7 @@
 Usage:
   preview.py <file-or-folder> [--scope [DIR]] [--no-comments] [--root DIR] [--port N] [--no-open]
   preview.py wait                       block until the reviewer sends comments, then print them
+                                        (or until the preview stops: there's nothing left to wait for)
   preview.py comments [--file PATH... | --folder DIR]
                                         list comments waiting on Claude, or every open one on
                                         PATH, or anywhere under DIR (a plan folder, say)
@@ -49,6 +50,21 @@ from worktree import STATE_DIR, git_root, inside, pid_alive, state_paths
 
 # ---------- Claude's comment commands ----------
 
+# How long the helper waits on a preview that isn't running before giving up: long enough for
+# one that's still starting, or restarting.
+NO_PREVIEW_GRACE = 30
+
+
+def server_alive(server_file):
+    """Whether this worktree's preview server is running."""
+    try:
+        with open(server_file) as f:
+            os.kill(json.load(f)["pid"], 0)
+        return True
+    except (OSError, ValueError, KeyError):
+        return False
+
+
 def comments_command(argv):
     """`wait` blocks until the reviewer sends a batch, or approves every doc asked for, then
     prints it and exits, so a background run of it wakes Claude. `comments` lists what's
@@ -85,6 +101,9 @@ def comments_command(argv):
             f.write(str(os.getpid()))
         atexit.register(lambda: os.path.exists(paths.helper) and os.remove(paths.helper))
         signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
+        # Comments and approvals only come from an open preview, so once it's gone (closed, or
+        # its worktree removed) stop waiting rather than run on unseen.
+        gone_since = None
         while True:
             if any(c["status"] == "sent" for c in store.load()):
                 batch = store.claim_sent()
@@ -94,6 +113,13 @@ def comments_command(argv):
             if approved:
                 return print("The reviewer approved " + ", ".join(p.lstrip("/") for p in approved)
                              + ". Everything asked for is approved.")
+            if server_alive(paths.server) and os.path.isdir(root):
+                gone_since = None
+            elif gone_since is None:
+                gone_since = time.time()
+            elif time.time() - gone_since > NO_PREVIEW_GRACE:
+                return print("The preview has stopped, so I've stopped waiting for comments. "
+                             "Start the helper again only if the preview is opened again.")
             time.sleep(1)
 
     if args.command == "approval":

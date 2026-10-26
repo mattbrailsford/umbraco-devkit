@@ -206,6 +206,14 @@ class FolderTests(TempRepo):
 
 
 class CommandTests(TempRepo):
+    def setUp(self):
+        super().setUp()
+        # A preview "running" for this worktree (this test's own process), so the helper waits.
+        server = worktree.state_paths(self.root).server
+        os.makedirs(os.path.dirname(server), exist_ok=True)
+        write(server, json.dumps({"root": self.root, "port": 1, "pid": os.getpid()}))
+        self.addCleanup(lambda: os.path.exists(server) and os.remove(server))
+
     def run_cli(self, *args, timeout=20):
         return subprocess.run([sys.executable, os.path.join(SCRIPTS, "preview.py"), *args, "--root", self.root],
                               capture_output=True, text=True, timeout=timeout, cwd=self.root)
@@ -251,6 +259,16 @@ class CommandTests(TempRepo):
         store.approve("/docs/plans/retries/SPEC.md", os.path.join(self.plan, "SPEC.md"))
         out, _ = waiter.communicate(timeout=20)
         self.assertIn("The reviewer approved docs/plans/retries/SPEC.md. Everything asked for is approved.", out)
+
+    def test_wait_stops_once_the_preview_has(self):
+        # Left running after the preview closed (an ended session, a removed worktree), the
+        # helper would wait forever; it gives up once the preview's been gone a while.
+        os.remove(worktree.state_paths(self.root).server)
+        code = ("import sys; sys.path.insert(0, %r); import preview; preview.NO_PREVIEW_GRACE = 1\n"
+                "preview.comments_command(['wait', '--root', %r])") % (SCRIPTS, self.root)
+        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=20).stdout
+        self.assertIn("The preview has stopped, so I've stopped waiting", out)
+        self.assertFalse(worktree.pid_alive(worktree.state_paths(self.root).helper))
 
     def test_wait_returns_the_batch_and_only_one_waits(self):
         script = os.path.join(SCRIPTS, "preview.py")
