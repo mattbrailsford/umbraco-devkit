@@ -225,7 +225,7 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
     without moving it. Those go in task 2 with the CMS bump, with no picking.
 
     Show the user the list (dependency, current, newest, what breaks) and let them pick.
-    Packages that release together (`react` with `react-dom`, an SDK family) are one row and
+    Packages that release together (`react` with `react-dom`, an SDK family) are one entry and
     one task. Record each picked bump that's breaking for consumers in "Breaking changes for
     consumers". What isn't picked goes in "Follow-ups".
 11. **Stopgaps waiting for a major.** Same condition as step 10: only when this release is a

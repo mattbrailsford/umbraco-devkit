@@ -1,5 +1,5 @@
 ---
-description: "pr-describe opens the PR with decision-review's choices in an IMPORTANT callout table, options one per line with a recommendation, a mockup-vs-built table for a UI change, and the fine items folded at the end."
+description: "pr-describe opens the PR with decision-review's choices in an IMPORTANT callout, one list block per choice with the recommended option first, a mockup-vs-built table for a UI change, no table wider than four columns, and the fine items folded at the end."
 tags: [pr-describe, workflow]
 max_turns: 40
 timeout_seconds: 900

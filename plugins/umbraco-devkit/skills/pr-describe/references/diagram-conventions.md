@@ -37,6 +37,9 @@ context would hide who owns what or in what order things happen.
 - A table inside a `diff` block renders as raw pipes. Show a changed set of rows with a
   `Change` column (**New**, **Changed**, **Removed**) instead.
 - Keep lines under about 90 characters; wider ones scroll sideways on GitHub.
+- Tables follow `plain-writing`'s "Fit a narrow screen": four columns at most, short cells.
+  A view whose rows need more becomes a list, with **New**, **Changed** or **Removed** at
+  the start of each line.
 
 ## Pseudocode — a changed algorithm or business rule
 
@@ -81,12 +84,15 @@ provider. Mark changed columns in the `Change` column; for a new table, leave it
 
 **Table `myPackageScheduledUnpublish`** (migration `AddUnpublishDate`)
 
-| Column | Type | Required | Change | Note |
-|---|---|---|---|---|
-| `Id` | int | yes | | Primary key |
-| `ContentKey` | Guid | yes | | Links to the document |
-| `UnpublishDate` | DateTime | yes | **New** | When the job runs |
-| `CreatedBy` | int | no | **New** | User who scheduled it |
+| Column | Type | Change | Note |
+|---|---|---|---|
+| `Id` | `int` | | Primary key |
+| `ContentKey` | `Guid` | | Links to the document |
+| `UnpublishDate` | `DateTime` | **New** | When the job runs |
+| `CreatedBy` | `int?` | **New** | User who scheduled it |
+
+A `?` on the type means the column allows nulls. Keep the table to these four columns so it
+fits a phone (`plain-writing`'s "Fit a narrow screen").
 
 When the package maps the table with EF Core, diff the entity class instead if it says more
 (a relationship, an owned type).
@@ -185,26 +191,28 @@ config, so it must be valid JSON once the comments are removed.
 }
 ```
 
-A renamed, removed, or re-defaulted setting goes in a table instead, keyed by its full path:
+A renamed, removed, or re-defaulted setting goes in a list instead, its full path on one line
+and the change under it. A full path is too long for a table cell on a phone.
 
-| Setting | Before | After |
-|---|---|---|
-| `MyPackage:ScheduledUnpublish:CheckIntervalMinutes` | default `15` | default `5` |
-| `MyPackage:UnpublishJobs:Enabled` | existed | **Removed**, always on now |
+- `MyPackage:ScheduledUnpublish:CheckIntervalMinutes`\
+  Default `15` → `5`
+- `MyPackage:UnpublishJobs:Enabled`\
+  **Removed**, always on now
 
 ## Management API endpoints — new or changed routes
 
-State the shared base path once, then one row per endpoint with only the rest of the route.
-"Who can call it" is the authorization policy in plain words. Leave `Change` empty for an
-unchanged route shown for context; drop the column when every route is new.
+State the shared base path once, and who can call the routes when it's the same for all of
+them, in plain words from the authorization policy. Then one bullet per endpoint: the method
+and the rest of the route in code, **New** or **Changed** in front unless every route is new,
+then what it does. A route that differs in who can call it says so on its own line. A list,
+not a table: five columns of routes don't fit a phone.
 
-All routes start with `/umbraco/management/api/v1/my-package`.
+All routes start with `/umbraco/management/api/v1/my-package`. Callers need access to the
+Content section.
 
-| Change | Method | Route | Who can call it | What it does |
-|---|---|---|---|---|
-| | `GET` | `/scheduled-unpublish` | Users with access to Content | Lists scheduled unpublishes |
-| **New** | `PUT` | `/scheduled-unpublish/{contentKey}` | Same | Sets or moves the date |
-| **New** | `DELETE` | `/scheduled-unpublish/{contentKey}` | Same | Cancels it |
+- `GET /scheduled-unpublish`: lists scheduled unpublishes
+- **New** `PUT /scheduled-unpublish/{contentKey}`: sets or moves the date
+- **New** `DELETE /scheduled-unpublish/{contentKey}`: cancels it
 
 ## Data structure / contract — a new or changed type
 

@@ -51,7 +51,7 @@ tracks completion via issues instead of an in-doc checklist.
    started. If nothing matches, fall back to the one plan folder present, or ask if more than
    one is ambiguous.
 2. Read `SPEC.md` (and `ARCHITECTURE.md` for context) in the resolved folder. If `SPEC.md` is
-   still a stub or full of `TODO`, **stop** — send the user back to `feature-design`.
+   still a stub or has open questions, **stop** — send the user back to `feature-design`.
    Likewise if `SPEC.md` describes a new or visibly changed screen that has no mockup in
    `mockups/`: name the screens and send the user back to `feature-design`. A screen
    without a mockup can't be approved, so it can't be planned.
@@ -89,10 +89,29 @@ Light — confirmation, not elicitation. ~3–5 questions, batched:
 Write every file this phase produces following `plain-writing`: a person reads it before the
 next phase runs, so it should be quick to read without leaving anything out.
 
-`PLAN.md`, a checklist `feature-build` can execute:
+`PLAN.md`, a checklist `feature-build` can execute. Like `STORIES.md`, it's written for the
+skills that run it, so every detail stays; a person reads it to check the order and what
+runs together. Group the tasks under one `##` heading per area (Setup, Core, Management API,
+Frontend, an integration, Docs), the areas in build order:
 
-- Every task is `- [ ]`, top-to-bottom in dependency order.
-- Each task line carries: a short id, the story it implements, explicit `depends-on:` ids,
+```md
+## <Area>
+
+- [ ] **T<n>** - story: <ID> (<criteria>). <What to build, naming the files, types and
+  decisions it follows.>
+  Acceptance: <the check that proves it, such as which specs go green or a real request>
+  depends-on: <ids, or none>. parallel-group: <letter, when it has one>
+
+- [ ] **T<n>** - **wire: <feature> into <entry point>.** story: <ID> (<criteria>). <What gets
+  registered or connected.>
+  Acceptance: <a real request or resolution through the running site>
+  depends-on: <ids>
+```
+
+Every task names its story, wire tasks included.
+
+- Every task is `- [ ]`, top-to-bottom in dependency order within its area.
+- Each task carries: a short id, the story it implements, explicit `depends-on:` ids,
   and a `parallel-group:` tag for tasks with no ordering between them.
 - One task = one reviewable, committable unit of work.
 - No task references a file, extension point, or decision not already in `ARCHITECTURE.md`/
@@ -109,9 +128,10 @@ next phase runs, so it should be quick to read without leaving anything out.
   the same task, or a task that `depends-on:` it. If `ARCHITECTURE.md` doesn't say how a
   new entity moves, stop and send the user back to `feature-design`.
 
-Update the `STORIES.md` and `PLAN.md` lines in `README.md`: check each box and replace
-`<pending>` with one plain-English line (e.g. "N stories" / "M tasks, first parallel group
-is...").
+Update the Stories and Plan rows in `README.md`: `⬜` becomes `✅`, and "In one line" gets a
+few words ("6 stories" / "14 tasks in 4 groups"). Leave "Needs you" empty unless a file opens
+with guesses. Same rules as `feature-explore`'s Brief row, including an older numbered-list
+README.
 
 Append dated `DECISION-LOG.md` entries for non-obvious sequencing decisions (why task X
 blocks task Y, why a slice was deferred).

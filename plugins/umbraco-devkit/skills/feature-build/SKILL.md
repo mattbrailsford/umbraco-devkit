@@ -199,9 +199,9 @@ subagent in whole-feature mode with the full branch diff (`git diff <base>...HEA
   `feature-design`.
 
 A human still reviews the PR; this pass means they aren't the first to see cross-task
-problems. Update the `BUILD-LOG.md` line in `README.md`: check its box and replace
-`<pending>` with one plain-English line (task count, commit count). Never touch another
-phase's line. If this feature is (or completes) a standalone package ready to publish, invoke
+problems. Update the Build log row in `README.md`: `⬜` becomes `✅`, and "In one line" gets the task
+and commit count. Same rules as `feature-explore`'s Brief row. Never touch another phase's
+row. If this feature is (or completes) a standalone package ready to publish, invoke
 `umbraco-marketplace` before tagging a release; it's not part of this loop.
 
 **Open the PR: invoke `pr-describe` directly (via the Skill tool). Don't write the body

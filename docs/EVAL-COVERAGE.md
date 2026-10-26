@@ -33,10 +33,11 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 
 A workflow eval scored under 100, so the skill broke one of its own rules.
 
-- [`feature-design`](#feature-design): `feature-design-draws-diagrams` (93). Read the run, then fix the skill or the grader.
+- [`feature-design`](#feature-design): `feature-design-nfr-targets` (83). Read the run, then fix the skill or the grader.
+- [`feature-explore`](#feature-explore): `feature-explore-writes-brief` (97). Read the run, then fix the skill or the grader.
 - [`feature-plan`](#feature-plan): `feature-plan-awaits-approval` (67) `feature-plan-offers-preview` (83). Read the run, then fix the skill or the grader.
 - [`markdown-preview`](#markdown-preview): `feature-plan-awaits-approval` (67). Read the run, then fix the skill or the grader.
-- [`pr-describe`](#pr-describe): `pr-describe-decision-callout` (92) `pr-describe-diagram-readability` (87). Read the run, then fix the skill or the grader.
+- [`pr-describe`](#pr-describe): `pr-describe-diagram-readability` (87). Read the run, then fix the skill or the grader.
 
 ### Evals never run
 
@@ -59,9 +60,9 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 4 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-design`](#feature-design) | workflow | Broke a rule | – | 8 | 0 | – | – |
-| [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 5 | 0 | – | – |
+| [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -70,7 +71,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
-| [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
+| [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -91,7 +92,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`umbraco-package-conventions`](#umbraco-package-conventions) | knowledge | Proven | +22 | 4 | 0 | 1/6 | 1 |
 | [`umbraco-performance`](#umbraco-performance) | knowledge | Proven | +100 | 6 | 4 | 4/10 | 2 |
 | [`umbraco-security`](#umbraco-security) | knowledge | Proven | +44 | 18 | 6 | 6/6 | 1 |
-| [`user-stories`](#user-stories) | knowledge | Proven | +100 | 1 | 0 | 2/4 | 1 |
+| [`user-stories`](#user-stories) | knowledge | Proven | +56 | 1 | 0 | 3/4 | 1 |
 
 ## How to read this
 
@@ -200,11 +201,11 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Eval | Score | Recorded |
 |---|---|---|
 | `feature-design-all-screens-mocked` | 100 | 2026-10-20 |
-| `feature-design-draws-diagrams` | 93 | 2026-10-26 |
+| `feature-design-draws-diagrams` | 100 | 2026-10-23 |
 | `feature-design-mockup-component-fidelity` | 100 | 2026-10-20 |
 | `feature-design-mockup-modal-property-layout` | 100 | 2026-10-20 |
 | `feature-design-mockups-email-without-ui` | 100 | 2026-10-20 |
-| `feature-design-nfr-targets` | 100 | 2026-10-18 |
+| `feature-design-nfr-targets` | 83 | 2026-10-26 |
 | `feature-design-open-comments` | 100 | 2026-10-26 |
 | `feature-design-stops-without-brief` | 100 | 2026-10-16 |
 
@@ -212,7 +213,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-explore-writes-brief` | 100 | 2026-10-26 |
+| `feature-explore-writes-brief` | 97 | 2026-10-26 |
 
 ### `feature-interrogate`
 
@@ -224,6 +225,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `feature-plan-area-headings` | 100 | 2026-10-26 |
 | `feature-plan-awaits-approval` | 67 | 2026-10-26 |
 | `feature-plan-earlier-step-comment` | 100 | 2026-10-26 |
 | `feature-plan-offers-preview` | 83 | 2026-10-26 |
@@ -298,13 +300,18 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Section | Eval | With | Without | Gain | Skill loaded | Recorded |
 |---|---|---|---|---|---|---|
 | Lead with the point | **no eval** | | | | | |
+| What needs the reader goes first | `plain-writing-guesses-first` | 100 | 33 | 67 | 3/3 | 2026-10-26 |
 | Plain words, short sentences | `plain-writing-upgrade-notes` | 100 | 80 | 20 | 6/6 | 2026-10-16 |
 | Concise is not vague | `plain-writing-issue-reply` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Concise is not vague | `plain-writing-readme-config` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Concise is not vague | `plain-writing-release-notes` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Concise is not vague | `plain-writing-upgrade-notes` | 100 | 80 | 20 | 6/6 | 2026-10-16 |
+| Let pictures carry what they show | `plain-writing-draw-it` | 100 | 58 | 42 | 3/3 | 2026-10-26 |
 | Let pictures carry what they show | `plain-writing-spec-screen` | 100 | 67 | 33 | 6/6 | 2026-10-16 |
 | Shape for scanning | **no eval** | | | | | |
+| Fit a narrow screen | `plain-writing-narrow-tables` | 100 | 25 | 75 | 3/3 | 2026-10-26 |
+| Files written mainly for skills | **no eval** | | | | | |
+| One fact, one place | `plain-writing-one-place` | 100 | 33 | 67 | 3/3 | 2026-10-26 |
 | Before handing it over | **no eval** | | | | | |
 
 Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-message`
@@ -321,7 +328,7 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `pr-describe-decision-callout` | 92 | 2026-10-23 |
+| `pr-describe-decision-callout` | 100 | 2026-10-26 |
 | `pr-describe-diagram-readability` | 87 | 2026-10-23 |
 | `pr-describe-gif` | 100 | 2026-10-23 |
 | `pr-describe-plan-diagrams` | 100 | 2026-10-23 |
@@ -619,6 +626,6 @@ Stays quiet on: `security-skip-generic-aspnet`
 | Section | Eval | With | Without | Gain | Skill loaded | Recorded |
 |---|---|---|---|---|---|---|
 | Where this writes | **no eval** | | | | | |
-| Workflow | `user-stories-merge-and-split` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
-| Scope boundaries | `user-stories-merge-and-split` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
-| Output | **no eval** | | | | | |
+| Workflow | `user-stories-merge-and-split` | 67 | 11 | 56 | 3/3 | 2026-10-26 |
+| Scope boundaries | `user-stories-merge-and-split` | 67 | 11 | 56 | 3/3 | 2026-10-26 |
+| Output | `user-stories-merge-and-split` | 67 | 11 | 56 | 3/3 | 2026-10-26 |
