@@ -182,13 +182,15 @@ Source idea: `<idea-name>`, <which part of it this feature builds>
 too ("2 guesses and 1 open question need you"). Leave the callout out when there's nothing.>
 
 ## Why now
-- <one reason per line>
+- <one reason per line, as given. No reason given is an open question in the callout.>
 
 ## Done when
 - <what the user can observably do, ideally measurable>
 
 ## Must work with
-- <CMS versions, databases, hosting such as load balancing, locked dependencies>
+- <CMS versions, databases, hosting such as load balancing, locked dependencies, as given.
+  One you've guessed (a database, load balancing) is a guess in the callout, not a line here
+  marked "assumed", until the human agrees.>
 
 ## Unknowns
 - <what might not work as hoped, for `feature-design` to check first. Leave out if none.>
