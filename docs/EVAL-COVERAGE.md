@@ -36,6 +36,7 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 - [`feature-design`](#feature-design): `feature-design-draws-diagrams` (93). Read the run, then fix the skill or the grader.
 - [`feature-plan`](#feature-plan): `feature-plan-awaits-approval` (67) `feature-plan-offers-preview` (83). Read the run, then fix the skill or the grader.
 - [`markdown-preview`](#markdown-preview): `feature-plan-awaits-approval` (67). Read the run, then fix the skill or the grader.
+- [`pr-describe`](#pr-describe): `pr-describe-decision-callout` (92) `pr-describe-diagram-readability` (87). Read the run, then fix the skill or the grader.
 
 ### Evals never run
 
@@ -51,7 +52,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 |---|---|---|---|---|---|---|---|
 | [`bdd-specs`](#bdd-specs) | knowledge | Proven | +78 | 1 | 0 | 1/6 | 3 |
 | [`change-backport`](#change-backport) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`decision-review`](#decision-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`decision-review`](#decision-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +100 | 2 | 0 | 4/9 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
@@ -71,7 +72,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
-| [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 5 | 0 | – | – |
+| [`pr-describe`](#pr-describe) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -134,7 +135,8 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `decision-review-unlogged-deviation` | 100 | 2026-10-16 |
+| `decision-review-beyond-spec` | 100 | 2026-10-23 |
+| `decision-review-unlogged-deviation` | 100 | 2026-10-23 |
 
 ### `dependency-review`
 
@@ -319,11 +321,12 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `pr-describe-diagram-readability` | 100 | 2026-10-23 |
+| `pr-describe-decision-callout` | 92 | 2026-10-23 |
+| `pr-describe-diagram-readability` | 87 | 2026-10-23 |
 | `pr-describe-gif` | 100 | 2026-10-23 |
 | `pr-describe-plan-diagrams` | 100 | 2026-10-23 |
-| `pr-describe-plan-folder` | 100 | 2026-10-16 |
-| `pr-describe-stacked-pr` | 100 | 2026-10-19 |
+| `pr-describe-plan-folder` | 100 | 2026-10-23 |
+| `pr-describe-stacked-pr` | 100 | 2026-10-23 |
 
 ### `pr-review`
 

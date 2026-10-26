@@ -1,5 +1,5 @@
 ---
-description: "pr-describe on a branch with a plan folder runs decision-review, saves PR-DESCRIPTION.md in the plan folder, and carries Needs a decision items through with their prefix."
+description: "pr-describe on a branch with a plan folder runs decision-review, saves PR-DESCRIPTION.md in the plan folder, and puts the spec deviation in a callout at the top."
 tags: [pr-describe, workflow]
 max_turns: 30
 timeout_seconds: 900

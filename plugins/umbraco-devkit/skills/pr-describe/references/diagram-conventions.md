@@ -21,7 +21,7 @@ these text views add the detail a picture can't carry, such as exact JSON, colum
 signatures.
 
 Pick the smallest view that makes the key point clear. Skip any view that doesn't apply — a
-one-file bug fix might use none of these and just need "Why" and "Special things to note."
+one-file bug fix might use none of these and just need "Why" and "How to verify."
 
 Use a `diff` block when the point is what changed and the surrounding shape already exists.
 Show the whole block, undiffed, in its own language, when most of it is new, or when trimming
