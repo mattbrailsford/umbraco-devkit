@@ -540,10 +540,10 @@
     "withoutDate": null
   },
   "feature-design-nfr-targets": {
-    "date": "2026-10-18",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 100,
+    "with": 83,
     "without": null,
     "withoutDate": null
   },
@@ -556,15 +556,23 @@
     "withoutDate": null
   },
   "feature-explore-writes-brief": {
-    "date": "2026-10-16",
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 97,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-interrogate-routes-dont-edit": {
+    "date": "2026-10-19",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
     "without": null,
     "withoutDate": null
   },
-  "feature-interrogate-routes-dont-edit": {
-    "date": "2026-10-19",
+  "feature-plan-area-headings": {
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -863,6 +871,22 @@
     "without": 0,
     "withoutDate": "2026-10-16"
   },
+  "plain-writing-draw-it": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 58,
+    "withoutDate": "2026-10-26"
+  },
+  "plain-writing-guesses-first": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
   "plain-writing-issue-reply": {
     "date": "2026-10-16",
     "runs": 3,
@@ -870,6 +894,22 @@
     "with": 100,
     "without": 100,
     "withoutDate": "2026-10-16"
+  },
+  "plain-writing-narrow-tables": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 25,
+    "withoutDate": "2026-10-26"
+  },
+  "plain-writing-one-place": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
   },
   "plain-writing-readme-config": {
     "date": "2026-10-16",
@@ -888,20 +928,20 @@
     "withoutDate": "2026-10-16"
   },
   "plain-writing-skip-code-comment": {
-    "date": "2026-10-16",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-16"
+    "withoutDate": "2026-10-26"
   },
   "plain-writing-skip-commit-message": {
-    "date": "2026-10-16",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-16"
+    "withoutDate": "2026-10-26"
   },
   "plain-writing-spec-screen": {
     "date": "2026-10-16",
@@ -944,10 +984,10 @@
     "withoutDate": null
   },
   "pr-describe-decision-callout": {
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 92,
+    "with": 100,
     "without": null,
     "withoutDate": null
   },
@@ -1096,12 +1136,12 @@
     "withoutDate": "2026-10-16"
   },
   "reviewer-nfr-targets": {
-    "date": "2026-10-18",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-18"
+    "withoutDate": "2026-10-26"
   },
   "reviewer-preexisting-bug": {
     "date": "2026-10-20",
@@ -1436,12 +1476,12 @@
     "withoutDate": "2026-10-16"
   },
   "user-stories-merge-and-split": {
-    "date": "2026-10-16",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 100,
-    "without": 0,
-    "withoutDate": "2026-10-16"
+    "with": 67,
+    "without": 11,
+    "withoutDate": "2026-10-26"
   },
   "zz-net-smoke": {
     "date": "2026-10-16",
