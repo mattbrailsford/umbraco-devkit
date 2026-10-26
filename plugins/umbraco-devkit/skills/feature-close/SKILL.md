@@ -57,6 +57,10 @@ section).
    on each line by its own run, once that line's PR is merged. Each line's archive is its
    own.
 
+4. **Check for unresolved review comments** in each plan folder, following
+   `markdown-preview`'s "Comments before moving on". Archiving takes the plan out of the
+   working set, so list any still open and ask before closing it.
+
 ## Close each plan
 
 Show the user what each step will change and wait for a yes before step 4.
