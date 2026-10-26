@@ -113,12 +113,13 @@ long answers such as full reviews, so judge with Sonnet:
 
 ```bash
 claude plugin eval plugins/umbraco-devkit --tag <skill-name> --judge-model sonnet --no-publish \
-  --scaffold --allow-tools Write Edit WebFetch
+  --scaffold --allow-tools Write Edit WebFetch Bash
 ```
 
-`--scaffold` runs each case's `fixture.sh`, and `--allow-tools` grants the write and web tools a
-case lists in `allowed_tools`. Without them, a case starts in an empty folder or can't write
-its answer, and its scores mean nothing.
+`--scaffold` runs each case's `fixture.sh`, and `--allow-tools` grants the write, web and shell
+tools a case lists in `allowed_tools`. Without them, a case starts in an empty folder, can't
+write its answer, or can't run a skill's script (`markdown-preview`'s comment and approval
+cases reply through `preview.py`), and its scores mean nothing.
 
 Ask the model to make the change, not review it. Given a short snippet to review, plain
 Claude catches most mistakes, so a review prompt hides what a skill adds. Test review only

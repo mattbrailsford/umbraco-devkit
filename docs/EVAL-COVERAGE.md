@@ -29,14 +29,18 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 - [`umbraco-docs`](#umbraco-docs): 4 of 5 sections have no eval.
 - [`umbraco-marketplace`](#umbraco-marketplace): 3 of 4 sections have no eval.
 
+### Workflow rules broken
+
+A workflow eval scored under 100, so the skill broke one of its own rules.
+
+- [`feature-design`](#feature-design): `feature-design-draws-diagrams` (93). Read the run, then fix the skill or the grader.
+- [`feature-plan`](#feature-plan): `feature-plan-awaits-approval` (67) `feature-plan-offers-preview` (83). Read the run, then fix the skill or the grader.
+- [`markdown-preview`](#markdown-preview): `feature-plan-awaits-approval` (67). Read the run, then fix the skill or the grader.
+
 ### Evals never run
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
-- [`feature-build`](#feature-build): `feature-build-open-comments`
-- [`feature-design`](#feature-design): `feature-design-open-comments`
-- [`feature-plan`](#feature-plan): `feature-plan-awaits-approval` `feature-plan-earlier-step-comment` `feature-plan-offers-preview`
-- [`markdown-preview`](#markdown-preview): `feature-plan-awaits-approval` `markdown-preview-comments-decision` `markdown-preview-comments-fix` `markdown-preview-comments-unclear` `markdown-preview-open-plan` `markdown-preview-show-brief`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -51,12 +55,12 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +100 | 2 | 0 | 4/9 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
-| [`feature-build`](#feature-build) | workflow | Not run | – | 4 | 0 | – | – |
+| [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 4 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-design`](#feature-design) | workflow | Not run | – | 8 | 0 | – | – |
+| [`feature-design`](#feature-design) | workflow | Broke a rule | – | 8 | 0 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-plan`](#feature-plan) | workflow | Not run | – | 5 | 0 | – | – |
+| [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 5 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -64,7 +68,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`markdown-preview`](#markdown-preview) | workflow | Not run | – | 6 | 0 | – | – |
+| [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +33 | 5 | 0 | 3/6 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Keeps its rules | – | 5 | 0 | – | – |
@@ -179,7 +183,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Eval | Score | Recorded |
 |---|---|---|
 | `feature-build-asks-before-trunk` | 100 | 2026-10-16 |
-| `feature-build-open-comments` | – | – |
+| `feature-build-open-comments` | 100 | 2026-10-26 |
 | `feature-build-rethink-after-three-rounds` | 100 | 2026-10-20 |
 | `feature-build-stops-without-checklist` | 100 | 2026-10-16 |
 
@@ -194,19 +198,19 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Eval | Score | Recorded |
 |---|---|---|
 | `feature-design-all-screens-mocked` | 100 | 2026-10-20 |
-| `feature-design-draws-diagrams` | 100 | 2026-10-23 |
+| `feature-design-draws-diagrams` | 93 | 2026-10-26 |
 | `feature-design-mockup-component-fidelity` | 100 | 2026-10-20 |
 | `feature-design-mockup-modal-property-layout` | 100 | 2026-10-20 |
 | `feature-design-mockups-email-without-ui` | 100 | 2026-10-20 |
 | `feature-design-nfr-targets` | 100 | 2026-10-18 |
-| `feature-design-open-comments` | – | – |
+| `feature-design-open-comments` | 100 | 2026-10-26 |
 | `feature-design-stops-without-brief` | 100 | 2026-10-16 |
 
 ### `feature-explore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-explore-writes-brief` | 100 | 2026-10-16 |
+| `feature-explore-writes-brief` | 100 | 2026-10-26 |
 
 ### `feature-interrogate`
 
@@ -218,9 +222,9 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-plan-awaits-approval` | – | – |
-| `feature-plan-earlier-step-comment` | – | – |
-| `feature-plan-offers-preview` | – | – |
+| `feature-plan-awaits-approval` | 67 | 2026-10-26 |
+| `feature-plan-earlier-step-comment` | 100 | 2026-10-26 |
+| `feature-plan-offers-preview` | 83 | 2026-10-26 |
 | `feature-plan-stops-without-design` | 100 | 2026-10-20 |
 | `feature-plan-stops-without-mockup` | 100 | 2026-10-20 |
 
@@ -280,12 +284,12 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-plan-awaits-approval` | – | – |
-| `markdown-preview-comments-decision` | – | – |
-| `markdown-preview-comments-fix` | – | – |
-| `markdown-preview-comments-unclear` | – | – |
-| `markdown-preview-open-plan` | – | – |
-| `markdown-preview-show-brief` | – | – |
+| `feature-plan-awaits-approval` | 67 | 2026-10-26 |
+| `markdown-preview-comments-decision` | 100 | 2026-10-26 |
+| `markdown-preview-comments-fix` | 100 | 2026-10-26 |
+| `markdown-preview-comments-unclear` | 100 | 2026-10-26 |
+| `markdown-preview-open-plan` | 100 | 2026-10-26 |
+| `markdown-preview-show-brief` | 100 | 2026-10-26 |
 
 ### `plain-writing`
 

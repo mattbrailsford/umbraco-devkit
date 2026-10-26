@@ -467,6 +467,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-build-open-comments": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
   "feature-build-rethink-after-three-rounds": {
     "date": "2026-10-20",
     "runs": 3,
@@ -500,12 +508,12 @@
     "withoutDate": null
   },
   "feature-design-draws-diagrams": {
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 100,
-    "without": null,
-    "withoutDate": null
+    "with": 93,
+    "without": 0,
+    "withoutDate": "2026-10-26"
   },
   "feature-design-mockup-component-fidelity": {
     "date": "2026-10-20",
@@ -539,6 +547,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-open-comments": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 50,
+    "withoutDate": "2026-10-26"
+  },
   "feature-design-stops-without-brief": {
     "date": "2026-10-16",
     "runs": 3,
@@ -548,12 +564,12 @@
     "withoutDate": null
   },
   "feature-explore-writes-brief": {
-    "date": "2026-10-16",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
-    "without": null,
-    "withoutDate": null
+    "without": 50,
+    "withoutDate": "2026-10-26"
   },
   "feature-interrogate-routes-dont-edit": {
     "date": "2026-10-19",
@@ -562,6 +578,30 @@
     "with": 100,
     "without": null,
     "withoutDate": null
+  },
+  "feature-plan-awaits-approval": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 67,
+    "without": 0,
+    "withoutDate": "2026-10-26"
+  },
+  "feature-plan-earlier-step-comment": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
+  "feature-plan-offers-preview": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 83,
+    "without": 33,
+    "withoutDate": "2026-10-26"
   },
   "feature-plan-stops-without-design": {
     "date": "2026-10-20",
@@ -746,6 +786,46 @@
     "with": 100,
     "without": null,
     "withoutDate": null
+  },
+  "markdown-preview-comments-decision": {
+    "date": "2026-10-26",
+    "runs": 2,
+    "skillLoaded": 2,
+    "with": 100,
+    "without": 13,
+    "withoutDate": "2026-10-26"
+  },
+  "markdown-preview-comments-fix": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 17,
+    "withoutDate": "2026-10-26"
+  },
+  "markdown-preview-comments-unclear": {
+    "date": "2026-10-26",
+    "runs": 2,
+    "skillLoaded": 2,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
+  "markdown-preview-open-plan": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 0,
+    "withoutDate": "2026-10-26"
+  },
+  "markdown-preview-show-brief": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 0,
+    "withoutDate": "2026-10-26"
   },
   "marketplace-semver-no-ui": {
     "date": "2026-10-16",
