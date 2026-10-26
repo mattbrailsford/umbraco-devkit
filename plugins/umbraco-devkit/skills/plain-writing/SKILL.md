@@ -38,6 +38,11 @@ they should check, a choice made without them, a question only they can answer, 
 broken. Put it in one list straight after the opening line, so a reader who stops there has
 done their part.
 
+This is for documents whose reader decides: a plan, a PR, a proposal, a review. A document
+published for people to use (a docs page, a README, release notes) has no such list. Its
+readers can't confirm your guesses; the person who asked for it can. Raise those points with
+them in your reply instead, and leave the published text free of them.
+
 - One numbered item per guess or choice. The guess itself, then a second line starting
   *If not:* with what changes if it's wrong. A question with no sensible guess says so and
   gives the options.
@@ -91,6 +96,11 @@ parts connect, the order things run in, the states something moves through, or w
 screen looks like before and after, show it instead: a diagram (follow `diagrams`), a
 screenshot or a mockup. Keep only the text the picture can't carry, and keep a picture only
 when it replaces text; one that repeats a short list is just more to read.
+
+Under a diagram, don't retell its path step by step ("it picks the row, marks it Sending,
+then..."). Write what the boxes and arrows can't hold: timings, limits, formulas, who runs
+it, what the reader must do. Those details can follow the diagram's order without
+repeating its moves.
 
 When a document includes a screenshot, mockup, table or diagram, the text doesn't describe what
 the reader can already see in it: the layout, the labels, the column names, the order of

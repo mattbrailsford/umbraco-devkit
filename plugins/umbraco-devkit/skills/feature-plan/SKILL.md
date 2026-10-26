@@ -98,7 +98,14 @@ Frontend, an integration, Docs), the areas in build order:
   decisions it follows.>
   Acceptance: <the check that proves it, such as which specs go green or a real request>
   depends-on: <ids, or none>. parallel-group: <letter, when it has one>
+
+- [ ] **T<n>** - **wire: <feature> into <entry point>.** story: <ID> (<criteria>). <What gets
+  registered or connected.>
+  Acceptance: <a real request or resolution through the running site>
+  depends-on: <ids>
 ```
+
+Every task names its story, wire tasks included.
 
 - Every task is `- [ ]`, top-to-bottom in dependency order within its area.
 - Each task carries: a short id, the story it implements, explicit `depends-on:` ids,
