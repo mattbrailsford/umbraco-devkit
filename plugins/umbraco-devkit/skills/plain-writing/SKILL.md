@@ -143,8 +143,8 @@ scroll sideways through.
   Two or three facts about one thing become a short block: the name in bold, then each fact
   on its own line.
 - **Long values never go in a cell.** A route, a JSON shape, a status code with its body:
-  give each its own line under a bold heading line, such as the route, with one status
-  code per bullet under it.
+  give each its own line under a bold heading line. For routes, settings and types, use
+  `diagrams`' text views.
 - **Check it at phone width** (about 400px). Nothing but a code block or a diagram should
   need sideways scrolling.
 

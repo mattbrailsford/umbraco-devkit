@@ -93,12 +93,13 @@ as-is; don't restate them here.
        plan. One line each. Omit the section when there's nothing; never restate the outline
        or the diff.
      - **Change outline** — the smallest set of diagrams that explains the implementation. See
-       `references/diagram-conventions.md` for which shape fits which kind of change and how to
-       draw it. Only include a view that actually changed; skip the rest. Order them the way a
-       reader would want the story told (a data structure or contract usually comes before the
-       code that uses it), not in a fixed sequence. Read that file's "Reading rules for every
-       view" before drawing: a step or line that changed but still exists stays a context
-       line, with what changed in a trailing comment, never a `-` line and a reworded `+`.
+       `references/diagram-conventions.md` for which views a PR uses, and `diagrams`'
+       `references/text-views.md` for the shape of each. Only include a view that actually
+       changed; skip the rest. Order them the way a reader would want the story told (a data
+       structure or contract usually comes before the code that uses it), not in a fixed
+       sequence. Read the text views' "Reading rules for every view" before drawing: a step or
+       line that changed but still exists stays a context line, with what changed in a
+       trailing comment, never a `-` line and a reworded `+`.
      - **Picture diagrams first.** When the plan folder has `diagrams/`, lead the outline with
        the ones that show what this PR built, each under a one-line caption and linked by
        full URL like the screenshots. Then the text views for detail a picture can't carry.

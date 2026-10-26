@@ -341,7 +341,9 @@ before moving on.
   editor, tree, etc.), plus `umbraco-backoffice-conventions` for package-level frontend
   structure.
 - Writing `ARCHITECTURE.md` and `SPEC.md` → `plain-writing`.
-- A flow, call order, lifecycle, data model or layer structure to explain → `diagrams`.
+- A flow, call order, lifecycle, data model or layer structure to explain, or an exact file
+  layout, table, setting, route or type to show → `diagrams` (its "Text views" for the
+  second).
 - Anything touching auth, the Management API, an endpoint outside it, a stored secret,
   rendering external or AI-generated content in the backoffice, or a design that would
   expose a secret to the client → `umbraco-security`, now, not at review time.
@@ -418,6 +420,11 @@ opens with the diagram of the main flow, under its one-line summary.
 Tables follow `plain-writing`'s "Fit a narrow screen": short cells only. Decisions, rules and
 endpoints are lists.
 
+Where an exact name, type or value matters, use a text view from `diagrams` (its "Text
+views") in the plan form, with no `+` or `-`: the database table for the data model, a file
+tree for where new code goes, settings as `appsettings.json`, a data contract's shape, and
+endpoints at contract depth in `SPEC.md`. Use one only where it replaces prose.
+
 `ARCHITECTURE.md`:
 
 ```md
@@ -440,15 +447,28 @@ reader might want to undo>
 
 ## What changes
 
-| Part | Change |
-|---|---|
-| <Backoffice / Server / Database / Cache / Events / ...> | <a short sentence: the class, table, extension or setting> |
+**<Area: Server / Backoffice / an integration>**
 
-<Database: entities, relationships, SQL Server and SQLite, or "none: reads and writes existing
-Umbraco data via <service>". A data model with more than one table also gets its diagram.>
+```text
+<that area's new and changed files as `diagrams`' file tree in plan form, starting at the
+area's real path (even when the client sits inside the project folder), each file's job in
+a trailing comment>
+```
+
+<one labelled tree per area the feature touches, in the same areas and order as PLAN.md's
+headings will use>
+
+- **<Cache / Events / Audit log / ...>:** <an effect that isn't a file, in a few words>
 
 Not touched: <each connected system this kind of change usually touches that doesn't apply
 here, with a few words on why: "Deploy (no connector), search index (not indexed)". One line.>
+
+## Data model
+
+<each new or changed table as `diagrams`' database table view, the new or changed columns
+marked in its Change column, its relationships, and SQL Server and SQLite notes. A data model
+with more than one table also gets its diagram. Leave the section out when the feature reads
+and writes only existing Umbraco data, and say which service it uses in "What changes".>
 ```
 
 `SPEC.md`:
@@ -469,7 +489,10 @@ Base path: `<shared prefix>`
 - **<status>** `<response shape>`
 - **<status>** <when, in a few words>
 
-<one block per route, or "None.">
+<one block per route, the contract depth of `diagrams`' endpoints view, or "None.">
+
+## Settings
+<new settings as `diagrams`' settings view, or leave the section out>
 
 ## Rules
 - **R1** <one observable rule a test can check: validation, permissions, limits, what

@@ -288,12 +288,20 @@
     "withoutDate": "2026-10-16"
   },
   "diagrams-architecture-flow": {
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 100,
+    "with": 83,
     "without": 0,
-    "withoutDate": "2026-10-23"
+    "withoutDate": "2026-10-26"
+  },
+  "diagrams-text-views-plan": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 89,
+    "without": 33,
+    "withoutDate": "2026-10-26"
   },
   "diagrams-update-keeps-layout": {
     "date": "2026-10-23",
@@ -1072,10 +1080,10 @@
     "withoutDate": null
   },
   "pr-describe-diagram-readability": {
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 87,
+    "with": 80,
     "without": null,
     "withoutDate": null
   },
@@ -1088,7 +1096,7 @@
     "withoutDate": null
   },
   "pr-describe-plan-diagrams": {
-    "date": "2026-10-23",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
