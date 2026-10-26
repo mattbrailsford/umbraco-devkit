@@ -49,7 +49,10 @@ doesn't replace the whole-feature review (see "Finish"); the two catch different
    2. Confirm you're on the project's trunk branch (see `CLAUDE.md`'s Feature workflow
       section). If not, stop and ask. Don't guess which branch to fork from.
    3. **Ask the user to confirm before running any of this.** It commits to trunk, which the
-      "always ask before touching main" rule covers however small the change.
+      "always ask before touching main" rule covers however small the change. First check the
+      plan folder for unresolved review comments (`markdown-preview`'s "Comments before moving
+      on"), and put any that are waiting on the user into this same question, so a plan with
+      an open question isn't committed and built without them knowing.
    4. Commit the plan folder as-is, on trunk, with any changed project starters: `git add
       <plan-folder> docs/mockups/starters && git commit -m "docs: add plan folder for
       <feature-slug>"`.

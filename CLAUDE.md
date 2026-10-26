@@ -34,11 +34,11 @@ These decide what belongs in this repo. Check a new rule, skill, or section agai
 .claude-plugin/marketplace.json                   # marketplace manifest (lists the plugin)
 plugins/umbraco-devkit/
   .claude-plugin/plugin.json                      # plugin manifest
-  skills/<name>/SKILL.md                          # one folder per skill (+ references/, templates/)
+  skills/<name>/SKILL.md                          # one folder per skill (+ references/, templates/, scripts/)
   agents/{builder,reviewer,issue-triager}.md      # subagents
   evals/<case>/{prompt.md,graders/}               # `claude plugin eval` cases; results/ is gitignored
 settings.example.json   # copy-by-hand example for consumers; NOT installed by the plugin
-scripts/                # check-*.sh + their allowlists; repo-only, not shipped
+scripts/                # check-*.sh + their allowlists, tests/; repo-only, not shipped
 .claude/skills/review-skill-links/  # repo-only skill: cross-reference review; not shipped
 .claude/skills/write-skill-eval/    # repo-only skill: write and prove an eval case; not shipped
 .github/workflows/checks.yml        # runs the check scripts below on every PR
@@ -88,8 +88,9 @@ Naming a new skill or agent:
 
 ## No build, lint, or test step
 
-Everything is Markdown plus two hand-written JSON manifests. There is no .NET code here.
-Don't run `dotnet build` or apply C# conventions to this repo. Checks that do exist:
+Everything is Markdown plus two hand-written JSON manifests, apart from the few scripts some
+skills ship (stdlib Python, tested by `scripts/tests/`). There is no .NET code here. Don't run
+`dotnet build` or apply C# conventions to this repo. Checks that do exist:
 
 ```bash
 jq . .claude-plugin/marketplace.json
@@ -100,6 +101,7 @@ scripts/check-version.sh      # version only in plugin.json, and bumped if shipp
 scripts/check-frontmatter.sh  # skill/agent headers parse, names match, descriptions fit
 scripts/check-skill-callers.sh # no skill changes behavior based on which skill started it
 scripts/check-evals.sh        # every skill has an eval
+scripts/check-skill-scripts.sh # tests for the scripts skills ship
 scripts/eval-coverage.sh --check # docs/EVAL-COVERAGE.md is current and every # covers: is valid
 ```
 
@@ -111,12 +113,13 @@ long answers such as full reviews, so judge with Sonnet:
 
 ```bash
 claude plugin eval plugins/umbraco-devkit --tag <skill-name> --judge-model sonnet --no-publish \
-  --scaffold --allow-tools Write Edit WebFetch
+  --scaffold --allow-tools Write Edit WebFetch Bash
 ```
 
-`--scaffold` runs each case's `fixture.sh`, and `--allow-tools` grants the write and web tools a
-case lists in `allowed_tools`. Without them, a case starts in an empty folder or can't write
-its answer, and its scores mean nothing.
+`--scaffold` runs each case's `fixture.sh`, and `--allow-tools` grants the write, web and shell
+tools a case lists in `allowed_tools`. Without them, a case starts in an empty folder, can't
+write its answer, or can't run a skill's script (`markdown-preview`'s comment and approval
+cases reply through `preview.py`), and its scores mean nothing.
 
 Ask the model to make the change, not review it. Given a short snippet to review, plain
 Claude catches most mistakes, so a review prompt hides what a skill adds. Test review only

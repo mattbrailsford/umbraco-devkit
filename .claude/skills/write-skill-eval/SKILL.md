@@ -117,7 +117,7 @@ Run the case once with a single run per arm:
 
 ```bash
 claude plugin eval plugins/umbraco-devkit --case <case-name> --runs 1 \
-  --judge-model sonnet --no-publish --scaffold --allow-tools Write Edit WebFetch
+  --judge-model sonnet --no-publish --scaffold --allow-tools Write Edit WebFetch Bash
 ```
 
 Drop `--scaffold` for a case with no `fixture.sh`. Read the run's warnings first: one saying a
@@ -152,7 +152,7 @@ Run it with the default three runs per arm, Sonnet judging:
 
 ```bash
 claude plugin eval plugins/umbraco-devkit --tag <skill-name> --judge-model sonnet \
-  --no-publish --scaffold --allow-tools Write Edit WebFetch
+  --no-publish --scaffold --allow-tools Write Edit WebFetch Bash
 ```
 
 Three runs are noisy. Don't judge a close or zero gain on one run: rerun with `--runs 6`
