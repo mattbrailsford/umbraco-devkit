@@ -110,6 +110,10 @@ Frontend, an integration, Docs), the areas in build order:
 
 Every task names its story, wire tasks included.
 
+Don't draw the task order: the area headings, `depends-on:` and `parallel-group:` already
+carry it, and a box-and-arrow graph typed as text breaks as soon as a task moves. A diagram
+the plan does need (rare: a migration order across projects, say) follows `diagrams`.
+
 - Every task is `- [ ]`, top-to-bottom in dependency order within its area.
 - Each task carries: a short id, the story it implements, explicit `depends-on:` ids,
   and a `parallel-group:` tag for tasks with no ordering between them.
