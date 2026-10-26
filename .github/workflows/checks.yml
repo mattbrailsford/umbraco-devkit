@@ -44,6 +44,9 @@ jobs:
       - name: Evals
         run: scripts/check-evals.sh
 
+      - name: Skill scripts
+        run: scripts/check-skill-scripts.sh
+
       # A warning, not a failure: some skill changes can't affect behavior. CI can't run evals.
       - name: Eval scores recorded
         run: |
