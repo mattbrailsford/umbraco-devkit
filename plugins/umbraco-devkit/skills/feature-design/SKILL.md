@@ -338,7 +338,9 @@ before moving on.
   editor, tree, etc.), plus `umbraco-backoffice-conventions` for package-level frontend
   structure.
 - Writing `ARCHITECTURE.md` and `SPEC.md` → `plain-writing`.
-- A flow, call order, lifecycle, data model or layer structure to explain → `diagrams`.
+- A flow, call order, lifecycle, data model or layer structure to explain, or an exact file
+  layout, table, setting, route or type to show → `diagrams` (its "Text views" for the
+  second).
 - Anything touching auth, the Management API, an endpoint outside it, a stored secret,
   rendering external or AI-generated content in the backoffice, or a design that would
   expose a secret to the client → `umbraco-security`, now, not at review time.
