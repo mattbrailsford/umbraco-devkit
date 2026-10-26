@@ -5,7 +5,8 @@ description: >-
   chart that takes its colours from one shared stylesheet and follows the reader's light or
   dark mode, or a text view in a code block (file tree, call chain, component tree, table
   columns, settings, routes, a type's shape). Use whenever a diagram, chart or text view goes
-  into a Markdown file a person reads. Not for backoffice screen mockups or screenshots.
+  into a Markdown file a person reads, including writing a plan's or doc's data model, file
+  layout, settings, endpoints or types. Not for backoffice screen mockups or screenshots.
 ---
 
 # Diagrams
