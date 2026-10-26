@@ -61,7 +61,9 @@ them in your reply instead, and leave the published text free of them.
   >    *If not:* overwrite it, or let the editor choose.
   ```
 - Nothing scattered: a guess sits only in this list, not also in the section it's about.
-  Once the reader agrees, it moves into its section as a plain fact and leaves the list.
+  Once the reader agrees, it moves into its section as a plain fact and leaves the list. The
+  same goes for any other ask: "add the deadline if there is one" is a list item, not a line
+  under "Why now".
 - Nothing to check: leave the list out. Don't write "nothing needs you".
 
 ## Plain words, short sentences
