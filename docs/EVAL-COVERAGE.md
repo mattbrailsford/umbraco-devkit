@@ -228,7 +228,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-explore-writes-brief` | 97 | 2026-10-26 |
+| `feature-explore-writes-brief` | 97 | 2026-10-27 |
 
 ### `feature-interrogate`
 
