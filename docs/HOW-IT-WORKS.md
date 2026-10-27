@@ -54,7 +54,7 @@ monorepo package), say so once in your project's `CLAUDE.md` and every step foll
 
 | File | Owned by |
 |---|---|
-| `README.md` | `feature-explore` creates it; every step updates its own line; `feature-close` adds a status line |
+| `README.md` | `feature-explore` creates it; every step before `feature-build` updates its own line; `feature-close` adds a status line |
 | `BRIEF.md` | `feature-explore` |
 | `ARCHITECTURE.md`, `SPEC.md`, `mockups/`, `diagrams/` | `feature-design` |
 | `STORIES.md`, `PLAN.md` | `feature-plan` (`feature-build` only ticks `PLAN.md`'s task checkboxes) |

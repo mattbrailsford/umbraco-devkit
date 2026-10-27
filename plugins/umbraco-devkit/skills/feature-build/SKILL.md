@@ -199,9 +199,7 @@ subagent in whole-feature mode with the full branch diff (`git diff <base>...HEA
   `feature-design`.
 
 A human still reviews the PR; this pass means they aren't the first to see cross-task
-problems. Update the Build log row in `README.md`: `⬜` becomes `✅`, and "In one line" gets the task
-and commit count. Same rules as `feature-explore`'s Brief row. Never touch another phase's
-row. If this feature is (or completes) a standalone package ready to publish, invoke
+problems. If this feature is (or completes) a standalone package ready to publish, invoke
 `umbraco-marketplace` before tagging a release; it's not part of this loop.
 
 **Open the PR: invoke `pr-describe` directly (via the Skill tool). Don't write the body
@@ -222,7 +220,9 @@ To click through the finished feature on the demo site before merging, use `pr-d
 
 - Sequential, dependency-ordered. This is a pipeline, not a parallel team.
 - Builder owns code; reviewer owns the gate; this loop owns sequencing, `PLAN.md` checkbox
-  state, `BUILD-LOG.md`, `screenshots/`, and its own line in `README.md`. Never collapse these roles.
+  state, `BUILD-LOG.md`, and `screenshots/`. Never collapse these roles. It never edits
+  `README.md`: the index links `BUILD-LOG.md` from its footer, and `PLAN.md`'s checkboxes show
+  progress.
 - The orchestrator may investigate directly: read docs, call an endpoint, read logs. The
   moment a fix touches code, dispatch a builder, even for one line you already know. This is
   easiest to break mid-debugging against a live system, where each small tweak feels too

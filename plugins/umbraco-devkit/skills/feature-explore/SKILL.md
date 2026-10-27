@@ -145,9 +145,8 @@ run in read order:
 | ⬜ [Spec](./SPEC.md) | | |
 | ⬜ [Stories](./STORIES.md) | | |
 | ⬜ [Plan](./PLAN.md) | | |
-| ⬜ [Build log](./BUILD-LOG.md) | | |
 
-Why things changed: [DECISION-LOG.md](./DECISION-LOG.md)
+What was built: [BUILD-LOG.md](./BUILD-LOG.md) · Why things changed: [DECISION-LOG.md](./DECISION-LOG.md)
 ```
 
 Every run (first run or a refinement), update only the Brief row: `⬜` becomes `✅`, "In one

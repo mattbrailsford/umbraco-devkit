@@ -237,7 +237,8 @@ preserve when editing these skills:
 - **The only four cross-owner writes:**
   1. Every phase may append to `DECISION-LOG.md`.
   2. Every phase updates its own single row in `README.md` when it finishes, never
-     another phase's row.
+     another phase's row. `feature-build` has no row: `BUILD-LOG.md` is linked from the
+     footer, next to `DECISION-LOG.md`.
   3. `feature-build` ticks `PLAN.md` checkboxes (`- [ ]` → `- [x]`), never editing task text.
   4. `feature-close` adds one `> **Status:**` line to the top of `README.md`.
 - **Links that survive a move.** Code never links to repo files or memory; a comment says
