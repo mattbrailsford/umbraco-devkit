@@ -166,6 +166,17 @@ rule. Then rerun.
 Check the log for errored runs too (auth, spend limit). An errored run is neither a pass nor
 a fail; don't count it.
 
+**Good enough to ship.** There's no fixed target score; the bar depends on the case:
+
+- **Knowledge case:** a clear gain over plain Claude, seen in a second batch of runs, not
+  just one.
+- **Workflow case** (no baseline): each grader passes in at least 2 of 3 runs, and the score
+  is no lower than the case's last recorded one in `docs/eval-scores.json`.
+- **A drop, even in a grader your change doesn't touch:** find out why before shipping. Rerun
+  with `--keep-temp` and read the answer; a judge split (`PASS FAIL FAIL`) on an answer that
+  looks right is noise, a rule broken the same way twice is a gap.
+- **A close call:** rerun with `--runs 6` before deciding.
+
 ## 8. Finish, and keep the case as a guard
 
 - Run `scripts/check-evals.sh`.
