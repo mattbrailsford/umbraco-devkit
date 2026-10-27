@@ -180,7 +180,12 @@ Source idea: `<idea-name>`, <which part of it this feature builds>
 >    *Options:* <the choices>
 
 <Per `plain-writing`'s "What needs the reader goes first". Count questions in the heading
-too ("2 guesses and 1 open question need you"). Leave the callout out when there's nothing.>
+too ("2 guesses and 1 open question need you"). Leave the callout out when there's nothing.
+Every guess goes here, whichever section it's about: a guessed measure under "Done when", a
+constraint under "Must work with", an item under "Not doing", a likely answer to an
+"Unknowns" line. The section below may point to
+it ("see guess 3") but never states a guess of its own, marked "(guess)" or "assumed" or not.
+One callout item per guess, never one item saying a whole section is guessed.>
 
 ## Why now
 - <one reason per line, as given. No reason given is an open question in the callout.>
@@ -189,15 +194,13 @@ too ("2 guesses and 1 open question need you"). Leave the callout out when there
 - <what the user can observably do, ideally measurable>
 
 ## Must work with
-- <CMS versions, databases, hosting such as load balancing, locked dependencies, as given.
-  One you've guessed (a database, load balancing) is a guess in the callout, not a line here
-  marked "assumed", until the human agrees.>
+- <CMS versions, databases, hosting such as load balancing, locked dependencies, as given.>
 
 ## Unknowns
 - <what might not work as hoped, for `feature-design` to check first. Leave out if none.>
 
 ## Not doing
-- **<item>.** <why>
+- **<item>.** <why. Only what the human ruled out. A cut you'd add yourself is a guess.>
 
 ## Repro
 <only for a reported bug: the steps or test that show it. The finished work must make it
