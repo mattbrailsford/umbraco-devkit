@@ -207,7 +207,8 @@ A phase that writes a doc a person reviews (`BRIEF.md`, `ARCHITECTURE.md`, `SPEC
   draws those in the browser.
 - **Other files** open in the page, read-only, as on github.com: source as coloured code,
   images and media in place, anything else (or anything over 512 KB) as a note. HTML mockups
-  and PDFs show live in the page, where github.com shows a mockup's source. The header's
-  **Raw** button opens any of them on its own.
+  and PDFs show live in the page, where github.com shows a mockup's source; a **Preview |
+  Code** switch, as github.com has for an SVG, shows a mockup's or SVG's source instead. The
+  header's **Raw** button opens any of them on its own.
 - **Local images, SVGs included,** load from the worktree. One that's broken here will be
   broken on GitHub too.

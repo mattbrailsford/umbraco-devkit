@@ -333,12 +333,14 @@ class ServerTests(TempRepo):
             f.write(b"\x00\x01\x02")
         nav = {"Sec-Fetch-Dest": "document"}
         folder = "/docs/plans/retries/"
-        render = lambda name: self.request("GET", "/__render?path=" + urllib.parse.quote(folder + name))[3]
+        render = lambda name, extra="": self.request("GET", "/__render?path=" + urllib.parse.quote(folder + name) + extra)[3]
         for name in ("retry.cs", "data.bin", "mockup.html", "flow.svg"):
             self.assertIn('<script id="boot"', self.request("GET", folder + name, headers=nav)[3], name)
         self.assertEqual(self.request("GET", folder + "mockup.html", headers={"Sec-Fetch-Dest": "iframe"})[3], "<p>Mockup</p>")
         self.assertIn('<iframe class="frame" src="/docs/plans/retries/mockup.html?raw=1"', render("mockup.html"))
         self.assertIn('<img src="/docs/plans/retries/flow.svg?raw=1"', render("flow.svg"))
+        self.assertIn("<p>```html\n<p>Mockup</p>", render("mockup.html", "&view=code"))  # Preview | Code
+        self.assertIn("<p>```svg\n<svg>", render("flow.svg", "&view=code"))
         self.assertEqual(self.request("GET", folder + "retry.cs")[3], "var s = \"```\";\n")
         self.assertEqual(self.request("GET", folder + "data.bin?raw=1", headers=nav)[3], "\x00\x01\x02")
         self.assertIn("<p>````cs\nvar s", render("retry.cs"))

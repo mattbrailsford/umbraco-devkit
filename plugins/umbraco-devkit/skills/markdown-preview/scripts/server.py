@@ -40,6 +40,12 @@ def embedded(found, url_path):
     return None
 
 
+def has_code_view(found):
+    """Files drawn by the browser that are also worth reading as source: HTML and SVG, as
+    GitHub offers Preview and Code for an SVG."""
+    return mimetypes.guess_type(found)[0] in ("text/html", "image/svg+xml")
+
+
 def source_text(found):
     """A file's text, if it's text and small enough to show as code; else None."""
     if os.path.getsize(found) > MAX_SOURCE:
@@ -223,7 +229,7 @@ class Handler(BaseHTTPRequestHandler):
                 with open(found, encoding="utf-8") as f:
                     return self.send(200, self.server.renderer.render(f.read()))
             embed = embedded(found, self.query["path"])
-            if embed:
+            if embed and not (self.query.get("view") == "code" and has_code_view(found)):
                 return self.send(200, embed)
             text = source_text(found)
             if text is None:
