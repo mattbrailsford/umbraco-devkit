@@ -50,15 +50,15 @@ svg {
 }
 @media (prefers-color-scheme: dark) {
   svg {
-    /* plain greys, close to VS Code's Dark Modern theme */
-    --bg: #1f1f1f; --text: #e0e0e0; --muted: #a0a0a0; --edge: #a0a0a0;
-    --zone-stroke: #4a4a4a;
-    --node-fill: #2b2b2b; --node-stroke: #6b6b6b; --decision-fill: #2b2b2b;
-    --store-fill: #2a2d36; --store-lid: #343844; --store-stroke: #8c95c9;
-    --ok-fill: #1f2d24; --ok-stroke: #4fb36b; --ok-text: #8fd9a5;
-    --fail-fill: #332223; --fail-stroke: #e05d5d; --fail-text: #f0a0a0;
-    --new-fill: #35281c; --new-stroke: #f0883e; --new-text: #ffb77c;
-    --table-head: #333333; --table-head-text: #e0e0e0; --table-row-alt: #252525;
+    /* GitHub's dark greys, so diagrams match the page they sit on */
+    --bg: #0d1117; --text: #e6edf3; --muted: #9198a1; --edge: #9198a1;
+    --zone-stroke: #3d444d;
+    --node-fill: #161b22; --node-stroke: #656c76; --decision-fill: #161b22;
+    --store-fill: #161d2e; --store-lid: #1f2840; --store-stroke: #8c95c9;
+    --ok-fill: #12261e; --ok-stroke: #4fb36b; --ok-text: #8fd9a5;
+    --fail-fill: #25171c; --fail-stroke: #e05d5d; --fail-text: #f0a0a0;
+    --new-fill: #161b22; --new-stroke: #f0883e; --new-text: #ffb77c;
+    --table-head: #21262d; --table-head-text: #e6edf3; --table-row-alt: #1c2128;
     --pk: #ffb77c; --fk: #9fa8da;
   }
 }
