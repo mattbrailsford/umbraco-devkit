@@ -178,11 +178,11 @@ class FolderTests(TempRepo):
         write(os.path.join(self.plan, "README.md"), read(os.path.join(self.plan, "README.md")) + "- [GONE.md](GONE.md)\n")
         self.assertEqual(folders.reading_order(self.plan), ["BRIEF.md", "SPEC.md"])
 
-    def test_file_list_puts_folders_then_reading_order_then_the_rest(self):
+    def test_file_list_puts_readme_then_folders_then_reading_order_then_the_rest(self):
         os.makedirs(os.path.join(self.plan, "diagrams"))
         listing = folders.folder_listing(self.plan, "/docs/plans/retries/", "BRIEF.md", {"/docs/plans/retries/SPEC.md": 2})
         names = re.findall(r"</svg>([^<]+)", listing)
-        self.assertEqual(names, ["..", "diagrams", "BRIEF.md", "SPEC.md", "notes.md", "README.md"])
+        self.assertEqual(names, ["..", "README.md", "diagrams", "BRIEF.md", "SPEC.md", "notes.md"])
         self.assertIn('class="current"', listing)
         self.assertIn('<span class="dot" title="Open comments">2</span>', listing)
 
@@ -307,9 +307,9 @@ class ServerTests(TempRepo):
         self.addCleanup(self.srv.server_close)
         self.addCleanup(self.srv.shutdown)
 
-    def request(self, method, path, body=None):
+    def request(self, method, path, body=None, headers=None):
         conn = http.client.HTTPConnection("127.0.0.1", self.srv.port, timeout=10)
-        conn.request(method, path, json.dumps(body) if body is not None else None)
+        conn.request(method, path, json.dumps(body) if body is not None else None, headers or {})
         res = conn.getresponse()
         data = res.read().decode()
         conn.close()
@@ -322,6 +322,26 @@ class ServerTests(TempRepo):
         boot = json.loads(re.search(r'<script id="boot" type="application/json">(.*?)</script>', page).group(1))
         self.assertEqual(boot, {"path": "/docs/plans/retries/BRIEF.md", "user": {"login": "someone"}})
         self.assertIn("/* css */", page)
+
+    def test_other_files_opened_as_a_page(self):
+        # Source shows as code, anything else as a note; what the browser shows itself, and
+        # anything a page loads, is sent as is.
+        write(os.path.join(self.plan, "retry.cs"), "var s = \"```\";\n")
+        write(os.path.join(self.plan, "mockup.html"), "<p>Mockup</p>")
+        with open(os.path.join(self.plan, "data.bin"), "wb") as f:
+            f.write(b"\x00\x01\x02")
+        nav = {"Sec-Fetch-Dest": "document"}
+        folder = "/docs/plans/retries/"
+        self.assertIn('<script id="boot"', self.request("GET", folder + "retry.cs", headers=nav)[3])
+        self.assertIn('<script id="boot"', self.request("GET", folder + "data.bin", headers=nav)[3])
+        self.assertEqual(self.request("GET", folder + "mockup.html", headers=nav)[3], "<p>Mockup</p>")
+        self.assertEqual(self.request("GET", folder + "retry.cs")[3], "var s = \"```\";\n")
+        self.assertEqual(self.request("GET", folder + "data.bin?raw=1", headers=nav)[3], "\x00\x01\x02")
+        drawn = self.request("GET", "/__render?path=" + urllib.parse.quote(folder + "retry.cs"))[3]
+        self.assertIn("<p>````cs\nvar s", drawn)
+        note = self.request("GET", "/__render?path=" + urllib.parse.quote(folder + "data.bin"))[3]
+        self.assertIn("This file can't be shown here.", note)
+        self.assertIn('href="/docs/plans/retries/data.bin?raw=1"', note)
 
     def test_a_folder_without_its_slash_redirects(self):
         status, _, location, _ = self.request("GET", "/docs/plans/retries")

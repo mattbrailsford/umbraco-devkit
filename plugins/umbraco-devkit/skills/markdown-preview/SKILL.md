@@ -205,5 +205,8 @@ A phase that writes a doc a person reviews (`BRIEF.md`, `ARCHITECTURE.md`, `SPEC
   diagram's layout can differ by a few pixels.
 - **Shown as code, not drawn:** GeoJSON and TopoJSON maps, and STL 3D models. github.com
   draws those in the browser.
+- **Other files** open in the page, as on github.com: source as coloured code, read-only;
+  anything else, or anything over 512 KB, as a note with a "View raw" link. Images, PDFs and
+  HTML mockups open as they are.
 - **Local images, SVGs included,** load from the worktree. One that's broken here will be
   broken on GitHub too.

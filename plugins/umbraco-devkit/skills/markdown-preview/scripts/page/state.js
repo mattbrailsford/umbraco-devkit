@@ -24,6 +24,7 @@ export const page = {
   scoped: false,    // whether this page sits inside the tab's scope
   canComment: false,
   isFolder: false,
+  isDoc: false,     // a Markdown file or folder, rather than another file shown as code or a note
   folderPath: '',   // the folder the file list shows
   docPath: '',      // the file drawn: the page itself, or a folder's README.md
 };
@@ -31,9 +32,10 @@ export const page = {
 export function setPage(path) {
   page.path = path;
   page.scoped = page.home !== '/' && (path + '/').startsWith(page.home);
-  // Comments are on inside the scope (or everywhere, unscoped) unless the tab was opened read-only.
-  page.canComment = tabSetting('comments', 'on') !== 'off' && (page.home === '/' || page.scoped);
   page.isFolder = path.endsWith('/');
+  page.isDoc = page.isFolder || path.endsWith('.md');  // not a source file shown as code
+  // Comments are on for docs inside the scope (or everywhere, unscoped) unless the tab was opened read-only.
+  page.canComment = page.isDoc && tabSetting('comments', 'on') !== 'off' && (page.home === '/' || page.scoped);
   page.folderPath = path.slice(0, path.lastIndexOf('/') + 1);
   page.docPath = page.isFolder ? path + 'README.md' : path;
 }

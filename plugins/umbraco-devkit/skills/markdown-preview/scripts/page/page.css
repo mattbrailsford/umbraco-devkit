@@ -29,6 +29,11 @@ aside summary { display: none; }
 .icon.dir { fill: #54aeff; }
 .markdown-body { box-sizing: border-box; padding: 32px; }
 @media (max-width: 767px) { .markdown-body { padding: 16px; } }
+/* A file that isn't a doc fills its box, as on GitHub: code edge to edge, or a centred note. */
+#content.code-file { padding: 0; }
+#content.code-file .highlight, #content.code-file pre { margin: 0; border-radius: 0; background: transparent; }
+.cant-show { text-align: center; padding: 32px 16px; color: var(--muted); }
+.cant-show p { margin-bottom: 8px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 #status { position: fixed; top: 8px; right: 8px; padding: 4px 10px; border-radius: 6px; font-size: 12px; display: none; }
 #status.error { display: block; background: #d1242f; color: #fff; }
@@ -38,6 +43,7 @@ aside summary { display: none; }
 .box-header { display: flex; justify-content: space-between; }
 #doc { overflow: visible; }
 #doc .box-header { border-radius: 6px 6px 0 0; align-items: center; min-height: 26px; }  /* as tall as its buttons, so it never jumps */
+#doc #content { border-radius: 0 0 5px 5px; }  /* the box doesn't clip (threads reach out of it), so its body rounds its own corners */
 
 .box-header .count { font-weight: 400; color: var(--muted); }
 .files .dot { min-width: 18px; padding: 0 6px; border-radius: 10px; background: var(--link); color: #fff; font-size: 12px; text-align: center; }

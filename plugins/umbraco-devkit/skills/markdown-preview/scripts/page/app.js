@@ -43,10 +43,11 @@ async function load() {
       const text = await res.text();
       if (!res.ok) throw new Error(text);
       content.innerHTML = text;
+      content.classList.toggle('code-file', !page.isDoc);
       box.hidden = false;
       enhance();
       if (page.canComment) markBlocks();
-      await showChanges();
+      if (page.isDoc) await showChanges();
       if (page.canComment) await renderComments();
     }
     scrollTo(0, y);

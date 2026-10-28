@@ -54,14 +54,15 @@ BADGE_TICK = ('<svg viewBox="0 0 16 16" width="8" height="8"><path fill="current
 
 
 def folder_listing(folder, url_path, current, counts, home="/", changed=(), approvals=None):
-    """The file list: folders first, as on GitHub; then files in the README's reading order;
-    then the rest by name. No way up from the top of the scope. At the end of a file's row:
-    a dot if it's `changed` since the reader last sent comments, and its open comments. A
-    doc's approval state, from `approvals` ({name: state}), badges its icon."""
+    """The file list: the README first, as it's the folder's page; then folders, as on GitHub;
+    then files in the README's reading order; then the rest by name. No way up from the top
+    of the scope. At the end of a file's row: a dot if it's `changed` since the reader last
+    sent comments, and its open comments. A doc's approval state, from `approvals`
+    ({name: state}), badges its icon."""
     approvals = approvals or {}
     entries = [e for e in os.scandir(folder) if not e.name.startswith(".")]
     order = reading_order(folder)
-    entries.sort(key=lambda e: (not e.is_dir(), e.name not in order,
+    entries.sort(key=lambda e: (e.name != "README.md", not e.is_dir(), e.name not in order,
                                 order.index(e.name) if e.name in order else 0, e.name.lower()))
     rows = []
     if url_path not in ("/", home):
