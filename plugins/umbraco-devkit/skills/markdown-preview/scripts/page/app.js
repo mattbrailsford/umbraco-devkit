@@ -28,6 +28,36 @@ async function loadFileList() {
 
 let pageFresh = true;  // a newly shown page starts at its top (or its #anchor)
 
+// A mockup's frame grows to the mockup's own height, so the page scrolls rather than the frame.
+// A PDF's frame keeps its fixed height: its viewer scrolls itself.
+function fitFrames() {
+  content.querySelectorAll('iframe.frame:not(.pdf)').forEach(frame => frame.addEventListener('load', () => {
+    const root = frame.contentDocument?.documentElement;
+    if (!root) return;
+    // Not the root's scrollHeight: that never drops below the frame's own height.
+    const fit = () => { frame.style.height = Math.max(root.offsetHeight, frame.contentDocument.body?.scrollHeight || 0) + 'px'; };
+    fit();
+    new ResizeObserver(fit).observe(root);
+  }));
+}
+
+// A mockup or SVG shows drawn, or as its source, as GitHub offers for an SVG. The choice
+// sticks to this tab.
+const hasCodeView = () => /\.(html?|svg)$/i.test(page.path);
+let view = (() => { try { return sessionStorage.getItem('view') || 'preview'; } catch { return 'preview'; } })();
+
+function showViewSwitch() {
+  $('view').hidden = !hasCodeView();
+  $('view').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
+}
+$('view').addEventListener('click', e => {
+  const picked = e.target.closest('button')?.dataset.view;
+  if (!picked || picked === view) return;
+  view = picked;
+  try { sessionStorage.setItem('view', view); } catch {}
+  load();
+});
+
 async function load() {
   // Don't wipe a comment someone is halfway through writing.
   if (document.querySelector('.thread.new textarea')?.value || document.querySelector('.thread.editing')) return setTimeout(load, 1000);
@@ -35,7 +65,7 @@ async function load() {
   try {
     const y = pageFresh ? 0 : scrollY;
     await loadFileList();
-    const res = await fetch('/__render?path=' + encodeURIComponent(page.docPath));
+    const res = await fetch('/__render?path=' + encodeURIComponent(page.docPath) + (hasCodeView() && view === 'code' ? '&view=code' : ''));
     const box = $('doc');
     if (res.status === 404 && page.isFolder) {
       box.hidden = true;  // a folder without a README shows just its file list
@@ -43,7 +73,11 @@ async function load() {
       const text = await res.text();
       if (!res.ok) throw new Error(text);
       content.innerHTML = text;
-      content.classList.toggle('code-file', !page.isDoc);
+      content.classList.toggle('file-view', !page.isDoc);
+      $('raw').hidden = page.isDoc;
+      $('raw').href = encodeURI(page.path) + '?raw=1';
+      showViewSwitch();
+      fitFrames();
       box.hidden = false;
       enhance();
       if (page.canComment) markBlocks();

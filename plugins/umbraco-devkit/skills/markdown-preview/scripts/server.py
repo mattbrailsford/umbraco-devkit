@@ -23,10 +23,27 @@ PAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "page")
 MAX_SOURCE = 512 * 1024  # bigger than any source file worth reading here, and under GitHub's render limit
 
 
-def shown_by_browser(found):
-    """Files the browser shows well on its own: images, media, HTML (mockups) and PDFs."""
+def embedded(found, url_path):
+    """Files the browser draws itself, placed in the page from their raw copy: an image or
+    media as on GitHub, and a mockup or PDF live in a frame. None for any other file."""
     kind = mimetypes.guess_type(found)[0] or ""
-    return kind.startswith(("image/", "audio/")) or kind in ("text/html", "application/pdf", "video/mp4", "video/webm")
+    src = html.escape(urllib.parse.quote(url_path)) + "?raw=1"
+    name = html.escape(os.path.basename(found))
+    if kind.startswith("image/"):
+        return f'<div class="media"><img src="{src}" alt="{name}"></div>'
+    if kind.startswith("audio/"):
+        return f'<div class="media"><audio controls src="{src}"></audio></div>'
+    if kind in ("video/mp4", "video/webm"):
+        return f'<div class="media"><video controls src="{src}"></video></div>'
+    if kind in ("text/html", "application/pdf"):
+        return f'<iframe class="frame{" pdf" if kind == "application/pdf" else ""}" src="{src}" title="{name}"></iframe>'
+    return None
+
+
+def has_code_view(found):
+    """Files drawn by the browser that are also worth reading as source: HTML and SVG, as
+    GitHub offers Preview and Code for an SVG."""
+    return mimetypes.guess_type(found)[0] in ("text/html", "image/svg+xml")
 
 
 def source_text(found):
@@ -175,8 +192,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def worktree_file(self, path):
         """A folder or Markdown file gets the preview page. So does any other file opened as a
-        page, as on GitHub, unless the browser shows it itself (an image, a mockup, a PDF).
-        Anything a page loads (an image in a doc, a mockup's styles), or ?raw=1, is sent as is."""
+        page, as on GitHub. Anything a page loads (an image in a doc, a mockup in its frame, a
+        mockup's styles), or ?raw=1, is sent as is."""
         found = self.resolve(path)
         if not found:
             return self.send(404, "Not found", "text/plain")
@@ -187,8 +204,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 return
             return self.page(path, "README.md")
-        if found.endswith(".md") or (self.headers.get("Sec-Fetch-Dest") == "document" and "raw" not in self.query
-                                     and not shown_by_browser(found)):
+        if found.endswith(".md") or (self.headers.get("Sec-Fetch-Dest") == "document" and "raw" not in self.query):
             return self.page(path, os.path.basename(found))
         with open(found, "rb") as f:
             self.send(200, f.read(), mimetypes.guess_type(found)[0] or "application/octet-stream")
@@ -212,6 +228,9 @@ class Handler(BaseHTTPRequestHandler):
             if found.endswith(".md"):
                 with open(found, encoding="utf-8") as f:
                     return self.send(200, self.server.renderer.render(f.read()))
+            embed = embedded(found, self.query["path"])
+            if embed and not (self.query.get("view") == "code" and has_code_view(found)):
+                return self.send(200, embed)
             text = source_text(found)
             if text is None:
                 return self.send(200, cant_show(self.query["path"], os.path.getsize(found) > MAX_SOURCE))
