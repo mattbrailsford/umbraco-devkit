@@ -20,6 +20,41 @@ from folders import breadcrumbs, change_marker, folder_listing
 from worktree import inside, pid_alive
 
 PAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "page")
+MAX_SOURCE = 512 * 1024  # bigger than any source file worth reading here, and under GitHub's render limit
+
+
+def shown_by_browser(found):
+    """Files the browser shows well on its own: images, media, HTML (mockups) and PDFs."""
+    kind = mimetypes.guess_type(found)[0] or ""
+    return kind.startswith(("image/", "audio/")) or kind in ("text/html", "application/pdf", "video/mp4", "video/webm")
+
+
+def source_text(found):
+    """A file's text, if it's text and small enough to show as code; else None."""
+    if os.path.getsize(found) > MAX_SOURCE:
+        return None
+    with open(found, "rb") as f:
+        data = f.read()
+    try:
+        return None if b"\0" in data else data.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+
+
+def as_code_block(found, text):
+    """A source file as one fenced block, so GitHub colours it by its extension (or name, for
+    a Dockerfile, say). The fence is longer than any run of backticks inside."""
+    name = os.path.basename(found).lower()
+    lang = re.sub(r"\W", "", os.path.splitext(name)[1] or name)
+    fence = "`" * max(3, max((len(r) for r in re.findall(r"`+", text)), default=0) + 1)
+    return f"{fence}{lang}\n{text}\n{fence}\n"
+
+
+def cant_show(url_path, too_big):
+    """What GitHub shows for a file it can't draw: a note, and a link to the file itself."""
+    note = "This file is too big to show here." if too_big else "This file can't be shown here."
+    return (f'<div class="cant-show"><p>{note}</p>'
+            f'<a href="{html.escape(urllib.parse.quote(url_path))}?raw=1">View raw</a></div>')
 
 
 class Tabs:
@@ -139,7 +174,9 @@ class Handler(BaseHTTPRequestHandler):
         self.send(200, body, "text/javascript; charset=utf-8" if name.endswith(".js") else "text/css; charset=utf-8")
 
     def worktree_file(self, path):
-        """A folder or Markdown file gets the preview page; anything else (an image, say) is sent as is."""
+        """A folder or Markdown file gets the preview page. So does any other file opened as a
+        page, as on GitHub, unless the browser shows it itself (an image, a mockup, a PDF).
+        Anything a page loads (an image in a doc, a mockup's styles), or ?raw=1, is sent as is."""
         found = self.resolve(path)
         if not found:
             return self.send(404, "Not found", "text/plain")
@@ -150,7 +187,8 @@ class Handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 return
             return self.page(path, "README.md")
-        if found.endswith(".md"):
+        if found.endswith(".md") or (self.headers.get("Sec-Fetch-Dest") == "document" and "raw" not in self.query
+                                     and not shown_by_browser(found)):
             return self.page(path, os.path.basename(found))
         with open(found, "rb") as f:
             self.send(200, f.read(), mimetypes.guess_type(found)[0] or "application/octet-stream")
@@ -171,8 +209,13 @@ class Handler(BaseHTTPRequestHandler):
         if not os.path.isfile(found):
             return self.send(404, "Not found", "text/plain")
         try:
-            with open(found, encoding="utf-8") as f:
-                self.send(200, self.server.renderer.render(f.read()))
+            if found.endswith(".md"):
+                with open(found, encoding="utf-8") as f:
+                    return self.send(200, self.server.renderer.render(f.read()))
+            text = source_text(found)
+            if text is None:
+                return self.send(200, cant_show(self.query["path"], os.path.getsize(found) > MAX_SOURCE))
+            self.send(200, self.server.renderer.render(as_code_block(found, text)))
         except Exception as e:  # GitHub unreachable, or gh signed out: shown on the page
             self.send(502, str(e), "text/plain")
 
