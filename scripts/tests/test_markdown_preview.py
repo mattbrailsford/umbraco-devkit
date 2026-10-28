@@ -324,22 +324,25 @@ class ServerTests(TempRepo):
         self.assertIn("/* css */", page)
 
     def test_other_files_opened_as_a_page(self):
-        # Source shows as code, anything else as a note; what the browser shows itself, and
-        # anything a page loads, is sent as is.
+        # Source shows as code, an image in place, a mockup in a frame, anything else as a note.
+        # Anything a page loads (the mockup's frame, say) is sent as is.
         write(os.path.join(self.plan, "retry.cs"), "var s = \"```\";\n")
         write(os.path.join(self.plan, "mockup.html"), "<p>Mockup</p>")
+        write(os.path.join(self.plan, "flow.svg"), "<svg></svg>")
         with open(os.path.join(self.plan, "data.bin"), "wb") as f:
             f.write(b"\x00\x01\x02")
         nav = {"Sec-Fetch-Dest": "document"}
         folder = "/docs/plans/retries/"
-        self.assertIn('<script id="boot"', self.request("GET", folder + "retry.cs", headers=nav)[3])
-        self.assertIn('<script id="boot"', self.request("GET", folder + "data.bin", headers=nav)[3])
-        self.assertEqual(self.request("GET", folder + "mockup.html", headers=nav)[3], "<p>Mockup</p>")
+        render = lambda name: self.request("GET", "/__render?path=" + urllib.parse.quote(folder + name))[3]
+        for name in ("retry.cs", "data.bin", "mockup.html", "flow.svg"):
+            self.assertIn('<script id="boot"', self.request("GET", folder + name, headers=nav)[3], name)
+        self.assertEqual(self.request("GET", folder + "mockup.html", headers={"Sec-Fetch-Dest": "iframe"})[3], "<p>Mockup</p>")
+        self.assertIn('<iframe class="frame" src="/docs/plans/retries/mockup.html?raw=1"', render("mockup.html"))
+        self.assertIn('<img src="/docs/plans/retries/flow.svg?raw=1"', render("flow.svg"))
         self.assertEqual(self.request("GET", folder + "retry.cs")[3], "var s = \"```\";\n")
         self.assertEqual(self.request("GET", folder + "data.bin?raw=1", headers=nav)[3], "\x00\x01\x02")
-        drawn = self.request("GET", "/__render?path=" + urllib.parse.quote(folder + "retry.cs"))[3]
-        self.assertIn("<p>````cs\nvar s", drawn)
-        note = self.request("GET", "/__render?path=" + urllib.parse.quote(folder + "data.bin"))[3]
+        self.assertIn("<p>````cs\nvar s", render("retry.cs"))
+        note = render("data.bin")
         self.assertIn("This file can't be shown here.", note)
         self.assertIn('href="/docs/plans/retries/data.bin?raw=1"', note)
 

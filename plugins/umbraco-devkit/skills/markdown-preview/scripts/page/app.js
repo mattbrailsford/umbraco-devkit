@@ -28,6 +28,19 @@ async function loadFileList() {
 
 let pageFresh = true;  // a newly shown page starts at its top (or its #anchor)
 
+// A mockup's frame grows to the mockup's own height, so the page scrolls rather than the frame.
+// A PDF's frame keeps its fixed height: its viewer scrolls itself.
+function fitFrames() {
+  content.querySelectorAll('iframe.frame:not(.pdf)').forEach(frame => frame.addEventListener('load', () => {
+    const root = frame.contentDocument?.documentElement;
+    if (!root) return;
+    // Not the root's scrollHeight: that never drops below the frame's own height.
+    const fit = () => { frame.style.height = Math.max(root.offsetHeight, frame.contentDocument.body?.scrollHeight || 0) + 'px'; };
+    fit();
+    new ResizeObserver(fit).observe(root);
+  }));
+}
+
 async function load() {
   // Don't wipe a comment someone is halfway through writing.
   if (document.querySelector('.thread.new textarea')?.value || document.querySelector('.thread.editing')) return setTimeout(load, 1000);
@@ -43,7 +56,10 @@ async function load() {
       const text = await res.text();
       if (!res.ok) throw new Error(text);
       content.innerHTML = text;
-      content.classList.toggle('code-file', !page.isDoc);
+      content.classList.toggle('file-view', !page.isDoc);
+      $('raw').hidden = page.isDoc;
+      $('raw').href = encodeURI(page.path) + '?raw=1';
+      fitFrames();
       box.hidden = false;
       enhance();
       if (page.canComment) markBlocks();
