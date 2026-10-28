@@ -178,11 +178,11 @@ class FolderTests(TempRepo):
         write(os.path.join(self.plan, "README.md"), read(os.path.join(self.plan, "README.md")) + "- [GONE.md](GONE.md)\n")
         self.assertEqual(folders.reading_order(self.plan), ["BRIEF.md", "SPEC.md"])
 
-    def test_file_list_puts_readme_then_folders_then_reading_order_then_the_rest(self):
+    def test_file_list_puts_folders_then_readme_then_reading_order_then_the_rest(self):
         os.makedirs(os.path.join(self.plan, "diagrams"))
         listing = folders.folder_listing(self.plan, "/docs/plans/retries/", "BRIEF.md", {"/docs/plans/retries/SPEC.md": 2})
         names = re.findall(r"</svg>([^<]+)", listing)
-        self.assertEqual(names, ["..", "README.md", "diagrams", "BRIEF.md", "SPEC.md", "notes.md"])
+        self.assertEqual(names, ["..", "diagrams", "README.md", "BRIEF.md", "SPEC.md", "notes.md"])
         self.assertIn('class="current"', listing)
         self.assertIn('<span class="dot" title="Open comments">2</span>', listing)
 
