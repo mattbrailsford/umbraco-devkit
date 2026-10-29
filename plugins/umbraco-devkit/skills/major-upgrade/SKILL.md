@@ -175,8 +175,9 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
      client uses itself) on the current version and again after the bump, like step 5's two
      builds. If the project's lint config lacks the rule, run it once from the command line
      rather than changing the config. Leave out generated API client folders (wherever the
-     project's OpenAPI generator writes): they're regenerated, not fixed by hand. Umbraco's `@deprecated` tags name the major that
-     removes the API ("Scheduled for removal in Umbraco 19").
+     project's OpenAPI generator writes): they're regenerated, not fixed by hand. Umbraco's
+     `@deprecated` tags name the major that removes the API ("Scheduled for removal in
+     Umbraco 19").
    - **Runtime deprecations.** Some backoffice deprecations only show in the browser. The
      CMS logs them with `UmbDeprecation` as a console warning that starts "Umbraco
      Backoffice:" and names the removal version. Newer releases add an "Origin:" line naming
@@ -371,9 +372,9 @@ When every task is ticked:
 2. **Smoke an upgrade, not just a fresh install.** Start a demo site on the current major
    with the package installed and some of its data in place. Move that site to the target
    major with the upgraded package. Check the package's migrations run and its data still
-   shows, including data a CMS migration rewrote (inventory step 2). If the project has no demo site, say this was skipped in the PR.
-   On a refresh, the smoke still starts from the previous major, not from the last RC: that's
-   the upgrade users will run.
+   shows, including data a CMS migration rewrote (inventory step 2). If the project has no
+   demo site, say this was skipped in the PR. On a refresh, the smoke still starts from the
+   previous major, not from the last RC: that's the upgrade users will run.
 3. **Compare every screen across the majors.** On that same site, screenshot every screen in
    the "Screen comparison" table at 1440×900 before moving it
    (`docs/upgrades/v<major>-screens/<screen>-v<current>.png`), and again after
