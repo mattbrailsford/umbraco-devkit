@@ -223,6 +223,14 @@
     "without": 0,
     "withoutDate": "2026-10-16"
   },
+  "dependencies-prerelease-feed": {
+    "date": "2026-10-29",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 60,
+    "withoutDate": "2026-10-29"
+  },
   "dependencies-shipped-major-pr": {
     "date": "2026-10-16",
     "runs": 3,

@@ -60,7 +60,9 @@ major's final release and its PR is merged, the upgrade is done: skip to "Archiv
    page yet. Say so, and ask the user to confirm the hop instead of assuming it's fine.
 4. **Other Umbraco dependencies.** For every other Umbraco package the project depends on
    (Forms, Commerce, community packages), check NuGet for a release that supports the target
-   release. A missing one is a blocker: record it and ask before going on.
+   release. For a pre-release target, check Umbraco's pre-release feed too
+   (`umbraco-dependencies`' "A pre-release floor"). A missing one is a blocker: record it and
+   ask before going on.
 5. **Branch.** Read `git-workflow`'s "Umbraco packages and version tracking" section and the
    project's `CLAUDE.md` to see how it carries more than one major.
    - Branch-per-major: the new line (for example `v18/dev`) is cut from the current major's
