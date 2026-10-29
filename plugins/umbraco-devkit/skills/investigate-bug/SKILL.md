@@ -5,9 +5,10 @@ description: >-
   gathers evidence, and tests one hypothesis at a time until the cause is proven. Never
   writes the fix; routes it to `quick-fix` or the feature pipeline. Use for "why is this
   broken", "this stopped working", an unexplained failing test, or an issue triaged as
-  needing investigation. `--unattended` runs without questions in its own worktree.
+  needing investigation. `--unattended` runs without questions in its own worktree, and
+  `--via-tracker` posts the issue's update as a proposal for a maintainer to approve.
 user-invocable: true
-argument-hint: <what's going wrong, or an issue ID> [--unattended]
+argument-hint: "<what's going wrong, or an issue ID> [--unattended] [--via-tracker]"
 ---
 
 # investigate-bug
@@ -43,6 +44,18 @@ apply, with these changes:
 - **The demo site** runs on this worktree's own port (`git wdp-port`), never a fixed one.
 - **Leave the worktree clean**, as Scope says, so it's removed when you finish.
 - **A security match** still stops everything: return only the flag and the issue ID.
+
+## Proposing the update
+
+`--via-tracker`, with an issue ID, posts the drafted update (step 6) on the issue as a proposal
+for a maintainer, rather than waiting for a yes. The proposal's format is `issue-triage`'s, not
+this skill's: read its Approval on the tracker section (in `issue-triage`'s `SKILL.md`) before
+writing, and follow it exactly. That's the `<!-- issue-triage:proposal first=<outcome> -->`
+marker, the one folded block headed `Proposed: <outcome>`, the reply's points rather than a
+reply, `state/drafted`, and a new comment or an edit as its round says. If the outcome is on
+the `Auto-apply` line, apply it as that section's Applying without approval says. Its outcome is the
+update's outcome, and its notes are the report's. A security match gets no proposal. A
+maintainer's answer to it is for `issue-triage --via-tracker` to act on.
 
 ## 1. Pin down the symptom
 
@@ -183,11 +196,12 @@ wrote the faulty code and a devkit skill should have prevented it, also suggest
 - One bug per run.
 - Evidence beats memory. Quote the log line, response, or source line behind every claim.
 - Never commit from this skill. Never write to the tracker either: the update is a draft,
-  applied only as the Hand off says.
+  applied only as the Hand off says, or posted as a proposal with `--via-tracker`.
 
 ## Hand off
 
-The report, the drafted update if there is one, and the route.
+The report, the drafted update if there is one, and the route. With `--via-tracker`, the
+proposal posted instead of the drafted update.
 
 - **If another skill started this one**, return those and stop. That skill decides what to
   apply and what runs next.

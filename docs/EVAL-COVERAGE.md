@@ -65,10 +65,10 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 11 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
@@ -271,12 +271,14 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Eval | Score | Recorded |
 |---|---|---|
 | `investigate-bug-no-fix` | 100 | 2026-10-16 |
+| `investigate-bug-via-tracker` | 100 | 2026-10-22 |
 
 ### `issue-backlog`
 
 | Eval | Score | Recorded |
 |---|---|---|
 | `issue-backlog-board` | 100 | 2026-10-16 |
+| `issue-backlog-unattended` | 100 | 2026-10-22 |
 
 ### `issue-resolve`
 
@@ -289,8 +291,17 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `issue-triage-answer-approve` | 100 | 2026-10-22 |
+| `issue-triage-answer-repropose` | 100 | 2026-10-22 |
+| `issue-triage-answer-team-issue` | 100 | 2026-10-22 |
+| `issue-triage-auto-apply` | 100 | 2026-10-22 |
 | `issue-triage-linked-pr` | 100 | 2026-10-19 |
+| `issue-triage-new-round` | 100 | 2026-10-22 |
+| `issue-triage-overrule-applied` | 100 | 2026-10-22 |
 | `issue-triage-security-report` | 100 | 2026-10-16 |
+| `issue-triage-trust-report` | 100 | 2026-10-22 |
+| `issue-triage-unattended-security` | 100 | 2026-10-22 |
+| `issue-triage-via-tracker` | 100 | 2026-10-22 |
 
 ### `major-upgrade`
 

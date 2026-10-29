@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: issue-triage-auto-apply
+context:
+  scaffold_script: fixture.sh
