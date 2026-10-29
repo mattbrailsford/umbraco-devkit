@@ -198,6 +198,10 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
    list in `.github/dependabot.yml` (`umbraco-dependencies`' "Dependabot").
    Against a CMS pre-release, the package's own version is a pre-release too (for example
    `19.0.0-rc1`), and its dependency range must allow the CMS pre-release.
+
+   A demo or test site the smoke uses (even a gitignored one) needs the target CMS too, so
+   list it as part of the bump task. It isn't a compatibility marker: it says nothing about
+   what the package supports.
 9. **The package's own scheduled removals.** Work out the package version this upgrade will
    release (from step 8). Then find everything the package itself deprecated with a removal
    version at or below it. With version-aligned versioning that's the target CMS major; with
@@ -322,8 +326,9 @@ the last RC to the final release). Work on the same branch.
 
 ## Build
 
-Commit the upgrade file on the new branch first (`docs: add upgrade plan for v<major>`, or
-`docs: refresh upgrade plan for <release>` on a refresh). Then,
+Commit the upgrade file on the new branch first, following the project's commit
+conventions (`git-workflow`): for example `docs: add upgrade plan for v<major>`, or
+`docs: refresh upgrade plan for <release>` on a refresh. Then,
 for each unchecked task, in order, follow `feature-build`'s loop with these differences:
 
 - **Build.** Give the `builder` the task text, the matching inventory entries (with their
