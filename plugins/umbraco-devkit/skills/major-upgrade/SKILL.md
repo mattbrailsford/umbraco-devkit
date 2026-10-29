@@ -343,7 +343,10 @@ When every task is ticked:
    the "Screen comparison" table at 1440×900 before moving it
    (`docs/upgrades/v<major>-screens/<screen>-v<current>.png`), and again after
    (`<screen>-v<target>.png`). Same data, same click path, so any difference comes from the
-   upgrade. Sort each difference into one of three:
+   upgrade. Past a handful of screens, script it: one browser script that walks the table's
+   click paths, run once per major. Before comparing, hide values that change between runs
+   (dates and times, generated numbers and ids, relative times like "2 minutes ago"), so
+   only real differences show. Sort each difference into one of three:
    - **CMS change**: the CMS itself changed the look (a new UUI, a new layout). Note it; no
      task.
    - **Already there**: the same fault shows on the current major. Not an upgrade task. If
@@ -351,8 +354,9 @@ When every task is ticked:
    - **Upgrade regression**: only on the target major. Add a task and build it, then take
      the target screenshot again.
 
-   Record the result per screen in the table, and commit the screenshots with the upgrade
-   file. If the project has no demo site, say this was skipped in the PR.
+   Record the result per screen in the table. Commit only the pairs that show a difference,
+   with the upgrade file; screens that match stay out of the repo, and the table says they
+   matched. If the project has no demo site, say this was skipped in the PR.
 4. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file
    as the design. Fix and re-review until `PASS`, as in `feature-build`'s "Finish".
 5. **Propose backports.** List every "Backport candidates" entry that shows on the current
