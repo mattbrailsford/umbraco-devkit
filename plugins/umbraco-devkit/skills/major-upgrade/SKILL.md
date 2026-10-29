@@ -93,29 +93,38 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
    under `external/*`, suggest importing from that path instead as a follow-up.
 
    List every shared dependency with its current and target version in the inventory.
-2. **Breaking-change PRs in the CMS repo.** Umbraco labels every breaking PR
-   `category/breaking`. Find the ones that are in the target release but not in the
-   project's current version, using the local CMS clone (`umbraco-cms-source` has how to
-   find it as `$CMS`):
-   ```bash
-   gh pr list -R umbraco/Umbraco-CMS --label category/breaking --state merged \
-     --search "merged:>=<date the current major's .0.0 was released>" --limit 500 \
-     --json number,title,mergeCommit -q '.[] | "\(.number) \(.mergeCommit.oid) \(.title)"' |
-   while read -r pr sha title; do
-     git -C "$CMS" merge-base --is-ancestor "$sha" "$target_tag" 2>/dev/null &&
-     ! git -C "$CMS" merge-base --is-ancestor "$sha" "$current_tag" 2>/dev/null &&
-     echo "#$pr $title"
-   done
-   ```
-   Fetch tags first (`umbraco-cms-source`'s "Pick the tag"). Checking ancestry against the
-   tags, not the PR's base branch, catches PRs merged to any branch that fed the release.
-   With no clone, filter the same list by base branch instead: `v<major>/dev`,
-   `release/<major>.*`, and `v<major>/feature/*`. For each PR, grep the project for what it
-   changed or removed. When the title isn't enough, read the PR's description and diff.
+2. **What changed in the CMS.** No single source lists every break: labels, release notes
+   and the docs each miss some. Work from the CMS diff between the two tags, using the local
+   clone (`umbraco-cms-source` has how to find it as `$CMS`). The commands for each part
+   are in `references/finding-breaks.md`.
+   - **Labelled PRs.** Umbraco labels breaking PRs `category/breaking`. List the ones in
+     the target release and not in the current one. Start the search at the oldest commit
+     in the range, not at the current major's release date: work for the next major
+     starts before the current one ships. A PR merged to a feature branch that was later
+     squash-merged is in no tag's history; keep it as "probably in" and check the target
+     tag for what it changed. With no clone, filter the list by base branch instead:
+     `v<major>/dev`, `release/<major>.*`, and `v<major>/feature/*`.
+   - **CMS types the package uses.** List every CMS type the package names, C# and
+     backoffice. Diff each one's file between the tags. Every removed or changed public or
+     protected member the package uses is an entry, labelled or not.
+   - **Subsystems the package extends.** Where the package subclasses or composes CMS
+     building blocks (the block editor's managers, workspaces and value converters; search
+     providers; trees), a change anywhere in that subsystem can break it, even one that
+     still compiles. Group these by subsystem and diff the whole folder, not only what the
+     PRs name. Read the behavior changes. Each subsystem gets its own scenario in the smoke.
+   - **CMS data migrations.** Read every migration the target adds to `UmbracoPlan.cs`. If
+     one rewrites data shaped like data the package stores (block JSON, property values it
+     owns), add a task to check the package's data after it, and include it in the upgrade
+     smoke ("Finish").
+
+   For each entry, grep the project for what it changed or removed. Name the PR behind an
+   entry from history (`git log -S` on the changed line), never from a PR title: titles
+   don't say everything a PR touched. Merge-ups and cherry-picks repeat a change; keep one
+   entry per PR.
 3. **Release notes.** Each beta, RC, and final release of the target major has a
-   "💥 Breaking Changes" section (`gh release view <tag> -R umbraco/Umbraco-CMS`). Use it to
-   check step 2 missed nothing; any PR listed there and not found in step 2 gets the same
-   treatment.
+   "💥 Breaking Changes" section (`gh release view <tag> -R umbraco/Umbraco-CMS`). Read
+   every one in the range. The list to work from is everything step 2 found plus every PR
+   these sections name; a PR here that step 2 missed gets the same treatment.
 4. **The docs page.** Read the target major's section of the breaking-changes page from
    preflight step 3, if it exists. It covers changes no single PR shows: settings with new
    defaults, migrations that now run automatically, steps to take before upgrading. Grep the
@@ -127,6 +136,15 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
    replacement now, while the upgrade is open. The second build catches APIs the target
    major newly made obsolete, which no earlier version warned about.
 
+   Some removals carry no `[Obsolete]` at all, only a `// TODO (V<target>)` comment in the
+   CMS at the current tag, often on a default interface member or an overload. Grep for
+   those too; each one the package uses is an entry.
+
+   **Spike compile.** In a scratch worktree, bump the CMS packages to the target and build
+   once. Fix nothing. Every error not already in the inventory is a new entry, and any
+   `CS0618` from projects that compiled is an early look at the second list. Remove the
+   worktree after. This is a cross-check, not the bump task.
+
    Leave a warning as a follow-up only when its replacement doesn't exist in every CMS
    version the branch builds against (a branch that targets two majors at once). Say which
    version is missing it.
@@ -135,6 +153,13 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
    a component tag that no longer exists, just renders nothing. Check each of these at the
    target tag (`umbraco-cms-source`, under `src/Umbraco.Web.UI.Client/`), and treat every hit
    as a task (`umbraco-backoffice-conventions` has the client build rules):
+   - **Type-check against the target.** In a scratch copy of the client, set
+     `@umbraco-cms/backoffice` to the exact target version. Set its peers to the target's
+     first (`npm view @umbraco-cms/backoffice@<target> peerDependencies`; the project's
+     lockfile still has the current major's), or the install fails with `ERESOLVE`. Then run
+     `tsc --noEmit`. Every error is an entry: removed exports, moved import paths, changed
+     contexts and manifest `meta` types. Do this first. A bundler build doesn't type-check,
+     and a deprecation lint can't see an API that's already gone.
    - **Import paths.** Compare the `exports` map in `package.json` at the two tags for every
      `@umbraco-cms/backoffice/*` path the project imports. A path that's gone or moved is a
      task.
@@ -142,7 +167,8 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
      easy to miss. Run ESLint with `@typescript-eslint/no-deprecated` (the rule the CMS
      client uses itself) on the current version and again after the bump, like step 5's two
      builds. If the project's lint config lacks the rule, run it once from the command line
-     rather than changing the config. Umbraco's `@deprecated` tags name the major that
+     rather than changing the config. Leave out generated API client folders (wherever the
+     project's OpenAPI generator writes): they're regenerated, not fixed by hand. Umbraco's `@deprecated` tags name the major that
      removes the API ("Scheduled for removal in Umbraco 19").
    - **Runtime deprecations.** Some backoffice deprecations only show in the browser. The
      CMS logs them with `UmbDeprecation` as a console warning that starts "Umbraco
@@ -255,7 +281,8 @@ build**:
    lint run in steps 5 and 6). Add these tasks once the bump compiles; you can't see them
    before.
 4. Behavior changes: breaking changes that still compile but act differently (a setting's new
-   default, a renamed URL, a changed notification).
+   default, a renamed URL, a changed notification, a subsystem change or data migration from
+   step 2).
 5. The frontend bump and its fixes: import paths, manifests, elements and contexts, UUI.
    Runtime deprecation warnings found in the smoke get added as tasks here.
 6. Third-party dependency bumps the user picked (step 10), one task per dependency or family
@@ -314,7 +341,8 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   framework bump task lands, the demo site must start on the target major and the backoffice
   must load with the package's extensions registered. Open every screen the package adds and
   read the browser console: an error from the package fails the smoke, and an "Umbraco
-  Backoffice:" deprecation warning with the package as its origin becomes a task.
+  Backoffice:" deprecation warning with the package as its origin becomes a task. Run the
+  scenario for each subsystem the package extends (inventory step 2) once its task lands.
 - **Tick and log.** Tick the task in the upgrade file and add its commit SHA to the "Log"
   section. A decision the inventory left open goes in the file's "Decisions" section.
 
@@ -326,7 +354,7 @@ When every task is ticked:
 2. **Smoke an upgrade, not just a fresh install.** Start a demo site on the current major
    with the package installed and some of its data in place. Move that site to the target
    major with the upgraded package. Check the package's migrations run and its data still
-   shows. If the project has no demo site, say this was skipped in the PR.
+   shows, including data a CMS migration rewrote (inventory step 2). If the project has no demo site, say this was skipped in the PR.
    On a refresh, the smoke still starts from the previous major, not from the last RC: that's
    the upgrade users will run.
 3. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file

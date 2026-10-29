@@ -795,8 +795,16 @@
     "without": 100,
     "withoutDate": "2026-10-16"
   },
+  "major-upgrade-diffs-used-types": {
+    "date": "2026-10-29",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-offers-stopgaps": {
-    "date": "2026-10-23",
+    "date": "2026-10-29",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -804,7 +812,7 @@
     "withoutDate": null
   },
   "major-upgrade-version-mismatch": {
-    "date": "2026-10-23",
+    "date": "2026-10-29",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
