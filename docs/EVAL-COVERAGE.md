@@ -69,7 +69,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 3 | 0 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 4 | 0 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
@@ -83,7 +83,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`umbraco-backoffice-testing`](#umbraco-backoffice-testing) | knowledge | Proven | +67 | 2 | 0 | 2/2 | 0 |
 | [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 1 |
 | [`umbraco-cms-source`](#umbraco-cms-source) | knowledge | Proven | +33 | 3 | 1 | 1/5 | 0 |
-| [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 8 | 0 | 4/5 | 0 |
+| [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 9 | 0 | 4/5 | 0 |
 | [`umbraco-docs`](#umbraco-docs) | knowledge | Gain, skill rarely loads | +23 | 2 | 0 | 1/5 | 0 |
 | [`umbraco-dotnet-testing`](#umbraco-dotnet-testing) | knowledge | Proven | +78 | 3 | 0 | 3/3 | 0 |
 | [`umbraco-env-sync`](#umbraco-env-sync) | knowledge | Proven | +27 | 7 | 0 | 7/31 | 1 |
@@ -296,6 +296,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `major-upgrade-diffs-used-types` | 100 | 2026-10-29 |
 | `major-upgrade-offers-stopgaps` | 100 | 2026-10-29 |
 | `major-upgrade-proposes-backports` | 100 | 2026-10-29 |
 | `major-upgrade-version-mismatch` | 100 | 2026-10-29 |
@@ -451,6 +452,7 @@ shown to follow (kept so a regression shows up), or a case not yet mapped.
 |---|---|---|---|---|---|---|
 | Which CMS version: the floor | `dependencies-add-ef-core` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Which CMS version: the floor | `dependencies-ef-core-floor` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
+| Which CMS version: the floor | `dependencies-prerelease-feed` | 100 | 60 | 40 | 3/3 | 2026-10-29 |
 | Locked to the CMS | `dependencies-add-ef-core` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Locked to the CMS | `dependencies-bare-lit-import` | 100 | 22 | 78 | 3/4 | 2026-10-17 |
 | Locked to the CMS | `dependencies-locked-security-alert` | 100 | 0 | 100 | 3/3 | 2026-10-16 |

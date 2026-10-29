@@ -48,10 +48,12 @@ If `$REMOTE` comes back empty, no remote points at Umbraco's repo: use the GitHu
    ```bash
    git -C "$CMS" tag -l "release-17.*" --sort=-v:refname | head -1
    ```
-3. If the tag isn't there, fetch tags once, then look again:
+3. If the tag isn't there, fetch the major's tags, then look again:
    ```bash
-   git -C "$CMS" fetch --tags --quiet "$REMOTE"
+   git -C "$CMS" fetch --quiet "$REMOTE" "refs/tags/release-17.*:refs/tags/release-17.*"
    ```
+   Fetch only the tags you need. A plain `fetch --tags` also updates every branch ref, and
+   one stale ref in the user's clone can make it fail.
 4. If the project supports more than one CMS major, check each major's tag. Behavior that
    differs between them is a multi-version finding, not a detail to average out.
 
@@ -65,13 +67,15 @@ branch:
 git -C "$CMS" show "${tag}:src/Umbraco.Core/Services/ContentService.cs"
 
 # Search the whole release (narrow with a pathspec when you can)
-git -C "$CMS" grep -n "class ContentService\b" "${tag}" -- 'src/*.cs'
+git -C "$CMS" grep -n -w "class ContentService" "${tag}" -- 'src/*.cs'
 
 # List files under a folder
 git -C "$CMS" ls-tree -r --name-only "${tag}" -- src/Umbraco.Web.UI.Client/src/packages/core/
 ```
 
-Write `"${tag}:path"` with braces. In zsh, `$tag:s` is read as a modifier on `$tag`.
+Write `"${tag}:path"` with braces. In zsh, `$tag:s` is read as a modifier on `$tag`. Match
+whole words with `-w`, not `\b`: macOS `git grep -E` has no `\b` and matches nothing,
+with no error.
 
 Where to look: from `release-17.1.0`, the CMS has its own `CLAUDE.md` at the repo root and in each
 project under `src/` (`src/Umbraco.Core/CLAUDE.md`, `src/Umbraco.Web.UI.Client/CLAUDE.md`, and
@@ -84,7 +88,7 @@ of the same type is registered.
 ## Rules
 
 - **Never change the clone.** No `checkout`, `switch`, `pull`, `reset`, or edits. It may be the
-  user's own working copy. `fetch --tags` is the only write, and it only adds tags.
+  user's own working copy. Fetching tags is the only write, and it only adds tags.
 - **Quote the tag you read.** When a design, review finding, or decision relies on CMS
   source, name the file and tag (`release-17.6.1:src/...`) so the claim can be checked.
 - **Source beats memory and docs.** If what you remember about a CMS API, or what the docs

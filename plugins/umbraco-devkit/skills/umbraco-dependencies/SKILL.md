@@ -67,6 +67,22 @@ that extends another Umbraco product has a floor for each:
   dependency graph, not only the CMS's. A product's own npm package is locked like
   `@umbraco-cms/backoffice` if the package extends that product's backoffice.
 
+### A pre-release floor
+
+A new major's line usually starts against a CMS beta or RC, so its floor is a pre-release.
+
+- **Locked packages are pre-releases too.** The CMS pins its Microsoft packages at their RC
+  builds during its own pre-releases. Use the versions at the floor's tag, as always; don't
+  swap in a stable version.
+- **Other Umbraco products may not be on nuget.org.** A product that versions with the CMS
+  (Umbraco.Licenses, Forms, Deploy) often publishes its matching pre-release only on
+  Umbraco's pre-release feed, `https://www.myget.org/F/umbracoprereleases/api/v3/index.json`.
+  Check that feed as well as nuget.org. If a version is only there, add the feed to the
+  repo's `NuGet.config` (and to its package source mapping, if it has one).
+- **Consumers need the feed too.** A site restoring the package's pre-release also has to
+  restore that product's pre-release. Say so in the pre-release's install notes, with the
+  feed URL. Once the products ship to nuget.org, remove the feed and the note.
+
 ### Exact versions and ranges
 
 With an exact version (`10.0.0`), a NuGet reference is a minimum: sites resolve that version
