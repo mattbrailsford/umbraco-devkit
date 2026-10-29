@@ -70,3 +70,10 @@ needs-info  # an issue-triage outcome name, used in its Auto-apply line, not a s
 needs-investigation  # an issue-triage outcome name, used in its Auto-apply line, not a skill
 needs-decision  # an issue-triage outcome name, used in its Auto-apply line, not a skill
 already-fixed  # an issue-triage outcome name, used in its Auto-apply line, not a skill
+font-family  # an SVG/CSS presentation attribute, not a skill
+font-size  # an SVG/CSS presentation attribute, not a skill
+font-weight  # an SVG/CSS presentation attribute, not a skill
+marker-end  # an SVG/CSS presentation attribute, not a skill
+marker-start  # an SVG/CSS presentation attribute, not a skill
+text-anchor  # an SVG/CSS presentation attribute, not a skill
+prefers-color-scheme  # a CSS media feature, not a skill

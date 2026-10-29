@@ -60,8 +60,8 @@ notifications"), ask:
 - What's explicitly **out of scope** for this story?
 
 Ask the smallest number of questions that unblock you. If told "just draft it and I'll
-correct it," do that — draft, mark assumptions with `> ASSUMPTION:` lines, and let the
-reaction do the specifying.
+correct it," do that — draft, list your guesses at the top per `plain-writing`'s "What
+needs the reader goes first", and let the reaction do the specifying.
 
 ### 2. Write the story
 
@@ -115,8 +115,8 @@ decomposing a backlog that will change is waste.
 ### 5. Definition of Ready / Definition of Done
 
 These are team agreements, not house rules — confirm them with the user rather than asserting
-defaults. Capture the agreed version once, at the top of `STORIES.md`, so every story in that
-feature inherits it instead of restating it. Reasonable starting points to offer (not impose):
+defaults. Capture the agreed version once, near the top of `STORIES.md` (see "Output"), so
+every story in that feature inherits it instead of restating it. Reasonable starting points to offer (not impose):
 **Ready** — role/capability/value all stated and non-hollow, Given/When/Then acceptance
 criteria cover the happy path, out-of-scope is explicit, passes INVEST. **Done** — all
 acceptance criteria pass as executable specs (via `bdd-specs`), sad-path criteria are covered
@@ -140,5 +140,44 @@ every name, number and condition kept.
 
 Write or update `STORIES.md`. If stories already exist there, merge — preserve story ids
 already in use (specs reference them) and append or amend rather than rewriting wholesale.
+
+The stories themselves are written for `bdd-specs` and `feature-build`, so completeness
+comes before length: every criterion stays, however long the file gets. A person reads the
+file mainly to check how the work was split, so it opens with a short index they can check
+that against:
+
+```md
+# Stories: <feature name>
+
+**<N> stories, <M> criteria.** Story ids are used by `PLAN.md` and the spec files, so never
+renumber them.
+
+> [!IMPORTANT]
+> **<N> guesses need your OK.**
+> <per `plain-writing`'s "What needs the reader goes first". Leave out when there's nothing.>
+
+**<Area>**
+
+- [<ID>](#<heading-anchor>) <story title>, <n> criteria
+
+<one bold area per part of the feature (core, API, backoffice, an integration, shipping),
+in build order, with every story listed once under one area>
+
+<details>
+<summary>Ready and Done</summary>
+
+<the agreed Definition of Ready and Definition of Done>
+
+</details>
+
+---
+
+## <ID>: <story title>
+<the story and its criteria, in full>
+```
+
+Rebuild the index on every write, so its counts and links match the stories below it. The
+counts make a story that's too big stand out; say so in your report rather than leaving it
+for the reader to spot.
 After writing, report how many stories the file now holds and that it's ready for
 `bdd-specs`.

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<link rel="icon" href="data:,">
+<style>{{github_css}}</style>
+<link rel="stylesheet" href="/__page/page.css">
+</head>
+<body>
+<div id="status"></div>
+<main>
+<nav class="crumbs">{{crumbs}}</nav>
+<div class="layout">
+<aside><details id="filebox"><summary>Files in this folder</summary><div id="files"></div></details></aside>
+<div class="box" id="doc" hidden>
+  <div class="box-header"><span class="doc-title"><span id="docname">{{docname}}</span><span id="changes"></span></span><span class="doc-actions"><span class="count" id="count"></span><span id="approval"></span><span class="seg" id="view" hidden><button data-view="preview">Preview</button><button data-view="code">Code</button></span><a class="btn" id="raw" target="_blank" title="Open the file on its own" hidden>Raw</a></span></div>
+  <article id="content" class="markdown-body"></article>
+</div>
+</div>
+</main>
+<button id="sel-btn" title="Comment on these words" aria-label="Comment on these words"></button>
+<button id="row-add" class="add-btn" title="Comment on this row" aria-label="Comment on this row"></button>
+<div id="keys"><div class="keys-head">Keyboard shortcuts</div><dl></dl></div>
+<button id="keys-hint"><kbd>?</kbd> shortcuts</button>
+<div id="sendbar"><span class="note" id="sendnote"></span><button class="btn primary" id="sendbtn" title="Shift+S">Send to Claude</button></div>
+<script id="boot" type="application/json">{{boot}}</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.3.0/dist/mermaid.min.js"></script>
+<script>window.MathJax = { tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] } };</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+<script type="module" src="/__page/app.js"></script>
+</body>
+</html>

@@ -125,6 +125,9 @@ design. A reviewer that fixes its own findings isn't a gate.
    ships` is a deliberate, tracked Umbraco pattern (e.g. marking a default interface
    implementation for removal once a deprecated overload is gone). A vague, undated
    `// TODO: fix this later` is the finding; a dated one tied to a real removal condition is not.
+   So does a stopgap marker (`TODO(stopgap):` or the project's own) when the task says the user
+   chose a stopgap and the comment says what it hides and what the proper fix is. A stopgap
+   without that marker is the finding.
    Also flag (`Important`) a code comment that links to a repo file or memory entry, and a
    new link from a `CLAUDE.md` or `.claude/memory/` into a plan folder or the archive. Both
    break when files move. See `CLAUDE.md`'s "Plans and the archive".
@@ -186,11 +189,12 @@ workflow. Look only for what builds up across tasks:
 - Leftovers from an approach a later task replaced: dead methods, unused registrations,
   orphaned files.
 - The same thing named differently in different tasks.
-- A target in `SPEC.md`'s "Non-functional targets" that nothing on the branch checks: no
-  test or measurement for it, and the code doesn't plainly meet it by its shape (a bounded
-  query meets "memory bounded by `take`"; nothing in code meets "under 1 second"). Each is its
-  own `Important` finding, naming the target. A target still marked `> ASSUMPTION:` was never
-  agreed: say so in the verdict and ask the human to confirm or replace it.
+- A target in `SPEC.md` that nothing on the branch checks, whether under "Targets" or still a
+  guess in the opening callout: no test or measurement for it, and the code doesn't plainly
+  meet it by its shape (a bounded query meets "memory bounded by `take`"; nothing in code
+  meets "under 1 second"). Each is its own `Important` finding, naming the target. A target
+  still in the callout was never agreed: say so in the verdict and ask the human to confirm
+  or replace it.
 
 `major-upgrade` dispatches this mode with its upgrade file (`docs/upgrades/v<major>.md`) in
 place of `ARCHITECTURE.md` and `SPEC.md`. There, drift means an inventory entry the branch

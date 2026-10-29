@@ -1,154 +1,35 @@
 # Diagram conventions for a PR description
 
-## Contents
+The change outline shows what the PR built with the fewest views that explain it. Each view's
+shape is in `diagrams`' `references/text-views.md`; this file says which ones a PR uses and
+in what order.
 
-- Pseudocode — a changed algorithm or business rule
-- Call chain — changed control flow
-- Shallow file tree — changed responsibilities
-- EF Core / SQL — a table or migration change
-- Lit component tree — changed backoffice UI
-- Manifest / composer registration — a changed extension point
-- Backoffice registrations — what was added to the backoffice
-- Settings — new or changed configuration
-- Management API endpoints — new or changed routes
-- Data structure / contract — a new or changed type
-- Rule of thumb
+## Pick the views
 
-Pick the smallest view that makes the key point clear. Skip any view that doesn't apply — a
-one-file bug fix might use none of these and just need "Why" and "Special things to note."
+- **Plan pictures first.** When the plan folder has `diagrams/`, show each one that matches
+  what the PR built (see below), then the text views for the detail a picture can't carry.
+- **Only views that changed.** Skip any view that doesn't apply. A one-file bug fix might use
+  none and just need "Why" and "How to verify."
+- **The change form.** Use each view's change form from `text-views.md`: a `diff` against the
+  old shape, or the whole block when most of it is new. Read its "Reading rules for every
+  view" first: a line that changed but still exists stays a context line, with what changed
+  in a trailing comment.
+- **Endpoints at summary depth.** The contract depth belongs in `SPEC.md`.
 
-Use a `diff` block when the point is what changed and the surrounding shape already exists.
-Show the whole block, undiffed, when most of it is new, or when trimming context would hide
-who owns what or in what order things happen.
+## Picture diagrams — from the plan folder's `diagrams/`
 
-## Pseudocode — a changed algorithm or business rule
+`feature-design` draws SVG diagrams of the flow, call order, statuses, data model or layers.
+Show each one that matches what the PR built, under a one-line caption, linked by full URL
+pinned to the pushed commit:
 
-```diff
- on(PublishContent)
--  save content
-+  save content
-+  if content has scheduled unpublish date
-+    queue unpublish job
+```md
+How a delivery moves from publish to delivered or dead-lettered.
+
+![Delivery flow](https://github.com/<owner>/<repo>/blob/<sha>/docs/plans/<feature-slug>/diagrams/delivery-flow.svg?raw=true)
 ```
 
-## Call chain — changed control flow
-
-```diff
- ContentController.PublishContent
-   ContentService.Save
-+    ScheduledPublishService.QueueUnpublish
-   ContentService.Publish
-```
-
-## Shallow file tree — changed responsibilities
-
-```diff
- src/
- ├── Services/
-+│   └── ScheduledPublishService.cs   # queues/cancels scheduled unpublish jobs
- ├── Notifications/
--└── ContentPublishedHandler.cs
-+└── ContentPublishedHandler.cs        # now also cancels a pending unpublish
-```
-
-## EF Core / SQL — a table or migration change
-
-```diff
- CREATE TABLE ScheduledUnpublish (
-   Id INT PRIMARY KEY,
-   ContentKey UNIQUEIDENTIFIER NOT NULL,
-+  UnpublishDate DATETIME2 NOT NULL,
-+  CONSTRAINT FK_ScheduledUnpublish_Content FOREIGN KEY (ContentKey)
-+    REFERENCES umbracoNode(uniqueID)
- )
-```
-
-Show the whole `CREATE TABLE`/entity when the table is new; diff it when adding or changing a
-column on an existing one.
-
-## Lit component tree — changed backoffice UI
-
-```diff
- <my-package-workspace-view> (client/src/workspace)
-   @state() private _content
-+  @state() private _scheduledUnpublishDate
-   <uui-box>
-+    <uui-input type="datetime-local">
-```
-
-Note properties/state and package boundaries that matter to the change, not every attribute.
-
-## Manifest / composer registration — a changed extension point
-
-Umbraco-specific: most backoffice extensions and server-side pipeline hooks register through a
-manifest entry or a `Composer`/`IComposer`, not through code a reviewer will stumble onto by
-reading top to bottom. Show the registration diff explicitly — it's easy to miss in a large
-diff otherwise.
-
-```diff
- {
-   "type": "workspaceView",
-   "alias": "MyPackage.WorkspaceView.ScheduledUnpublish",
-+  "name": "Scheduled Unpublish Workspace View",
-+  "js": "/App_Plugins/MyPackage/workspace-view.js",
-+  "conditions": [
-+    { "alias": "Umb.Condition.WorkspaceAlias", "match": "Umb.Workspace.Document" }
-+  ]
- }
-```
-
-## Backoffice registrations — what was added to the backoffice
-
-The manifest diff above shows the exact JSON; this table is the readable summary of it. One
-row per extension the PR adds or changes, so a reviewer can see the whole footprint at once.
-
-| Type | Name | Where it appears |
-|---|---|---|
-| Workspace view | Deliveries | Webhook editor, as a tab after Details |
-| Entity action | Resend delivery | "..." menu on a webhook in the tree |
-| Dashboard | Usage | AI section, second dashboard tab |
-
-Use the editor-facing name and place, not the alias. Leave out extensions with no visible
-footprint (a condition, a repository) unless they're the point of the PR.
-
-## Settings — new or changed configuration
-
-Show any new `appsettings.json` options as they'd appear in a site's config, with their
-default values and a short comment on each. Site owners copy this straight into their own
-config, so it must be valid JSON once the comments are removed.
-
-```jsonc
-{
-  "Umbraco": {
-    "MyPackage": {
-      "Deliveries": {
-        "RetryCount": 3,          // attempts before a delivery is marked failed
-        "RetentionDays": 30       // how long delivery history is kept
-      }
-    }
-  }
-}
-```
-
-## Management API endpoints — new or changed routes
-
-One row per endpoint. "Who can call it" is the authorization policy in plain words.
-
-| Method | Route | Who can call it | What it does |
-|---|---|---|---|
-| `GET` | `/umbraco/management/api/v1/my-package/deliveries` | Users with access to the Settings section | Lists deliveries, newest first |
-| `POST` | `/umbraco/management/api/v1/my-package/deliveries/{id}/resend` | Same | Queues a delivery to send again |
-
-Diff the table when changing an existing set of routes.
-
-## Data structure / contract — a new or changed type
-
-Show the complete shape when it's new or central to the change; diff it when adding to an
-existing one.
-
-```csharp
-public record ScheduledUnpublishRequest(Guid ContentKey, DateTime UnpublishDate);
-```
+Don't redraw them here. A picture replaces the text view that tells the same story, per
+`text-views.md`'s "Picture or text view".
 
 ## Rule of thumb
 

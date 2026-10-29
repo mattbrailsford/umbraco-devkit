@@ -117,8 +117,9 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 
 | I want to... | Run |
 |---|---|
-| Write the PR description, with diagrams and screenshots | [`/pr-describe`](plugins/umbraco-devkit/skills/pr-describe/SKILL.md) |
+| Write the PR description: choices to check first, then screenshots and diagrams | [`/pr-describe`](plugins/umbraco-devkit/skills/pr-describe/SKILL.md) |
 | Review a PR from outside the core team | [`/pr-review`](plugins/umbraco-devkit/skills/pr-review/SKILL.md) |
+| Try a PR yourself on the demo site, with a click-through list | [`/pr-demo`](plugins/umbraco-devkit/skills/pr-demo/SKILL.md) |
 | Review dependencies: Dependabot PRs, security alerts, and what's out of date | [`/dependency-review`](plugins/umbraco-devkit/skills/dependency-review/SKILL.md) |
 
 ### Upgrade and publish
@@ -127,6 +128,12 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 |---|---|
 | Move to a new Umbraco major, task by task, still reviewed | [`/major-upgrade`](plugins/umbraco-devkit/skills/major-upgrade/SKILL.md) |
 | Get a finished package listed on the Umbraco Marketplace | [`/umbraco-marketplace`](plugins/umbraco-devkit/skills/umbraco-marketplace/SKILL.md) |
+
+### Read a doc
+
+| I want to... | Run |
+|---|---|
+| See a plan file or folder as GitHub will show it, refreshing as it changes, and comment on it for Claude to fix ("show me the brief") | [`/markdown-preview`](plugins/umbraco-devkit/skills/markdown-preview/SKILL.md) |
 
 ### Learn from a session
 
@@ -170,6 +177,7 @@ You don't run these. The skills above and the agents load them when the work nee
 | Skill | What it covers |
 |---|---|
 | [`bdd-specs`](plugins/umbraco-devkit/skills/bdd-specs/SKILL.md), [`user-stories`](plugins/umbraco-devkit/skills/user-stories/SKILL.md) | Stories with acceptance criteria, turned into tests |
+| [`diagrams`](plugins/umbraco-devkit/skills/diagrams/SKILL.md) | Hand-placed SVG diagrams and charts, and text views such as file trees and table columns, for plans and PRs |
 | [`git-workflow`](plugins/umbraco-devkit/skills/git-workflow/SKILL.md) | Commits, branches, and asking before touching `main` |
 | [`plain-writing`](plugins/umbraco-devkit/skills/plain-writing/SKILL.md) | How every document a person reads gets written |
 

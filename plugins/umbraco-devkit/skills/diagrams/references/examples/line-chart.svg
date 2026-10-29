@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="506" viewBox="0 0 960 506">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="506"/>
+
+  <text class="heading" x="24" y="36">Outbox backlog during a 10-minute publish burst</text>
+  <rect class="band" x="90" y="100" width="500" height="310"/>
+  <text class="band-title" x="98" y="118">Publish burst, minutes 0 to 10</text>
+  <text class="axis-label" x="80" y="414" text-anchor="end">0</text>
+  <path class="gridline" d="M90,306.7 H840"/>
+  <text class="axis-label" x="80" y="310.7" text-anchor="end">1K</text>
+  <path class="gridline" d="M90,203.3 H840"/>
+  <text class="axis-label" x="80" y="207.3" text-anchor="end">2K</text>
+  <path class="gridline" d="M90,100 H840"/>
+  <text class="axis-label" x="80" y="104" text-anchor="end">3K</text>
+  <text class="axis-title" x="80" y="86">Pending rows</text>
+  <path class="axis" d="M90,410 H840"/>
+  <text class="axis-label" x="90" y="430" text-anchor="middle">0</text>
+  <text class="axis-label" x="140" y="430" text-anchor="middle">1</text>
+  <text class="axis-label" x="190" y="430" text-anchor="middle">2</text>
+  <text class="axis-label" x="240" y="430" text-anchor="middle">3</text>
+  <text class="axis-label" x="290" y="430" text-anchor="middle">4</text>
+  <text class="axis-label" x="340" y="430" text-anchor="middle">5</text>
+  <text class="axis-label" x="390" y="430" text-anchor="middle">6</text>
+  <text class="axis-label" x="440" y="430" text-anchor="middle">7</text>
+  <text class="axis-label" x="490" y="430" text-anchor="middle">8</text>
+  <text class="axis-label" x="540" y="430" text-anchor="middle">9</text>
+  <text class="axis-label" x="590" y="430" text-anchor="middle">10</text>
+  <text class="axis-label" x="640" y="430" text-anchor="middle">11</text>
+  <text class="axis-label" x="690" y="430" text-anchor="middle">12</text>
+  <text class="axis-label" x="740" y="430" text-anchor="middle">13</text>
+  <text class="axis-label" x="790" y="430" text-anchor="middle">14</text>
+  <text class="axis-label" x="840" y="430" text-anchor="middle">15</text>
+  <text class="axis-title" x="465" y="454" text-anchor="middle">Minutes since the burst started</text>
+  <path class="threshold" d="M90,306.7 H840"/>
+  <text class="threshold-label" x="850" y="310.7">alert threshold</text>
+  <polyline class="series muted" fill="none" points="90,410 140,381.1 190,352.1 240,323.2 290,294.3 340,265.3 390,236.4 440,207.5 490,178.5 540,149.6 590,120.7 640,139.3 690,157.9 740,176.5 790,195.1 840,213.7"/>
+  <polyline class="series" fill="none" points="90,410 140,384.2 190,363.5 240,352.1 290,348 340,352.1 390,360.4 440,370.7 490,381.1 540,391.4 590,400.7 640,410 690,410 740,410 790,410 840,410"/>
+  <circle class="point" cx="90" cy="410" r="4"/>
+  <circle class="point" cx="140" cy="384.2" r="4"/>
+  <circle class="point" cx="190" cy="363.5" r="4"/>
+  <circle class="point" cx="240" cy="352.1" r="4"/>
+  <circle class="point" cx="290" cy="348" r="4"/>
+  <circle class="point" cx="340" cy="352.1" r="4"/>
+  <circle class="point" cx="390" cy="360.4" r="4"/>
+  <circle class="point" cx="440" cy="370.7" r="4"/>
+  <circle class="point" cx="490" cy="381.1" r="4"/>
+  <circle class="point" cx="540" cy="391.4" r="4"/>
+  <circle class="point" cx="590" cy="400.7" r="4"/>
+  <circle class="point" cx="640" cy="410" r="4"/>
+  <circle class="point" cx="690" cy="410" r="4"/>
+  <circle class="point" cx="740" cy="410" r="4"/>
+  <circle class="point" cx="790" cy="410" r="4"/>
+  <circle class="point" cx="840" cy="410" r="4"/>
+  <text class="value-label" x="850" y="217.7">Before 1,900</text>
+  <text class="value-label" x="850" y="408">After 0</text>
+  <text class="footnote" x="24" y="490">Before: sequential sends (dashed). After: batched, 8 in parallel (solid, dot per minute).</text>
+</svg>

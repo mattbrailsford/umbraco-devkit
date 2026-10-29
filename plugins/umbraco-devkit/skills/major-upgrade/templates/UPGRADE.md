@@ -10,23 +10,37 @@ pre-release, the package's own version is a pre-release too.]
 
 What the target major changes that this project actually uses. One entry per change, each
 with its source (CMS PR, release tag, obsolete warning, or docs page), the CMS release it
-first appeared in, and where it hits the project.
+first appeared in, and where it hits the project. A list, not a table: sources and paths are
+too long for table cells on a phone.
 
-| Change | Source | Since | Where it hits us |
-|---|---|---|---|
-| [.NET 10 → .NET 11] | [`release-19.0.0-rc1:Directory.Build.props`] | [rc1] | [every project] |
-| [EF Core 10.0.10 → 11.0.2, to match the CMS] | [`release-19.0.0-rc1:Directory.Packages.props`] | [rc1] | [`Directory.Packages.props`] |
-| [`UmbracoApiController` removed] | [umbraco/Umbraco-CMS#12345] | [rc1] | [`src/Api/ProductsController.cs`] |
-| [`IFooService.Get` obsolete, use `GetAsync`] | [CS0618 on `release-19.0.0-rc1`] | [rc1] | [`src/Services/Bar.cs:40`] |
+- **[.NET 10 → .NET 11]** ([rc1])\
+  Source: [`release-19.0.0-rc1:Directory.Build.props`]\
+  Hits: [every project]
+- **[EF Core 10.0.10 → 11.0.2, to match the CMS]** ([rc1])\
+  Source: [`release-19.0.0-rc1:Directory.Packages.props`]\
+  Hits: [`Directory.Packages.props`]
+- **[`UmbracoApiController` removed]** ([rc1])\
+  Source: [umbraco/Umbraco-CMS#12345]\
+  Hits: [`src/Api/ProductsController.cs`]
+- **[`IFooService.Get` obsolete, use `GetAsync`]** ([rc1])\
+  Source: [CS0618 on `release-19.0.0-rc1`]\
+  Hits: [`src/Services/Bar.cs:40`]
 
 ## Third-party dependencies
 
 Shipped dependencies offered in inventory step 10, and what was picked. Forced bumps are
 marked; they go in the main bump task.
 
-| Dependency | Current | New | What breaks | Picked |
-|---|---|---|---|---|
-| [JsonSchema.Net.Generation] | [5.1.1] | [7.4.0] | [`JsonSchema` in `IStepType`; consumers see it] | [yes] |
+- **[JsonSchema.Net.Generation]** [5.1.1] → [7.4.0]. [Picked / Not picked].\
+  Breaks: [`JsonSchema` in `IStepType`; consumers see it]
+
+## Stopgaps
+
+`TODO(stopgap):` markers offered in inventory step 11, and what was picked.
+
+- **[`GetLevel` returns -1 for untracked stock]**. [Picked / Not picked].\
+  Where: [`src/Services/IStockService.cs:12`]\
+  Proper fix: [return `int?`]. [Breaking for consumers / Not breaking].
 
 ## Blockers
 
@@ -43,6 +57,7 @@ Each task ends in a green build.
 - [ ] [Bump `@umbraco-cms/backoffice`; fix the client]
 - [ ] [Bump <shipped dependency or family> to <version>, one task each]
 - [ ] [Remove this package's own code scheduled for removal in this version]
+- [ ] [Proper fix for <stopgap>, one task each]
 - [ ] [Update compatibility markers]
 
 ## Decisions
@@ -59,7 +74,7 @@ see. Or "None".]
 
 [Things found along the way that the upgrade didn't need: obsolete APIs whose replacement
 isn't in every CMS version the branch builds against, shipped dependency majors not picked,
-refactors, dropping an old major.]
+stopgaps not picked, refactors, dropping an old major.]
 
 ## Log
 

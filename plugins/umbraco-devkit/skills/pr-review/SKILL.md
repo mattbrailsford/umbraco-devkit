@@ -32,7 +32,7 @@ of checks that only exist *because* the diff came from outside.
   `feature-build`/`quick-fix` already do); merging, approving, or requesting changes without
   you confirming the drafted comment first; fixing the contribution yourself (if it's close
   but needs a small push, say so in the comment and let the contributor or a maintainer decide
-  who pushes it).
+  who pushes it); clicking through it on the demo site yourself (`pr-demo`).
 
 ## Argument
 

@@ -1,0 +1,279 @@
+
+:root { --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --border: #d1d9e0; --header: #f6f8fa; --link: #0969da; --hover: #f6f8fa; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0d1117; --fg: #f0f6fc; --muted: #9198a1; --border: #3d444d; --header: #151b23; --link: #4493f8; --hover: #151b23; }
+}
+body { margin: 0; background: var(--bg); color: var(--fg); font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+main { box-sizing: border-box; max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
+.layout { display: grid; grid-template-columns: 260px minmax(0, 1fr) 24px; gap: 24px; align-items: start; }
+aside { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
+aside summary { display: none; }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr) 24px; gap: 12px; }
+  aside { grid-column: 1 / -1; }
+  aside { position: static; max-height: none; }
+  aside summary { display: block; cursor: pointer; padding: 8px 0; font-weight: 600; color: var(--link); }
+}
+.files a.current { background: var(--hover); font-weight: 600; box-shadow: inset 1px 0 0 var(--link); }
+.crumbs { font-size: 20px; margin-bottom: 16px; word-break: break-all; }
+.crumbs a { color: var(--link); text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+.crumbs .sep { color: var(--muted); margin: 0 4px; }
+.crumbs .here { font-weight: 600; }
+.box { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; overflow: hidden; }
+.box-header { background: var(--header); border-bottom: 1px solid var(--border); padding: 10px 16px; font-weight: 600; }
+.files a { display: flex; gap: 10px; align-items: center; padding: 8px 16px; color: var(--fg); text-decoration: none; border-top: 1px solid var(--border); }
+.files a:first-child { border-top: 0; }
+.files a:hover { background: var(--hover); color: var(--link); }
+.icon { fill: var(--muted); flex: none; }
+.icon.dir { fill: #54aeff; }
+.markdown-body { box-sizing: border-box; padding: 32px; }
+@media (max-width: 767px) { .markdown-body { padding: 16px; } }
+/* A file that isn't a doc fills its box, as on GitHub: code edge to edge, an image or a note
+   centred, a mockup or PDF live in a frame. */
+#content.file-view { padding: 0; }
+#content.file-view .highlight, #content.file-view pre { margin: 0; border-radius: 0; background: transparent; }
+#content .media { text-align: center; padding: 16px; }
+#content .media img, #content .media video { max-width: 100%; }
+#content .frame { display: block; width: 100%; height: 600px; border: 0; border-radius: 0 0 5px 5px; }
+#content .frame.pdf { height: 80vh; }
+#raw { margin-left: 0; text-decoration: none; }
+/* Preview | Code, as GitHub's segmented switch. */
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.seg[hidden] { display: none; }
+.seg button { padding: 4px 12px; border: 0; background: var(--header); color: var(--fg); font: 500 13px/20px sans-serif; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-pressed="true"] { background: var(--bg); font-weight: 600; }
+.cant-show { text-align: center; padding: 32px 16px; color: var(--muted); }
+.cant-show p { margin-bottom: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#status { position: fixed; top: 8px; right: 8px; padding: 4px 10px; border-radius: 6px; font-size: 12px; display: none; }
+#status.error { display: block; background: #d1242f; color: #fff; }
+#status.busy { display: block; background: #0969da; color: #fff; }
+:root { --pending: #0969da; --pending-bg: #ddf4ff; --done: #1a7f37; --accent-bg: #ddf4ff; --deferred: #8250df; --waiting: #bc4c00; }
+@media (prefers-color-scheme: dark) { :root { --pending: #4493f8; --pending-bg: #388bfd26; --done: #3fb950; --accent-bg: #388bfd1a; --deferred: #ab7df8; --waiting: #f0883e; } }
+.box-header { display: flex; justify-content: space-between; }
+#doc { overflow: visible; }
+#doc .box-header { border-radius: 6px 6px 0 0; align-items: center; min-height: 26px; }  /* as tall as its buttons, so it never jumps */
+#doc #content { border-radius: 0 0 5px 5px; }  /* the box doesn't clip (threads reach out of it), so its body rounds its own corners */
+
+.box-header .count { font-weight: 400; color: var(--muted); }
+.files .dot { min-width: 18px; padding: 0 6px; border-radius: 10px; background: var(--link); color: #fff; font-size: 12px; text-align: center; }
+/* Hover a block to get a comment button in the gutter, as on a PR's lines. */
+#content [data-block] { position: relative; }
+#content math-renderer[data-block] { display: block; }
+#content markdown-accessiblity-table { display: block; position: relative; }
+#row-add { position: absolute; z-index: 4; }
+#content tr.thread-row > td { padding: 8px; background: var(--bg); }
+#content .row-thread { position: absolute; left: 9px; right: 0; margin: 0; z-index: 2; }
+#content .hot { background: var(--accent-bg); border-radius: 4px; cursor: text; }  /* text can be picked out to comment on */
+/* Images, diagrams and maths can't be picked out, only clicked to comment on. */
+#content .hot img, #content .hot svg, #content .hot[data-source], #content .hot [data-source], #content .hot[data-tex], #content .hot [data-tex],
+#content .hot mjx-container { cursor: pointer; }
+#content .thread { cursor: auto; }
+.add-btn { position: absolute; left: -30px; top: 0; width: 24px; height: 24px; border-radius: 6px; border: 0; background: var(--link); color: #fff; cursor: pointer; display: none; padding: 0; }
+.add-btn svg { display: block; margin: auto; }
+#content .hot > .add-btn { display: block; }
+/* Picking out words offers a small comment button above them, like a tooltip. */
+#sel-btn { position: absolute; display: none; z-index: 5; padding: 6px; border: 0; border-radius: 6px; background: #25292e; color: #fff;
+           box-shadow: 0 4px 12px rgba(0,0,0,.25); cursor: pointer; line-height: 0; transform: translateX(-50%); }
+#sel-btn::after { content: ""; position: absolute; left: 50%; bottom: -5px; margin-left: -5px; border: 5px solid transparent; border-bottom: 0; border-top-color: #25292e; }
+#sel-btn:hover { background: var(--link); }
+#sel-btn:hover::after { border-top-color: var(--link); }
+@media (prefers-color-scheme: dark) { #sel-btn { background: #3d444d; } #sel-btn::after { border-top-color: #3d444d; } }
+.thread { border: 1px solid var(--border); border-radius: 8px; margin: 8px 0 16px; background: var(--bg); font-size: 14px; line-height: 1.5; overflow: hidden; }
+.thread.draft { border-color: var(--pending); }
+.thread .msg { display: flex; gap: 10px; padding: 12px 14px; }
+.thread .msg + .msg { border-top: 1px solid var(--border); }
+.thread .msg.claude { background: var(--header); }
+.avatar { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 600 11px/1 sans-serif; color: #fff; background: #6e7781; overflow: hidden; }
+.avatar img { width: 100%; height: 100%; }
+.avatar.claude { background: #d97757; }
+.msg-main { min-width: 0; flex: 1; }
+.msg-head { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.msg-head b { font-weight: 600; }
+.msg-head .when { color: var(--muted); font-size: 12px; }
+.msg-head .state { margin-left: auto; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+.state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.state.draft { color: var(--pending); }
+.state.sent, .state.working { color: var(--muted); }
+.state.replied { color: var(--waiting); }
+.state.deferred { color: var(--deferred); }
+.state.working::before { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+.state.resolved { color: var(--done); }
+.msg-body { margin-top: 2px; overflow-wrap: anywhere; }
+#content .msg-body > :first-child { margin-top: 0; }
+#content .msg-body > :last-child { margin-bottom: 0; }
+#content .msg-body p, #content .msg-body ul, #content .msg-body ol, #content .msg-body pre { margin: 0 0 8px; }
+#content .msg-body pre { padding: 8px 12px; }
+.thread.draft:not(.editing) .msg.pending .msg-body { cursor: text; border-radius: 4px; margin-left: -4px; padding: 0 4px; }
+.thread.draft:not(.editing) .msg.pending .msg-body:hover { background: var(--pending-bg); }
+.reply-box { border-top: 1px solid var(--border); padding: 8px 14px 8px 48px; }
+.thread-actions { padding: 0 14px 10px 48px; }
+.thread-actions:first-of-type, .msg + .thread-actions { border-top: 1px solid var(--border); padding-top: 10px; }
+.thread-actions .btn { margin-left: 0; }
+.reply-box textarea { width: 100%; box-sizing: border-box; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; resize: none; }
+.reply-box.active textarea { min-height: 64px; }
+.reply-actions { display: none; text-align: right; margin-top: 6px; }
+.reply-box.active .reply-actions { display: block; }
+.msg-was { margin: 4px 0 2px; padding-left: 8px; border-left: 1px solid var(--border); color: var(--muted); font-size: 13px;
+           white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.msg-was.open { white-space: normal; }
+.msg-was s { text-decoration-color: color-mix(in srgb, var(--muted) 70%, transparent); }
+.msg-quote { margin: 4px 0 2px; padding-left: 8px; border-left: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+.btn.danger { margin-left: 0; color: #d1242f; }
+.btn.danger:hover { background: #d1242f; border-color: #d1242f; color: #fff; }
+.msg-head { align-items: center; }
+.state-icon { margin-left: auto; display: inline-flex; padding: 4px; }
+.state-icon.draft { color: var(--pending); }
+.state-icon.sent { color: var(--muted); }
+.state-icon.working { color: var(--link); }
+.state-icon.working svg { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.state-icon.replied { color: var(--waiting); }
+.state-icon.addressed, .state-icon.resolved { color: var(--done); }
+.state-icon.deferred { color: var(--deferred); }
+@media (prefers-reduced-motion: reduce) { .state-icon.working svg { animation: none; } }
+.thread .summary { display: none; padding: 8px 14px; color: var(--muted); font-size: 13px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.thread .summary:hover { color: var(--fg); }
+.thread .summary .tick { color: var(--done); font-weight: 600; margin-right: 4px; }
+.thread.resolved { display: none; }
+.thread.resolved.open { display: block; }
+.resolved-pin { position: absolute; top: 2px; height: 20px; min-width: 20px; padding: 0 4px; border: 0; border-radius: 10px; background: none; color: var(--done); opacity: .75; font: 600 11px/20px sans-serif; cursor: pointer; display: flex; align-items: center; gap: 2px; }
+.resolved-pin:hover, .resolved-pin.on { opacity: 1; background: var(--hover); box-shadow: 0 0 0 1px var(--border); }
+.resolved-pin svg { fill: currentColor; }
+.thread.outdated .msg:first-child .msg-quote::before { content: "No longer in the doc · "; font-weight: 600; }
+.thread.line-removed .msg:first-child .msg-quote::before { content: "Line removed · "; font-weight: 600; }
+.state.addressed { color: var(--done); }
+#content .orphans { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); }
+#content .orphans h4 { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
+mark.cmark { background: var(--pending-bg); color: inherit; border-bottom: 2px solid var(--pending); padding: 0 1px; }
+.comment-form { padding: 12px 14px; display: flex; gap: 10px; }
+.md-input { position: relative; }
+.md-input textarea { position: relative; z-index: 1; background: transparent !important; color: transparent !important; caret-color: var(--fg); line-height: 1.5; }
+.md-input textarea::placeholder { color: var(--muted); }
+.md-input textarea::selection { color: transparent; background: color-mix(in srgb, var(--link) 30%, transparent); }
+.md-layer { position: absolute; inset: 0; box-sizing: border-box; border-style: solid; border-color: transparent; overflow: hidden;
+            white-space: pre-wrap; overflow-wrap: break-word; color: var(--fg); background: var(--bg); border-radius: 6px; pointer-events: none; }
+.md-layer .hm, .md-layer .hf { color: var(--muted); }
+.md-layer .hb { color: var(--fg); }
+.md-layer .hc { color: var(--deferred); }
+.md-layer .hl { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+.md-layer .hh, .md-layer .hh .hb { color: var(--link); }
+.md-layer .hs { background: color-mix(in srgb, #3fb950 15%, transparent); }
+.form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+.btn.suggest { margin-left: 0; }
+.suggestion { margin: 6px 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.suggestion .sg-head { padding: 4px 10px; background: var(--header); border-bottom: 1px solid var(--border); color: var(--muted); font-family: -apple-system, sans-serif; }
+.suggestion .sg-del, .suggestion .sg-add { padding: 2px 10px; white-space: pre-wrap; }
+.suggestion .sg-del { background: color-mix(in srgb, #f85149 15%, transparent); }
+.suggestion .sg-add { background: color-mix(in srgb, #3fb950 15%, transparent); }
+.thread.editing .msg-body textarea, .comment-form textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; resize: none; }
+.btn { padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--header); color: var(--fg); font: 500 13px/20px sans-serif; cursor: pointer; margin-left: 6px; }
+.btn.primary { background: #1f883d; border-color: #1f883d; color: #fff; }
+#sendbar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: none; align-items: center; gap: 12px; padding: 10px 12px 10px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 10; }
+#sendbar.show { display: flex; }
+.thread.flash { animation: flash 1s ease-out; }
+#content .just-resolved { animation: resolved-glow 1.8s ease-out; border-radius: 4px; }
+@keyframes resolved-glow { 0%, 25% { background: color-mix(in srgb, var(--done) 30%, transparent); } 100% { background: transparent; } }
+.resolved-pin.pop { animation: pop .7s cubic-bezier(.3, 1.6, .5, 1); opacity: 1; }
+@keyframes pop { 0% { transform: scale(.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes flash { from { box-shadow: 0 0 0 4px var(--link); } }
+kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--header); font: 11px/16px ui-monospace, monospace; color: var(--fg); }
+/* The open-comments count opens a list of them, like GitHub's select menus. */
+#count { position: relative; display: flex; align-items: center; }
+.cm-btn { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; margin: -2px -6px; border: 0; border-radius: 6px; background: none; color: var(--muted); font: inherit; cursor: pointer; }
+.cm-btn:hover, .cm-btn[aria-expanded="true"] { color: var(--fg); background: var(--hover); }
+.cm-btn .caret { fill: currentColor; }
+.cm-menu { position: absolute; right: -6px; top: calc(100% + 8px); z-index: 6; width: 340px; border: 1px solid var(--border); border-radius: 8px;
+           background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); overflow: hidden; font-size: 14px; }
+.cm-menu[hidden] { display: none; }
+.cm-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; border-bottom: 1px solid var(--border); font-weight: 600; color: var(--fg); font-size: 13px; }
+.cm-order { display: flex; padding: 4px; border: 0; border-radius: 6px; background: none; color: var(--muted); cursor: pointer; }
+.cm-order:hover { color: var(--fg); background: var(--hover); }
+.cm-list { max-height: min(420px, 60vh); overflow-y: auto; }
+.cm-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 16px; color: var(--fg); text-decoration: none; border-top: 1px solid var(--border); }
+.cm-item:first-child { border-top: 0; }
+.cm-item:hover { background: var(--hover); }
+.cm-item:hover .cm-text { color: var(--link); }
+.cm-item .icon { margin-top: 2px; }
+.cm-item .icon.addressed { fill: var(--done); }
+.cm-item .icon.replied { fill: var(--waiting); }
+.cm-item .icon.draft { fill: var(--pending); }
+.cm-item .icon.sent, .cm-item .icon.working { fill: var(--muted); }
+.cm-item .icon.deferred { fill: var(--deferred); }
+.cm-body { min-width: 0; flex: 1; }
+.cm-text { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cm-meta { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#content { transition: opacity .15s; }
+#content.leaving { opacity: .35; }
+#keys-hint { position: fixed; left: 16px; bottom: 16px; border: 0; background: none; color: var(--muted); font-size: 12px; cursor: pointer; }
+#keys-hint:hover { color: var(--fg); }
+#keys { position: fixed; left: 16px; bottom: 44px; display: none; width: 360px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 11; font-size: 13px; }
+#keys.show { display: block; }
+#keys .keys-head { font-weight: 600; margin-bottom: 8px; }
+#keys dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; }
+#keys dt { white-space: nowrap; }
+#keys dt.keys-group { grid-column: 1 / -1; margin-top: 6px; font-weight: 600; }
+#keys dd { margin: 0; color: var(--muted); }
+#sendbar .note { color: var(--muted); }
+
+/* Changes since the reader last sent comments, like GitHub's rich diff: added blocks tinted green,
+   removed ones tinted red and struck through. */
+:root { --changed: #9a6700; --added: #1a7f37; --added-bg: #dafbe1; --added-word: #aceebb; --removed: #d1242f; --removed-bg: #ffebe9; --removed-word: #ffcecb; }
+@media (prefers-color-scheme: dark) { :root { --changed: #d29922; --added: #3fb950; --added-bg: #2ea04326; --added-word: #2ea04366; --removed: #f85149; --removed-bg: #f851491a; --removed-word: #f8514966; } }
+.doc-title { display: flex; align-items: center; gap: 12px; min-width: 0; }
+#changes { display: inline-flex; align-items: stretch; height: 24px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+           font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+#changes:empty { display: none; }
+#changes button { display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; border: 0; background: var(--bg); color: var(--muted); font: inherit; cursor: pointer; }
+#changes button:hover { background: var(--hover); color: var(--fg); }
+#changes .ch-eye { padding: 0 6px; border-left: 1px solid var(--border); }
+#changes .add { color: var(--added); }
+#changes .del { color: var(--removed); }
+#changes .squares { display: inline-flex; gap: 1px; }
+#changes .squares i { width: 7px; height: 7px; border-radius: 1px; background: var(--removed); }
+#changes .squares i.add { background: var(--added); }
+#changes:has(.ch-eye[aria-pressed="true"]) .ch-step { opacity: .55; }
+#content.hide-changes .diff-removed, #content.hide-changes .diff-removed-wrap { display: none; }
+#content.hide-changes .diff-added { background: none; box-shadow: none; }
+#content .diff-added, #content .diff-removed { border-radius: 4px; box-shadow: 0 0 0 4px var(--tint); background: var(--tint); }
+#content .diff-added { --tint: var(--added-bg); }
+#content .diff-removed { --tint: var(--removed-bg); color: var(--muted); text-decoration: line-through; text-decoration-color: var(--removed); }
+#content tr.diff-added, #content tr.diff-removed { box-shadow: none; }
+#content .diff-removed.edited { color: inherit; text-decoration: none; }
+#content mark.ch-old { background: var(--removed-word); color: inherit; border-radius: 3px; }
+#content mark.ch-new { background: var(--added-word); color: inherit; border-radius: 3px; }
+#content code:has(> mark.ch-old) { background: var(--removed-word); }  /* the chip's own grey would hide it */
+#content code:has(> mark.ch-new) { background: var(--added-word); }
+#content.hide-changes mark.ch-new { background: none; }
+#content del.ch-del { color: var(--muted); text-decoration-color: var(--removed); background: var(--removed-word); border-radius: 3px; }
+#content.hide-changes del.ch-del { display: none; }
+#content.hide-changes code:has(> mark.ch-new) { background: var(--bgColor-neutral-muted); }
+#content .diff-removed-wrap { margin-bottom: 16px; }
+#content table.diff-removed-wrap { display: table; }
+
+/* The end of a file row: changed, then open comments. */
+.files .marks { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.files .changed { width: 8px; height: 8px; border-radius: 50%; background: var(--changed); flex: none; }
+
+/* Approval as a badge on the doc's icon, cut out from the row behind it. */
+.files .fileicon { position: relative; display: flex; flex: none; }
+.files .badge { position: absolute; right: -4px; bottom: -3px; display: flex; align-items: center; justify-content: center;
+                width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; box-shadow: 0 0 0 2px var(--row-bg, var(--bg)); }
+.files .ap-needed .badge { border: 1.5px solid var(--muted); background: var(--bg); }
+.files .ap-changed .badge { border: 1.5px solid var(--changed); background: var(--bg); }
+.files .ap-approved .badge { background: var(--done); color: #fff; }
+.files a.current, .files a:hover { --row-bg: var(--hover); }
+
+/* Approval in the doc's header, like GitHub's Approve. */
+.doc-actions { display: flex; align-items: center; gap: 16px; }
+#approval:empty { display: none; }
+.ap-btn { height: 26px; padding: 0 12px; border: 1px solid rgba(31,35,40,.15); border-radius: 6px; background: var(--done); color: #fff;
+          font: 500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; cursor: pointer; }
+.ap-btn:hover { filter: brightness(1.08); }
+.ap-btn.again { background: var(--changed); }
+.ap-btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+.ap-done { display: inline-flex; align-items: center; gap: 6px; color: var(--done); font-size: 13px; font-weight: 600; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }

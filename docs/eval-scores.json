@@ -175,8 +175,16 @@
     "without": 100,
     "withoutDate": "2026-10-17"
   },
+  "decision-review-beyond-spec": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "decision-review-unlogged-deviation": {
-    "date": "2026-10-16",
+    "date": "2026-10-23",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -214,6 +222,14 @@
     "with": 100,
     "without": 0,
     "withoutDate": "2026-10-16"
+  },
+  "dependencies-prerelease-feed": {
+    "date": "2026-10-29",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 60,
+    "withoutDate": "2026-10-29"
   },
   "dependencies-shipped-major-pr": {
     "date": "2026-10-16",
@@ -278,6 +294,30 @@
     "with": 67,
     "without": 0,
     "withoutDate": "2026-10-16"
+  },
+  "diagrams-architecture-flow": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 83,
+    "without": 0,
+    "withoutDate": "2026-10-26"
+  },
+  "diagrams-text-views-plan": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 89,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
+  "diagrams-update-keeps-layout": {
+    "date": "2026-10-23",
+    "runs": 1,
+    "skillLoaded": 1,
+    "with": 100,
+    "without": 100,
+    "withoutDate": "2026-10-23"
   },
   "docs-custom-webhook-event": {
     "date": "2026-10-17",
@@ -451,6 +491,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-build-open-comments": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
   "feature-build-rethink-after-three-rounds": {
     "date": "2026-10-20",
     "runs": 3,
@@ -483,6 +531,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-draws-diagrams": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-design-mockup-component-fidelity": {
     "date": "2026-10-20",
     "runs": 3,
@@ -508,12 +564,20 @@
     "withoutDate": null
   },
   "feature-design-nfr-targets": {
-    "date": "2026-10-18",
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 83,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-design-open-comments": {
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
-    "without": null,
-    "withoutDate": null
+    "without": 50,
+    "withoutDate": "2026-10-26"
   },
   "feature-design-stops-without-brief": {
     "date": "2026-10-16",
@@ -524,10 +588,10 @@
     "withoutDate": null
   },
   "feature-explore-writes-brief": {
-    "date": "2026-10-16",
+    "date": "2026-10-27",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 100,
+    "with": 97,
     "without": null,
     "withoutDate": null
   },
@@ -538,6 +602,38 @@
     "with": 100,
     "without": null,
     "withoutDate": null
+  },
+  "feature-plan-area-headings": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-plan-awaits-approval": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 67,
+    "without": 0,
+    "withoutDate": "2026-10-26"
+  },
+  "feature-plan-earlier-step-comment": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
+  "feature-plan-offers-preview": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 83,
+    "without": 33,
+    "withoutDate": "2026-10-26"
   },
   "feature-plan-stops-without-design": {
     "date": "2026-10-20",
@@ -795,13 +891,69 @@
     "without": 100,
     "withoutDate": "2026-10-16"
   },
-  "major-upgrade-version-mismatch": {
-    "date": "2026-10-16",
+  "major-upgrade-diffs-used-types": {
+    "date": "2026-10-29",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
     "without": null,
     "withoutDate": null
+  },
+  "major-upgrade-offers-stopgaps": {
+    "date": "2026-10-29",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-version-mismatch": {
+    "date": "2026-10-29",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "markdown-preview-comments-decision": {
+    "date": "2026-10-26",
+    "runs": 2,
+    "skillLoaded": 2,
+    "with": 100,
+    "without": 13,
+    "withoutDate": "2026-10-26"
+  },
+  "markdown-preview-comments-fix": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 17,
+    "withoutDate": "2026-10-26"
+  },
+  "markdown-preview-comments-unclear": {
+    "date": "2026-10-26",
+    "runs": 2,
+    "skillLoaded": 2,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
+  "markdown-preview-open-plan": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 0,
+    "withoutDate": "2026-10-26"
+  },
+  "markdown-preview-show-brief": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 0,
+    "withoutDate": "2026-10-26"
   },
   "marketplace-semver-no-ui": {
     "date": "2026-10-16",
@@ -911,6 +1063,22 @@
     "without": 0,
     "withoutDate": "2026-10-16"
   },
+  "plain-writing-draw-it": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 58,
+    "withoutDate": "2026-10-26"
+  },
+  "plain-writing-guesses-first": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
+  },
   "plain-writing-issue-reply": {
     "date": "2026-10-16",
     "runs": 3,
@@ -918,6 +1086,22 @@
     "with": 100,
     "without": 100,
     "withoutDate": "2026-10-16"
+  },
+  "plain-writing-narrow-tables": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 25,
+    "withoutDate": "2026-10-26"
+  },
+  "plain-writing-one-place": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 33,
+    "withoutDate": "2026-10-26"
   },
   "plain-writing-readme-config": {
     "date": "2026-10-16",
@@ -936,20 +1120,20 @@
     "withoutDate": "2026-10-16"
   },
   "plain-writing-skip-code-comment": {
-    "date": "2026-10-16",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-16"
+    "withoutDate": "2026-10-26"
   },
   "plain-writing-skip-commit-message": {
-    "date": "2026-10-16",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-16"
+    "withoutDate": "2026-10-26"
   },
   "plain-writing-spec-screen": {
     "date": "2026-10-16",
@@ -967,8 +1151,64 @@
     "without": 80,
     "withoutDate": "2026-10-16"
   },
+  "pr-demo-main-checkout-data": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-demo-realistic-content": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-demo-uses-demo-setup": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-describe-decision-callout": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-describe-diagram-readability": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 80,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-describe-gif": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-describe-plan-diagrams": {
+    "date": "2026-10-26",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "pr-describe-plan-folder": {
-    "date": "2026-10-16",
+    "date": "2026-10-23",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -976,9 +1216,9 @@
     "withoutDate": null
   },
   "pr-describe-stacked-pr": {
-    "date": "2026-10-19",
-    "runs": 6,
-    "skillLoaded": 6,
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
     "with": 100,
     "without": 83,
     "withoutDate": "2026-10-19"
@@ -1031,6 +1271,22 @@
     "without": null,
     "withoutDate": null
   },
+  "quick-fix-root-cause": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "quick-fix-stopgap-marker": {
+    "date": "2026-10-23",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "review-backoffice-security-diff": {
     "date": "2026-10-16",
     "runs": 3,
@@ -1072,12 +1328,12 @@
     "withoutDate": "2026-10-16"
   },
   "reviewer-nfr-targets": {
-    "date": "2026-10-18",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-18"
+    "withoutDate": "2026-10-26"
   },
   "reviewer-preexisting-bug": {
     "date": "2026-10-20",
@@ -1412,12 +1668,12 @@
     "withoutDate": "2026-10-16"
   },
   "user-stories-merge-and-split": {
-    "date": "2026-10-16",
+    "date": "2026-10-26",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 100,
-    "without": 0,
-    "withoutDate": "2026-10-16"
+    "with": 67,
+    "without": 11,
+    "withoutDate": "2026-10-26"
   },
   "zz-net-smoke": {
     "date": "2026-10-16",

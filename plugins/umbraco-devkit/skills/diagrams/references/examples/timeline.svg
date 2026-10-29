@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="716" viewBox="0 0 960 716">
+  <style id="theme"><!-- Example: paste the diagram stylesheet here, wrapped in CDATA --></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="716"/>
+
+  <text class="heading" x="20" y="34">One failing delivery: retry timeline</text>
+  <text class="footnote" x="20" y="54">Wait after each failure grows 4x: 30 s, 2 min, 8 min, 32 min. Times are from publish (t = 0). Both axes are linear.</text>
+
+  <!-- Zoom panel: first 3 minutes, 280 px per minute -->
+  <rect class="zone" x="20" y="70" width="920" height="232" rx="10"/>
+  <text class="zone-title" x="36" y="90">First 3 minutes (280 px per min; shaded on the axis below)</text>
+
+  <g class="node">
+    <rect class="shape" x="30" y="104" width="150" height="44" rx="6"/>
+    <text class="title" x="105" y="122">Publish · t = 0</text>
+    <text class="sub" x="105" y="139">row created, Pending</text>
+  </g>
+  <g class="node fail">
+    <rect class="shape" x="80" y="158" width="150" height="44" rx="6"/>
+    <text class="title" x="155" y="176">Attempt 1 · 0:10</text>
+    <text class="sub" x="155" y="193">503, wait 30 s</text>
+  </g>
+  <g class="node fail">
+    <rect class="shape" x="190" y="104" width="150" height="44" rx="6"/>
+    <text class="title" x="265" y="122">Attempt 2 · 0:40</text>
+    <text class="sub" x="265" y="139">503, wait 2 min</text>
+  </g>
+  <g class="node fail">
+    <rect class="shape" x="732" y="104" width="150" height="44" rx="6"/>
+    <text class="title" x="807" y="122">Attempt 3 · 2:40</text>
+    <text class="sub" x="807" y="139">503, wait 8 min</text>
+  </g>
+
+  <!-- leaders -->
+  <path class="edge" d="M60,148 V223"/>
+  <path class="edge" d="M106.7,202 V223"/>
+  <path class="edge" d="M246.7,148 V223"/>
+  <path class="edge" d="M806.7,148 V223"/>
+
+  <path class="axis" d="M60,230 H900"/>
+  <path class="axis" d="M60,230 v5 M200,230 v5 M340,230 v5 M480,230 v5 M620,230 v5 M760,230 v5 M900,230 v5"/>
+  <text class="axis-label" x="60" y="250" text-anchor="middle">0</text>
+  <text class="axis-label" x="200" y="250" text-anchor="middle">0:30</text>
+  <text class="axis-label" x="340" y="250" text-anchor="middle">1:00</text>
+  <text class="axis-label" x="480" y="250" text-anchor="middle">1:30</text>
+  <text class="axis-label" x="620" y="250" text-anchor="middle">2:00</text>
+  <text class="axis-label" x="760" y="250" text-anchor="middle">2:30</text>
+  <text class="axis-label" x="900" y="250" text-anchor="middle">3:00</text>
+
+  <g class="node"><circle class="shape" cx="60" cy="230" r="7"/></g>
+  <g class="node fail"><circle class="shape" cx="106.7" cy="230" r="7"/></g>
+  <g class="node fail"><circle class="shape" cx="246.7" cy="230" r="7"/></g>
+  <g class="node fail"><circle class="shape" cx="806.7" cy="230" r="7"/></g>
+
+  <path class="edge" d="M60,268 H806.7 M60,262 v12 M106.7,262 v12 M246.7,262 v12 M806.7,262 v12"/>
+  <text class="edge-label center" x="83" y="288">next run</text>
+  <text class="edge-label center" x="176.7" y="288">30 s</text>
+  <text class="edge-label center" x="526.7" y="288">2 min</text>
+
+  <!-- Main panel: whole life, 15 px per minute -->
+  <rect class="zone" x="20" y="320" width="920" height="334" rx="10"/>
+  <text class="zone-title" x="36" y="340">Whole life of the row (15 px per min)</text>
+
+  <g class="node fail">
+    <rect class="shape" x="145" y="352" width="150" height="44" rx="6"/>
+    <text class="title" x="220" y="370">Attempt 4 · 10:40</text>
+    <text class="sub" x="220" y="387">503, wait 32 min</text>
+  </g>
+  <g class="node fail">
+    <rect class="shape" x="596" y="352" width="154" height="44" rx="6"/>
+    <text class="title" x="673" y="370">Attempt 5 · 42:40</text>
+    <text class="sub" x="673" y="387">503, 5th failure</text>
+  </g>
+  <g class="node new">
+    <rect class="shape" x="770" y="352" width="160" height="44" rx="6"/>
+    <text class="title" x="850" y="370">Resend · ~50 min</text>
+    <text class="sub" x="850" y="387">editor, dashboard</text>
+  </g>
+  <g class="node ok">
+    <rect class="shape" x="770" y="416" width="160" height="44" rx="6"/>
+    <text class="title" x="850" y="434">Attempt 6 · next run</text>
+    <text class="sub" x="850" y="451">2xx</text>
+  </g>
+  <path class="edge new" d="M850,396 V416" marker-end="url(#arrow-new)"/>
+
+  <path class="edge" d="M220,396 V493"/>
+  <path class="edge" d="M700,396 V493"/>
+  <path class="edge" d="M812.5,460 V493"/>
+
+  <rect class="band" x="60" y="480" width="45" height="20"/>
+  <text class="axis-label" x="111" y="494">zoomed above</text>
+
+  <path class="axis" d="M60,500 H930"/>
+  <path class="axis" d="M60,500 v5 M135,500 v5 M210,500 v5 M285,500 v5 M360,500 v5 M435,500 v5 M510,500 v5 M585,500 v5 M660,500 v5 M735,500 v5 M810,500 v5 M885,500 v5"/>
+  <text class="axis-label" x="60" y="520" text-anchor="middle">0</text>
+  <text class="axis-label" x="135" y="520" text-anchor="middle">5</text>
+  <text class="axis-label" x="210" y="520" text-anchor="middle">10</text>
+  <text class="axis-label" x="285" y="520" text-anchor="middle">15</text>
+  <text class="axis-label" x="360" y="520" text-anchor="middle">20</text>
+  <text class="axis-label" x="435" y="520" text-anchor="middle">25</text>
+  <text class="axis-label" x="510" y="520" text-anchor="middle">30</text>
+  <text class="axis-label" x="585" y="520" text-anchor="middle">35</text>
+  <text class="axis-label" x="660" y="520" text-anchor="middle">40</text>
+  <text class="axis-label" x="735" y="520" text-anchor="middle">45</text>
+  <text class="axis-label" x="810" y="520" text-anchor="middle">50</text>
+  <text class="axis-label" x="885" y="520" text-anchor="middle">55 min</text>
+
+  <g class="node fail"><circle class="shape" cx="220" cy="500" r="7"/></g>
+  <g class="node fail"><circle class="shape" cx="700" cy="500" r="7"/></g>
+  <g class="node ok"><circle class="shape" cx="812.5" cy="500" r="7"/></g>
+
+  <path class="edge" d="M100,540 H700 M100,534 v12 M220,534 v12 M700,534 v12"/>
+  <text class="edge-label center" x="160" y="558">8 min</text>
+  <text class="edge-label center" x="460" y="558">32 min</text>
+
+  <!-- Status lane -->
+  <text class="axis-title" x="60" y="588">Row status (WebhookOutbox.Status)</text>
+  <g class="node">
+    <rect class="shape" x="60" y="598" width="640" height="44" rx="4"/>
+    <text class="title" x="380" y="616">Pending</text>
+    <text class="sub" x="380" y="633">attempts 0 to 4, waits for NextAttemptAt</text>
+  </g>
+  <g class="node fail">
+    <rect class="shape" x="700" y="598" width="110" height="44" rx="4"/>
+    <text class="title" x="755" y="616" font-size="12">DeadLettered</text>
+    <text class="sub" x="755" y="633">+ WebhookLog</text>
+  </g>
+  <g class="node ok">
+    <rect class="shape" x="812.5" y="598" width="117.5" height="44" rx="4"/>
+    <text class="title" x="871" y="616">Delivered</text>
+    <text class="sub" x="871" y="633">+ WebhookLog</text>
+  </g>
+
+  <text class="footnote" x="20" y="680">An attempt runs on the first 10 s job run after NextAttemptAt, so real times can be up to 10 s later.</text>
+  <text class="footnote" x="20" y="698">Resend sets Pending, attempts = 0; the row is Pending for about 10 s before attempt 6 (the thin gap in the status lane).</text>
+</svg>

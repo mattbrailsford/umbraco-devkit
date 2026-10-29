@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600">
+  <style id="theme"><![CDATA[
+/* Replace this line with the whole of diagram.css (the project's copy if it has one). */
+]]></style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+    <marker id="arrow-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path class="arrowhead new" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="600"/>
+
+  <!-- A box: a g.node holding a .shape, a .title, and an optional .sub -->
+  <g class="node">
+    <rect class="shape" x="40" y="40" width="240" height="52" rx="6"/>
+    <text class="title" x="160" y="62">ContentPublishedNotification</text>
+    <text class="sub" x="160" y="80">handler, any server</text>
+  </g>
+
+  <!-- A connector: a .edge path with an arrowhead, and its label kept off the line -->
+  <path class="edge" d="M160,92 V140" marker-end="url(#arrow)"/>
+  <text class="edge-label" x="168" y="120">insert row</text>
+</svg>

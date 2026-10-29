@@ -46,8 +46,8 @@ than going fully freeform.
   visitor?), the why-now, in/out scope, what success looks like, unknowns, light research
   where a fact is needed to proceed.
 - OUT: architecture, CMS extension points to use, data model, package structure — all
-  `feature-design`. If a solution idea comes up mid-interview, park it under a `> ASSUMPTION:`
-  or note in the non-goals section rather than deciding it here.
+  `feature-design`. If a solution idea comes up mid-interview, pass it on in the hand-off
+  for `feature-design` rather than deciding it here or writing it into the brief.
 
 ## Preflight
 
@@ -81,6 +81,8 @@ than going fully freeform.
    extending an existing Umbraco extension point (property editor, dashboard, content app,
    notification handler) or introducing a new one — that framing shapes several of the
    interview questions below.
+5. Check `BRIEF.md` and `README.md` for open review comments, following `markdown-preview`'s
+   "Open comments on your files". Each one is input to this run.
 
 ## Assume, then show
 
@@ -89,9 +91,9 @@ Not every topic below needs a spoken question. Before asking:
 1. **Check whether it's a checkable fact** — does Umbraco core already expose this, how does
    a sibling package handle it — and go find it instead of asking.
 2. **If it's a judgment call and a wrong guess is cheap to correct once it's written down**
-   (a scope boundary, a success metric, the smallest shippable slice), write it as
-   `> ASSUMPTION: ...` under the relevant section of `BRIEF.md` instead of asking, and let the
-   human correct it when they read the brief. Correcting a written-down guess costs them a
+   (a scope boundary, a success metric, the smallest shippable slice), write it as a guess in
+   the list at the top of `BRIEF.md` instead of asking, and let the human correct it when they
+   read the brief. Correcting a written-down guess costs them a
    sentence; answering a live question costs them a context switch.
 3. **Ask directly only when a wrong guess is expensive to undo here** — which CMS version(s)
    to support (locks in a compatibility promise you'd have to walk back), or anything only the
@@ -130,47 +132,75 @@ and the CMS itself with `umbraco-cms-source`.
 Write every file this phase produces following `plain-writing`: a person reads it before the
 next phase runs, so it should be quick to read without leaving anything out.
 
-**First run only (`README.md` doesn't exist yet):** create it as the folder's index:
+**First run only (`README.md` doesn't exist yet):** create it as the folder's index. Rows
+run in read order:
 
 ```md
 # <Feature name>
 
-Read these in order:
+| File | In one line | Needs you |
+|---|---|---|
+| ⬜ [Brief](./BRIEF.md) | | |
+| ⬜ [Architecture](./ARCHITECTURE.md) | | |
+| ⬜ [Spec](./SPEC.md) | | |
+| ⬜ [Stories](./STORIES.md) | | |
+| ⬜ [Plan](./PLAN.md) | | |
 
-1. [ ] [BRIEF.md](./BRIEF.md) — <pending>
-2. [ ] [ARCHITECTURE.md](./ARCHITECTURE.md) — <pending>
-3. [ ] [SPEC.md](./SPEC.md) — <pending>
-4. [ ] [STORIES.md](./STORIES.md) — <pending>
-5. [ ] [PLAN.md](./PLAN.md) — <pending>
-6. [ ] [BUILD-LOG.md](./BUILD-LOG.md) — <pending>
-
-See [DECISION-LOG.md](./DECISION-LOG.md) for why things changed along the way.
+What was built: [BUILD-LOG.md](./BUILD-LOG.md) · Why things changed: [DECISION-LOG.md](./DECISION-LOG.md)
 ```
 
-Every run (first run or a refinement), update only the `BRIEF.md` line: check its box and
-replace `<pending>` with one plain-English line summarizing the current problem. Never touch
-any other phase's line.
+Every run (first run or a refinement), update only the Brief row: `⬜` becomes `✅`, "In one
+line" gets the problem in a few words (the table has to fit a phone), and "Needs you" gets
+the count from the top of `BRIEF.md` ("2 guesses", "1 open question"), or stays empty. Never
+touch another phase's row. A folder from before this layout has a numbered list instead:
+update your own line in it the same way, and don't convert the list.
 
 When revising an existing `BRIEF.md`, rewrite the affected sections to reflect the current
 understanding only — don't leave the old answer in place alongside a note about what
 changed. This file is a snapshot of the current problem definition, not a changelog. Past
 answers and why they changed belong in `DECISION-LOG.md`.
 
-Write/update `BRIEF.md`:
+Write/update `BRIEF.md`. It says why and for whom, never how: anything about extension
+points, tables or screens belongs to `feature-design`.
 
 ```md
-# Brief
+# Brief: <feature name>
+
+<One or two sentences: the problem, and who has it.>
 
 Source idea: `<idea-name>`, <which part of it this feature builds>
 <only when the feature started from an idea. Leave the line out otherwise.>
 
-## Problem
-<what, who, why-now, success criteria, constraints, riskiest unknowns. A guess you're showing
-the human is `> ASSUMPTION: ...`. Something genuinely unresolved that needs a real decision,
-not just a correction, is `TODO`.>
+> [!IMPORTANT]
+> **<N> guesses need your OK.**
+>
+> 1. <the guess>\
+>    *If not:* <what changes>
+> 2. **Open:** <a question with no sensible guess>\
+>    *Options:* <the choices>
 
-## Non-goals
-<explicitly out of scope, and why>
+<Per `plain-writing`'s "What needs the reader goes first". Count questions in the heading
+too ("2 guesses and 1 open question need you"). Leave the callout out when there's nothing.
+Every guess goes here, whichever section it's about: a guessed measure under "Done when", a
+constraint under "Must work with", an item under "Not doing", a likely answer to an
+"Unknowns" line. The section below may point to
+it ("see guess 3") but never states a guess of its own, marked "(guess)" or "assumed" or not.
+One callout item per guess, never one item saying a whole section is guessed.>
+
+## Why now
+- <one reason per line, as given. No reason given is an open question in the callout.>
+
+## Done when
+- <what the user can observably do, ideally measurable>
+
+## Must work with
+- <CMS versions, databases, hosting such as load balancing, locked dependencies, as given.>
+
+## Unknowns
+- <what might not work as hoped, for `feature-design` to check first. Leave out if none.>
+
+## Not doing
+- **<item>.** <why. Only what the human ruled out. A cut you'd add yourself is a guess.>
 
 ## Repro
 <only for a reported bug: the steps or test that show it. The finished work must make it
@@ -185,5 +215,7 @@ just this one), write it to `.claude/memory/` instead (type: `decision`) — see
 
 ## Hand off
 
-State what's still `TODO`, then: `Suggested next: feature-design — or re-run feature-explore
+State any open question still in the brief. Offer to open `BRIEF.md` in a live preview,
+following `markdown-preview`'s "Offering a preview". With a preview open, ask for approval on
+`BRIEF.md`, following its "Approval". Then: `Suggested next: feature-design — or re-run feature-explore
 to close open questions first.`

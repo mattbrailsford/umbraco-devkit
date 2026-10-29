@@ -5,6 +5,32 @@ Omit the whole line if there's nothing to link.}
 
 {Stacked PR only — omit entirely otherwise: `Stacked on #<parent-pr-number>.`}
 
+{Your call: every Your call item from decision-review, in its order. Omit the whole callout
+when there are none. Every line starts with `> `.}
+
+> [!IMPORTANT]
+> **{N} choices were made without you.** Please check each one.
+>
+> **1. {Design / Behavior / UI}: {topic in a few words}**\
+> Plan said: {what the plan said, or "Nothing about <topic>"}\
+> Built: [{what was built}](https://github.com/{owner}/{repo}/blob/{sha}/{path}#L{line})
+>
+> - **A. {recommended option}** *(recommended)*
+> - B. {other option}
+>
+> | Mockup | Built |
+> |---|---|
+> | ![Mockup](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/mockups/{screen}.png?raw=true) | ![Built](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}.png?raw=true) |
+
+{Mockup | Built: only under a UI item whose screen has a mockup, straight after its options.}
+
+{Must fix: only when decision-review returned Must fix items. Omit it otherwise.}
+
+> [!CAUTION]
+> **Must fix before merge**
+>
+> - [{what's broken}](https://github.com/{owner}/{repo}/blob/{sha}/{path}#L{line})
+
 ## Why the change
 
 {Exactly one sentence: the problem this PR solves and what becomes possible once it ships.}
@@ -27,15 +53,21 @@ Omit the whole line if there's nothing to link.}
 |---|---|
 | ![{Screen name} before](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}-before.png?raw=true) | ![{Screen name} after](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}.png?raw=true) |
 
-## Special things to note
+{Interaction GIF, only if one is in screenshots/: a one-line caption, then the GIF, under its
+screen's screenshot.}
 
-- {Every `Needs a decision`/`Consider reverting` item decision-review flagged, first, each
-  prefixed with its verdict — e.g. "**Needs a decision:** {what and why}" or "**Consider
-  reverting:** {what and why}". A plain `Looks fine as documented` item gets no prefix.}
-- {Then one bullet each for migrations, compatibility constraints, or other deliberate
-  omissions decision-review wouldn't have caught — no fixed count, but each one must be
-  something the reviewer genuinely needs before approving, not a restatement of the change
-  outline below. Write "- None." if there's nothing at all.}
+{What the GIF shows, e.g. "Dragging a gallery item to the top."}
+
+![{Screen name}: {action}](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/screenshots/{screen}-{action}.gif?raw=true)
+
+## How to verify
+
+1. {A step on the demo site, and what the reviewer should see.}
+
+## Good to know
+
+{Only for a planned migration, a compatibility limit or a deliberate omission the reviewer
+needs before approving. One line each. Omit the section when there's nothing.}
 
 ## Change outline
 
@@ -44,13 +76,30 @@ the implementation. Only include a view that actually changed — omit the rest.
 however tells the story best; a data structure or contract usually comes before the code that
 uses it.}
 
+{Plan-folder diagrams first, if diagrams/ has any that match what was built: a one-line
+caption, then the image by full URL.}
+
+{What the diagram shows, e.g. "How a delivery moves from publish to delivered."}
+
+![{Diagram name}](https://github.com/{owner}/{repo}/blob/{sha}/{plan-folder}/diagrams/{name}.svg?raw=true)
+
 {...one short sentence introducing the view...}
 
 ```diff
 {the diagram}
 ```
 
-{Repeat for each relevant view — file tree, component tree, call chain, table/contract diff,
-manifest registration diff, backoffice registrations table, settings, API endpoints,
-pseudocode. Prefer `diff` for a change to an existing shape; show
-the whole block only when most of it is new or a diff would hide ownership or order.}
+{Repeat for each relevant view — file tree, component tree, call chain, database table,
+contract, manifest registration diff, backoffice registrations table, settings, API
+endpoints, pseudocode. Prefer `diff` for a change to an existing shape; show the whole block
+only when most of it is new or a diff would hide ownership or order. Tables never go in a
+`diff` block; they mark changes in a `Change` column.}
+
+{Checked and fine: decision-review's Checked and fine items, folded. Omit when there are none.}
+
+<details>
+<summary>Checked and fine ({count})</summary>
+
+- {One line per item.}
+
+</details>

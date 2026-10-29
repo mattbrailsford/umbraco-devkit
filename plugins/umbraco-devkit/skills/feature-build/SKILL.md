@@ -49,7 +49,10 @@ doesn't replace the whole-feature review (see "Finish"); the two catch different
    2. Confirm you're on the project's trunk branch (see `CLAUDE.md`'s Feature workflow
       section). If not, stop and ask. Don't guess which branch to fork from.
    3. **Ask the user to confirm before running any of this.** It commits to trunk, which the
-      "always ask before touching main" rule covers however small the change.
+      "always ask before touching main" rule covers however small the change. First check the
+      plan folder for unresolved review comments (`markdown-preview`'s "Comments before moving
+      on"), and put any that are waiting on the user into this same question, so a plan with
+      an open question isn't committed and built without them knowing.
    4. Commit the plan folder as-is, on trunk, with any changed project starters: `git add
       <plan-folder> docs/mockups/starters && git commit -m "docs: add plan folder for
       <feature-slug>"`.
@@ -137,7 +140,27 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    `screenshots/<screen>.png` in the plan folder (this loop's folder; `mockups/` belongs to
    `feature-design`). Link it from the task's `BUILD-LOG.md` entry with the click path to reach it
    ("Settings › Webhooks › any webhook › Deliveries tab"), so `pr-describe` can tell
-   reviewers where to find it.
+   reviewers where to find it. When the task changed only one part of the screen and that part
+   makes sense on its own, crop the saved screenshot to it, so the reviewer sees just what
+   needs approving. Keep the full screen when where it sits matters: a new menu or list item,
+   a layout change, or anything placed against other parts of the screen. A crop keeps at
+   least 24px of the surrounding screen on every side, so no edge, border or popover touches
+   the image edge, and its `-before.png` is cropped to the same area so the pair lines up.
+
+   **If the task adds an interaction a still can't show** (a drag and drop, an animation, a
+   screen that changes live, a short flow across screens), also record it as
+   `screenshots/<screen>-<action>.gif`, following `references/recording-gifs.md`, and link it
+   from the same `BUILD-LOG.md` entry. A GIF sits beside the screenshot, never in place of
+   it. A screen that only sits there gets no GIF. Record a `<screen>-<action>-before.gif`
+   only when the old behavior is what the task fixes.
+
+   **If the smoke needed content the demo site didn't have** (a document type using the new
+   property editor, tagged posts for a new dashboard to list, a setting turned on), make it
+   realistic, as `pr-demo`'s step 6 describes. Record it in the task's `BUILD-LOG.md` entry as
+   a short "Demo setup" note, next to the click path, so someone trying the branch can see the
+   same thing. If the project has a committed seed (a seed script, uSync files), have the
+   builder add the content there as part of this task instead, and the note says "in the
+   seed".
 
 5. **Commit.** On `PASS` + smoke green, have the builder commit *only this task's changes*
    with a message naming the task, following the project's commit conventions (see
@@ -146,8 +169,8 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
 
 6. **Check the box.** Edit `PLAN.md`: `- [ ]` → `- [x]` for the completed task, and add a
    one-line entry to `BUILD-LOG.md` (commit SHA, what was verified). Commit that change, plus
-   any `screenshots/` this task saved, with the task commit or immediately after.
-   `pr-describe` links screenshots by commit, so an uncommitted one is a broken image in the
+   any `screenshots/` (images and GIFs) this task saved, with the task commit or immediately
+   after. `pr-describe` links screenshots by commit, so an uncommitted one is a broken image in the
    PR. If the builder's report named "any decision the plan left implicit that you had to
    make" (step 6 of its workflow), such as an assumption, spec deviation, or workaround,
    append a dated one-line entry to `DECISION-LOG.md` too. Otherwise it is lost when the task
@@ -176,9 +199,7 @@ subagent in whole-feature mode with the full branch diff (`git diff <base>...HEA
   `feature-design`.
 
 A human still reviews the PR; this pass means they aren't the first to see cross-task
-problems. Update the `BUILD-LOG.md` line in `README.md`: check its box and replace
-`<pending>` with one plain-English line (task count, commit count). Never touch another
-phase's line. If this feature is (or completes) a standalone package ready to publish, invoke
+problems. If this feature is (or completes) a standalone package ready to publish, invoke
 `umbraco-marketplace` before tagging a release; it's not part of this loop.
 
 **Open the PR: invoke `pr-describe` directly (via the Skill tool). Don't write the body
@@ -193,11 +214,15 @@ If this feature built inside a worktree, don't remove it here. That's post-merge
 project's `WorktreeRemove` hook, or `git worktree remove`). Archiving the plan folder is
 post-merge too: `feature-close`, once the PR is merged.
 
+To click through the finished feature on the demo site before merging, use `pr-demo`.
+
 ## Rules
 
 - Sequential, dependency-ordered. This is a pipeline, not a parallel team.
 - Builder owns code; reviewer owns the gate; this loop owns sequencing, `PLAN.md` checkbox
-  state, `BUILD-LOG.md`, `screenshots/`, and its own line in `README.md`. Never collapse these roles.
+  state, `BUILD-LOG.md`, and `screenshots/`. Never collapse these roles. It never edits
+  `README.md`: the index links `BUILD-LOG.md` from its footer, and `PLAN.md`'s checkboxes show
+  progress.
 - The orchestrator may investigate directly: read docs, call an endpoint, read logs. The
   moment a fix touches code, dispatch a builder, even for one line you already know. This is
   easiest to break mid-debugging against a live system, where each small tweak feels too
