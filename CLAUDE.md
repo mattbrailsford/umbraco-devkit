@@ -232,8 +232,8 @@ preserve when editing these skills:
   reads one as input; no skill ever edits an idea file.
 
   Outside the plan folders, `major-upgrade` owns `docs/upgrades/v<major>.md`, one file per
-  CMS major upgrade, ticking its own checklist and archiving it to `docs/archive/upgrades/`
-  once shipped.
+  CMS major upgrade, and its screenshots in `docs/upgrades/v<major>-screens/`, ticking its
+  own checklist and archiving both to `docs/archive/upgrades/` once shipped.
 - **The only four cross-owner writes:**
   1. Every phase may append to `DECISION-LOG.md`.
   2. Every phase updates its own single row in `README.md` when it finishes, never

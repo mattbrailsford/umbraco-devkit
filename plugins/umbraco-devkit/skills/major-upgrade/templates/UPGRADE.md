@@ -42,6 +42,17 @@ marked; they go in the main bump task.
   Where: [`src/Services/IStockService.cs:12`]\
   Proper fix: [return `int?`]. [Breaking for consumers / Not breaking].
 
+## Screen comparison
+
+Every screen the package adds, listed in inventory step 6, compared before and after the
+upgrade smoke (screenshots in `v[major]-screens/`). Difference is one of: none, CMS change,
+already there, upgrade regression.
+
+- **[Stock dashboard]**. [Content › Stock].\
+  Difference: [CMS change: new UUI table styling]
+- **[Stock level property editor]**. [Content › any product › Stock level].\
+  Difference: [Upgrade regression: value not shown]. Task: [Fix stock level editor]
+
 ## Blockers
 
 [Dependencies with no release for the target major yet, or "None".]
@@ -70,11 +81,21 @@ Each task ends in a green build.
 package's own deprecated code removed in this version, and dependency bumps consumers will
 see. Or "None".]
 
+## Backport candidates
+
+Bugs fixed on this branch that the upgrade didn't cause, each in its own commit.
+
+- **[Low-stock filter resets after save]** ([commit SHA]).\
+  On the current major: [yes / no / unchecked]. Class: [safe for a patch release / would
+  break a patch release: reason / only exists because of the new CMS].\
+  Target line: [support/18.x]. [Picked / Not picked / Ported in #123]
+
 ## Follow-ups
 
 [Things found along the way that the upgrade didn't need: obsolete APIs whose replacement
 isn't in every CMS version the branch builds against, shipped dependency majors not picked,
-stopgaps not picked, refactors, dropping an old major.]
+stopgaps not picked, faults already on the current major that this branch didn't fix,
+refactors, dropping an old major.]
 
 ## Log
 

@@ -162,6 +162,11 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
      `tsc --noEmit`. Every error is an entry: removed exports, moved import paths, changed
      contexts and manifest `meta` types. Do this first. A bundler build doesn't type-check,
      and a deprecation lint can't see an API that's already gone.
+   - **Screen list.** List every screen the package adds, from its manifests: sections,
+     workspaces and their views, dashboards, property editors, modals. Give each a short
+     name and the click path to reach it. The smoke and the screen comparison ("Finish")
+     both work from this list, so write it into the upgrade file's "Screen comparison"
+     table now.
    - **Import paths.** Compare the `exports` map in `package.json` at the two tags for every
      `@umbraco-cms/backoffice/*` path the project imports. A path that's gone or moved is a
      task.
@@ -350,6 +355,11 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   read the browser console: an error from the package fails the smoke, and an "Umbraco
   Backoffice:" deprecation warning with the package as its origin becomes a task. Run the
   scenario for each subsystem the package extends (inventory step 2) once its task lands.
+- **Bugs the upgrade didn't cause.** A bug found during a task may also exist on the current
+  major. Fix it in its own commit, apart from the upgrade work, so it can be ported later.
+  Check whether it shows on the current major (the demo site on the current major, or the
+  code at the current line's head) and add it to the file's "Backport candidates": yes, no,
+  or unchecked.
 - **Tick and log.** Tick the task in the upgrade file and add its commit SHA to the "Log"
   section. A decision the inventory left open goes in the file's "Decisions" section.
 
@@ -364,12 +374,41 @@ When every task is ticked:
    shows, including data a CMS migration rewrote (inventory step 2). If the project has no demo site, say this was skipped in the PR.
    On a refresh, the smoke still starts from the previous major, not from the last RC: that's
    the upgrade users will run.
-3. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file
+3. **Compare every screen across the majors.** On that same site, screenshot every screen in
+   the "Screen comparison" table at 1440×900 before moving it
+   (`docs/upgrades/v<major>-screens/<screen>-v<current>.png`), and again after
+   (`<screen>-v<target>.png`). Same data, same click path, so any difference comes from the
+   upgrade. Past a handful of screens, script it: one browser script that walks the table's
+   click paths, run once per major. Before comparing, hide values that change between runs
+   (dates and times, generated numbers and ids, relative times like "2 minutes ago"), so
+   only real differences show. Sort each difference into one of three:
+   - **CMS change**: the CMS itself changed the look (a new UUI, a new layout). Note it; no
+     task.
+   - **Already there**: the same fault shows on the current major. Not an upgrade task. If
+     the branch fixed it, it's a backport candidate; if not, a follow-up.
+   - **Upgrade regression**: only on the target major. Add a task and build it, then take
+     the target screenshot again.
+
+   Record the result per screen in the table. Commit only the pairs that show a difference,
+   with the upgrade file; screens that match stay out of the repo, and the table says they
+   matched. If the project has no demo site, say this was skipped in the PR.
+4. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file
    as the design. Fix and re-review until `PASS`, as in `feature-build`'s "Finish".
-4. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
+5. **Propose backports.** List every "Backport candidates" entry that shows on the current
+   major, and sort each one:
+   - **Safe for a patch release**: no public API change, no migration, no new dependency,
+     and no behavior a consumer could rely on. Name the line it would go to, from
+     `git-workflow`'s "Umbraco packages and version tracking" and the project's `CLAUDE.md`.
+   - **Would break a patch release**: give the reason, for the user to decide.
+   - **Exists only because of the new CMS**: never ported.
+
+   Show the list and ask which to port. Mark the picks in the file. Port nothing yet:
+   `change-backport` only ports a merged change.
+6. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
    uses its plain style, since there's no plan folder. Point it at the upgrade file, so the PR
-   lists the breaking changes handled, any breaking changes for consumers, and the
-   follow-ups.
+   lists the breaking changes handled, any breaking changes for consumers, the follow-ups,
+   and the picked backports. Under "How to verify", it shows each changed screen's two
+   screenshots side by side, with the click path, and says how each difference was sorted.
 
 ## Archive
 
@@ -381,7 +420,9 @@ line's trunk, follow `feature-close`'s
 - The status line goes at the top of the upgrade file itself, under its title.
 - Step 2 reads the file's "Decisions" section. Open "Follow-ups" have no lasting home here:
   list them for the user to turn into tracker issues before the move.
-- The file moves to `<archive-path>/upgrades/v<major>.md`.
+- Picked backports not ported yet: list them for the user too, with their commits.
+- The file moves to `<archive-path>/upgrades/v<major>.md`, and its screenshots folder with
+  it.
 
 ## Rules
 
@@ -396,5 +437,7 @@ line's trunk, follow `feature-close`'s
 ## Hand off
 
 Report: current to target version (and the CMS release, if it's a pre-release), tasks done
-and commits, what the upgrade smoke showed, third-party dependencies moved, any breaking
-changes for consumers, and the follow-ups. Then the PR link.
+and commits, what the upgrade smoke and the screen comparison showed, third-party
+dependencies moved, any breaking changes for consumers, the follow-ups, and the backport
+candidates with the ones picked. Then the PR link. Once the PR merges, offer
+`change-backport` for each picked backport, one run per change and target line.
