@@ -83,7 +83,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`umbraco-backoffice-testing`](#umbraco-backoffice-testing) | knowledge | Proven | +67 | 2 | 0 | 2/2 | 0 |
 | [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 1 |
 | [`umbraco-cms-source`](#umbraco-cms-source) | knowledge | Proven | +33 | 3 | 1 | 1/5 | 0 |
-| [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 8 | 0 | 4/5 | 0 |
+| [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 9 | 0 | 4/5 | 0 |
 | [`umbraco-docs`](#umbraco-docs) | knowledge | Gain, skill rarely loads | +23 | 2 | 0 | 1/5 | 0 |
 | [`umbraco-dotnet-testing`](#umbraco-dotnet-testing) | knowledge | Proven | +78 | 3 | 0 | 3/3 | 0 |
 | [`umbraco-env-sync`](#umbraco-env-sync) | knowledge | Proven | +27 | 7 | 0 | 7/31 | 1 |
@@ -451,6 +451,7 @@ shown to follow (kept so a regression shows up), or a case not yet mapped.
 |---|---|---|---|---|---|---|
 | Which CMS version: the floor | `dependencies-add-ef-core` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Which CMS version: the floor | `dependencies-ef-core-floor` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
+| Which CMS version: the floor | `dependencies-prerelease-feed` | 100 | 60 | 40 | 3/3 | 2026-10-29 |
 | Locked to the CMS | `dependencies-add-ef-core` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Locked to the CMS | `dependencies-bare-lit-import` | 100 | 22 | 78 | 3/4 | 2026-10-17 |
 | Locked to the CMS | `dependencies-locked-security-alert` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
