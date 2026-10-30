@@ -820,7 +820,7 @@
     "withoutDate": null
   },
   "major-upgrade-proposes-backports": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,

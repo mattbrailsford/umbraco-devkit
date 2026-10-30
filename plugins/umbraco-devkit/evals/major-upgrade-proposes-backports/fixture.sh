@@ -29,8 +29,6 @@ export class StockDashboardElement extends UmbLitElement {
 
   async #save(key: string, level: number) {
     await this.#repository.saveLevel(key, level);
-    this._lowOnly = false;
-    await this.#load();
   }
 
   render() {
@@ -41,6 +39,14 @@ TS
 git add -A && git commit -qm "feat: stock dashboard"
 git branch support/16.x
 git branch support/15.x
+python3 - src/Umbraco.Community.StockLevels/Client/src/stock-dashboard.element.ts <<'PY'
+import sys
+p = sys.argv[1]
+old = "    await this.#repository.saveLevel(key, level);\n"
+s = open(p).read().replace(old, old + "    this._lowOnly = false;\n    await this.#load();\n")
+open(p, "w").write(s)
+PY
+git commit -qam "feat: reload the stock list after saving a level"
 git switch -qc v18/dev
 git commit -qam "chore: bump Umbraco to 18.0.0" --allow-empty
 python3 - src/Umbraco.Community.StockLevels/Client/src/stock-dashboard.element.ts <<'PY'
