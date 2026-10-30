@@ -356,11 +356,12 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   read the browser console: an error from the package fails the smoke, and an "Umbraco
   Backoffice:" deprecation warning with the package as its origin becomes a task. Run the
   scenario for each subsystem the package extends (inventory step 2) once its task lands.
-- **Bugs the upgrade didn't cause.** A bug found during a task may also exist on the current
-  major. Fix it in its own commit, apart from the upgrade work, so it can be ported later.
-  Check whether it shows on the current major (the demo site on the current major, or the
-  code at the current line's head) and add it to the file's "Backport candidates": yes, no,
-  or unchecked.
+- **Bugs the upgrade didn't cause.** A bug found during a task may also exist on older
+  lines. Fix it in its own commit, apart from the upgrade work, so it can be ported later.
+  Check whether it shows on every line the project still supports, not only the current
+  major. The lines and their phases come from `change-backport`'s "Find the lines". For each
+  line, use its demo site or the code at its head. Add the bug to the file's "Backport
+  candidates" with yes, no, or unchecked for each line.
 - **Tick and log.** Tick the task in the upgrade file and add its commit SHA to the "Log"
   section. A decision the inventory left open goes in the file's "Decisions" section.
 
@@ -395,16 +396,18 @@ When every task is ticked:
    matched. If the project has no demo site, say this was skipped in the PR.
 4. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file
    as the design. Fix and re-review until `PASS`, as in `feature-build`'s "Finish".
-5. **Propose backports.** List every "Backport candidates" entry that shows on the current
-   major, and sort each one:
+5. **Propose backports.** List every "Backport candidates" entry that shows on at least one
+   supported line, and sort each one:
    - **Safe for a patch release**: no public API change, no migration, no new dependency,
-     and no behavior a consumer could rely on. Name the line it would go to, from
-     `git-workflow`'s "Umbraco packages and version tracking" and the project's `CLAUDE.md`.
+     and no behavior a consumer could rely on. Name every line it would go to: each line
+     where it shows and whose phase takes it (`change-backport`'s "Check the target should
+     get it"). Also name each line where it shows but the phase rules it out, with the
+     phase, so the user can overrule it.
    - **Would break a patch release**: give the reason, for the user to decide.
    - **Exists only because of the new CMS**: never ported.
 
-   Show the list and ask which to port. Mark the picks in the file. Port nothing yet:
-   `change-backport` only ports a merged change.
+   Show the list and ask which to port, per change and line. Mark the picks in the file.
+   Port nothing yet: `change-backport` only ports a merged change.
 6. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
    uses its plain style, since there's no plan folder. Point it at the upgrade file, so the PR
    lists the breaking changes handled, any breaking changes for consumers, the follow-ups,

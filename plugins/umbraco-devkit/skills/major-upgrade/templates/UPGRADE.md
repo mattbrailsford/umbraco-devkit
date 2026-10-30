@@ -86,9 +86,11 @@ see. Or "None".]
 Bugs fixed on this branch that the upgrade didn't cause, each in its own commit.
 
 - **[Low-stock filter resets after save]** ([commit SHA]).\
-  On the current major: [yes / no / unchecked]. Class: [safe for a patch release / would
-  break a patch release: reason / only exists because of the new CMS].\
-  Target line: [support/18.x]. [Picked / Not picked / Ported in #123]
+  Class: [safe for a patch release / would break a patch release: reason / only exists
+  because of the new CMS].
+  - [`v18/dev`] ([active]): shows [yes / no / unchecked]. [Picked / Not picked / Ported in
+    #123]
+  - [`v17/dev`] ([security fixes only]): shows [yes]. [Ruled out by phase / Picked anyway]
 
 ## Follow-ups
 

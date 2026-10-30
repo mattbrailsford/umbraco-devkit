@@ -1,5 +1,5 @@
 ---
-description: At Finish, major-upgrade proposes porting a bug fix the upgrade didn't cause to the current major's line and asks which to port, without porting anything itself.
+description: At Finish, major-upgrade checks each supported line for a bug fix the upgrade didn't cause, proposes porting it only to the lines it shows on, and asks which to port, without porting anything itself.
 tags: [major-upgrade, workflow]
 max_turns: 40
 timeout_seconds: 900

@@ -298,7 +298,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 |---|---|---|
 | `major-upgrade-diffs-used-types` | 100 | 2026-10-29 |
 | `major-upgrade-offers-stopgaps` | 100 | 2026-10-29 |
-| `major-upgrade-proposes-backports` | 100 | 2026-10-29 |
+| `major-upgrade-proposes-backports` | 100 | 2026-10-30 |
 | `major-upgrade-version-mismatch` | 100 | 2026-10-29 |
 
 ### `markdown-preview`
