@@ -14,8 +14,10 @@ version follows the CMS major.
 
 - `v18/dev`: Umbraco 18, being built. Active.
 - `support/17.x`: Umbraco 17. Active: fixes and small features, released as patches.
+- `support/16.x`: Umbraco 16. Active: fixes only, released as patches.
+- `support/15.x`: Umbraco 15. End of life: no more releases.
 
-Fixes for 17.x go on a `hotfix/<slug>` branch off `support/17.x`.
+Fixes for an older line go on a `hotfix/<slug>` branch off that line.
 MD
 cat > src/Umbraco.Community.StockLevels/Client/src/stock-dashboard.element.ts <<'TS'
 import { html, customElement, state } from '@umbraco-cms/backoffice/external/lit';
@@ -37,6 +39,8 @@ export class StockDashboardElement extends UmbLitElement {
 }
 TS
 git add -A && git commit -qm "feat: stock dashboard"
+git branch support/16.x
+git branch support/15.x
 git switch -qc v18/dev
 git commit -qam "chore: bump Umbraco to 18.0.0" --allow-empty
 python3 - src/Umbraco.Community.StockLevels/Client/src/stock-dashboard.element.ts <<'PY'
