@@ -34,7 +34,10 @@ Branch naming: `<type>/<short-slug>` — `feat/order-fulfillment`, `fix/missing-
 than one Umbraco CMS major at once? Prefix with the version instead** (see "Umbraco packages
 and version tracking" below) — `v17/fix/missing-null-check`, `v18/feat/order-fulfillment`.
 Prefer the `vN/` **prefix** form for a new project (it sorts and greps better than a suffix);
-match whatever a project with existing history already does otherwise. Keep branches
+match whatever a project with existing history already does otherwise. `feat/`, `feature/`,
+and `topic/` are the same kind of prefix (some projects put all work, fixes included, under
+`vN/topic/`). Read a branch under any of them the same way, for example when matching it to a
+plan folder. Keep branches
 short-lived; open the PR early, even as draft.
 
 ## Branch/worktree per feature (the feature-* pipeline)

@@ -67,8 +67,8 @@ it decides the real branch name and location. Otherwise `feature-build` falls ba
 `git checkout -b <feature-slug>` off trunk.]
 
 **Finding the current feature's plan folder:** once a branch/worktree exists for a feature,
-its name already carries the feature slug — strip a leading `vN/` and/or type prefix such as `feat/`
-or `feature/` (see `git-workflow`'s branch-naming rules) and check whether the plan-folder path above has a
+its name already carries the feature slug — strip a leading `vN/` and/or type prefix such as `feat/`,
+`feature/`, or `topic/` (see `git-workflow`'s branch-naming rules) and check whether the plan-folder path above has a
 matching `<remainder>/` folder. If it does, that's the current feature — no need to ask which
 one. Only fall back to asking when nothing matches (still on trunk, or the branch/worktree name
 doesn't correspond to any plan folder).
