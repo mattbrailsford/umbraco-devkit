@@ -255,6 +255,14 @@
     "without": 100,
     "withoutDate": "2026-10-16"
   },
+  "dependencies-upgrade-target-peers": {
+    "date": "2026-11-03",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 56,
+    "withoutDate": "2026-11-03"
+  },
   "dependencies-write-dependabot": {
     "date": "2026-10-16",
     "runs": 3,
