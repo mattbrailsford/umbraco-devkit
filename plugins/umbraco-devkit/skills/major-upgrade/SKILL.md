@@ -43,7 +43,9 @@ major's final release and its PR is merged, the upgrade is done: skip to "Archiv
 
 1. **Current version.** Read the exact `Umbraco.Cms.*` version from `Directory.Packages.props`
    or the `.csproj` files, and `@umbraco-cms/backoffice` from the frontend's `package.json`
-   if there is one. If projects disagree, stop and report it; fix that first.
+   if there is one. If projects disagree, stop and report it; fix that first. Other Umbraco
+   products and the build tools have floors of their own: sort them with
+   `umbraco-dependencies`' "More than one floor" and "Locked to the CMS".
 2. **Which CMS release to target.** List the target major's releases:
    ```bash
    gh release list -R umbraco/Umbraco-CMS --limit 100 | grep "release-<major>\."
@@ -157,8 +159,7 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
    as a task (`umbraco-backoffice-conventions` has the client build rules):
    - **Type-check against the target.** In a scratch copy of the client, set
      `@umbraco-cms/backoffice` to the exact target version. Set its peers to the target's
-     first (`npm view @umbraco-cms/backoffice@<target> peerDependencies`; the project's
-     lockfile still has the current major's), or the install fails with `ERESOLVE`. Then run
+     first (`umbraco-dependencies`' "npm"), or the install fails with `ERESOLVE`. Then run
      `tsc --noEmit`. Every error is an entry: removed exports, moved import paths, changed
      contexts and manifest `meta` types. Do this first. A bundler build doesn't type-check,
      and a deprecation lint can't see an API that's already gone.

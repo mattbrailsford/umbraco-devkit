@@ -186,6 +186,14 @@ list, whether or not the client lists any of them. Leave out the build-time entr
 jq -r '.packages["node_modules/@umbraco-cms/backoffice"].peerDependencies // {} | keys[]' package-lock.json
 ```
 
+When the floor moves, the lockfile still holds the old release's peers. Read the new
+release's instead, and raise any dependency they rule out, build-time ones included
+(a newer `@hey-api/openapi-ts` floor, say), or the install fails with `ERESOLVE`:
+
+```bash
+npm view @umbraco-cms/backoffice@<new floor> peerDependencies
+```
+
 For the version a library is at in a given CMS release, read the CMS repo's lockfiles at
 the floor's tag. Most are in `src/Umbraco.Web.UI.Client/package-lock.json`, but some sit
 under a nested package's `node_modules`, so take the entry nearest the package that uses it.
