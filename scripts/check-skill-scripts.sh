@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Runs the tests for the scripts that ship inside skills (today, markdown-preview's preview
-# server). They're the one part of the plugin that's code rather than Markdown, so a broken
-# change wouldn't show up anywhere else until someone opened a preview.
+# server and feature-design's mockup style check). They're the one part of the plugin that's
+# code rather than Markdown, so a broken change wouldn't show up anywhere else until someone
+# ran it.
 #
 # Standard-library Python only, and no network: GitHub's renderer is swapped for a stand-in.
 # The page-script parse check runs only when node is installed.

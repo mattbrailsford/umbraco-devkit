@@ -563,6 +563,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-mockup-no-invented-styling": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 40,
+    "withoutDate": "2026-11-05"
+  },
   "feature-design-mockups-email-without-ui": {
     "date": "2026-10-20",
     "runs": 3,
