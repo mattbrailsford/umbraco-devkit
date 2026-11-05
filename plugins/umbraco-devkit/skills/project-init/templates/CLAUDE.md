@@ -9,6 +9,19 @@ README/package description.]
 - Database: [SQL Server only | SQL Server + SQLite — TODO if undetected]
 - Frontend: [Lit + UUI, if a Client/ folder exists — otherwise omit this section]
 
+## Docs
+
+Where this package's user docs live. `major-upgrade` reads this to find the pages an upgrade
+makes wrong.
+
+- Where: [`docs/` in this repo | the `<owner>/<repo>` repo | <URL> | none]
+- Versions: [one copy for every version | one copy per CMS major, at `<pattern>`]
+- Submitting: [in the same PR as the code | <how, e.g. a PR to the docs repo>]
+
+[Only if the docs are in a separate repo:] A local clone's path is personal, so it goes in
+`CLAUDE.local.md` as `Package docs source: <path>`, with an optional
+`Submit docs with: <skill or command>` line for whoever uses one.
+
 ## Build & test
 
 ```bash

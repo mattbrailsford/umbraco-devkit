@@ -13,7 +13,8 @@ change):
   `feature-build`, for a feature or any fix too big to do in one go.
 - **`quick-fix`**, for a small fix of one concern. It hands over to the pipeline if the fix
   turns out bigger.
-- **`major-upgrade`**, for moving to a new Umbraco major.
+- **`major-upgrade`**, for moving to a new Umbraco major. It also lists the pages and
+  screenshots of the package's own docs that the upgrade makes wrong.
 - **`change-backport`**, for landing a change that's already merged on one version line on
   another.
 

@@ -22,8 +22,8 @@ the same builder → reviewer → smoke → commit gate as `feature-build`.
 - IN: one hop to one target major. Dependency and target framework bumps, code changes forced
   by breaking changes or removed obsolete APIs, the frontend's `@umbraco-cms/backoffice`
   bump, the package's own compatibility markers (version, dependency range, marketplace
-  metadata, README), and the third-party dependency bumps the user picks from inventory step
-  10.
+  metadata, README), the package's own docs (inventory step 12), and the third-party
+  dependency bumps the user picks from inventory step 10.
 - OUT: new features, refactors the upgrade doesn't force, and dropping an older major the
   project still supports. Note those in the upgrade file's "Follow-ups" section instead.
   Releasing the upgraded package is also out of scope; it's the project's own release steps.
@@ -279,6 +279,21 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
     finishes. Each picked one is a task, and its proper fix removes the marker comments. Record
     the breaking ones in "Breaking changes for consumers". What isn't picked goes in
     "Follow-ups".
+12. **The package's own docs.** Read where they live from the "Docs" section of `CLAUDE.md`.
+    If there's none, look for a `docs/` folder or a docs link in the README, `.csproj` or
+    `umbraco-marketplace.json`, ask the user once with what you found, and add the section
+    in the shape of `project-init`'s `templates/CLAUDE.md`. Docs in a separate repo are
+    read from the local clone named in `CLAUDE.local.md`.
+
+    Search the docs for every inventory entry: the API, setting, alias, route or screen it
+    touches, and the supported CMS and .NET versions. When the docs keep one copy per major,
+    search the target major's copy. If that copy doesn't exist yet, say so in "Docs", add a
+    follow-up to search it once it does, and don't create it: a new major's copy belongs to
+    whoever owns the docs. With no clone of a separate docs repo, list what changed for
+    readers (old and new) instead of pages.
+
+    List each page to change in the file's "Docs" section, with the inventory entry behind
+    it. Screenshots to retake come later, from the screen comparison (Finish step 3).
 
 Write the file from `templates/UPGRADE.md`. Order the tasks so **every task ends in a green
 build**:
@@ -306,6 +321,8 @@ build**:
 8. Proper fixes for the stopgaps the user picked (step 11), one task each, after the
    removals, so a failure points at the fix.
 9. Compatibility markers.
+10. Docs, when they're in this repo: one task, last, so the pages describe the finished
+    code. Docs kept elsewhere get no task; the "Docs" section is their hand-off.
 
 Show the user the inventory and the ordered tasks, and wait for a yes before building. This
 is the plan; a missing item here becomes a broken site later.
@@ -319,7 +336,8 @@ the last RC to the final release). Work on the same branch.
    the same, say so and stop.
 2. Run inventory steps 1 to 6 again, with the file's current release as the "current" tag
    and the newer release as the target. Breaking changes between two RCs are rarer but do
-   happen. Re-read the docs page too: it's often only finished for the final release.
+   happen. Re-read the docs page too: it's often only finished for the final release. Then
+   run step 12 for the new entries.
 3. Append what you find to the file as new entries and new unchecked tasks. Don't rewrite or
    untick earlier ones; they're done and committed. Update the file's target release line.
    Don't re-offer step 10's or step 11's list, but re-check each unchecked step 10 task against the newer
@@ -392,6 +410,10 @@ When every task is ticked:
    - **Upgrade regression**: only on the target major. Add a task and build it, then take
      the target screenshot again.
 
+   Each screen sorted as a CMS change or an upgrade regression may also appear in the
+   package's own docs. Add each docs screenshot of it to the "Docs" section's screenshots to
+   retake, with the screen's click path. Retake them now if the docs are in this repo.
+
    Record the result per screen in the table. Commit only the pairs that show a difference,
    with the upgrade file; screens that match stay out of the repo, and the table says they
    matched. If the project has no demo site, say this was skipped in the PR.
@@ -411,9 +433,10 @@ When every task is ticked:
    Port nothing yet: `change-backport` only ports a merged change.
 6. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
    uses its plain style, since there's no plan folder. Point it at the upgrade file, so the PR
-   lists the breaking changes handled, any breaking changes for consumers, the follow-ups,
-   and the picked backports. Under "How to verify", it shows each changed screen's two
-   screenshots side by side, with the click path, and says how each difference was sorted.
+   lists the breaking changes handled, any breaking changes for consumers, the docs changed
+   or handed off, the follow-ups, and the picked backports. Under "How to verify", it shows
+   each changed screen's two screenshots side by side, with the click path, and says how
+   each difference was sorted.
 
 ## Archive
 
@@ -443,6 +466,11 @@ line's trunk, follow `feature-close`'s
 
 Report: current to target version (and the CMS release, if it's a pre-release), tasks done
 and commits, what the upgrade smoke and the screen comparison showed, third-party
-dependencies moved, any breaking changes for consumers, the follow-ups, and the backport
-candidates with the ones picked. Then the PR link. Once the PR merges, offer
+dependencies moved, any breaking changes for consumers, the docs changed, the follow-ups, and
+the backport candidates with the ones picked. Then the PR link. Once the PR merges, offer
 `change-backport` for each picked backport, one run per change and target line.
+
+When the docs live outside this repo, the upgrade file's "Docs" section is their hand-off:
+show it, and say which docs copy was searched. If `CLAUDE.local.md` names a skill or command
+on a `Submit docs with:` line, offer to run it with that section. Don't draft a PR to the
+docs repo yourself; each docs repo has its own rules.
