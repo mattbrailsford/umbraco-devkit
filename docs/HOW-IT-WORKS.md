@@ -150,6 +150,14 @@ after the feature. The plan ends up in the feature branch's history because it w
 just before the branch was cut. `git-workflow`'s "Branch/worktree per feature" section has
 the full reasoning.
 
+Every skill asks before it commits to trunk, but a skill is advice Claude can miss. The
+plugin's `trunk-gate` hook backs it up. Before any commit, merge, or push that lands on a
+protected branch (`main`, `master`, the remote's default branch, `support/*`, `vN/main`,
+`vN/dev`), Claude Code itself asks you. A force-push or delete of one is blocked outright. So
+the trunk commit `feature-build` makes can ask twice: once in chat, once from the hook. A
+project that doesn't want it sets `UMBRACO_DEVKIT_TRUNK_GATE=off` in the `env` block of its
+`.claude/settings.json`.
+
 ## Building on top
 
 The devkit stops where most projects start to differ. As a project grows, it usually
