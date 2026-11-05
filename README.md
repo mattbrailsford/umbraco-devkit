@@ -14,7 +14,7 @@ Three things run through all of it:
   idioms Umbraco itself uses, read against the real CMS source and docs for the version you
   target.
 - **It asks before it touches git or your tracker.** Plans and drafts stay on disk until you
-  say yes.
+  say yes. For your main and version branches, a hook makes sure of it.
 
 **This is a foundation, not a finished house.** Drop it into a new package or add-on and
 build on it as the project grows.
@@ -154,6 +154,12 @@ You don't run these. The skills above and the agents load them when the work nee
 | [`builder`](plugins/umbraco-devkit/agents/builder.md) | Builds one task at a time |
 | [`reviewer`](plugins/umbraco-devkit/agents/reviewer.md) | Checks every diff, read-only, before it's committed |
 | [`issue-triager`](plugins/umbraco-devkit/agents/issue-triager.md) | Reads and classifies tracker issues, read-only |
+
+**Hooks** (checks Claude Code runs before an action, so they hold even if Claude forgets a rule):
+
+| Hook | What it does |
+|---|---|
+| [`trunk-gate`](plugins/umbraco-devkit/hooks/trunk-gate.mjs) | Asks you before any commit or push to `main` or a version branch. Needs Node |
 
 **Umbraco knowledge:**
 
