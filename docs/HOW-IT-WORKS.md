@@ -13,7 +13,8 @@ change):
   `feature-build`, for a feature or any fix too big to do in one go.
 - **`quick-fix`**, for a small fix of one concern. It hands over to the pipeline if the fix
   turns out bigger.
-- **`major-upgrade`**, for moving to a new Umbraco major.
+- **`major-upgrade`**, for moving to a new Umbraco major. It also lists the pages and
+  screenshots of the package's own docs that the upgrade makes wrong.
 - **`change-backport`**, for landing a change that's already merged on one version line on
   another.
 
@@ -149,6 +150,14 @@ before committing the plan folder to your trunk branch, then cuts a branch or wo
 after the feature. The plan ends up in the feature branch's history because it was committed
 just before the branch was cut. `git-workflow`'s "Branch/worktree per feature" section has
 the full reasoning.
+
+Every skill asks before it commits to trunk, but a skill is advice Claude can miss. The
+plugin's `trunk-gate` hook backs it up. Before any commit, merge, or push that lands on a
+protected branch (`main`, `master`, the remote's default branch, `support/*`, `vN/main`,
+`vN/dev`), Claude Code itself asks you. A force-push or delete of one is blocked outright. So
+the trunk commit `feature-build` makes can ask twice: once in chat, once from the hook. A
+project that doesn't want it sets `UMBRACO_DEVKIT_TRUNK_GATE=off` in the `env` block of its
+`.claude/settings.json`.
 
 ## Building on top
 

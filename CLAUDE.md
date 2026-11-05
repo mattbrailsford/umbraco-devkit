@@ -36,6 +36,7 @@ plugins/umbraco-devkit/
   .claude-plugin/plugin.json                      # plugin manifest
   skills/<name>/SKILL.md                          # one folder per skill (+ references/, templates/, scripts/)
   agents/{builder,reviewer,issue-triager}.md      # subagents
+  hooks/hooks.json, hooks/*.mjs                   # hooks, on for every consumer; Node, no dependencies
   evals/<case>/{prompt.md,graders/}               # `claude plugin eval` cases; results/ is gitignored
 settings.example.json   # copy-by-hand example for consumers; NOT installed by the plugin
 scripts/                # check-*.sh + their allowlists, tests/; repo-only, not shipped
@@ -89,8 +90,8 @@ Naming a new skill or agent:
 ## No build, lint, or test step
 
 Everything is Markdown plus two hand-written JSON manifests, apart from the few scripts some
-skills ship (stdlib Python, tested by `scripts/tests/`). There is no .NET code here. Don't run
-`dotnet build` or apply C# conventions to this repo. Checks that do exist:
+skills ship (stdlib Python) and the plugin's hooks (Node), all tested by `scripts/tests/`.
+There is no .NET code here. Don't run `dotnet build` or apply C# conventions to this repo. Checks that do exist:
 
 ```bash
 jq . .claude-plugin/marketplace.json
@@ -101,7 +102,7 @@ scripts/check-version.sh      # version only in plugin.json, and bumped if shipp
 scripts/check-frontmatter.sh  # skill/agent headers parse, names match, descriptions fit
 scripts/check-skill-callers.sh # no skill changes behavior based on which skill started it
 scripts/check-evals.sh        # every skill has an eval
-scripts/check-skill-scripts.sh # tests for the scripts skills ship
+scripts/check-skill-scripts.sh # tests for the scripts skills ship and the plugin's hooks
 scripts/eval-coverage.sh --check # docs/EVAL-COVERAGE.md is current and every # covers: is valid
 ```
 
@@ -183,10 +184,10 @@ refer to the consumer project, not this repo.
   means checking the other.
 - `version` lives only in `plugin.json`. Don't add it to `marketplace.json`: Claude Code
   reads `plugin.json` first, so a second copy silently drifts.
-- Bump for any change to a skill, agent, or template a consumer would load. Installed
+- Bump for any change to a skill, agent, hook, or template a consumer would load. Installed
   consumers only see changes after their plugin update picks up a new version.
   - Patch: edits to an existing skill/agent/template.
-  - Minor: a new skill or agent.
+  - Minor: a new skill, agent, or hook.
   - Major: renaming or removing a skill, or any other change to what a user types.
 - Skip the bump only for files that never ship: this file, `README.md`, `docs/`, `scripts/`,
   `settings.example.json`, CI config. Also skip it for `plugins/umbraco-devkit/evals/`: it
