@@ -63,7 +63,8 @@ with the plugin, because what to allow is your call.
 before each step. Run it again any time to fill gaps. When it's done, open `CLAUDE.md` and
 check the **Stack** section: the CMS version(s) you target and the database(s) you support
 should be filled in, with no `TODO` left. Many skills and the reviewer's checks depend on
-them.
+them. The **Docs** section says where your package's own docs live, so an upgrade can find
+the pages it makes wrong.
 
 **3. Ask for what you want.** Describe it ("add a dashboard that...", "why does saving fail
 when...", "triage the new issues") and the right skill picks it up. Or run one yourself from
@@ -126,7 +127,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 
 | I want to... | Run |
 |---|---|
-| Move to a new Umbraco major, task by task, still reviewed | [`/major-upgrade`](plugins/umbraco-devkit/skills/major-upgrade/SKILL.md) |
+| Move to a new Umbraco major, task by task, still reviewed, with the docs it makes wrong listed | [`/major-upgrade`](plugins/umbraco-devkit/skills/major-upgrade/SKILL.md) |
 | Get a finished package listed on the Umbraco Marketplace | [`/umbraco-marketplace`](plugins/umbraco-devkit/skills/umbraco-marketplace/SKILL.md) |
 
 ### Read a doc
