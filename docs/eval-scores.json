@@ -571,6 +571,22 @@
     "without": 40,
     "withoutDate": "2026-11-05"
   },
+  "feature-design-mockup-shared-surface-css": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-design-mockup-tree-state-sign": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 50,
+    "withoutDate": "2026-11-05"
+  },
   "feature-design-mockups-email-without-ui": {
     "date": "2026-10-20",
     "runs": 3,

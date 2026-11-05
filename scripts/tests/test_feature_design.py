@@ -112,6 +112,31 @@ class CheckMockupTests(unittest.TestCase):
         self.assertTrue(skipped)
         self.assertEqual(findings, [])
 
+    def test_linked_stylesheet_is_checked_once(self):
+        self.write("feature.css", ".share-row {\n\tpadding: 4px;\n}\n")
+        page = STARTER.replace("</head>", '<link rel="stylesheet" href="feature.css">\n</head>')
+        one, two = self.write("one.html", page), self.write("two.html", page)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(check_mockup.main(["--starter", self.starter, one, two]), 1)
+        self.assertEqual(out.getvalue().count("custom CSS rule: .share-row"), 1)
+
+    def test_stylesheet_the_starter_links_is_known(self):
+        self.write("surface.css", ".chat {\n\tdisplay: flex;\n}\n")
+        link = '<link rel="stylesheet" href="surface.css">\n</head>'
+        starter = self.write("surface.html", STARTER.replace("</head>", link))
+        screen = self.write("screen.html", STARTER.replace("</head>", link))
+        known = check_mockup.starter_lines(starter)
+        self.assertEqual(check_mockup.check_stylesheet(os.path.join(self.dir, "surface.css"), known), [])
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(check_mockup.main(["--starter", starter, screen]), 0)
+
+    def test_remote_and_harness_stylesheets_are_not_followed(self):
+        page = self.write("screen.html", STARTER.replace("</head>",
+            '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@umbraco-ui/uui@2/dist/themes/light.css">\n'
+            '<link rel="stylesheet" href="_mockup.css">\n</head>'))
+        self.assertEqual(check_mockup.linked_stylesheets(page), [])
+
     def test_exit_codes(self):
         clean = self.write("clean.html", STARTER)
         dirty = self.write("dirty.html", STARTER.replace("<h3>Content</h3>", "<h3>Content</h3>\n<h4>x</h4>"))

@@ -138,9 +138,42 @@ html:not([data-mockup-ready]) body {
 	font-size: 14px;
 }
 
-.section-sidebar uui-menu-item uui-icon[slot='icon'] {
+.section-sidebar uui-menu-item uui-icon[slot='icon'],
+.section-sidebar uui-menu-item .entity-sign[slot='icon'] {
 	font-size: 15px;
 }
+
+/* Entity sign: a small state icon on an item's own icon (umb-entity-sign-bundle and the icon
+   kind's element). Wrap the item icon: <span slot="icon" class="entity-sign"><uui-icon
+   name="icon-document"></uui-icon><uui-icon class="sign green" name="icon-time"></uui-icon>
+   </span>. Colour classes are the backoffice's iconColorAlias names. */
+.entity-sign {
+	position: relative;
+	display: inline-flex;
+}
+
+.entity-sign .sign {
+	position: absolute;
+	top: 10px;
+	left: 12px;
+	font-size: 8px;
+	filter: drop-shadow(-1px 0 0 var(--uui-color-surface)) drop-shadow(0 -1px 0 var(--uui-color-surface))
+		drop-shadow(0 1px 0 var(--uui-color-surface));
+}
+
+.entity-sign .sign + .sign {
+	transform: translateX(-5px);
+	z-index: -1;
+}
+
+.entity-sign .sign.yellow { color: var(--uui-palette-sunglow); }
+.entity-sign .sign.pink { color: var(--uui-palette-spanish-pink); }
+.entity-sign .sign.blue { color: var(--uui-palette-violet-blue); }
+.entity-sign .sign.light-blue { color: var(--uui-palette-malibu); }
+.entity-sign .sign.red { color: var(--uui-palette-maroon-flush); }
+.entity-sign .sign.green { color: var(--uui-palette-jungle-green); }
+.entity-sign .sign.brown { color: var(--uui-palette-chamoisee); }
+.entity-sign .sign.grey { color: var(--uui-palette-dusty-grey); }
 
 .section-main {
 	flex: 1 1 auto;
