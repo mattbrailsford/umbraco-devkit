@@ -175,7 +175,10 @@ For each screen the feature adds or visibly changes:
    A few more patterns build from these: a **property editor** is one `.property` row in
    `editor.html`; an editor's **Info view** is the editor's main area as a two-column grid
    (`1fr 350px`, 24px gap) with stacked boxes left and a "General" box right; a **search or
-   filter bar** above a box is the collection toolbar without its create button. Property
+   filter bar** above a box is the collection toolbar without its create button; a **state
+marker on a tree item** (shared, scheduled, locked) is an entity sign on Umbraco 17 and
+later, a small icon on the corner of the item's own icon: wrap the item's icon in
+`_mockup.css`'s `.entity-sign`, not a swapped icon or a second icon or line by the name. Property
    rows always sit inside a `uui-box` group, never loose on the page or modal background —
    `modal-form.html` is `modal-sidebar.html`'s shell with that content instead of a picker
    list; reach for it whenever the modal's job is to create or edit something, not choose
@@ -222,7 +225,19 @@ For each screen the feature adds or visibly changes:
 5. **Mock the five moments that apply.** The empty state and error state are their own small
    variants (a second section in the same file, or `<screen>-empty.html`), not something left
    for the builder to invent.
-6. **Screenshot and show it.** Serve the folder locally (the pages load ES modules, so
+6. **Check the styling.** Run `python3 <this skill's folder>/scripts/check_mockup.py --starter
+   <the starter it was copied from> mockups/<screen>.html`. It compares the page with its
+   starter and flags only what the screen added: custom CSS, inline styles, raw colours
+   (including a colour fallback inside `var()`), `!important`, and headings with no class.
+   Invented styling is what makes the feature's own part look "not Umbraco": a made-up row
+   where a `.property` row belongs, a guessed colour, an override fighting a rule nobody read.
+   Fix each finding with the real part. Keep one only when it's copied from the product's real
+   source (step 3), with a `mockup-ok: <where it's from>` comment on the line, or on a CSS
+   rule's opening line. Re-run until it prints "Nothing flagged". Styling you keep goes in one
+   `mockups/<feature-slug>.css` that every screen of the feature links, not in each page's own
+   `<style>` block: with a copy per page, a fix made on one screen is missed on the next and
+   the screens drift apart. The check reads linked stylesheets too.
+7. **Screenshot and show it.** Serve the folder locally (the pages load ES modules, so
    `file://` won't work), wait for `html[data-mockup-ready]` so UUI, icons and any toast have
    finished loading, then check the console for warnings before screenshotting — a missing
    icon name (`No backoffice icon named icon-*`) is the common one, and it's free to catch
@@ -273,18 +288,27 @@ When both are true and no starter exists yet:
   `_mockup.css` and `_mockup.js`, with a "Replace from here" / "Replace to here" region where
   feature content goes. Screenshot the real surface, if a running site is available, and
   compare.
-- Save it to `docs/mockups/starters/<surface>.html` with a copy of `_mockup.css` and
-  `_mockup.js` beside it, so it previews on its own.
+- Save it to `docs/mockups/starters/<surface>.html`, with the surface's own CSS in
+  `<surface>.css` beside it (linked, not a `<style>` block) and a copy of `_mockup.css` and
+  `_mockup.js`, so it previews on its own. A feature reusing it copies the HTML and the CSS
+  into `mockups/`, and every screen links that one CSS copy.
 - Start the file with a comment naming the source files it copies and the commit it was
   copied from (`git rev-parse HEAD`).
+- Run the styling check (step 6 above) against the general starter it was built from. Each
+  rule copied from the product's source gets a `mockup-ok:` comment naming the file it came
+  from; a rule with no source to name is a guess, so read the source first.
 
 When reusing a project starter, first check whether its source files have changed since that
 commit (`git log --oneline <commit>..HEAD -- <source files>`). If they have, refresh the
 starter before copying it, and update the commit in its comment.
 
-Fidelity is "close enough to judge the layout and the content choices," not pixel-perfect:
-real components, real spacing tokens, real data shapes. Final colour tweaks and dark-mode
-polish still happen on the built screen.
+Fidelity has two zones. **What the feature adds or changes** is drawn as close to the built
+screen as the starter's parts allow: real components, real spacing tokens, real data shapes,
+and a clean styling check. It's what the human approves and the builder copies. **Everything
+around it** (the header, the tree, the page behind a modal) stays as the starter drew it: set
+the active section tab and tree item, use plausible names, and stop. The backdrop isn't
+what's being decided, so time spent restyling it is time not spent on the feature. Final
+colour tweaks and dark-mode polish still happen on the built screen.
 
 Each screen section in `SPEC.md` shows its mockup's screenshot inline at full size
 (GitHub fits it to the page; a thumbnail is too small to judge layout) with a link to its
