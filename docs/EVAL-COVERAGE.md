@@ -69,13 +69,13 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 4 | 0 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 7 | 0 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`project-init`](#project-init) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`project-init`](#project-init) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -296,10 +296,13 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `major-upgrade-diffs-used-types` | 100 | 2026-10-29 |
-| `major-upgrade-offers-stopgaps` | 100 | 2026-10-29 |
-| `major-upgrade-proposes-backports` | 100 | 2026-10-30 |
-| `major-upgrade-version-mismatch` | 100 | 2026-10-29 |
+| `major-upgrade-diffs-used-types` | 100 | 2026-11-05 |
+| `major-upgrade-docs-elsewhere` | 100 | 2026-11-05 |
+| `major-upgrade-lists-docs` | 100 | 2026-11-05 |
+| `major-upgrade-no-docs-copy` | 100 | 2026-11-05 |
+| `major-upgrade-offers-stopgaps` | 100 | 2026-11-05 |
+| `major-upgrade-proposes-backports` | 100 | 2026-11-05 |
+| `major-upgrade-version-mismatch` | 100 | 2026-11-05 |
 
 ### `markdown-preview`
 
@@ -363,8 +366,9 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `project-init-keeps-claude-md` | 100 | 2026-10-16 |
-| `project-init-new-package-template` | 100 | 2026-10-16 |
+| `project-init-asks-docs` | 100 | 2026-11-05 |
+| `project-init-keeps-claude-md` | 100 | 2026-11-05 |
+| `project-init-new-package-template` | 100 | 2026-11-05 |
 
 ### `project-retro`
 

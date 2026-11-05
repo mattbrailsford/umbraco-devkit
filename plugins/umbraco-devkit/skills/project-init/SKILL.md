@@ -55,8 +55,8 @@ whatever was skipped, so "not now" is always a fine answer.
 
 1. **Re-entrant: if a file already exists, leave it alone.** Report what was already there
    vs. what you created. Never clobber an existing `CLAUDE.md` — if it's missing a section
-   this skill would normally add (the plan-folder convention, the pipeline skill list), offer to
-   append just that section, and show the diff before writing it.
+   this skill would normally add (the plan-folder convention, the pipeline skill list, the
+   "Docs" section), offer to append just that section, and show the diff before writing it.
 2. Detect the ground:
    - Code already present → seed `CLAUDE.md` from what's actually there: the CMS version(s)
      targeted (check `Directory.Packages.props` / `.csproj` for an `Umbraco.Cms.Core` package
@@ -141,6 +141,11 @@ Almost none. Ask at most:
    is where `feature-build` commits the plan folder and cuts the feature branch/worktree).
 5. Only if genuinely ambiguous from the code: which Umbraco CMS major version(s) this targets,
    and whether it ships against SQL Server only or SQL Server + SQLite.
+6. Where the package's user docs live, for the template's "Docs" section: in this repo, in
+   another repo, on a website, or nowhere. Then whether they keep one copy per CMS major, and
+   how a docs change gets submitted. Look first and offer what you found as the default: a
+   `docs/` folder, a docs link in `README.md`, a `PackageProjectUrl` in a `.csproj`, or
+   the documentation link in `umbraco-marketplace.json`.
 
 Otherwise stay silent and scaffold.
 
