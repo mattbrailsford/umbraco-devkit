@@ -185,8 +185,9 @@ A phase that writes a doc a person reviews (`BRIEF.md`, `ARCHITECTURE.md`, `SPEC
 
 ## *What it needs*
 
-- macOS, `python3` (part of Xcode's command line tools, which git already needs) and `gh`,
-  signed in. `gh auth status` says whether it is.
+- Python 3 and `gh`, signed in. `gh auth status` says whether it is. On macOS, `python3` comes
+  with Xcode's command line tools, which git already needs. On Windows, run the commands with
+  `python` or `py -3` if `python3` isn't found; Linux works as macOS does.
 - Internet access: GitHub draws the page, and the styles, Mermaid and math load from a CDN.
 - The file's text, and the text of comments on it, go to GitHub's Markdown API to be drawn,
   including plans that aren't committed. Nothing else is sent anywhere. The `gh` sign-in is read once and kept in memory only.
