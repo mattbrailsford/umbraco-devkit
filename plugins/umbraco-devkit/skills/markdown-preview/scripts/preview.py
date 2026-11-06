@@ -20,6 +20,8 @@ line, then send them to Claude in one batch, and approve the docs a step asks th
 
 One server runs per git worktree; asking again reuses it, and an open preview tab is sent to
 the new page rather than opening another. The server stops once its worktree is removed.
+Each Claude session on a worktree gets its own tab and helper: comments sent from a tab go
+to the session that opened it.
 Comments live in the worktree's git folder, so they're never committed and any step can read
 them without the server running.
 
@@ -41,12 +43,12 @@ import urllib.request
 import webbrowser
 
 import compat
-from comments import Comments, describe
+from comments import Comments, belongs, describe
 from approvals import Approvals
 from rendering import Renderer, fetch_css, github_user, repo_context
 from seen import Seen
 from server import PreviewServer
-from worktree import STATE_DIR, git_root, inside, pid_alive, state_paths
+from worktree import STATE_DIR, git_root, inside, pid_alive, session_id, state_paths
 
 
 # ---------- Claude's comment commands ----------
@@ -85,7 +87,8 @@ def comments_command(argv):
     parser.add_argument("--root", help="worktree (default: the one holding the current folder)")
     args = parser.parse_args(argv)
     root = os.path.realpath(args.root or git_root(os.getcwd()) or os.getcwd())
-    paths = state_paths(root)
+    session = session_id()
+    paths = state_paths(root, session)
     store = Comments(paths.comments)
     approvals = Approvals(paths.approvals)
 
@@ -95,7 +98,7 @@ def comments_command(argv):
 
     if args.command == "wait":
         if pid_alive(paths.helper):
-            return print("Already waiting for comments on this worktree; nothing more to do.")
+            return print("Already waiting for comments from this session; nothing more to do.")
         os.makedirs(STATE_DIR, exist_ok=True)
         with open(paths.helper, "w") as f:
             f.write(str(os.getpid()))
@@ -105,11 +108,11 @@ def comments_command(argv):
         # its worktree removed) stop waiting rather than run on unseen.
         gone_since = None
         while True:
-            if any(c["status"] == "sent" for c in store.load()):
-                batch = store.claim_sent()
+            if any(c["status"] == "sent" and belongs(c, session) for c in store.load()):
+                batch = store.claim_sent(session)
                 print(f"The reviewer sent {len(batch)} comment{'s' if len(batch) > 1 else ''}:")
                 return print(describe(batch))
-            approved = approvals.claim_all_approved(root)
+            approved = approvals.claim_all_approved(root, session)
             if approved:
                 return print("The reviewer approved " + ", ".join(p.lstrip("/") for p in approved)
                              + ". Everything asked for is approved.")
@@ -128,7 +131,7 @@ def comments_command(argv):
             missing = [f for f, p in zip(args.request, wanted) if not os.path.isfile(root + p)]
             if missing:
                 sys.exit("Not found: " + ", ".join(missing))
-            approvals.request(wanted, args.step)
+            approvals.request(wanted, args.step, session)
             return print("Asked the reviewer to approve " + ", ".join(p.lstrip("/") for p in wanted) + ".")
         states = approvals.states(root)
         if not states:
@@ -148,7 +151,7 @@ def comments_command(argv):
             items = [c for c in store.unresolved() if c["path"] in wanted and c["status"] != "draft"]
             empty = "No open comments."
         else:
-            items = [c for c in store.load() if c["status"] in ("sent", "working")]
+            items = [c for c in store.load() if c["status"] in ("sent", "working") and belongs(c, session)]
             empty = "No comments waiting."
         return print(describe(items) if items else empty)
 
@@ -211,16 +214,19 @@ def open_command(argv):
         params["home"] = "/" if home == "/./" else home
     if args.no_comments:
         params["comments"] = "off"
+    session = session_id()
+    if session:
+        params["session"] = session  # so the tab sends its comments to this session
     if params:
         url_path += "?" + urllib.parse.urlencode(params)
 
-    # One server per worktree: if it's running, send the open tab there (or open one).
+    # One server per worktree: if it's running, send this session's open tab there (or open one).
     paths = state_paths(root)
     port = running_port(paths.server, root)
     if port:
         url = f"http://127.0.0.1:{port}/{url_path}"
         if not args.no_open:
-            req = urllib.request.Request(f"http://127.0.0.1:{port}/__open", json.dumps({"path": url_path}).encode(), method="POST")
+            req = urllib.request.Request(f"http://127.0.0.1:{port}/__open", json.dumps({"path": url_path, "session": session}).encode(), method="POST")
             with urllib.request.urlopen(req, timeout=2) as res:
                 reused = res.read().decode() == "reused"
             if not reused:
@@ -230,8 +236,7 @@ def open_command(argv):
 
     server = PreviewServer(args.port, root=root, css=fetch_css(), renderer=Renderer(repo_context(start_dir)),
                            comments=Comments(paths.comments), seen=Seen(paths.seen), approvals=Approvals(paths.approvals),
-                           user=github_user(),
-                           helper_file=paths.helper)
+                           user=github_user())
     os.makedirs(STATE_DIR, exist_ok=True)
     with open(paths.server, "w") as f:
         json.dump({"root": root, "port": server.port, "pid": os.getpid()}, f)
@@ -246,7 +251,7 @@ def open_command(argv):
     # before opening another.
     def show():
         time.sleep(1.5)
-        if not server.tabs.open(url_path):
+        if not server.tabs.open(url_path, session):
             webbrowser.open(url)
     if not args.no_open:
         threading.Thread(target=show, daemon=True).start()

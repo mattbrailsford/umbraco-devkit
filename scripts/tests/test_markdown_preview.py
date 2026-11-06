@@ -34,6 +34,12 @@ def read(path):
         return f.read()
 
 
+def as_session(session=""):
+    """The environment of a command run by one Claude session, or outside Claude Code."""
+    env = {k: v for k, v in os.environ.items() if k not in ("CLAUDE_PID", "CLAUDE_CODE_SESSION_ID")}
+    return {**env, "CLAUDE_PID": session} if session else env
+
+
 def write(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="") as f:  # no CRLF on Windows: write exactly `text`
@@ -162,6 +168,19 @@ class CommentStoreTests(TempRepo):
         self.assertEqual([c["path"] for c in self.store.unresolved(under="/docs/plans/")], [self.brief])
         self.assertEqual(self.store.open_counts(), {self.brief: 1, "/docs/other/X.md": 1})
 
+    def test_each_session_sends_and_claims_its_own(self):
+        brief = "/docs/plans/retries/BRIEF.md"
+        self.store.add(brief, "Retry with backoff.", "From A", session="a")
+        self.store.add(brief, "Webhooks", "From B", session="b")
+        self.store.add(brief, "Five attempts.", "From before sessions")
+        self.assertEqual([c["body"] for c in self.store.drafts("a")], ["From A", "From before sessions"])
+        self.store.send_drafts("a")
+        self.assertEqual(self.store.claim_sent("b"), [])  # A's batch never wakes B
+        self.assertEqual([c["body"] for c in self.store.claim_sent("a")], ["From A", "From before sessions"])
+        self.store.reader_reply("c1", "Over to B", session="b")  # replied in B's tab: B's now
+        self.store.send_drafts("b")
+        self.assertEqual([c["body"] for c in self.store.claim_sent("b")], ["From A", "From B"])
+
     def test_describe_says_whose_move_it_is(self):
         c = self.store.add(self.brief, "Retry with backoff.", "```suggestion\nRetry twice.\n```", section="Goals")
         self.store.claude_reply(c["id"], "Left for later.", defer="feature-plan")
@@ -224,9 +243,9 @@ class CommandTests(TempRepo):
         write(server, json.dumps({"root": self.root, "port": 1, "pid": os.getpid()}))
         self.addCleanup(lambda: os.path.exists(server) and os.remove(server))
 
-    def run_cli(self, *args, timeout=20):
+    def run_cli(self, *args, timeout=20, session=""):
         return subprocess.run([sys.executable, os.path.join(SCRIPTS, "preview.py"), *args, "--root", self.root],
-                              capture_output=True, text=True, timeout=timeout, cwd=self.root)
+                              capture_output=True, text=True, timeout=timeout, cwd=self.root, env=as_session(session))
 
     def test_reply_flags(self):
         self.store.add("/docs/plans/retries/BRIEF.md", "Retry with backoff.", "Why?")
@@ -263,7 +282,7 @@ class CommandTests(TempRepo):
         store = approvals.Approvals(worktree.state_paths(self.root).approvals)
         store.request(["/docs/plans/retries/SPEC.md"])
         waiter = subprocess.Popen([sys.executable, os.path.join(SCRIPTS, "preview.py"), "wait", "--root", self.root],
-                                  stdout=subprocess.PIPE, text=True, cwd=self.root)
+                                  stdout=subprocess.PIPE, text=True, cwd=self.root, env=as_session())
         self.addCleanup(lambda: waiter.poll() is None and waiter.kill())
         time.sleep(1.5)
         store.approve("/docs/plans/retries/SPEC.md", os.path.join(self.plan, "SPEC.md"))
@@ -276,13 +295,14 @@ class CommandTests(TempRepo):
         os.remove(worktree.state_paths(self.root).server)
         code = ("import sys; sys.path.insert(0, %r); import preview; preview.NO_PREVIEW_GRACE = 1\n"
                 "preview.comments_command(['wait', '--root', %r])") % (SCRIPTS, self.root)
-        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=20).stdout
+        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=20, env=as_session()).stdout
         self.assertIn("The preview has stopped, so I've stopped waiting", out)
         self.assertFalse(worktree.pid_alive(worktree.state_paths(self.root).helper))
 
     def test_wait_returns_the_batch_and_only_one_waits(self):
         script = os.path.join(SCRIPTS, "preview.py")
-        waiter = subprocess.Popen([sys.executable, script, "wait", "--root", self.root], stdout=subprocess.PIPE, text=True, cwd=self.root)
+        waiter = subprocess.Popen([sys.executable, script, "wait", "--root", self.root], stdout=subprocess.PIPE, text=True,
+                                  cwd=self.root, env=as_session())
         self.addCleanup(lambda: waiter.poll() is None and waiter.kill())
         for _ in range(50):
             if worktree.pid_alive(worktree.state_paths(self.root).helper):
@@ -294,6 +314,26 @@ class CommandTests(TempRepo):
         out, _ = waiter.communicate(timeout=20)
         self.assertIn("The reviewer sent 1 comment", out)
         self.assertIn("Over to you", out)
+        self.assertEqual(self.store.load()[0]["status"], "working")
+
+    def test_two_sessions_each_wait_for_their_own(self):
+        # Two Claude sessions on one worktree: a batch sent from A's tab wakes A, never B.
+        script = os.path.join(SCRIPTS, "preview.py")
+        waiters = {s: subprocess.Popen([sys.executable, script, "wait", "--root", self.root], stdout=subprocess.PIPE,
+                                       text=True, cwd=self.root, env=as_session(s)) for s in ("a", "b")}
+        for w in waiters.values():
+            self.addCleanup(lambda w=w: w.poll() is None and w.kill())
+        for _ in range(50):
+            if all(worktree.pid_alive(worktree.state_paths(self.root, s).helper) for s in waiters):
+                break
+            time.sleep(0.1)
+        self.assertIn("Already waiting", self.run_cli("wait", session="a").stdout)
+        self.store.add("/docs/plans/retries/BRIEF.md", "Retry with backoff.", "For A", session="a")
+        self.store.send_drafts("a")
+        out, _ = waiters["a"].communicate(timeout=20)
+        self.assertIn("For A", out)
+        time.sleep(1.5)
+        self.assertIsNone(waiters["b"].poll())  # B is still waiting
         self.assertEqual(self.store.load()[0]["status"], "working")
 
 
@@ -311,8 +351,7 @@ class ServerTests(TempRepo):
         paths = worktree.state_paths(self.root)
         self.srv = server.PreviewServer(0, root=self.root, css="/* css */", renderer=FakeRenderer(),
                                         comments=self.store, seen=seen.Seen(paths.seen),
-                                        approvals=approvals.Approvals(paths.approvals), user={"login": "someone"},
-                                        helper_file=paths.helper)
+                                        approvals=approvals.Approvals(paths.approvals), user={"login": "someone"})
         threading.Thread(target=self.srv.serve_forever, daemon=True).start()
         self.addCleanup(self.srv.server_close)
         self.addCleanup(self.srv.shutdown)
@@ -401,6 +440,23 @@ class ServerTests(TempRepo):
         self.assertEqual(self.request("POST", "/__open", {"path": "docs/plans/retries/SPEC.md"})[3], "reused")
         marks = json.loads(self.request("GET", "/__changes?path=" + urllib.parse.quote("/docs/plans/retries/BRIEF.md"))[3])
         self.assertEqual(marks["navigate"], "/docs/plans/retries/SPEC.md")
+
+    def test_each_session_reuses_only_its_own_tab(self):
+        brief = urllib.parse.quote("/docs/plans/retries/BRIEF.md")
+        self.request("GET", f"/__changes?path={brief}&session=a")  # A's tab checks in
+        self.assertEqual(self.request("POST", "/__open", {"path": "x.md", "session": "b"})[3], "none")
+        self.assertEqual(self.request("POST", "/__open", {"path": "SPEC.md", "session": "a"})[3], "reused")
+        self.assertNotIn("navigate", json.loads(self.request("GET", f"/__changes?path={brief}&session=b")[3]))
+        self.assertEqual(json.loads(self.request("GET", f"/__changes?path={brief}&session=a")[3])["navigate"], "/SPEC.md")
+
+    def test_a_tab_sends_only_its_own_session_comments(self):
+        brief = "/docs/plans/retries/BRIEF.md"
+        self.request("POST", "/__comments", {"path": brief, "quote": "Retry with backoff.", "body": "A's", "session": "a"})
+        self.request("POST", "/__comments", {"path": brief, "quote": "Webhooks", "body": "B's", "session": "b"})
+        self.assertEqual([c["body"] for c in json.loads(self.request("GET", "/__comments?drafts=1&session=b")[3])], ["B's"])
+        self.request("POST", "/__comments/send", {"session": "b"})
+        self.assertEqual([c["status"] for c in self.store.load()], ["draft", "sent"])
+        self.assertEqual(self.request("GET", "/__listening?session=b")[3], "0")
 
 
     def test_changes_since_comments_were_sent(self):
@@ -494,6 +550,12 @@ class ApprovalTests(TempRepo):
         self.approvals.approve(self.brief, self.root + self.brief)
         self.assertEqual(self.approvals.claim_all_approved(self.root), [self.spec, self.brief])
         self.assertIsNone(self.approvals.claim_all_approved(self.root))
+
+    def test_only_the_session_that_asked_hears(self):
+        self.approvals.request([self.spec], "feature-design", session="a")
+        self.approvals.approve(self.spec, self.root + self.spec)
+        self.assertIsNone(self.approvals.claim_all_approved(self.root, "b"))
+        self.assertEqual(self.approvals.claim_all_approved(self.root, "a"), [self.spec])
 
     def test_looking_never_rewrites_the_file(self):
         # The waiting helper looks every second, and open pages redraw whenever the file

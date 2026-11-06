@@ -127,7 +127,7 @@ async function navigate(href, push = true) {
     showKeysHint();
     setHot(null);
     pageFresh = true;
-    seen = JSON.parse(await fetchText('/__changes?path=' + encodeURIComponent(page.path)));
+    seen = JSON.parse(await fetchText('/__changes?path=' + encodeURIComponent(page.path) + '&session=' + encodeURIComponent(page.session)));
     await load();
   } catch {
     location.assign(u.href);
@@ -155,7 +155,7 @@ addEventListener('popstate', () => navigate(location.href, false));
 async function poll() {
   if (navigating) return setTimeout(poll, 400);
   try {
-    const now = JSON.parse(await fetchText('/__changes?path=' + encodeURIComponent(page.path)));
+    const now = JSON.parse(await fetchText('/__changes?path=' + encodeURIComponent(page.path) + '&session=' + encodeURIComponent(page.session)));
     if (now.navigate) { await navigate(now.navigate); return setTimeout(poll, 400); }  // another request reused this tab
     if ($('status').className === 'error' && $('status').textContent === 'Preview server stopped') showStatus('');
     if (!seen || now.doc !== seen.doc) { seen = now; await load(); }
