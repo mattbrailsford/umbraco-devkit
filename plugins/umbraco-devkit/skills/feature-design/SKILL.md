@@ -130,6 +130,23 @@ it before finalizing the design:
    noted as a deliberate skip.
 3. **List every place each component will appear**, so the mockups and the spec cover all of
    them.
+4. **Try each CMS component the design reuses before designing around it.** A CMS picker,
+   input or property editor can behave differently outside the screen it was built for: one
+   ignores `required`, another's Choose button does nothing in a modal. Found during the
+   build, each costs a blocked task and a question. Find out what it does with `required`
+   and an empty value, a value pointing at a deleted item, each config option the design
+   relies on, and the shape of the value it saves.
+   - **The project has a demo site:** mount the component the way the design plans (same
+     host, same config) in a throwaway extension in the demo site, plain JS with no build
+     step, outside the package's source. Dispatch a `smoke-tester` (Agent tool,
+     `subagent_type: smoke-tester`) for a try-out, with the component, the click path to it
+     and the list above. Delete the extension once it reports.
+   - **No demo site:** read the component's source at the project's release tag
+     (`umbraco-cms-source`) for the same list.
+
+   Each answer becomes a line in `SPEC.md`. One read from source, not tried, goes in the
+   guesses at the top of `SPEC.md` for the human to confirm. A surprise changes the design
+   now, not during the build.
 
 ### Mockup each screen
 

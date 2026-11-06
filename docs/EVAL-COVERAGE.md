@@ -45,6 +45,7 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
+- [`feature-design`](#feature-design): `feature-design-tries-cms-components`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -61,7 +62,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
 | [`feature-build`](#feature-build) | workflow | Broke a rule | – | 7 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-design`](#feature-design) | workflow | Broke a rule | – | 12 | 4 | – | – |
+| [`feature-design`](#feature-design) | workflow | Broke a rule | – | 13 | 5 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 6 | 0 | – | – |
@@ -232,6 +233,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `feature-design-nfr-targets` | 83 | 2026-10-26 |
 | `feature-design-open-comments` | 100 | 2026-10-26 |
 | `feature-design-stops-without-brief` | 100 | 2026-10-16 |
+| `feature-design-tries-cms-components` | – | – |
 
 ### `feature-explore`
 
