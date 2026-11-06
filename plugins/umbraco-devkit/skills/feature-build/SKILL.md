@@ -147,6 +147,10 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    a layout change, or anything placed against other parts of the screen. A crop keeps at
    least 24px of the surrounding screen on every side, so no edge, border or popover touches
    the image edge, and its `-before.png` is cropped to the same area so the pair lines up.
+   Full or cropped, the image holds everything under review whole. When the screen runs past
+   900px, keep the 1440 width and take the full page; when a story's canvas or a clip box is
+   smaller than what it renders, size it to fit. Open the saved image and check no part under
+   review (a card, a badge, a row) is cut by an edge before linking it.
 
    **If the task adds an interaction a still can't show** (a drag and drop, an animation, a
    screen that changes live, a short flow across screens), also record it as
