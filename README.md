@@ -8,8 +8,8 @@ persistence, Lit + UUI backoffice frontend.
 Three things run through all of it:
 
 - **Every code change is reviewed.** One agent builds, a read-only reviewer checks the diff,
-  build, and tests before anything is committed. Features, fixes, and upgrades all go
-  through it.
+  build, and tests before anything is committed, and another runs it in the real app.
+  Features, fixes, and upgrades all go through it.
 - **Umbraco knowledge, loaded when it's needed.** Skills for the C#, EF Core, and Lit + UUI
   idioms Umbraco itself uses, read against the real CMS source and docs for the version you
   target.
@@ -153,6 +153,7 @@ You don't run these. The skills above and the agents load them when the work nee
 |---|---|
 | [`builder`](plugins/umbraco-devkit/agents/builder.md) | Builds one task at a time |
 | [`reviewer`](plugins/umbraco-devkit/agents/reviewer.md) | Checks every diff, read-only, before it's committed |
+| [`smoke-tester`](plugins/umbraco-devkit/agents/smoke-tester.md) | Runs each change through the real app and takes its screenshots |
 | [`issue-triager`](plugins/umbraco-devkit/agents/issue-triager.md) | Reads and classifies tracker issues, read-only |
 
 **Hooks** (checks Claude Code runs before an action, so they hold even if Claude forgets a rule):

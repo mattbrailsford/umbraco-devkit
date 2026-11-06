@@ -78,9 +78,9 @@ doesn't replace the whole-feature review (see "Finish"); the two catch different
 
 For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
 
-1. **Build.** If the task changes an existing screen, first screenshot it at 1440×900 as
-   `screenshots/<screen>-before.png`. Once the builder starts, the old screen is gone, and the
-   PR needs before and after.
+1. **Build.** If the task changes an existing screen, first dispatch a `smoke-tester` to
+   capture it as `screenshots/<screen>-before.png`, with the screen's click path. Once the
+   builder starts, the old screen is gone, and the PR needs before and after.
 
    Then dispatch a `builder` subagent (Agent tool, `subagent_type: builder`, model
    sonnet). Give it: the exact task text, the relevant sections of `ARCHITECTURE.md` and
@@ -118,54 +118,28 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    - **An end-to-end (e2e) test suite.** Run the e2e test covering the task's path. If none
      covers it, the builder adds one as part of the task. A suite passing without touching
      the new code proves nothing.
-   - **A demo site.** Start it and run through the change yourself: drive the backoffice UI
-     (Playwright or equivalent), or send one real request through the Management API
-     controller for a change with no screen.
+   - **A demo site.** Drive the backoffice UI (Playwright or equivalent) through the change,
+     or send one real request through the Management API controller for a change with no
+     screen.
    - **Neither**, because you're building the host itself (like Umbraco CMS), not a package
      installed into one: a thorough integration test that boots the real hosting/DI pipeline
      (not a unit test through an internal seam) is the equivalent gate.
 
    Fakes for external services are fine in all three; the request must travel through the
-   real entry point, not an internal function that bypasses it. If the smoke fails, recurse
-   to step 3 with a finding. A green unit test suite is not enough to ship.
+   real entry point, not an internal function that bypasses it. A green unit test suite is
+   not enough to ship.
 
-   **If the task adds or changes a migration** and the project supports SQL Server, the smoke
-   includes running it on a real SQL Server, as `ef-core-data` describes. Note in the task's
-   `BUILD-LOG.md` entry which providers it actually ran on.
-
-   **If the task renders a screen that has a mockup,** screenshot the built screen at 1440×900
-   and compare it with `mockups/<screen>.png`. A difference in layout, components used, or
-   what's shown (a missing or extra column, a box split or merged, a different chart type) is
-   a smoke failure unless the builder's report flagged it as a deliberate departure. Small
-   spacing and colour differences are not. Once the screen is complete, save its screenshot as
-   `screenshots/<screen>.png` in the plan folder (this loop's folder; `mockups/` belongs to
-   `feature-design`). Link it from the task's `BUILD-LOG.md` entry with the click path to reach it
-   ("Settings › Webhooks › any webhook › Deliveries tab"), so `pr-describe` can tell
-   reviewers where to find it. When the task changed only one part of the screen and that part
-   makes sense on its own, crop the saved screenshot to it, so the reviewer sees just what
-   needs approving. Keep the full screen when where it sits matters: a new menu or list item,
-   a layout change, or anything placed against other parts of the screen. A crop keeps at
-   least 24px of the surrounding screen on every side, so no edge, border or popover touches
-   the image edge, and its `-before.png` is cropped to the same area so the pair lines up.
-   Full or cropped, the image holds everything under review whole. When the screen runs past
-   900px, keep the 1440 width and take the full page; when a story's canvas or a clip box is
-   smaller than what it renders, size it to fit. Open the saved image and check no part under
-   review (a card, a badge, a row) is cut by an edge before linking it.
-
-   **If the task adds an interaction a still can't show** (a drag and drop, an animation, a
-   screen that changes live, a short flow across screens), also record it as
-   `screenshots/<screen>-<action>.gif`, following `references/recording-gifs.md`, and link it
-   from the same `BUILD-LOG.md` entry. A GIF sits beside the screenshot, never in place of
-   it. A screen that only sits there gets no GIF. Record a `<screen>-<action>-before.gif`
-   only when the old behavior is what the task fixes.
-
-   **If the smoke needed content the demo site didn't have** (a document type using the new
-   property editor, tagged posts for a new dashboard to list, a setting turned on), make it
-   realistic, as `pr-demo`'s step 6 describes. Record it in the task's `BUILD-LOG.md` entry as
-   a short "Demo setup" note, next to the click path, so someone trying the branch can see the
-   same thing. If the project has a committed seed (a seed script, uSync files), have the
-   builder add the content there as part of this task instead, and the note says "in the
-   seed".
+   Dispatch a `smoke-tester` subagent (Agent tool, `subagent_type: smoke-tester`) to run it.
+   Give it: the task text, which of the three smokes to run, the click path to each screen
+   the task renders, the path to each screen's mockup and `-before.png`, the departures from
+   the mockup the builder's report flagged as deliberate, whether the task adds or changes a
+   migration, whether the project has a committed seed, and the full paths to this skill's
+   `references/recording-gifs.md` and to `pr-demo`'s `SKILL.md` (for realistic demo content). It takes, compares, crops and
+   saves the screenshots and GIFs, so you never open an image. It returns `PASS` or `FAIL`,
+   what it ran and on which database providers, the files it saved with their click paths,
+   and any demo setup. Put those in the task's `BUILD-LOG.md` entry. On `FAIL`, recurse to
+   step 3 with its findings. If it reports content a committed seed should hold, have the
+   builder add it there as part of this task.
 
 5. **Commit.** On `PASS` + smoke green, have the builder commit *only this task's changes*
    with a message naming the task, following the project's commit conventions (see
@@ -228,9 +202,18 @@ To click through the finished feature on the demo site before merging, use `pr-d
   state, `BUILD-LOG.md`, and `screenshots/`. Never collapse these roles. It never edits
   `README.md`: the index links `BUILD-LOG.md` from its footer, and `PLAN.md`'s checkboxes show
   progress.
-- The orchestrator may investigate directly: read docs, call an endpoint, read logs. The
-  moment a fix touches code, dispatch a builder, even for one line you already know. This is
-  easiest to break mid-debugging against a live system, where each small tweak feels too
-  small to hand off.
+- **Keep this session small.** It runs every task, so whatever it reads stays in context
+  for every later turn, and a long build fills it. Read the plan folder's files, the agents'
+  reports and short command output. Never open an image, a diff or a full build or test log
+  here: the agents read those and report back. Ask each agent for a short report that points
+  at files and lines instead of pasting code or output.
+- The orchestrator may investigate directly: read docs, call an endpoint, read a few lines of
+  a log. Anything bigger (many files, a whole log, a browser session) goes to a
+  `general-purpose` subagent that reports what it found. The moment a fix touches code,
+  dispatch a builder, even for one line you already know. This is easiest to break
+  mid-debugging against a live system, where each small tweak feels too small to hand off.
+- **Resuming mid-task.** A run can stop between a task's build and its commit. On resume, if
+  the next unchecked task has uncommitted changes on the branch, don't rebuild it: send them
+  to a `reviewer` as a fresh review of the whole task, then carry on from step 3.
 - If a gate still fails after the rethink round, stop and report the task + findings rather
   than committing degraded code.

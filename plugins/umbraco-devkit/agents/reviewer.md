@@ -162,6 +162,9 @@ skill you loaded.
    - `FAIL` if any Critical or Important finding exists — list each (file:line, what's
      wrong, why it matters, what must change). No vague "consider" notes on a `FAIL` item;
      hedging belongs in Suggestions.
+   - Keep the report short: a few lines per finding, pointing at file:line rather than
+     pasting code, the diff or test output. The session that sent you keeps it in context
+     for the rest of its run.
 
 ## Re-review rounds
 

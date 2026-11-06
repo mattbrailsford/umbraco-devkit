@@ -81,7 +81,9 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
    "Build & test" and fix what it reports in the files you changed. If `CLAUDE.md` lists no
    check, say so in your report.
 6. Report back, starting with the skills you loaded: what you changed, which files, test
-   result, the entry-point trace, and any decision the plan left implicit.
+   result, the entry-point trace, and any decision the plan left implicit. Keep it short:
+   one line per point, and file:line instead of pasted code, diffs or build output. The
+   session that sent you runs every task, and your report stays in its context.
 
 ## Hard rules
 

@@ -59,7 +59,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +83 | 3 | 0 | 5/24 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
-| [`feature-build`](#feature-build) | workflow | Broke a rule | – | 6 | 0 | – | – |
+| [`feature-build`](#feature-build) | workflow | Broke a rule | – | 7 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-design`](#feature-design) | workflow | Broke a rule | – | 12 | 4 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
@@ -207,6 +207,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `feature-build-names-agent-skills` | 100 | 2026-11-06 |
 | `feature-build-open-comments` | 56 | 2026-11-06 |
 | `feature-build-rethink-after-three-rounds` | 100 | 2026-11-06 |
+| `feature-build-smoke-tester-screens` | 100 | 2026-11-06 |
 | `feature-build-stops-without-checklist` | 100 | 2026-11-06 |
 
 ### `feature-close`
