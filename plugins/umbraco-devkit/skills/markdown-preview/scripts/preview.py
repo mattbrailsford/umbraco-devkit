@@ -40,6 +40,7 @@ import urllib.parse
 import urllib.request
 import webbrowser
 
+import compat
 from comments import Comments, describe
 from approvals import Approvals
 from rendering import Renderer, fetch_css, github_user, repo_context
@@ -59,8 +60,7 @@ def server_alive(server_file):
     """Whether this worktree's preview server is running."""
     try:
         with open(server_file) as f:
-            os.kill(json.load(f)["pid"], 0)
-        return True
+            return compat.pid_running(json.load(f)["pid"])
     except (OSError, ValueError, KeyError):
         return False
 
@@ -166,7 +166,8 @@ def running_port(server_file, root):
     try:
         with open(server_file) as f:
             state = json.load(f)
-        os.kill(state["pid"], 0)
+        if not compat.pid_running(state["pid"]):
+            return None
         with urllib.request.urlopen(f"http://127.0.0.1:{state['port']}/__ping", timeout=1) as res:
             return state["port"] if res.read().decode() == root else None
     except (OSError, ValueError, KeyError):
@@ -200,7 +201,7 @@ def open_command(argv):
         sys.exit(f"{args.path} is not inside {root}")
 
     rel = os.path.relpath(target, root)
-    url_path = "" if rel == "." else urllib.parse.quote(rel) + ("/" if os.path.isdir(target) else "")
+    url_path = "" if rel == "." else urllib.parse.quote(rel.replace(os.sep, "/")) + ("/" if os.path.isdir(target) else "")
     params = {}
     if args.scope is not None:
         scope = os.path.realpath(args.scope) if args.scope else start_dir

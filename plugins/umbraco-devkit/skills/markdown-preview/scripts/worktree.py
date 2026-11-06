@@ -4,6 +4,8 @@ import os
 import tempfile
 from collections import namedtuple
 
+import compat
+
 # Things that only matter while running (the server's port, the waiting helper) live here.
 STATE_DIR = os.path.join(tempfile.gettempdir(), "umbraco-devkit-preview")
 
@@ -56,8 +58,7 @@ def pid_alive(pid_file):
     """Whether the process whose id is in `pid_file` is still running."""
     try:
         with open(pid_file) as f:
-            os.kill(int(f.read()), 0)
-        return True
+            return compat.pid_running(f.read())
     except (OSError, ValueError):
         return False
 

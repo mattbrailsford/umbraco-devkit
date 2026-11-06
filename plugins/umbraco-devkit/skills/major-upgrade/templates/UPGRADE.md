@@ -53,6 +53,24 @@ already there, upgrade regression.
 - **[Stock level property editor]**. [Content › any product › Stock level].\
   Difference: [Upgrade regression: value not shown]. Task: [Fix stock level editor]
 
+## Docs
+
+Where this package's user docs live (from `CLAUDE.md`), the copy searched, and what this
+upgrade makes wrong in them (inventory step 12). When the docs live in another repo, this
+section is the hand-off.
+
+Docs: [`docs/` in this repo / `mycompany/stock-levels-docs`, copy `18/` searched / none].
+
+- **[docs/usage.md]**. [Shows `GetLevel`, removed in this version].\
+  Fix: [use `GetLevelAsync` in the sample]
+- **[docs/installation.md]**. [Says "Umbraco 17"].\
+  Fix: [Umbraco 18, .NET 11]
+
+Screenshots to retake (Finish step 3):
+
+- **[docs/images/stock-dashboard.png]**, on [docs/dashboard.md]. [Content › Stock].\
+  Why: [CMS change: new UUI table styling]
+
 ## Blockers
 
 [Dependencies with no release for the target major yet, or "None".]
@@ -70,6 +88,7 @@ Each task ends in a green build.
 - [ ] [Remove this package's own code scheduled for removal in this version]
 - [ ] [Proper fix for <stopgap>, one task each]
 - [ ] [Update compatibility markers]
+- [ ] [Update the docs pages and screenshots in "Docs", when they're in this repo]
 
 ## Decisions
 

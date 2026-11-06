@@ -14,7 +14,7 @@ Three things run through all of it:
   idioms Umbraco itself uses, read against the real CMS source and docs for the version you
   target.
 - **It asks before it touches git or your tracker.** Plans and drafts stay on disk until you
-  say yes.
+  say yes. For your main and version branches, a hook makes sure of it.
 
 **This is a foundation, not a finished house.** Drop it into a new package or add-on and
 build on it as the project grows.
@@ -63,7 +63,8 @@ with the plugin, because what to allow is your call.
 before each step. Run it again any time to fill gaps. When it's done, open `CLAUDE.md` and
 check the **Stack** section: the CMS version(s) you target and the database(s) you support
 should be filled in, with no `TODO` left. Many skills and the reviewer's checks depend on
-them.
+them. The **Docs** section says where your package's own docs live, so an upgrade can find
+the pages it makes wrong.
 
 **3. Ask for what you want.** Describe it ("add a dashboard that...", "why does saving fail
 when...", "triage the new issues") and the right skill picks it up. Or run one yourself from
@@ -126,7 +127,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 
 | I want to... | Run |
 |---|---|
-| Move to a new Umbraco major, task by task, still reviewed | [`/major-upgrade`](plugins/umbraco-devkit/skills/major-upgrade/SKILL.md) |
+| Move to a new Umbraco major, task by task, still reviewed, with the docs it makes wrong listed | [`/major-upgrade`](plugins/umbraco-devkit/skills/major-upgrade/SKILL.md) |
 | Get a finished package listed on the Umbraco Marketplace | [`/umbraco-marketplace`](plugins/umbraco-devkit/skills/umbraco-marketplace/SKILL.md) |
 
 ### Read a doc
@@ -153,6 +154,12 @@ You don't run these. The skills above and the agents load them when the work nee
 | [`builder`](plugins/umbraco-devkit/agents/builder.md) | Builds one task at a time |
 | [`reviewer`](plugins/umbraco-devkit/agents/reviewer.md) | Checks every diff, read-only, before it's committed |
 | [`issue-triager`](plugins/umbraco-devkit/agents/issue-triager.md) | Reads and classifies tracker issues, read-only |
+
+**Hooks** (checks Claude Code runs before an action, so they hold even if Claude forgets a rule):
+
+| Hook | What it does |
+|---|---|
+| [`trunk-gate`](plugins/umbraco-devkit/hooks/trunk-gate.mjs) | Asks you before any commit or push to `main` or a version branch. Needs Node |
 
 **Umbraco knowledge:**
 

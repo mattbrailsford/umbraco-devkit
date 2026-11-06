@@ -563,6 +563,30 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-mockup-no-invented-styling": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 40,
+    "withoutDate": "2026-11-05"
+  },
+  "feature-design-mockup-shared-surface-css": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-design-mockup-tree-state-sign": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 50,
+    "withoutDate": "2026-11-05"
+  },
   "feature-design-mockups-email-without-ui": {
     "date": "2026-10-20",
     "runs": 3,
@@ -812,7 +836,31 @@
     "withoutDate": "2026-10-16"
   },
   "major-upgrade-diffs-used-types": {
-    "date": "2026-10-29",
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-docs-elsewhere": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-lists-docs": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-no-docs-copy": {
+    "date": "2026-11-05",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -820,7 +868,7 @@
     "withoutDate": null
   },
   "major-upgrade-offers-stopgaps": {
-    "date": "2026-10-29",
+    "date": "2026-11-05",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -828,15 +876,15 @@
     "withoutDate": null
   },
   "major-upgrade-proposes-backports": {
-    "date": "2026-10-30",
-    "runs": 3,
-    "skillLoaded": 3,
+    "date": "2026-11-05",
+    "runs": 6,
+    "skillLoaded": 6,
     "with": 100,
     "without": null,
     "withoutDate": null
   },
   "major-upgrade-version-mismatch": {
-    "date": "2026-10-29",
+    "date": "2026-11-05",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -1167,8 +1215,16 @@
     "without": 100,
     "withoutDate": "2026-10-16"
   },
+  "project-init-asks-docs": {
+    "date": "2026-11-05",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "project-init-keeps-claude-md": {
-    "date": "2026-10-16",
+    "date": "2026-11-05",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -1176,7 +1232,7 @@
     "withoutDate": null
   },
   "project-init-new-package-template": {
-    "date": "2026-10-16",
+    "date": "2026-11-05",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
