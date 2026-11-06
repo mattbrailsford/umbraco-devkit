@@ -66,7 +66,11 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
 2. **Activate this task's specs.** `bdd-specs` generates specs pending by default. Find the
    ones this task covers, turn off their pending marker, run them, and confirm they fail for
    the right reason before writing any implementation. Leave every other pending spec alone —
-   another task owns those. If the dispatch asks for an e2e test because none covers this
+   another task owns those. A spec you write yourself gets the same check, whether it covers
+   a new guard, a branch, or a fix-round change: see it fail against the code without your
+   change (or with the guard taken out), then put the change back. A spec that passes either
+   way, such as "count is 0" when nothing renders, proves nothing; rewrite it until it can
+   fail. If the dispatch asks for an e2e test because none covers this
    task's path, write one test for the task's main path in the project's e2e suite.
 3. Implement the task.
 4. **Trace from the real entry point.** If the task touches a deployed code path, open the
@@ -81,16 +85,23 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
    "Build & test" and fix what it reports in the files you changed. If `CLAUDE.md` lists no
    check, say so in your report.
 6. Report back, starting with the skills you loaded: what you changed, which files, test
-   result, the entry-point trace, and any decision the plan left implicit. Keep it short:
-   one line per point, and file:line instead of pasted code, diffs or build output. The
-   session that sent you runs every task, and your report stays in its context.
+   result, the entry-point trace, and any decision the plan left implicit. For the test
+   result, give each command you ran and its summary line copied from the output (passed,
+   failed and skipped counts), and say how you saw each spec you activated or wrote fail
+   first. Report only results you saw; a check you didn't run is "not run", not "passes".
+   Keep it short: one line per point, and file:line instead of pasted code, diffs or the
+   rest of the build output. The session that sent you runs every task, and your report
+   stays in its context.
 
 ## Hard rules
 
 - **Do not commit** unless the dispatch explicitly tells you to (the loop commits only after
   review passes).
 - Stay inside the files/extension points you own. If the task needs others, stop and say so.
-- Address review findings specifically; don't re-architect unrelated code.
+- Address review findings specifically; don't re-architect unrelated code. Then treat what
+  the fix touched as new code: a new branch, catch, `finally` or changed condition gets its
+  own spec that fails first (step 2), and the task's specs run again. Fixing the finding the
+  reviewer named while breaking the line next to it costs another round.
 - **No stubs or no-ops left on a live code path.** If you stub or deprecate a method, delete
   or rewire every call site in the same task. A deprecated method still called from
   production code is a bug.
