@@ -49,10 +49,17 @@ export function attachHighlight(box) {
   layer.setAttribute('aria-hidden', 'true');
   box.before(wrap);
   wrap.append(layer, box);
-  const cs = getComputedStyle(box);
-  for (const k of ['padding', 'borderWidth', 'fontFamily', 'fontSize', 'lineHeight', 'letterSpacing'])
-    layer.style[k] = cs[k];
-  const paint = () => { layer.innerHTML = highlightMarkdown(box.value); layer.scrollTop = box.scrollTop; };
+  // A box built before it is on the page has no styles yet, so copy them once it is.
+  let matched = false;
+  const match = () => {
+    if (matched || !box.isConnected) return;
+    const cs = getComputedStyle(box);
+    for (const k of ['padding', 'borderWidth', 'fontFamily', 'fontSize', 'lineHeight', 'letterSpacing'])
+      layer.style[k] = cs[k];
+    matched = true;
+  };
+  const paint = () => { match(); layer.innerHTML = highlightMarkdown(box.value); layer.scrollTop = box.scrollTop; };
+  box.addEventListener('focus', paint);
   box.addEventListener('input', paint);
   box.addEventListener('scroll', () => { layer.scrollTop = box.scrollTop; });
   new MutationObserver(paint).observe(box, { attributes: true, attributeFilter: ['style'] });
