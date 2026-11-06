@@ -164,7 +164,10 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    PR. If the builder's report named "any decision the plan left implicit that you had to
    make" (step 6 of its workflow), such as an assumption, spec deviation, or workaround,
    append a dated one-line entry to `DECISION-LOG.md` too. Otherwise it is lost when the task
-   ends; `decision-review` depends on it being on disk.
+   ends; `decision-review` depends on it being on disk. Say who decided:
+   `(feature-build, task 3, agent)` for a call the builder made, `(…, user)` for one the
+   user made, such as an answer to a question the task raised. The whole-feature review and
+   `decision-review` treat the two differently.
 
 8. Next task.
 
@@ -173,13 +176,14 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
 When every box is checked: run the full test suite once more. If `BRIEF.md` has a `Repro`
 section, run it through the real entry point, as step 5 does, and see it pass; a failure goes
 to a fresh `builder` like a review finding. Then run the whole-feature review below, then
-report a summary (tasks completed, commits, anything still red).
+report a summary (tasks completed, commits, anything still red, and the review's "Needs
+sign-off" list).
 
 **Whole-feature review.** The per-task `reviewer` sees one task's diff, so it misses what
 builds up across tasks: duplicated logic, a class that took on a second job, a component that
 started calling a repository directly, drift from `ARCHITECTURE.md`. Dispatch one `reviewer`
 subagent in whole-feature mode with the full branch diff (`git diff <base>...HEAD`),
-`ARCHITECTURE.md` and `SPEC.md`.
+`ARCHITECTURE.md`, `SPEC.md` and `DECISION-LOG.md`.
 
 - On `FAIL`, send the findings to a fresh `builder`, then review again. Repeat until `PASS`,
   with the same round diffs and three-round limit as the loop's "Recurse" step; here the
