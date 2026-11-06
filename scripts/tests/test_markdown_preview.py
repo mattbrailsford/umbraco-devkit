@@ -6,6 +6,7 @@ Standard library only, and no network: GitHub's renderer is swapped for a stand-
 import http.client
 import json
 import os
+import pathlib
 import re
 import shutil
 import subprocess
@@ -35,7 +36,7 @@ def read(path):
 
 def write(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
+    with open(path, "w", encoding="utf-8", newline="") as f:  # no CRLF on Windows: write exactly `text`
         f.write(text)
 
 
@@ -84,6 +85,15 @@ class WorktreeTests(TempRepo):
         write(pid_file, "not a pid")
         self.assertFalse(worktree.pid_alive(pid_file))
         self.assertFalse(worktree.pid_alive(os.path.join(self.root, "missing")))
+
+    def test_pid_alive_is_false_once_the_process_exits(self):
+        # On Windows, os.kill(pid, 0) succeeds for a process that has exited, so a stale pid
+        # file from a killed helper used to block every later `wait`.
+        child = subprocess.Popen([sys.executable, "-c", "pass"])
+        child.wait()
+        pid_file = os.path.join(self.root, "pid")
+        write(pid_file, str(child.pid))
+        self.assertFalse(worktree.pid_alive(pid_file))
 
 
 class CommentStoreTests(TempRepo):
@@ -522,7 +532,7 @@ class PageScriptTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("node"), "needs node")
     def test_scripts_parse(self):
         for name in self.scripts():
-            with tempfile.NamedTemporaryFile("w", suffix=".mjs", delete=False) as f:
+            with tempfile.NamedTemporaryFile("w", suffix=".mjs", delete=False, encoding="utf-8") as f:
                 f.write(read(os.path.join(self.page_dir, name)))
             self.addCleanup(os.remove, f.name)
             result = subprocess.run(["node", "--check", f.name], capture_output=True, text=True)
@@ -556,7 +566,7 @@ const out = cases.map(([o, n]) => {
 });
 out.push(diff(['a', 'b', 'c'], ['a', 'c', 'b']));
 console.log(JSON.stringify(out));
-""" % os.path.join(SCRIPTS, "page", "diff.js")
+""" % pathlib.Path(SCRIPTS, "page", "diff.js").as_uri()  # a file URL: a Windows path's backslashes would be escapes
         result = subprocess.run(["node", "--input-type=module", "-e", script, json.dumps([c[:2] for c in cases])],
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)

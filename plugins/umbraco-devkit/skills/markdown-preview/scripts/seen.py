@@ -8,6 +8,8 @@ the git folder, mirroring the worktree's paths.
 import os
 import shutil
 
+import compat
+
 
 class Seen:
     def __init__(self, folder):
@@ -48,7 +50,7 @@ class Seen:
         os.makedirs(os.path.dirname(copy), exist_ok=True)
         tmp = f"{copy}.{os.getpid()}.tmp"
         shutil.copyfile(full, tmp)
-        os.replace(tmp, copy)
+        compat.replace(tmp, copy)
 
     def before(self, url_path, full):
         """The text the reader last saw, or None if the file hasn't changed since."""
