@@ -52,8 +52,10 @@ CS
 cat > docs/plans/tag-filters/SPEC.md <<'MD'
 # Tag filters: spec
 
-- A tag whose text equals an exact name, ignoring case, is left out.
-- A tag whose text starts with a prefix, ignoring case, is left out.
+- A tag whose text equals an exact name, ignoring case, is left out (for example, the name
+  `draft` hides "Draft").
+- A tag whose text starts with a prefix, ignoring case, is left out (for example, the prefix
+  `internal-` hides "Internal-HR").
 - With no filters configured, the cloud is unchanged.
 MD
 cat > docs/plans/tag-filters/PLAN.md <<'MD'
@@ -144,85 +146,49 @@ sed -i.bak 's/- \[ \] Add `TagFilter`/- [x] Add `TagFilter`/' docs/plans/tag-fil
 rm docs/plans/tag-filters/PLAN.md.bak
 git add -A && git commit -q -m "feat(filters): add TagFilter with name and prefix rules"
 
-# Task 3: the builder's uncommitted change under review.
-cat > src/Umbraco.Community.TagCloud/Services/TagCloudService.cs <<'CS'
-using Umbraco.Cms.Core.Services;
-using Umbraco.Community.TagCloud.Filters;
-
-namespace Umbraco.Community.TagCloud.Services;
-
-public class TagCloudService(ITagService tagService, TagFilter filter)
-{
-    public IReadOnlyList<(string Text, int Weight)> GetCloud(string group) =>
-        tagService.GetAllContentTags(group)
-            .Where(t => !filter.IsHidden(t.Text))
-            .OrderByDescending(t => t.NodeCount)
-            .Select(t => (t.Text, t.NodeCount))
-            .ToList();
-}
-CS
-sed -i.bak 's#    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />#    <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />\n    <PackageReference Include="NSubstitute" Version="5.3.0" />#' \
-  tests/Umbraco.Community.TagCloud.Tests/Umbraco.Community.TagCloud.Tests.csproj
-rm tests/Umbraco.Community.TagCloud.Tests/Umbraco.Community.TagCloud.Tests.csproj.bak
+# An earlier test of the cloud's ordering, with a shared fake tag service.
 cat > tests/Umbraco.Community.TagCloud.Tests/TagCloudServiceTests.cs <<'CS'
-using Microsoft.Extensions.Options;
-using NSubstitute;
+using System.Reflection;
 using NUnit.Framework;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Community.TagCloud.Filters;
 using Umbraco.Community.TagCloud.Services;
 
 namespace Umbraco.Community.TagCloud.Tests;
 
 public class TagCloudServiceTests
 {
-    private static ITag Tag(string text, int count)
-    {
-        var tag = Substitute.For<ITag>();
-        tag.Text.Returns(text);
-        tag.NodeCount.Returns(count);
-        return tag;
-    }
+    // The tags every test's cloud is built from.
+    private static readonly (string Text, int Count)[] SampleTags =
+        [("news", 5), ("events", 3), ("sports", 8)];
+
+    private static TagCloudService CreateService() => new(FakeTagService.With(SampleTags));
 
     [Test]
-    public void FilteredTags_NeverAppear()
+    public void Cloud_IsOrderedByWeight() =>
+        Assert.That(
+            CreateService().GetCloud("default").Select(c => c.Text),
+            Is.EqualTo(new[] { "sports", "news", "events" }));
+}
+
+// A stand-in for ITagService that only answers GetAllContentTags.
+public class FakeTagService : DispatchProxy
+{
+    private IEnumerable<ITag> _tags = [];
+
+    public static ITagService With(IEnumerable<(string Text, int Count)> tags)
     {
-        var tags = Substitute.For<ITagService>();
-        tags.GetAllContentTags("default").Returns([Tag("news", 5), Tag("events", 3)]);
-        var filter = new TagFilter(Options.Create(new TagFilterOptions { Names = ["draft"] }));
-
-        var cloud = new TagCloudService(tags, filter).GetCloud("default");
-
-        Assert.That(cloud.Select(c => c.Text), Has.No.Member("draft"));
+        var proxy = Create<ITagService, FakeTagService>();
+        ((FakeTagService)(object)proxy)._tags = tags
+            .Select(t => (ITag)new Tag { Text = t.Text, NodeCount = t.Count, Group = "default" })
+            .ToList();
+        return proxy;
     }
 
-    [Test]
-    public void Cloud_IsOrderedByWeight()
-    {
-        var tags = Substitute.For<ITagService>();
-        tags.GetAllContentTags("default").Returns([Tag("events", 3), Tag("news", 5)]);
-        var filter = new TagFilter(Options.Create(new TagFilterOptions()));
-
-        var cloud = new TagCloudService(tags, filter).GetCloud("default");
-
-        Assert.That(cloud.Select(c => c.Text), Is.EqualTo(new[] { "news", "events" }));
-    }
+    protected override object? Invoke(MethodInfo? method, object?[]? args) =>
+        method?.Name == nameof(ITagService.GetAllContentTags)
+            ? _tags
+            : throw new NotSupportedException(method?.Name);
 }
 CS
-cat > BUILDER-REPORT.md <<'MD'
-# Builder report: task 3
-
-Changed `TagCloudService` to take `TagFilter` and drop hidden tags before ordering. Added
-`TagCloudServiceTests` with `FilteredTags_NeverAppear` and `Cloud_IsOrderedByWeight`.
-
-`dotnet build`: succeeded. `dotnet test`: 6 passed, 0 failed, 0 skipped.
-
-Entry point: `TagCloudComposer` registers `TagFilter` and `TagCloudService`; the cloud view
-component calls `GetCloud`, which now filters.
-MD
-
-# git can't run inside the eval sandbox, so hand the reviewer the diff as a file.
-git add -A
-git diff --cached HEAD -- src tests > CHANGE.diff
-git reset -q
+git add -A && git commit -q -m "test: cover cloud ordering"

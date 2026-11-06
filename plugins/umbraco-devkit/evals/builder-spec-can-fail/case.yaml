@@ -1,4 +1,4 @@
 schema_version: "1.1"
-name: reviewer-spec-cannot-fail
+name: builder-spec-can-fail
 context:
   scaffold_script: fixture.sh
