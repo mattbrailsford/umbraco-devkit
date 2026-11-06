@@ -1359,6 +1359,14 @@
     "without": 67,
     "withoutDate": "2026-11-06"
   },
+  "reviewer-logged-decisions": {
+    "date": "2026-11-06",
+    "runs": 4,
+    "skillLoaded": 0,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "reviewer-nfr-targets": {
     "date": "2026-11-06",
     "runs": 3,

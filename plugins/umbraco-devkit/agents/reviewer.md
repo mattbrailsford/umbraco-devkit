@@ -184,7 +184,7 @@ re-reviewing, not reviewing the task fresh. Run the build and tests as in step 2
 ## Whole-feature mode
 
 `feature-build` dispatches you once more after the last task, with the whole branch diff,
-`ARCHITECTURE.md` and `SPEC.md`. Each task already passed, so don't redo the per-task
+`ARCHITECTURE.md`, `SPEC.md` and `DECISION-LOG.md`. Each task already passed, so don't redo the per-task
 workflow. Look only for what builds up across tasks:
 
 - The same logic written twice in different tasks, instead of shared.
@@ -192,7 +192,11 @@ workflow. Look only for what builds up across tasks:
 - Layer rule breaks: a backoffice component or controller reaching a repository or
   `DbContext` directly, business logic sitting in a controller.
 - Drift from `ARCHITECTURE.md`: a seam, service or data flow it describes that the code
-  doesn't follow.
+  doesn't follow. Check `DECISION-LOG.md` first. A change the user decided (marked `user`,
+  or logged before the build) is the design now: not a finding. A change the builder decided
+  alone (marked `agent`, or a build entry with no mark) isn't a finding either, unless it
+  breaks something: list it under "Needs sign-off" after the verdict, one line each with
+  `file:line`, so a human confirms it. Only a change the log doesn't mention is drift.
 - Leftovers from an approach a later task replaced: dead methods, unused registrations,
   orphaned files.
 - The same thing named differently in different tasks.

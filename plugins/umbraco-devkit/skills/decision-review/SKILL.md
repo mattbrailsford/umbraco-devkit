@@ -70,7 +70,8 @@ layout inside an already-agreed extension point. Nobody needs to sign off on tho
 1. Read `DECISION-LOG.md` end to end. Keep only entries timestamped from this feature's build
    phase (from when `feature-build` cut the branch onward). Earlier entries belong to
    `feature-explore`/`feature-design`/`feature-plan` — the user already weighed in during those phases'
-   interviews; don't re-surface settled ground.
+   interviews; don't re-surface settled ground. Drop build entries marked `user` too: the user
+   made that call during the build.
 2. Read `BUILD-LOG.md` for what each task claimed to verify, as context for the entries above.
 3. Read the full diff since the branch point (`git diff <base>...HEAD`), with enough
    surrounding code to judge each flagged item in context, not just the changed lines.
