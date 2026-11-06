@@ -35,7 +35,7 @@ These decide what belongs in this repo. Check a new rule, skill, or section agai
 plugins/umbraco-devkit/
   .claude-plugin/plugin.json                      # plugin manifest
   skills/<name>/SKILL.md                          # one folder per skill (+ references/, templates/, scripts/)
-  agents/{builder,reviewer,issue-triager}.md      # subagents
+  agents/{builder,reviewer,smoke-tester,issue-triager}.md # subagents
   hooks/hooks.json, hooks/*.mjs                   # hooks, on for every consumer; Node, no dependencies
   evals/<case>/{prompt.md,graders/}               # `claude plugin eval` cases; results/ is gitignored
 settings.example.json   # copy-by-hand example for consumers; NOT installed by the plugin

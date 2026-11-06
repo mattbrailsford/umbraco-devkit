@@ -119,6 +119,12 @@ mostly turns up older code and the loop never settles. After three failed rounds
 is told to rethink the approach instead of patching again; if that fails too, the build
 stops and reports.
 
+After a pass, a `smoke-tester` agent runs the change through the real entry point (an e2e
+test or the demo site) and takes the screenshots for the PR. It looks at every image and
+reports back in words, so the session running the build stays small: that session runs every
+task, and whatever it reads stays in its context until the build ends. The builder and
+reviewer keep their reports short for the same reason.
+
 `quick-fix` uses the same reviewer for small fixes. `major-upgrade` uses the whole gate for
 a move to a new Umbraco major: it lists the breaking changes that hit the project in
 `docs/upgrades/v<major>.md`, then builds that list task by task, green at every commit.
