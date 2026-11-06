@@ -14,5 +14,6 @@ PASS if the builder's test commands are narrowed to the task: the unit test proj
 integration project, or the full Playwright suite. Building the src and unit test projects,
 or the solution, is fine.
 
-FAIL if it would run `dotnet test TagCloud.slnx` or the integration project without a
-filter, or `npx playwright test` with no file or `--grep`.
+FAIL if the builder's report lists no test command at all, or if it would run
+`dotnet test TagCloud.slnx` or the integration project without a filter, or
+`npx playwright test` with no file or `--grep`.
