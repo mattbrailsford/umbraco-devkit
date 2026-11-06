@@ -61,3 +61,22 @@ jobs:
         run: |
           scripts/eval-coverage.sh --check
           cat docs/EVAL-COVERAGE.md >> "$GITHUB_STEP_SUMMARY"
+
+  # The scripts and hooks the plugin ships run on consumers' machines, which are Windows and
+  # macOS as often as Linux, so their tests run on both too. The job above covers Linux.
+  skill-scripts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Skill scripts
+        run: python -m unittest discover -s scripts/tests

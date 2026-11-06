@@ -162,6 +162,8 @@ You don't run these. The skills above and the agents load them when the work nee
 |---|---|
 | [`trunk-gate`](plugins/umbraco-devkit/hooks/trunk-gate.mjs) | Asks you before any commit or push to `main` or a version branch. Needs Node |
 
+**Pre-review checks:** [`checks/`](plugins/umbraco-devkit/checks/run.mjs) is a script `feature-build` runs between the builder and the reviewer, for slips a script can catch (file encoding, links into plan folders, unsanitized `unsafeHTML`, files git doesn't track). Add your own in `.claude/checks/`. Needs Node.
+
 **Umbraco knowledge:**
 
 | Skill | What it covers |

@@ -90,17 +90,28 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    `umbraco-backoffice-conventions`, etc. as relevant) and run the existing specs before
    reporting back. Ask it to start its report with the skills it loaded, so a skipped one
    shows. If the project has e2e tests and none covers the task's path, tell the builder to
-   add one (the smoke step runs it). The builder does not commit.
+   add one (the smoke step runs it). Give it the pre-review check command below, to run and
+   fix before it reports. The builder does not commit.
 
-2. **Review.** Dispatch a `reviewer` subagent (Agent tool, `subagent_type: reviewer`, model
+2. **Pre-review checks.** Run `node "${CLAUDE_PLUGIN_ROOT}/checks/run.mjs"` in the task's
+   worktree. It checks the uncommitted changes for slips a script can catch: a file that
+   isn't UTF-8, a link into a plan folder, `unsafeHTML` with no `sanitizeHTML`, a new file
+   git doesn't track. Exit 1 prints one finding per line: send them to a fresh `builder` as
+   the round's findings and run the checks again, before any review. Exit 2 means the
+   checks couldn't run: note it in `BUILD-LOG.md` and go on to review. A project adds its own
+   checks as `.mjs` files in `.claude/checks/`, and turns one off by name in
+   `.claude/checks/config.json` (`{ "disabled": ["untracked"] }`); see the header of
+   `run.mjs` for the shape.
+
+3. **Review.** Dispatch a `reviewer` subagent (Agent tool, `subagent_type: reviewer`, model
    opus, must be ≥ builder). It invokes `umbraco-security` (when the diff
    touches security) and the relevant stack skills, reads the builder's diff, and returns `PASS` or
    `FAIL` with specific findings. Ask it, too, to start its report with the skills it loaded.
 
-3. **Recurse.** If `FAIL`: send the findings to a fresh `builder` for the same task, then
-   review again. Nothing reaches git history before `PASS`. If a finding is a repeatable
-   mistake a future `builder` would likely make on another task, write it to
-   `.claude/memory/` (type: `gotcha`) once fixed.
+4. **Recurse.** If `FAIL`: send the findings to a fresh `builder` for the same task, then
+   run the pre-review checks (step 2) and review again. Nothing reaches git history before
+   `PASS`. If a finding is a repeatable mistake a future `builder` would likely make on
+   another task, write it to `.claude/memory/` (type: `gotcha`) once fixed.
    - **Re-review the round, not the task.** Before each fix round, snapshot the tree
      (`git add -A && git write-tree`, which stages but doesn't commit). After it, give the
      `reviewer` the previous round's findings and the round's diff
@@ -113,7 +124,7 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
      fails too, stop and report the task and its findings. If the findings show the design
      is wrong, not the code, hand off to `feature-design`.
 
-4. **Smoke the real entry point.** Before commit, exercise the deployed artifact. Use the
+5. **Smoke the real entry point.** Before commit, exercise the deployed artifact. Use the
    first of these the project has:
    - **An end-to-end (e2e) test suite.** Run the e2e test covering the task's path. If none
      covers it, the builder adds one as part of the task. A suite passing without touching
@@ -138,15 +149,15 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    saves the screenshots and GIFs, so you never open an image. It returns `PASS` or `FAIL`,
    what it ran and on which database providers, the files it saved with their click paths,
    and any demo setup. Put those in the task's `BUILD-LOG.md` entry. On `FAIL`, recurse to
-   step 3 with its findings. If it reports content a committed seed should hold, have the
+   step 4 with its findings. If it reports content a committed seed should hold, have the
    builder add it there as part of this task.
 
-5. **Commit.** On `PASS` + smoke green, have the builder commit *only this task's changes*
+6. **Commit.** On `PASS` + smoke green, have the builder commit *only this task's changes*
    with a message naming the task, following the project's commit conventions (see
    `git-workflow`). One commit per task. If the task's code makes a pending spec pass for
    the first time, that spec file goes in the same commit, never in a later cleanup commit.
 
-6. **Check the box.** Edit `PLAN.md`: `- [ ]` → `- [x]` for the completed task, and add a
+7. **Check the box.** Edit `PLAN.md`: `- [ ]` → `- [x]` for the completed task, and add a
    one-line entry to `BUILD-LOG.md` (commit SHA, what was verified). Commit that change, plus
    any `screenshots/` (images and GIFs) this task saved, with the task commit or immediately
    after. `pr-describe` links screenshots by commit, so an uncommitted one is a broken image in the
@@ -155,12 +166,12 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    append a dated one-line entry to `DECISION-LOG.md` too. Otherwise it is lost when the task
    ends; `decision-review` depends on it being on disk.
 
-7. Next task.
+8. Next task.
 
 ## Finish
 
 When every box is checked: run the full test suite once more. If `BRIEF.md` has a `Repro`
-section, run it through the real entry point, as step 4 does, and see it pass; a failure goes
+section, run it through the real entry point, as step 5 does, and see it pass; a failure goes
 to a fresh `builder` like a review finding. Then run the whole-feature review below, then
 report a summary (tasks completed, commits, anything still red).
 
@@ -214,6 +225,6 @@ To click through the finished feature on the demo site before merging, use `pr-d
   mid-debugging against a live system, where each small tweak feels too small to hand off.
 - **Resuming mid-task.** A run can stop between a task's build and its commit. On resume, if
   the next unchecked task has uncommitted changes on the branch, don't rebuild it: send them
-  to a `reviewer` as a fresh review of the whole task, then carry on from step 3.
+  to a `reviewer` as a fresh review of the whole task, then carry on from step 4.
 - If a gate still fails after the rethink round, stop and report the task + findings rather
   than committing degraded code.
