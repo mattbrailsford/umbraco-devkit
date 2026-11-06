@@ -89,7 +89,8 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
    step runs the task's e2e test. Fix until the relevant specs pass. Do not weaken
    or skip specs to go green. Then run the lint/format check `CLAUDE.md` lists under
    "Build & test" and fix what it reports in the files you changed. If `CLAUDE.md` lists no
-   check, say so in your report.
+   check, say so in your report. Last, if the dispatch gives a pre-review check command, run
+   it and fix every finding it prints; the loop runs it again before the reviewer.
 6. Report back, starting with the skills you loaded: what you changed, which files, test
    result, the entry-point trace, and any decision the plan left implicit. For the test
    result, give each command you ran and its summary line copied from the output (passed,

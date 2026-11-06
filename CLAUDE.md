@@ -37,6 +37,7 @@ plugins/umbraco-devkit/
   skills/<name>/SKILL.md                          # one folder per skill (+ references/, templates/, scripts/)
   agents/{builder,reviewer,smoke-tester,issue-triager}.md # subagents
   hooks/hooks.json, hooks/*.mjs                   # hooks, on for every consumer; Node, no dependencies
+  checks/run.mjs, checks/builtin/*.mjs            # pre-review checks feature-build runs; Node, no dependencies
   evals/<case>/{prompt.md,graders/}               # `claude plugin eval` cases; results/ is gitignored
 settings.example.json   # copy-by-hand example for consumers; NOT installed by the plugin
 scripts/                # check-*.sh + their allowlists, tests/; repo-only, not shipped
@@ -90,7 +91,8 @@ Naming a new skill or agent:
 ## No build, lint, or test step
 
 Everything is Markdown plus two hand-written JSON manifests, apart from the few scripts some
-skills ship (stdlib Python) and the plugin's hooks (Node), all tested by `scripts/tests/`.
+skills ship (stdlib Python) and the plugin's hooks and pre-review checks (Node), all tested by
+`scripts/tests/`, on Linux, macOS and Windows in CI.
 There is no .NET code here. Don't run `dotnet build` or apply C# conventions to this repo. Checks that do exist:
 
 ```bash
@@ -102,7 +104,7 @@ scripts/check-version.sh      # version only in plugin.json, and bumped if shipp
 scripts/check-frontmatter.sh  # skill/agent headers parse, names match, descriptions fit
 scripts/check-skill-callers.sh # no skill changes behavior based on which skill started it
 scripts/check-evals.sh        # every skill has an eval
-scripts/check-skill-scripts.sh # tests for the scripts skills ship and the plugin's hooks
+scripts/check-skill-scripts.sh # tests for the scripts skills ship, the hooks and the checks
 scripts/eval-coverage.sh --check # docs/EVAL-COVERAGE.md is current and every # covers: is valid
 ```
 
