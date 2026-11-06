@@ -408,7 +408,8 @@ When every task is ticked:
    (dates and times, generated numbers and ids, relative times like "2 minutes ago"), so
    only real differences show. Sort each difference into one of three:
    - **CMS change**: the CMS itself changed the look (a new UUI, a new layout). Note it; no
-     task.
+     task. If it changes the shared frame (header, sidebar, corners, colours, tables), report
+     it with `skill-report`: the `feature-design` mockup starters need a look for this major.
    - **Already there**: the same fault shows on the current major. Not an upgrade task. If
      the branch fixed it, it's a backport candidate; if not, a follow-up.
    - **Upgrade regression**: only on the target major. Add a task and build it, then take
