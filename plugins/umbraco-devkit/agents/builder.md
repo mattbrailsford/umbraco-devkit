@@ -50,7 +50,10 @@ section, and the files/extension points you own. Build that task and nothing mor
   code reading a build-time env var or calling an API that needs credentials, or any
   `localStorage`/`sessionStorage` use → `umbraco-security`, same reason.
 
-Load only the skills the task needs.
+Load only the skills the task needs. If the dispatch names skills, load every one of them
+before you start, plus any others above the task needs.
+
+Start your report with `Skills loaded:` and the name of every skill you loaded.
 
 ## Workflow
 
@@ -77,8 +80,8 @@ Load only the skills the task needs.
    weaken or skip specs to go green. Then run the lint/format check `CLAUDE.md` lists under
    "Build & test" and fix what it reports in the files you changed. If `CLAUDE.md` lists no
    check, say so in your report.
-6. Report back: what you changed, which files, test result, the entry-point trace, and any
-   decision the plan left implicit.
+6. Report back, starting with the skills you loaded: what you changed, which files, test
+   result, the entry-point trace, and any decision the plan left implicit.
 
 ## Hard rules
 

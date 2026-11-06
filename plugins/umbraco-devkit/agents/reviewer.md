@@ -56,6 +56,10 @@ design. A reviewer that fixes its own findings isn't a gate.
   above the package's CMS floor, is `Important`. So is a floor between siblings that release
   together, with no exact pin.
 
+If the dispatch names skills, load every one of them before you judge the diff, plus any
+others above the diff needs. Start your report with `Skills loaded:` and the name of every
+skill you loaded.
+
 ## Workflow
 
 1. `git diff` to see what the builder changed. Review only that, against the task it was

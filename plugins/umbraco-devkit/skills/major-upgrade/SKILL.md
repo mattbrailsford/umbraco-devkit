@@ -300,7 +300,10 @@ build**:
 
 1. Fix obsolete and `@deprecated` usages, C# and frontend, while still on the current
    version. Each replacement API already exists there, so this lands green and shrinks the
-   bump.
+   bump. The same goes for a whole subsystem the target major removes (a search engine, a
+   cache, a delivery model) when its replacement already ships for the current major: port
+   to it here, as its own task, behind the package's own interface, so the bump only swaps
+   versions.
 2. Bump the target framework and packages, with every shared dependency at the CMS's
    version (step 1) and any forced third-party bump (step 10), and fix what no longer
    compiles. This is the one big task. Split it by

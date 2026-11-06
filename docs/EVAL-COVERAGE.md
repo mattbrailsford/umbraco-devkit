@@ -33,9 +33,11 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 
 A workflow eval scored under 100, so the skill broke one of its own rules.
 
+- [`feature-build`](#feature-build): `feature-build-checks-agent-skills` (67) `feature-build-open-comments` (56). Read the run, then fix the skill or the grader.
 - [`feature-design`](#feature-design): `feature-design-nfr-targets` (83). Read the run, then fix the skill or the grader.
 - [`feature-explore`](#feature-explore): `feature-explore-writes-brief` (97). Read the run, then fix the skill or the grader.
 - [`feature-plan`](#feature-plan): `feature-plan-awaits-approval` (67) `feature-plan-offers-preview` (83). Read the run, then fix the skill or the grader.
+- [`major-upgrade`](#major-upgrade): `major-upgrade-offers-stopgaps` (67). Read the run, then fix the skill or the grader.
 - [`markdown-preview`](#markdown-preview): `feature-plan-awaits-approval` (67). Read the run, then fix the skill or the grader.
 - [`pr-describe`](#pr-describe): `pr-describe-diagram-readability` (80). Read the run, then fix the skill or the grader.
 
@@ -57,7 +59,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +83 | 3 | 0 | 5/24 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
-| [`feature-build`](#feature-build) | workflow | Keeps its rules | – | 4 | 0 | – | – |
+| [`feature-build`](#feature-build) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-design`](#feature-design) | workflow | Broke a rule | – | 11 | 3 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
@@ -69,7 +71,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Keeps its rules | – | 7 | 0 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 9 | 0 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
@@ -200,10 +202,12 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `feature-build-asks-before-trunk` | 100 | 2026-10-16 |
-| `feature-build-open-comments` | 100 | 2026-10-26 |
-| `feature-build-rethink-after-three-rounds` | 100 | 2026-10-20 |
-| `feature-build-stops-without-checklist` | 100 | 2026-10-16 |
+| `feature-build-asks-before-trunk` | 100 | 2026-11-06 |
+| `feature-build-checks-agent-skills` | 67 | 2026-11-06 |
+| `feature-build-names-agent-skills` | 100 | 2026-11-06 |
+| `feature-build-open-comments` | 56 | 2026-11-06 |
+| `feature-build-rethink-after-three-rounds` | 100 | 2026-11-06 |
+| `feature-build-stops-without-checklist` | 100 | 2026-11-06 |
 
 ### `feature-close`
 
@@ -299,13 +303,15 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `major-upgrade-diffs-used-types` | 100 | 2026-11-05 |
-| `major-upgrade-docs-elsewhere` | 100 | 2026-11-05 |
-| `major-upgrade-lists-docs` | 100 | 2026-11-05 |
-| `major-upgrade-no-docs-copy` | 100 | 2026-11-05 |
-| `major-upgrade-offers-stopgaps` | 100 | 2026-11-05 |
-| `major-upgrade-proposes-backports` | 100 | 2026-11-05 |
-| `major-upgrade-version-mismatch` | 100 | 2026-11-05 |
+| `major-upgrade-diffs-used-types` | 100 | 2026-11-06 |
+| `major-upgrade-docs-elsewhere` | 100 | 2026-11-06 |
+| `major-upgrade-lists-docs` | 100 | 2026-11-06 |
+| `major-upgrade-no-docs-copy` | 100 | 2026-11-06 |
+| `major-upgrade-offers-stopgaps` | 67 | 2026-11-06 |
+| `major-upgrade-proposes-backports` | 100 | 2026-11-06 |
+| `major-upgrade-subsystem-in-bump` | 100 | 2026-11-06 |
+| `major-upgrade-subsystem-port-first` | 100 | 2026-11-06 |
+| `major-upgrade-version-mismatch` | 100 | 2026-11-06 |
 
 ### `markdown-preview`
 
@@ -547,13 +553,13 @@ Stays quiet on: `dependencies-skip-generic-node`
 | 4. Cache refresher | `load-balancing-cache-clear` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | 4. Cache refresher | `load-balancing-cache-clear-content-map` | – | 100 | – | – | – |
 | 4. Cache refresher | `load-balancing-cache-clear-sibling-local` | – | 100 | – | – | – |
-| 4. Cache refresher | `review-load-balancing-diff` | 89 | 78 | 11 | 0/6 | 2026-10-16 |
+| 4. Cache refresher | `review-load-balancing-diff` | 67 | 78 | -11 | 0/3 | 2026-11-06 |
 | 8. Custom file system | **no eval** | | | | | |
 | 9. Package migration plan | `extensibility-migration-admin-group` | 100 | 78 | 22 | 3/4 | 2026-10-17 |
 | 9. Package migration plan | `extensibility-package-migration` | 100 | 33 | 67 | 2/2 | 2026-10-17 |
 | 10. Recurring background job | `extensibility-distributed-job` | 100 | 11 | 89 | 3/3 | 2026-10-16 |
 | 10. Recurring background job | `extensibility-job-umbraco-context` | 89 | 89 | 0 | 1/3 | 2026-10-16 |
-| 10. Recurring background job | `review-load-balancing-diff` | 89 | 78 | 11 | 0/6 | 2026-10-16 |
+| 10. Recurring background job | `review-load-balancing-diff` | 67 | 78 | -11 | 0/3 | 2026-11-06 |
 | 11. Custom Management API authorization policy | **no eval** | | | | | |
 | 1. Property value converter | **no eval** | | | | | |
 | 5. Content finder | **no eval** | | | | | |
@@ -632,14 +638,14 @@ Stays quiet on: `performance-skip-template`
 | Secrets and sensitive configuration | `security-secret-in-response-dynamic-settings` | – | – | – | – | – |
 | Secrets and sensitive configuration | `security-write-api-key` | 100 | – | – | 3/3 | 2026-10-16 |
 | Endpoints outside the Management API | `security-write-member-endpoint` | 100 | – | – | 3/3 | 2026-10-16 |
-| Backoffice: sanitizing and escaping | `review-security-diff` | 100 | – | – | 0/3 | 2026-10-16 |
+| Backoffice: sanitizing and escaping | `review-security-diff` | 100 | 100 | 0 | 0/3 | 2026-11-06 |
 | Backoffice: sanitizing and escaping | `security-localize-unsafehtml` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Backoffice: sanitizing and escaping | `security-localize-unsafehtml-info-box` | – | 100 | – | – | – |
 | Backoffice: sanitizing and escaping | `security-localize-unsafehtml-sibling-pattern` | – | 100 | – | – | – |
 | Backoffice: sanitizing and escaping | `security-unsafehtml-trusted-backend` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Backoffice: sanitizing and escaping | `security-unsafehtml-trusted-backend-email-preview` | – | 100 | – | – | – |
 | Backoffice: sanitizing and escaping | `security-unsafehtml-trusted-backend-sibling` | – | 100 | – | – | – |
-| Backoffice: custom elements in sanitized HTML | `review-security-diff` | 100 | – | – | 0/3 | 2026-10-16 |
+| Backoffice: custom elements in sanitized HTML | `review-security-diff` | 100 | 100 | 0 | 0/3 | 2026-11-06 |
 | Backoffice: custom elements in sanitized HTML | `security-dompurify-attributes` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Backoffice: custom elements in sanitized HTML | `security-dompurify-attributes-generic-elements` | – | 100 | – | – | – |
 | Backoffice: custom elements in sanitized HTML | `security-dompurify-attributes-markdown-mentions` | 100 | 75 | 25 | 4/4 | 2026-10-17 |
