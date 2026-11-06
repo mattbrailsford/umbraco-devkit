@@ -89,6 +89,9 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
    result, give each command you ran and its summary line copied from the output (passed,
    failed and skipped counts), and say how you saw each spec you activated or wrote fail
    first. Report only results you saw; a check you didn't run is "not run", not "passes".
+   Keep it short: one line per point, and file:line instead of pasted code, diffs or the
+   rest of the build output. The session that sent you runs every task, and your report
+   stays in its context.
 
 ## Hard rules
 

@@ -372,12 +372,13 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   scheduled it, so a planned removal isn't flagged as an unproxied public API break. It
   still checks that nothing inside the package, its tests, or its demo site uses the removed
   code.
-- **Smoke.** Use the order in `feature-build`'s "Smoke the real entry point" step. Once the
-  framework bump task lands, the demo site must start on the target major and the backoffice
-  must load with the package's extensions registered. Open every screen the package adds and
-  read the browser console: an error from the package fails the smoke, and an "Umbraco
-  Backoffice:" deprecation warning with the package as its origin becomes a task. Run the
-  scenario for each subsystem the package extends (inventory step 2) once its task lands.
+- **Smoke.** Dispatch a `smoke-tester` as `feature-build`'s "Smoke the real entry point" step
+  does. Once the framework bump task lands, tell it the demo site must start on the target
+  major and the backoffice must load with the package's extensions registered, and to open
+  every screen the package adds and read the browser console: an error from the package
+  fails the smoke, and an "Umbraco Backoffice:" deprecation warning with the package as its
+  origin comes back as a finding that becomes a task. Have it run the scenario for each
+  subsystem the package extends (inventory step 2) once its task lands.
 - **Bugs the upgrade didn't cause.** A bug found during a task may also exist on older
   lines. Fix it in its own commit, apart from the upgrade work, so it can be ported later.
   Check whether it shows on every line the project still supports, not only the current
@@ -407,7 +408,8 @@ When every task is ticked:
    (dates and times, generated numbers and ids, relative times like "2 minutes ago"), so
    only real differences show. Sort each difference into one of three:
    - **CMS change**: the CMS itself changed the look (a new UUI, a new layout). Note it; no
-     task.
+     task. If it changes the shared frame (header, sidebar, corners, colours, tables), report
+     it with `skill-report`: the `feature-design` mockup starters need a look for this major.
    - **Already there**: the same fault shows on the current major. Not an upgrade task. If
      the branch fixed it, it's a backport candidate; if not, a follow-up.
    - **Upgrade regression**: only on the target major. Add a task and build it, then take
@@ -416,6 +418,11 @@ When every task is ticked:
    Each screen sorted as a CMS change or an upgrade regression may also appear in the
    package's own docs. Add each docs screenshot of it to the "Docs" section's screenshots to
    retake, with the screen's click path. Retake them now if the docs are in this repo.
+
+   Hand the screenshots and the comparison to `smoke-tester` subagents, a few screens each,
+   and have each report every difference in a line with how it sorted it. Never open the
+   images in this session: a full upgrade compares many screens, and every image would stay
+   in context for the rest of the run.
 
    Record the result per screen in the table. Commit only the pairs that show a difference,
    with the upgrade file; screens that match stay out of the repo, and the table says they

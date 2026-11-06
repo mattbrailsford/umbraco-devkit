@@ -531,6 +531,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-build-smoke-tester-screens": {
+    "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-build-stops-without-checklist": {
     "date": "2026-11-06",
     "runs": 3,
@@ -565,6 +573,14 @@
   },
   "feature-design-mockup-component-fidelity": {
     "date": "2026-10-20",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-design-mockup-full-height": {
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,

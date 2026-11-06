@@ -208,7 +208,8 @@ later, a small icon on the corner of the item's own icon: wrap the item's icon i
    design system to keep in sync. Set `UMBRACO_VERSION` at the top of `_mockup.js` to the
    Umbraco major the project targets (from `CLAUDE.md`; the newest one when it targets more
    than one). It picks the look: 18 has UUI's rounder corners, 17 the squarer 3px ones and
-   pink highlight. Umbraco 17.6+ and 18 use UUI 2 (the default); 17.5 and older use UUI 1
+   pink highlight. A newer major, or its beta, gets the newest look the starters have; most
+   majors look like the one before. Umbraco 17.6+ and 18 use UUI 2 (the default); 17.5 and older use UUI 1
    (see the note in `_mockup.js`). Static HTML only: no build step, no data fetching, no charting
    library (a rough inline SVG of the right chart type is enough).
 3. **For a component that already exists and runs in the product, copy its real source —
@@ -242,7 +243,9 @@ later, a small icon on the corner of the item's own icon: wrap the item's icon i
    finished loading, then check the console for warnings before screenshotting — a missing
    icon name (`No backoffice icon named icon-*`) is the common one, and it's free to catch
    since the loader already prints it. Screenshot each mockup at a backoffice-sized viewport
-   (1440×900), save it beside the HTML as `<screen>.png`, and show it to the human with the
+   (1440×900), taking the full page at that width when the mockup runs past 900px, so no
+   state or section is cut off at the bottom. Open the image and check every part of the
+   mockup is in it whole. Save it beside the HTML as `<screen>.png`, and show it to the human with the
    two or three choices you're least sure of named underneath. Revise the HTML on feedback
    and re-shoot; the screenshot in the folder is always the current one.
 
