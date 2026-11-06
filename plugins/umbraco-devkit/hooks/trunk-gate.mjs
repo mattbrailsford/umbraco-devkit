@@ -26,8 +26,16 @@ const ESCAPES_OUT = ["--abort", "--quit", "--skip"];
 // Global git options that take a value as the next word.
 const GIT_OPTS_WITH_VALUE = new Set(["-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path"]);
 
-/** Splits a command line into words, keeping quoted text together, with separators as their own words. */
-export function tokenize(line) {
+// Inside double quotes, Bash treats a backslash as an escape only before these. Anywhere else in
+// double quotes it's literal, so "C:\Users\me" keeps its backslashes.
+const DOUBLE_QUOTE_ESCAPABLE = new Set(["$", "`", '"', "\\", "\n"]);
+
+/**
+ * Splits a command line into words, keeping quoted text together, with separators as their own
+ * words. PowerShell escapes with a backtick, not a backslash, so `cd C:\repo` keeps its path there.
+ */
+export function tokenize(line, { powershell = false } = {}) {
+  const escape = powershell ? "`" : "\\";
   const words = [];
   let word = "";
   let inWord = false;
@@ -37,7 +45,10 @@ export function tokenize(line) {
   for (let i = 0; i < line.length; i++) {
     const c = line[i];
     if (quote) {
-      if (c === "\\" && quote === '"' && i + 1 < line.length) { word += line[++i]; continue; }
+      if (c === escape && quote === '"' && i + 1 < line.length && (powershell || DOUBLE_QUOTE_ESCAPABLE.has(line[i + 1]))) {
+        word += line[++i];
+        continue;
+      }
       if (c === "$" && line[i + 1] === "(") { depth++; word += "$("; i++; continue; }
       if (c === ")" && depth > 0) { depth--; word += c; continue; }
       if (c === quote && depth === 0) { quote = null; continue; }
@@ -45,7 +56,7 @@ export function tokenize(line) {
       continue;
     }
     if (c === "'" || c === '"') { quote = c; inWord = true; continue; }
-    if (c === "\\" && i + 1 < line.length) { word += line[++i]; inWord = true; continue; }
+    if (c === escape && i + 1 < line.length) { word += line[++i]; inWord = true; continue; }
     if (c === "$" && line[i + 1] === "(") { depth++; word += "$("; i++; inWord = true; continue; }
     if (c === ")" && depth > 0) { depth--; word += c; continue; }
     if (depth > 0) { word += c; inWord = true; continue; }
@@ -170,10 +181,10 @@ function checkCommit(dir, sub, args) {
 }
 
 /** Returns { decision, reason } for a shell command, or null when it doesn't touch a protected branch. */
-export function decide(command, cwd) {
+export function decide(command, cwd, tool = "Bash") {
   let dir = cwd;
   let result = null;
-  for (const seg of segments(tokenize(command))) {
+  for (const seg of segments(tokenize(command, { powershell: tool === "PowerShell" }))) {
     let i = 0;
     while (i < seg.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(seg[i])) i++; // FOO=bar git ...
     const cmd = seg[i];
@@ -212,7 +223,7 @@ function main() {
   const input = JSON.parse(readFileSync(0, "utf8"));
   const command = input?.tool_input?.command;
   if (typeof command !== "string" || !/\bgit\b/.test(command)) return;
-  const r = decide(command, input.cwd || process.cwd());
+  const r = decide(command, input.cwd || process.cwd(), input.tool_name);
   if (!r) return;
   process.stdout.write(JSON.stringify({
     hookSpecificOutput: {

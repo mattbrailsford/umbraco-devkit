@@ -6,6 +6,7 @@ checks it stays quiet, asks, or blocks. Needs node and git; skipped without node
 """
 import json
 import os
+import pathlib
 import shutil
 import subprocess
 import tempfile
@@ -81,7 +82,34 @@ class TrunkGateTests(unittest.TestCase):
         elsewhere = os.path.join(self.tmp, "other")
         os.makedirs(elsewhere)
         self.assertEqual(self.run_hook(f'git -C "{self.repo}" commit -m x', cwd=elsewhere), "ask")
-        self.assertEqual(self.run_hook(f"cd {self.repo} && git commit -m x", cwd=elsewhere), "ask")
+        # Unquoted, Bash itself drops backslashes, so a Windows path is written with forward slashes there.
+        posix_repo = self.repo.replace("\\", "/")
+        self.assertEqual(self.run_hook(f"cd {posix_repo} && git commit -m x", cwd=elsewhere), "ask")
+
+    def test_powershell_paths_keep_their_backslashes(self):
+        # PowerShell's escape is a backtick, so `cd C:\repo` names the repo as written.
+        elsewhere = os.path.join(self.tmp, "other")
+        os.makedirs(elsewhere)
+        self.assertEqual(self.run_hook(f"cd {self.repo}; git commit -m x", cwd=elsewhere, tool="PowerShell"), "ask")
+        self.assertEqual(self.run_hook(f'git -C "{self.repo}" commit -m x', cwd=elsewhere, tool="PowerShell"), "ask")
+
+    def tokens(self, line, powershell=False):
+        script = ("import { tokenize } from %s; console.log(JSON.stringify(tokenize(process.argv[1], { powershell: %s })));"
+                  % (json.dumps(pathlib.Path(HOOK).as_uri()), "true" if powershell else "false"))
+        p = subprocess.run(["node", "--input-type=module", "-e", script, line], capture_output=True, text=True)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        return json.loads(p.stdout)
+
+    def test_backslashes_in_windows_paths_survive(self):
+        # On Windows the gate failed open: "C:\repo" read as "C:repo", so git -C found no repo.
+        self.assertEqual(self.tokens(r'git -C "C:\Users\me\repo" commit')[2], r"C:\Users\me\repo")
+        self.assertEqual(self.tokens(r"cd C:\Users\me\repo; git commit", powershell=True)[1], r"C:\Users\me\repo")
+        self.assertEqual(self.tokens(r'git -C "C:\Users\me\repo" commit', powershell=True)[2], r"C:\Users\me\repo")
+
+    def test_bash_escapes_inside_double_quotes_still_apply(self):
+        self.assertEqual(self.tokens(r'git commit -m "say \"hi\" \\ \$HOME"')[3], r'say "hi" \ $HOME')
+        self.assertEqual(self.tokens(r"git -C my\ repo commit")[2], "my repo")
+        self.assertEqual(self.tokens('git commit -m "a `"b`" c"', powershell=True)[3], 'a "b" c')
 
     def test_heredoc_message_stays_one_word(self):
         cmd = 'git commit -m "$(cat <<\'EOF\'\nfeat: x\n\ngit push origin main later\nEOF\n)"'
