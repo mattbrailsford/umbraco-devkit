@@ -571,6 +571,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-mockup-full-height": {
+    "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-design-mockup-modal-property-layout": {
     "date": "2026-10-20",
     "runs": 3,

@@ -61,7 +61,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
 | [`feature-build`](#feature-build) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-design`](#feature-design) | workflow | Broke a rule | – | 11 | 3 | – | – |
+| [`feature-design`](#feature-design) | workflow | Broke a rule | – | 12 | 4 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 6 | 0 | – | – |
@@ -222,6 +222,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `feature-design-all-screens-mocked` | 100 | 2026-10-20 |
 | `feature-design-draws-diagrams` | 100 | 2026-10-23 |
 | `feature-design-mockup-component-fidelity` | 100 | 2026-10-20 |
+| `feature-design-mockup-full-height` | 100 | 2026-11-06 |
 | `feature-design-mockup-modal-property-layout` | 100 | 2026-10-20 |
 | `feature-design-mockup-no-invented-styling` | 100 | 2026-11-05 |
 | `feature-design-mockup-shared-surface-css` | 100 | 2026-11-05 |
