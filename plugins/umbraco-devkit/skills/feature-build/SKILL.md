@@ -87,14 +87,15 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    `SPEC.md`, the path to any mockup for a screen the task touches, the files/extension points
    it owns, and an instruction to invoke the project's
    stack skills (`umbraco-extensibility`, `umbraco-package-conventions`, `ef-core-data`,
-   `umbraco-backoffice-conventions`, etc. as relevant) and run the existing specs before reporting back. If the project has e2e tests and none covers the
-   task's path, tell the builder to add one (the smoke step runs it). The builder does not
-   commit.
+   `umbraco-backoffice-conventions`, etc. as relevant) and run the existing specs before
+   reporting back. Ask it to start its report with the skills it loaded, so a skipped one
+   shows. If the project has e2e tests and none covers the task's path, tell the builder to
+   add one (the smoke step runs it). The builder does not commit.
 
 2. **Review.** Dispatch a `reviewer` subagent (Agent tool, `subagent_type: reviewer`, model
    opus, must be ≥ builder). It invokes `umbraco-security` (when the diff
    touches security) and the relevant stack skills, reads the builder's diff, and returns `PASS` or
-   `FAIL` with specific findings.
+   `FAIL` with specific findings. Ask it, too, to start its report with the skills it loaded.
 
 3. **Recurse.** If `FAIL`: send the findings to a fresh `builder` for the same task, then
    review again. Nothing reaches git history before `PASS`. If a finding is a repeatable

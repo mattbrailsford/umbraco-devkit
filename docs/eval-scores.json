@@ -492,7 +492,23 @@
     "withoutDate": "2026-10-16"
   },
   "feature-build-asks-before-trunk": {
-    "date": "2026-10-16",
+    "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-build-checks-agent-skills": {
+    "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 67,
+    "without": null,
+    "withoutDate": null
+  },
+  "feature-build-names-agent-skills": {
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -500,15 +516,15 @@
     "withoutDate": null
   },
   "feature-build-open-comments": {
-    "date": "2026-10-26",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
-    "with": 100,
+    "with": 56,
     "without": 33,
     "withoutDate": "2026-10-26"
   },
   "feature-build-rethink-after-three-rounds": {
-    "date": "2026-10-20",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -516,7 +532,7 @@
     "withoutDate": null
   },
   "feature-build-stops-without-checklist": {
-    "date": "2026-10-16",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -836,7 +852,7 @@
     "withoutDate": "2026-10-16"
   },
   "major-upgrade-diffs-used-types": {
-    "date": "2026-11-05",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -844,7 +860,7 @@
     "withoutDate": null
   },
   "major-upgrade-docs-elsewhere": {
-    "date": "2026-11-05",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -852,7 +868,7 @@
     "withoutDate": null
   },
   "major-upgrade-lists-docs": {
-    "date": "2026-11-05",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -860,7 +876,7 @@
     "withoutDate": null
   },
   "major-upgrade-no-docs-copy": {
-    "date": "2026-11-05",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -868,23 +884,39 @@
     "withoutDate": null
   },
   "major-upgrade-offers-stopgaps": {
-    "date": "2026-11-05",
+    "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 67,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-proposes-backports": {
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
     "without": null,
     "withoutDate": null
   },
-  "major-upgrade-proposes-backports": {
-    "date": "2026-11-05",
-    "runs": 6,
-    "skillLoaded": 6,
+  "major-upgrade-subsystem-in-bump": {
+    "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-subsystem-port-first": {
+    "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
     "with": 100,
     "without": null,
     "withoutDate": null
   },
   "major-upgrade-version-mismatch": {
-    "date": "2026-11-05",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -1280,20 +1312,20 @@
     "withoutDate": "2026-10-16"
   },
   "review-load-balancing-diff": {
-    "date": "2026-10-16",
-    "runs": 6,
+    "date": "2026-11-06",
+    "runs": 3,
     "skillLoaded": 0,
-    "with": 89,
+    "with": 67,
     "without": 78,
-    "withoutDate": "2026-10-16"
+    "withoutDate": "2026-11-06"
   },
   "review-security-diff": {
-    "date": "2026-10-16",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
-    "without": null,
-    "withoutDate": null
+    "without": 100,
+    "withoutDate": "2026-11-06"
   },
   "review-security-lit-diff": {
     "date": "2026-10-16",
@@ -1304,36 +1336,36 @@
     "withoutDate": "2026-10-16"
   },
   "reviewer-feature-diff": {
-    "date": "2026-10-16",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 67,
-    "withoutDate": "2026-10-16"
+    "withoutDate": "2026-11-06"
   },
   "reviewer-nfr-targets": {
-    "date": "2026-10-26",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-26"
+    "withoutDate": "2026-11-06"
   },
   "reviewer-preexisting-bug": {
-    "date": "2026-10-20",
+    "date": "2026-11-06",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
-    "without": null,
-    "withoutDate": null
+    "without": 0,
+    "withoutDate": "2026-11-06"
   },
   "reviewer-rereview-round-diff": {
-    "date": "2026-10-20",
-    "runs": 3,
+    "date": "2026-11-06",
+    "runs": 6,
     "skillLoaded": 0,
-    "with": 100,
-    "without": null,
-    "withoutDate": null
+    "with": 83,
+    "without": 75,
+    "withoutDate": "2026-11-06"
   },
   "security-bundle-secret-and-storage": {
     "date": "2026-10-16",
