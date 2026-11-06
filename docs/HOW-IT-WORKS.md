@@ -60,7 +60,7 @@ monorepo package), say so once in your project's `CLAUDE.md` and every step foll
 | `ARCHITECTURE.md`, `SPEC.md`, `mockups/`, `diagrams/` | `feature-design` |
 | `STORIES.md`, `PLAN.md` | `feature-plan` (`feature-build` only ticks `PLAN.md`'s task checkboxes) |
 | `DECISION-LOG.md` | every step appends |
-| `BUILD-LOG.md`, `screenshots/` | `feature-build` |
+| `BUILD-LOG.md`, `screenshots/` | `feature-build` (its `smoke-tester` agent takes the screenshots) |
 | `PR-DESCRIPTION.md` | `pr-describe` |
 
 Three rules make this work:

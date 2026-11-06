@@ -258,7 +258,7 @@ preserve when editing these skills:
 `feature-build` dispatches `agents/builder.md` per task, then `agents/reviewer.md` against
 the diff, then one whole-branch review after the last task. `quick-fix` and `change-backport` also dispatch
 `reviewer`. `major-upgrade` runs the same builder/reviewer loop over its upgrade
-checklist.
+checklist. Both send each task's smoke test and screenshots to `agents/smoke-tester.md`.
 
 - `reviewer` has no `Edit`/`Write` in its frontmatter `tools:` list. This is load-bearing:
   a reviewer that can patch its own findings stops being a gate. Never add write tools to it.
@@ -266,6 +266,10 @@ checklist.
   sibling code second → impact on consumers (public API / manifest `alias` changes) → trace
   the real entry point → grep for ghost code → multi-version/provider parity → verdict.
 - `issue-triager` is likewise read-only and report-only.
+- `smoke-tester` has `Edit`/`Write` in `disallowedTools`: it may save screenshots and add demo
+  content, never change code. It keeps every image out of the session running the build:
+  that session runs every task, and anything it opens stays in context until the run ends.
+  Don't move image work back into `feature-build` or `major-upgrade`.
 
 ## Skills calling skills
 
