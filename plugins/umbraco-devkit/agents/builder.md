@@ -79,9 +79,15 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
    side effect the plan promises (a DB write, a published notification, a UI element that
    renders). If the trace doesn't reach your new code, finish the wiring before reporting
    back. A passing unit test through an internal seam is not enough.
-5. Run the project's build and tests (`dotnet build`, `dotnet test`, and any frontend
-   `npm run build` / `npm test` the task touches). Fix until the relevant specs pass. Do not
-   weaken or skip specs to go green. Then run the lint/format check `CLAUDE.md` lists under
+5. Run the project's build and tests, narrowed to what the task touches: build the projects
+   you changed and the test projects that cover them, not the whole solution; run this
+   task's specs and the tests for the code you changed (`dotnet test --filter`, one spec file
+   for a frontend test runner, Playwright `--grep` for the task's e2e test against a site
+   that's already running), and any frontend `npm run build` the task touches. Don't run or
+   list a whole slow suite (the full solution, an integration project, every e2e test), even
+   as optional: the reviewer runs the full build and tests after you, and the loop's smoke
+   step runs the task's e2e test. Fix until the relevant specs pass. Do not weaken
+   or skip specs to go green. Then run the lint/format check `CLAUDE.md` lists under
    "Build & test" and fix what it reports in the files you changed. If `CLAUDE.md` lists no
    check, say so in your report.
 6. Report back, starting with the skills you loaded: what you changed, which files, test
