@@ -79,8 +79,10 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
    you changed and the test projects that cover them, not the whole solution; run this
    task's specs and the tests for the code you changed (`dotnet test --filter`, one spec file
    for a frontend test runner, Playwright `--grep` for the task's e2e test against a site
-   that's already running), and any frontend `npm run build` the task touches. The reviewer
-   runs the full build and tests after you. Fix until the relevant specs pass. Do not weaken
+   that's already running), and any frontend `npm run build` the task touches. Don't run or
+   list a whole slow suite (the full solution, an integration project, every e2e test), even
+   as optional: the reviewer runs the full build and tests after you, and the loop's smoke
+   step runs the task's e2e test. Fix until the relevant specs pass. Do not weaken
    or skip specs to go green. Then run the lint/format check `CLAUDE.md` lists under
    "Build & test" and fix what it reports in the files you changed. If `CLAUDE.md` lists no
    check, say so in your report.
