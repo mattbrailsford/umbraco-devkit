@@ -131,6 +131,11 @@ reports back in words, so the session running the build stays small: that sessio
 task, and whatever it reads stays in its context until the build ends. The builder and
 reviewer keep their reports short for the same reason.
 
+The same agent works for `feature-design`. When a design reuses a CMS picker or editor
+somewhere new, design mounts it in a throwaway extension on the demo site and sends the
+`smoke-tester` to try it (required and empty, a deleted item, the value it saves) before the
+plan depends on it.
+
 `quick-fix` uses the same reviewer for small fixes. `major-upgrade` uses the whole gate for
 a move to a new Umbraco major: it lists the breaking changes that hit the project in
 `docs/upgrades/v<major>.md`, then builds that list task by task, green at every commit.
