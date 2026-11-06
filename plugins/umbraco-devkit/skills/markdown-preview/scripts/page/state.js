@@ -9,7 +9,7 @@ export const content = $('content');
 
 const boot = JSON.parse($('boot').textContent);
 
-// A setting given in the address (?home=…, ?comments=off) sticks to this tab as you follow
+// A setting given in the address (?home=…, ?comments=off, ?session=…) sticks to this tab as you follow
 // links inside it.
 function tabSetting(name, fallback) {
   const given = new URLSearchParams(location.search).get(name);
@@ -20,6 +20,7 @@ function tabSetting(name, fallback) {
 export const page = {
   user: boot.user,
   home: tabSetting('home', '/'),  // the folder this tab is scoped to; '/' when unscoped
+  session: tabSetting('session', ''),  // the Claude session that opened this tab, which gets its comments
   path: '',         // the URL path of the file or folder shown
   scoped: false,    // whether this page sits inside the tab's scope
   canComment: false,
@@ -56,8 +57,9 @@ export function showStatus(text, kind) {
   $('status').className = kind || '';
 }
 
+// Every change says which Claude session's tab made it, so a sent comment goes to that session.
 export async function post(url, body) {
-  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, session: page.session }) });
   if (!res.ok) showStatus(await res.text(), 'error');
 }
 

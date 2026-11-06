@@ -4,9 +4,9 @@ A step asks for approval on the docs it owns (feature-design: SPEC.md and ARCHIT
 replacing whatever the last step asked for. The reader signs each off on the page; only the
 reader can. An approval holds for the doc as it was approved: once the doc changes, it's stale
 and wanted again. When every doc asked for is approved, Claude's waiting helper hears it
-once.
+once: the helper of the Claude session that asked.
 
-Stored as {"step", "requested": [paths], "approved": {path: {"hash", "at"}}, "told": bool}.
+Stored as {"step", "session", "requested": [paths], "approved": {path: {"hash", "at"}}, "told": bool}.
 """
 import hashlib
 
@@ -21,10 +21,10 @@ def file_hash(full):
 class Approvals(JsonStore):
     empty = dict
 
-    def request(self, paths, step=None):
+    def request(self, paths, step=None, session=""):
         def request(data):
             data.clear()
-            data.update(step=step, requested=list(paths), approved={}, told=False)
+            data.update(step=step, session=session, requested=list(paths), approved={}, told=False)
         self.change(request)
 
     def approve(self, path, full):
@@ -54,11 +54,12 @@ class Approvals(JsonStore):
         data = self.load()
         return [(p, *self.state(p, root + p, data)) for p in data.get("requested", [])]
 
-    def claim_all_approved(self, root):
-        """Once every doc asked for is approved (and unchanged), say so, the first time only."""
+    def claim_all_approved(self, root, session=""):
+        """Once every doc asked for is approved (and unchanged), tell the session that asked, the
+        first time only."""
         def claim(data):
             requested = data.get("requested", [])
-            if not requested or data.get("told"):
+            if not requested or data.get("told") or data.get("session", "") not in ("", session):
                 return None
             if any(self.state(p, root + p, data)[0] != "approved" for p in requested):
                 return None

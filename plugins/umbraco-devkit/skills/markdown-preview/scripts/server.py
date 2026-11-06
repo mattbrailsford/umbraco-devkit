@@ -17,7 +17,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from folders import breadcrumbs, change_marker, folder_listing
-from worktree import inside, pid_alive
+from worktree import inside, pid_alive, state_paths
 
 PAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "page")
 MAX_SOURCE = 512 * 1024  # bigger than any source file worth reading here, and under GitHub's render limit
@@ -75,25 +75,31 @@ def cant_show(url_path, too_big):
 
 
 class Tabs:
-    """Whether a preview tab is open (they check in every 0.4s), and where to send it next, so
-    asking to open another file reuses the tab rather than opening a new one."""
+    """Whether each Claude session's preview tab is open (they check in every 0.4s), and where
+    to send it next, so asking to open another file reuses that session's tab rather than
+    opening a new one, or taking over another session's."""
 
     def __init__(self):
-        self.seen = 0.0
-        self.go_to = None
+        self.seen = {}
+        self.go_to = {}
 
-    def open(self, url_path):
-        """Point the open tab at url_path; False if no tab has checked in lately."""
-        if time.time() - self.seen > 2:
+    def open(self, url_path, session=""):
+        """Point the session's open tab at url_path; False if it hasn't checked in lately."""
+        if time.time() - self.seen.get(session, 0.0) > 2:
             return False
-        self.go_to = "/" + url_path
+        self.go_to[session] = "/" + url_path
         return True
+
+    def check_in(self, session):
+        """A tab checking in: where to send it, if anywhere."""
+        self.seen[session] = time.time()
+        return self.go_to.pop(session, None)
 
 
 class PreviewServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, port, *, root, css, renderer, comments, seen, approvals, user, helper_file):
+    def __init__(self, port, *, root, css, renderer, comments, seen, approvals, user):
         self.root = root
         self.css = css
         self.renderer = renderer
@@ -101,7 +107,6 @@ class PreviewServer(ThreadingHTTPServer):
         self.seen = seen
         self.approvals = approvals
         self.user = user
-        self.helper_file = helper_file
         self.tabs = Tabs()
         super().__init__(("127.0.0.1", port), Handler)
 
@@ -214,9 +219,13 @@ class Handler(BaseHTTPRequestHandler):
     def get_ping(self):
         self.send(200, self.server.root, "text/plain")
 
+    def session(self):
+        """The Claude session the asking tab belongs to: ?session= or the body's "session"."""
+        return self.query.get("session", "") if self.command == "GET" else self.data.get("session", "")
+
     def get_listening(self):
-        """Whether Claude's helper is waiting for a batch, for the "Sent" note."""
-        self.send(200, "1" if pid_alive(self.server.helper_file) else "0", "text/plain")
+        """Whether the tab's Claude helper is waiting for a batch, for the "Sent" note."""
+        self.send(200, "1" if pid_alive(state_paths(self.server.root, self.session()).helper) else "0", "text/plain")
 
     def get_render(self):
         found = self.target()
@@ -277,18 +286,17 @@ class Handler(BaseHTTPRequestHandler):
         found = self.target()
         if not found:
             return
-        tabs = self.server.tabs
         marks = {"doc": repr((change_marker(found), self.server.seen.version())),
                  "comments": repr((self.server.comments.mtime(), self.server.approvals.mtime()))}
-        tabs.seen = time.time()
-        if tabs.go_to:
-            marks["navigate"], tabs.go_to = tabs.go_to, None
+        go_to = self.server.tabs.check_in(self.session())
+        if go_to:
+            marks["navigate"] = go_to
         self.send_json(marks)
 
     def get_comments(self):
         store = self.server.comments
         if "drafts" in self.query:
-            return self.send_json(store.drafts())
+            return self.send_json(store.drafts(self.session()))
         self.send_json(store.on_file(self.query.get("path", "")))
 
     def get_approval(self):
@@ -321,13 +329,14 @@ class Handler(BaseHTTPRequestHandler):
         self.ok()
 
     def post_open(self):
-        self.send(200, "reused" if self.server.tabs.open(self.data["path"]) else "none", "text/plain")
+        self.send(200, "reused" if self.server.tabs.open(self.data["path"], self.session()) else "none", "text/plain")
 
     def post_comment(self):
         d = self.data
         if not self.resolve(d["path"]):
             raise BadRequest("no such file")
-        self.server.comments.add(d["path"], d["quote"], d["body"], d.get("prefix", ""), d.get("suffix", ""), d.get("section", ""))
+        self.server.comments.add(d["path"], d["quote"], d["body"], d.get("prefix", ""), d.get("suffix", ""), d.get("section", ""),
+                                  self.session())
         self.ok()
 
     def ok(self):
@@ -335,7 +344,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def post_send(self):
         self.server.seen.mark_all(self.server.root)  # before Claude can start on them
-        self.server.comments.send_drafts()
+        self.server.comments.send_drafts(self.session())
         self.ok()
 
     def post_resolve(self):
@@ -347,7 +356,7 @@ class Handler(BaseHTTPRequestHandler):
         self.ok()
 
     def post_reply(self):
-        self.server.comments.reader_reply(self.data["id"], self.data["body"])
+        self.server.comments.reader_reply(self.data["id"], self.data["body"], self.session())
         self.ok()
 
     def post_delete(self):

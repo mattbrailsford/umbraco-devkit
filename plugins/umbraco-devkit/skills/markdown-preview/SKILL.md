@@ -52,9 +52,11 @@ python3 <this skill's folder>/scripts/preview.py wait
 - `--scope` on its own scopes to the opened folder, or the file's folder. Name a folder to
   scope wider.
 - `--no-comments` opens it read-only, for "just show me". Then don't start the helper.
-- **One server and one helper per git worktree.** Asking again reuses them: an open preview
-  tab is sent to the new page instead of opening another, and a second helper exits at once
-  saying one is already waiting. Never stop a running server to open another file.
+- **One server per git worktree, and one tab and helper per Claude session on it.** Asking
+  again reuses them: this session's open tab is sent to the new page instead of opening
+  another, and a second helper exits at once saying one is already waiting. Comments sent
+  from a tab, and the news that its docs are approved, go only to the session that opened
+  it. Never stop a running server to open another file: another session may be using it.
 - The script prints the page's URL. Give it to the user.
 - The server stops when the session ends, when it's killed, or once its worktree is removed.
   The helper then stops by itself within a minute, saying the preview has stopped. Don't start

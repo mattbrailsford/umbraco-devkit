@@ -11,11 +11,19 @@ carries no source line numbers. Its status says whose move it is:
     deferred   another step owns the file; left for that step (`owner`)
     resolved   the reader closed it. Only the reader resolves.
 
+A comment also keeps the Claude session whose tab it was written or last replied in, so
+sending it wakes that session's helper and no other. One with no session goes to any.
+
 The page server and Claude's commands both change the file (see store.py).
 """
 from store import JsonStore, now
 
 OPEN = ("draft", "sent", "working", "replied", "addressed", "deferred")
+
+
+def belongs(c, session):
+    """Whether this session's Claude gets the comment."""
+    return c.get("session", "") in ("", session)
 
 
 class Comments(JsonStore):
@@ -30,11 +38,11 @@ class Comments(JsonStore):
 
     # ---------- the reader, on the page ----------
 
-    def add(self, path, quote, body, prefix="", suffix="", section=""):
+    def add(self, path, quote, body, prefix="", suffix="", section="", session=""):
         def add(items):
             item = {"id": f"c{max([int(c['id'][1:]) for c in items] + [0]) + 1}", "path": path,
                     "quote": quote, "prefix": prefix, "suffix": suffix, "section": section, "body": body,
-                    "status": "draft", "replies": [], "created": now()}
+                    "status": "draft", "replies": [], "created": now(), "session": session}
             items.append(item)
             return item
         return self.change(add)
@@ -50,11 +58,13 @@ class Comments(JsonStore):
                 c["body"] = body
         return self.update(comment_id, edit)
 
-    def reader_reply(self, comment_id, body):
-        """Replying reopens the thread; the reply goes out with the next batch."""
+    def reader_reply(self, comment_id, body, session=""):
+        """Replying reopens the thread; the reply goes out with the next batch, to the session
+        it was written in."""
         def reply(c):
             c["replies"].append({"author": "you", "body": body, "created": now()})
             c["status"] = "draft"
+            c["session"] = session
         return self.update(comment_id, reply)
 
     def delete(self, comment_id):
@@ -75,19 +85,19 @@ class Comments(JsonStore):
     def resolve(self, comment_id):
         return self.update(comment_id, lambda c: c.update(status="resolved"))
 
-    def send_drafts(self):
+    def send_drafts(self, session=""):
         def send(items):
             for c in items:
-                if c["status"] == "draft":
-                    c["status"] = "sent"
+                if c["status"] == "draft" and belongs(c, session):
+                    c["status"], c["session"] = "sent", session
         self.change(send)
 
     # ---------- Claude, through the commands ----------
 
-    def claim_sent(self):
-        """Take the sent batch: mark it as being worked on, and return it."""
+    def claim_sent(self, session=""):
+        """Take this session's sent batch: mark it as being worked on, and return it."""
         def claim(items):
-            batch = [c for c in items if c["status"] == "sent"]
+            batch = [c for c in items if c["status"] == "sent" and belongs(c, session)]
             for c in batch:
                 c["status"] = "working"
             return batch
@@ -111,8 +121,8 @@ class Comments(JsonStore):
     def on_file(self, path):
         return [c for c in self.load() if c["path"] == path]
 
-    def drafts(self):
-        return [c for c in self.load() if c["status"] == "draft"]
+    def drafts(self, session=""):
+        return [c for c in self.load() if c["status"] == "draft" and belongs(c, session)]
 
     def unresolved(self, under="/"):
         return [c for c in self.load() if c["status"] != "resolved" and c["path"].startswith(under)]
