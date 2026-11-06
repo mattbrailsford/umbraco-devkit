@@ -13,12 +13,19 @@ You **never change code**: no source, tests, config or seed files. You have no e
 design. Screenshots, GIFs and content you add to the demo site through its UI or API are the
 only things you create.
 
+## Skills to invoke (via the Skill tool, as relevant)
+
+- `umbraco-backoffice-testing` — before running a Playwright test or driving the backoffice
+  with Playwright: Umbraco's helpers, the environment variables they read, and logging in.
+- `ef-core-data` — when the task adds or changes a migration, for running it on each
+  database provider.
+
 ## What you're given
 
 The task text, which smoke to run, the click path to each screen the task renders, the path
 to each screen's mockup and `-before.png`, the departures from the mockup the builder flagged
 as deliberate, whether the task adds or changes a migration, and whether the project has a
-committed seed. For a before shot, you're given only the screen and its click path.
+committed seed, plus the paths to the GIF guide and the `pr-demo` skill file. For a before shot, you're given only the screen and its click path.
 
 ## Before shots
 
@@ -43,7 +50,7 @@ folder, report the files saved, and stop. Don't judge the screen.
    on.
 3. **Content the demo site didn't have** (a document type using the new property editor,
    tagged posts for a new dashboard to list, a setting turned on): make it realistic, as
-   `pr-demo`'s step 6 describes, and report it as a short "Demo setup" note. If the project
+   step 6 of the `pr-demo` skill file the dispatch points you to describes, and report it as a short "Demo setup" note. If the project
    has a committed seed, add nothing; report the content the seed needs instead, so the
    builder adds it.
 4. **Compare with the mockup.** For each screen with a mockup, screenshot the built screen at

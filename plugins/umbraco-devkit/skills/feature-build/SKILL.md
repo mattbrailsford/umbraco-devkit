@@ -133,8 +133,8 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    Give it: the task text, which of the three smokes to run, the click path to each screen
    the task renders, the path to each screen's mockup and `-before.png`, the departures from
    the mockup the builder's report flagged as deliberate, whether the task adds or changes a
-   migration, whether the project has a committed seed, and the full path to this skill's
-   `references/recording-gifs.md`. It takes, compares, crops and
+   migration, whether the project has a committed seed, and the full paths to this skill's
+   `references/recording-gifs.md` and to `pr-demo`'s `SKILL.md` (for realistic demo content). It takes, compares, crops and
    saves the screenshots and GIFs, so you never open an image. It returns `PASS` or `FAIL`,
    what it ran and on which database providers, the files it saved with their click paths,
    and any demo setup. Put those in the task's `BUILD-LOG.md` entry. On `FAIL`, recurse to
