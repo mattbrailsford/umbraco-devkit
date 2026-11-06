@@ -74,3 +74,5 @@ marker-start  # an SVG/CSS presentation attribute, not a skill
 text-anchor  # an SVG/CSS presentation attribute, not a skill
 prefers-color-scheme  # a CSS media feature, not a skill
 trunk-gate              # a hook in plugins/umbraco-devkit/hooks/, not a skill
+smoke-tester            # the subagent feature-build and major-upgrade dispatch, not a skill itself
+general-purpose         # Claude Code's built-in subagent type, not a skill

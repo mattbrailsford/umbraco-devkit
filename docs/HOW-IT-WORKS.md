@@ -60,7 +60,7 @@ monorepo package), say so once in your project's `CLAUDE.md` and every step foll
 | `ARCHITECTURE.md`, `SPEC.md`, `mockups/`, `diagrams/` | `feature-design` |
 | `STORIES.md`, `PLAN.md` | `feature-plan` (`feature-build` only ticks `PLAN.md`'s task checkboxes) |
 | `DECISION-LOG.md` | every step appends |
-| `BUILD-LOG.md`, `screenshots/` | `feature-build` |
+| `BUILD-LOG.md`, `screenshots/` | `feature-build` (its `smoke-tester` agent takes the screenshots) |
 | `PR-DESCRIPTION.md` | `pr-describe` |
 
 Three rules make this work:
@@ -118,6 +118,12 @@ round changed, plus whether the old findings were fixed. Reviewing the whole tas
 mostly turns up older code and the loop never settles. After three failed rounds, the builder
 is told to rethink the approach instead of patching again; if that fails too, the build
 stops and reports.
+
+After a pass, a `smoke-tester` agent runs the change through the real entry point (an e2e
+test or the demo site) and takes the screenshots for the PR. It looks at every image and
+reports back in words, so the session running the build stays small: that session runs every
+task, and whatever it reads stays in its context until the build ends. The builder and
+reviewer keep their reports short for the same reason.
 
 `quick-fix` uses the same reviewer for small fixes. `major-upgrade` uses the whole gate for
 a move to a new Umbraco major: it lists the breaking changes that hit the project in
