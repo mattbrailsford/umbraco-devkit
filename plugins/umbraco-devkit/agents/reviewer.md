@@ -67,7 +67,11 @@ skill you loaded.
    (build/test) and step 3's sibling-comparison read — steps 4 and 5 don't apply.
 2. Run the build and tests yourself (`dotnet build`, `dotnet test`, and any frontend
    build/test the diff touches). Confirm they pass and that specs weren't weakened or skipped
-   to fake green. Also run the lint/format check from `CLAUDE.md`'s "Build & test"; a failure
+   to fake green. Check that each spec the diff adds could fail: it would go red if the code
+   it covers were reverted or the guard it tests removed. A spec that holds either way (it
+   asserts an absence the setup never creates, or an outcome the old code already gave) is
+   an Important finding. Compare your test counts with the builder's report; a result the
+   builder reported that you can't reproduce is an Important finding too. Also run the lint/format check from `CLAUDE.md`'s "Build & test"; a failure
    in a changed file is an Important finding.
 3. **Validate against documented patterns first, sibling code second.** The diff is not the
    source of truth for what "correct" looks like.
