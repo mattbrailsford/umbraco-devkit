@@ -163,8 +163,9 @@ Write the report in chat:
 
 **If there was no issue ID** and the cause is proven, draft a new issue holding the report,
 labelled `state/ready`, following the same sections. The report then lives somewhere a fresh
-session can find it, and the fix gets tracked. Find the tracker as `issue-triage`'s "Issue
-tracker" section says. No tracker set up: skip the draft, and the report stays in chat.
+session can find it, and the fix gets tracked. The tracker is in `CLAUDE.md`'s `## Issue
+tracker` section; for its fields, see `issue-triage`'s Preflight. No such section: skip the
+draft, and the report stays in chat.
 
 Then pick the route for the fix, for the report's **Route** line:
 
