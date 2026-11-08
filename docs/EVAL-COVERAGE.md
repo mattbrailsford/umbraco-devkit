@@ -83,7 +83,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions) | knowledge | Proven | +100 | 6 | 2 | 3/11 | 1 |
 | [`umbraco-backoffice-testing`](#umbraco-backoffice-testing) | knowledge | Proven | +67 | 2 | 0 | 2/2 | 0 |
-| [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 1 |
+| [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 11 | 0 | 5/6 | 1 |
 | [`umbraco-cms-source`](#umbraco-cms-source) | knowledge | Proven | +33 | 3 | 1 | 1/5 | 0 |
 | [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 0 |
 | [`umbraco-docs`](#umbraco-docs) | knowledge | Gain, skill rarely loads | +23 | 2 | 0 | 1/5 | 0 |
@@ -438,6 +438,7 @@ Stays quiet on: `backoffice-conventions-skip-plain-lit`
 | Choosing things: picker, not select | `backoffice-ux-picker-reviewer-user` | – | 100 | – | – | – |
 | Choosing things: picker, not select | `backoffice-ux-picker-sibling-select` | 75 | 0 | 75 | 3/4 | 2026-10-17 |
 | Choosing things: picker, not select | `backoffice-ux-write-connections-dashboard` | 100 | 100 | 0 | 6/6 | 2026-10-16 |
+| Modals that edit something get a URL | `backoffice-ux-edit-modal-sibling-open` | 100 | 0 | 100 | 3/3 | 2026-11-08 |
 | The five moments | `backoffice-ux-moments-remember-filter` | 100 | 0 | 100 | 4/4 | 2026-10-17 |
 | The five moments | `backoffice-ux-write-connections-dashboard` | 100 | 100 | 0 | 6/6 | 2026-10-16 |
 | The five moments | `backoffice-ux-write-sync-button` | 100 | 100 | 0 | 6/6 | 2026-10-16 |

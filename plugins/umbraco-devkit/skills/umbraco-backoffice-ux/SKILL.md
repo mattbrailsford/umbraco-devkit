@@ -80,6 +80,33 @@ A `<select>` or combobox is a deliberate choice only for a short, fixed list of 
 (an enum-like setting) that needs no extra context to pick correctly. When you choose it over
 a picker, say so in `ARCHITECTURE.md` with the reason, so it reads as a decision.
 
+## Modals that edit something get a URL
+
+A modal that edits a saved item (a row in a list, an entry in a ref list, a workspace opened
+in a modal) is registered as a route, so it has its own URL: reload keeps it open, the
+browser Back button closes it, and the row can be a real link. Opening it from a click
+handler with `umbOpenModal` or the modal manager gives it none.
+
+```ts
+// GOOD — registered once, opened by URL
+new UmbModalRouteRegistrationController(this, MY_ITEM_MODAL)
+	.addAdditionalPath(':id')
+	.onSetup(async ({ id }) => ({ data: { item: await this.#loadItem(id) } }))
+	.onSubmit((value) => this.#save(value))
+	.observeRouteBuilder((builder) => (this._editRoute = builder));
+
+// each row: href=${this._editRoute?.({ id: item.id })}
+```
+
+The CMS registers its edit modals this way: workspace modals from item refs and inputs, block
+editors, the link picker's edit, and a modal that leads on to another. Keep `umbOpenModal` for
+modals with nothing to come back to: confirmations, a picker that just returns a choice, a
+one-off form.
+
+**This beats "match what's already there".** A sibling button that opens the same form with
+`umbOpenModal` (often an "Add" button) is no reason to open the edit one that way. Register
+the edit modal as a route, and say in your reply that the sibling should switch too.
+
 ## The five moments
 
 Most requests describe only the main action. Walk these for every screen and decide,
