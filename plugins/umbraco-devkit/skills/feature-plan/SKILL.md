@@ -146,7 +146,7 @@ blocks task Y, why a slice was deferred).
 Summarize: N stories, M tasks, S spec files generated, the first parallel group. Offer to
 open `PLAN.md` in a live preview, following `markdown-preview`'s "Offering a preview". With a
 preview open, ask for approval on `PLAN.md`, following its "Approval". Then:
-`Suggested next: /clear, then feature-build <plan folder path> — specs are in place and
-pending.` The path matters: no feature branch exists yet for `feature-build` to match. For a
+`Suggested next: /clear, then feature-build <feature-slug> — specs are in place and
+pending.` Name the slug: no feature branch exists yet for `feature-build` to match. For a
 large or risky plan, mention `feature-interrogate` as an optional stress-test before that
 first build.

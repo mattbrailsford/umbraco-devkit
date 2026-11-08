@@ -5,7 +5,7 @@ description: >-
   subagent gates, and each task commits only on pass. Use once feature-plan has an ordered
   task list and it's time to write code.
 user-invocable: true
-argument-hint: [path to the feature's plan folder, optional]
+argument-hint: [feature slug or plan folder path, optional]
 ---
 
 # feature-build
@@ -30,8 +30,8 @@ doesn't replace the whole-feature review (see "Finish"); the two catch different
 
 ## Preflight
 
-1. Resolve the plan folder: the path given in the argument; else, if the current
-   branch/worktree name matches a plan folder under the project's convention (see
+1. Resolve the plan folder: the path or feature slug given in the argument; else, if the
+   current branch/worktree name matches a plan folder under the project's convention (see
    `CLAUDE.md`'s "Finding the current feature's plan folder" rule; the normal case when
    resuming), use that match; else **stop and ask**. Don't guess. Its name is the feature slug
    used below for the branch/worktree.
