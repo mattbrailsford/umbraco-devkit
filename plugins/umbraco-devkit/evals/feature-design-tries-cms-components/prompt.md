@@ -4,7 +4,7 @@ tags: [feature-design, workflow, real-bug]
 # covers: ["Backoffice UX check (features with a UI)"]
 max_turns: 50
 timeout_seconds: 1800
-allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, WebFetch]
+allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, WebFetch, Agent]
 ---
 
 Use the feature-design skill for the create-element-action feature. Git can't run here; we're

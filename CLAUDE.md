@@ -261,7 +261,8 @@ preserve when editing these skills:
 the diff, then one whole-branch review after the last task. `quick-fix` and `change-backport` also dispatch
 `reviewer`. `major-upgrade` runs the same builder/reviewer loop over its upgrade
 checklist. Both send each task's smoke test and screenshots to `agents/smoke-tester.md`, and
-`feature-design` sends it a try-out of a CMS component the design reuses.
+`feature-design` sends a `builder` spike and a `smoke-tester` try-out for a CMS component the
+design reuses.
 
 - `reviewer` has no `Edit`/`Write` in its frontmatter `tools:` list. This is load-bearing:
   a reviewer that can patch its own findings stops being a gate. Never add write tools to it.

@@ -135,14 +135,17 @@ it before finalizing the design:
    ignores `required`, another's Choose button does nothing in a modal. Found during the
    build, each costs a blocked task and a question. Find out what it does with `required`
    and an empty value, a value pointing at a deleted item, each config option the design
-   relies on, and the shape of the value it saves.
-   - **The project has a demo site:** mount the component the way the design plans (same
-     host, same config) in a throwaway extension in the demo site, plain JS with no build
-     step, outside the package's source. Dispatch a `smoke-tester` (Agent tool,
-     `subagent_type: smoke-tester`) for a try-out, with the component, the click path to it
-     and the list above. Delete the extension once it reports.
-   - **No demo site:** read the component's source at the project's release tag
-     (`umbraco-cms-source`) for the same list.
+   relies on, and the shape of the value it saves. Hand the work off and keep only the
+   answers: the spike's code, the browser and the CMS source stay out of this session.
+   - **The project has a demo site:** dispatch a `builder` (Agent tool,
+     `subagent_type: builder`) in spike mode, with the component, the host the design plans
+     (a modal, a workspace view, a property) and the config. It mounts the component there in
+     `App_Plugins/<feature-slug>-spike/` in the demo site and returns the click path. Then
+     dispatch a `smoke-tester` (`subagent_type: smoke-tester`) for a try-out, with the
+     component, that click path and the list above. Delete the spike folder once it reports.
+   - **No demo site:** dispatch a `general-purpose` subagent to load `umbraco-cms-source`,
+     read the component's source at the project's release tag, and answer the same list in
+     one line each.
 
    Each answer becomes a line in `SPEC.md`. One read from source, not tried, goes in the
    guesses at the top of `SPEC.md` for the human to confirm. A surprise changes the design

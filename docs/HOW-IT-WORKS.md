@@ -132,9 +132,9 @@ task, and whatever it reads stays in its context until the build ends. The build
 reviewer keep their reports short for the same reason.
 
 The same agent works for `feature-design`. When a design reuses a CMS picker or editor
-somewhere new, design mounts it in a throwaway extension on the demo site and sends the
-`smoke-tester` to try it (required and empty, a deleted item, the value it saves) before the
-plan depends on it.
+somewhere new, a `builder` mounts it in a throwaway spike on the demo site and the
+`smoke-tester` tries it (required and empty, a deleted item, the value it saves) before the
+plan depends on it. Design only reads their short reports.
 
 `quick-fix` uses the same reviewer for small fixes. `major-upgrade` uses the whole gate for
 a move to a new Umbraco major: it lists the breaking changes that hit the project in
