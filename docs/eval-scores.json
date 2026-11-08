@@ -95,6 +95,14 @@
     "without": 50,
     "withoutDate": "2026-10-17"
   },
+  "backoffice-ux-edit-modal-sibling-open": {
+    "date": "2026-11-08",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 0,
+    "withoutDate": "2026-11-08"
+  },
   "backoffice-ux-match-banner-tokens": {
     "date": "2026-10-17",
     "runs": 4,

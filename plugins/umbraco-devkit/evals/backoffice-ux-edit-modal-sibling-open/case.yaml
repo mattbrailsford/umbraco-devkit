@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: backoffice-ux-edit-modal-sibling-open
+context:
+  scaffold_script: fixture.sh
