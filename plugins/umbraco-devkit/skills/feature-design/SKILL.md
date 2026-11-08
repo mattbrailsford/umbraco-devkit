@@ -425,14 +425,18 @@ blocked a build for 15 hours. Prove these while the design is still cheap to cha
    - **The project has a demo site:** dispatch a `builder` (Agent tool,
      `subagent_type: builder`) in spike mode, with the assumption and how the design plans
      to use it (the host, the config, the call). It writes the smallest throwaway that
-     exercises it, in one `<feature-slug>-spike` folder in the demo site, and returns how to
-     reach it. Then dispatch a `smoke-tester` (`subagent_type: smoke-tester`) for a try-out,
-     with that and the list from step 2. Delete the spike folder once it reports.
+     exercises it, in one `<feature-slug>-spike` folder in the demo site. Where the CMS uses
+     it differently from the plan, it builds the CMS's way as a second variant. Then dispatch
+     a `smoke-tester` (`subagent_type: smoke-tester`) for a try-out of every variant, with the
+     list from step 2. If none works, send its report to one more `builder` spike and try
+     again. Delete the spike folder once you have the answers.
    - **No demo site:** dispatch a `general-purpose` subagent to load `umbraco-cms-source` and
      `umbraco-docs`, read how it behaves at the project's release tag, and answer the list in
      one line each.
 4. **Write each answer down.** It becomes a line in `ARCHITECTURE.md` or `SPEC.md`, whichever
-   owns the fact. One read, not tried, goes in that file's guesses at the top for the human
+   owns the fact. When the planned way failed and another worked (a routed modal, not a plain
+   one), change the design to the way that worked and log the change in `DECISION-LOG.md`.
+   When nothing worked, pick another approach or ask the human. One read, not tried, goes in that file's guesses at the top for the human
    to confirm. A surprise changes the design now, not during the build.
 
 ## Interview
