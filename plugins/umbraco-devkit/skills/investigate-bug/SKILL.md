@@ -161,10 +161,15 @@ Write the report in chat:
 - Cause is in the CMS and no package workaround is planned → `state/blocked`, linking the
   upstream issue once the user has posted it.
 
+**If there was no issue ID** and the cause is proven, draft a new issue holding the report,
+labelled `state/ready`, following the same sections. The report then lives somewhere a fresh
+session can find it, and the fix gets tracked. Find the tracker as `issue-triage`'s "Issue
+tracker" section says. No tracker set up: skip the draft, and the report stays in chat.
+
 Then pick the route for the fix, for the report's **Route** line:
 
-- **An issue ID with a proven cause:** `issue-resolve` with that ID and the report, so the
-  fix gets tracked on the issue.
+- **An issue ID with a proven cause**, given or newly drafted: `issue-resolve` with that ID
+  and the report, so the fix gets tracked on the issue.
 - **Small fix** (one concern, the size `quick-fix` describes): `quick-fix`, passing it the
   cause, the repro, and the places with the same cause.
 - **Bigger fix**, or a shared fix across several places: `feature-explore`, with the report as
@@ -191,5 +196,6 @@ The report, the drafted update if there is one, and the route.
 
 - **If another skill started this one**, return those and stop. That skill decides what to
   apply and what runs next.
-- **Otherwise**, show the drafted update and apply it only on the user's yes. Then offer the
-  route as a one-line question.
+- **Otherwise**, show the drafted update or new issue and apply it only on the user's yes.
+  Then offer the route as a one-line question. Once the report is on the tracker, the route
+  can start in a fresh session: suggest `/clear`, then `issue-resolve <issue ID>`.
