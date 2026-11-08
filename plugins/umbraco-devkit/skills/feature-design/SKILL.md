@@ -130,26 +130,9 @@ it before finalizing the design:
    noted as a deliberate skip.
 3. **List every place each component will appear**, so the mockups and the spec cover all of
    them.
-4. **Try each CMS component the design reuses before designing around it.** A CMS picker,
-   input or property editor can behave differently outside the screen it was built for: one
-   ignores `required`, another's Choose button does nothing in a modal. Found during the
-   build, each costs a blocked task and a question. Find out what it does with `required`
-   and an empty value, a value pointing at a deleted item, each config option the design
-   relies on, and the shape of the value it saves. Hand the work off and keep only the
-   answers: the spike's code, the browser and the CMS source stay out of this session.
-   - **The project has a demo site:** dispatch a `builder` (Agent tool,
-     `subagent_type: builder`) in spike mode, with the component, the host the design plans
-     (a modal, a workspace view, a property) and the config. It mounts the component there in
-     `App_Plugins/<feature-slug>-spike/` in the demo site and returns the click path. Then
-     dispatch a `smoke-tester` (`subagent_type: smoke-tester`) for a try-out, with the
-     component, that click path and the list above. Delete the spike folder once it reports.
-   - **No demo site:** dispatch a `general-purpose` subagent to load `umbraco-cms-source`,
-     read the component's source at the project's release tag, and answer the same list in
-     one line each.
-
-   Each answer becomes a line in `SPEC.md`. One read from source, not tried, goes in the
-   guesses at the top of `SPEC.md` for the human to confirm. A surprise changes the design
-   now, not during the build.
+4. **A CMS component reused somewhere new is a risky assumption.** A picker, input or
+   property editor can behave differently outside the screen it was built for. Prove it as
+   "Prove the riskiest assumptions" below describes.
 
 ### Mockup each screen
 
@@ -420,6 +403,38 @@ This doesn't relax "stop, don't guess" — that rule is about a phase's *require
 missing (no `BRIEF.md` to read). This is about which of *this* phase's own questions you put
 to the human versus answer yourself and show your work.
 
+## Prove the riskiest assumptions
+
+A design often rests on how something outside the package behaves: a CMS picker in a new
+host, when a notification fires, what an API returns, whether a query works on both database
+providers. When that's wrong, the build finds out: a task blocks on a question, then takes
+several fix rounds. In real builds, one CMS picker let an empty required value save, another's
+Choose button did nothing in a modal, and a question about the format a CMS editor saves
+blocked a build for 15 hours. Prove these while the design is still cheap to change.
+
+1. **Pick them.** List each decision that rests on outside behaviour the docs and source
+   don't state plainly for this use, and that would change the design if it's wrong. The
+   interview's hardest-risk question names the first one. Most features have none, one or
+   two.
+2. **Say what to check:** the case the design relies on, plus the edges that would break it.
+   For a CMS picker, input or property editor reused somewhere new: `required` with an empty
+   value, a value pointing at a deleted item, each config option the design relies on, and
+   the shape of the value it saves.
+3. **Hand it off and keep only the answers.** The spike's code, the browser and the source
+   stay out of this session.
+   - **The project has a demo site:** dispatch a `builder` (Agent tool,
+     `subagent_type: builder`) in spike mode, with the assumption and how the design plans
+     to use it (the host, the config, the call). It writes the smallest throwaway that
+     exercises it, in one `<feature-slug>-spike` folder in the demo site, and returns how to
+     reach it. Then dispatch a `smoke-tester` (`subagent_type: smoke-tester`) for a try-out,
+     with that and the list from step 2. Delete the spike folder once it reports.
+   - **No demo site:** dispatch a `general-purpose` subagent to load `umbraco-cms-source` and
+     `umbraco-docs`, read how it behaves at the project's release tag, and answer the list in
+     one line each.
+4. **Write each answer down.** It becomes a line in `ARCHITECTURE.md` or `SPEC.md`, whichever
+   owns the fact. One read, not tried, goes in that file's guesses at the top for the human
+   to confirm. A surprise changes the design now, not during the build.
+
 ## Interview
 
 Up to ~10 questions, adaptive, batched (4 at a time) — only what's left after the filter
@@ -438,7 +453,7 @@ above:
 7. Auth & trust boundaries — is this backoffice-only, or does anything cross into the
    public-facing site?
 8. Hardest technical risk, and the fallback if the assumed extension point doesn't behave as
-   expected?
+   expected? Prove it before the plan, as "Prove the riskiest assumptions" describes.
 9. What are we explicitly **not** building for now (YAGNI)?
 10. Non-functionals that bite: content-tree or data scale, request latency, cold-start on a
     busy site, accessibility of a new screen? Each answer becomes a target in `SPEC.md`.

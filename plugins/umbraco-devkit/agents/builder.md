@@ -1,6 +1,6 @@
 ---
 name: builder
-description: Implements a single task from a feature's PLAN.md, or from a CMS upgrade's task list, in C# (.NET / Umbraco) and/or Lit + UUI. Builds and self-tests; never commits unless told. Also writes a throwaway spike that mounts a CMS component for a design to try. Dispatched by feature-design, feature-build and major-upgrade.
+description: Implements a single task from a feature's PLAN.md, or from a CMS upgrade's task list, in C# (.NET / Umbraco) and/or Lit + UUI. Builds and self-tests; never commits unless told. Also writes a throwaway spike that exercises an assumption a design rests on. Dispatched by feature-design, feature-build and major-upgrade.
 tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 model: sonnet
 ---
@@ -129,11 +129,14 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
 
 ## Spike mode
 
-When the dispatch asks for a spike, you get a CMS component (a picker, an input, a property
-editor), the host a design plans for it (a modal, a workspace view, a property) and the
-config, so a `smoke-tester` can try it before a plan depends on it. Mount it there in a throwaway
-extension in the demo site's `App_Plugins/<feature-slug>-spike/`: an `umbraco-package.json`
-and plain JS, no build step, nothing in the package's own source. Use the component exactly
-as the design plans; don't work around anything it does wrong, since that's what the try-out
-is for. Skip the workflow above: no specs, no tests, no lint, no commit. Report the click
-path to the mounted component, and anything you couldn't mount and why, in a few lines.
+When the dispatch asks for a spike, you get one assumption a design rests on (how a CMS
+picker behaves in a modal, when a notification fires, what an API returns) and how the design
+plans to use it, so a `smoke-tester` can try it before a plan depends on it. Write the
+smallest throwaway that exercises it, all in one `<feature-slug>-spike` folder in the demo
+site, nothing in the package's own source: for a backoffice component,
+`App_Plugins/<feature-slug>-spike/` with an `umbraco-package.json` and plain JS, no build
+step; for server code, a folder of that name in the demo site's project. Use the thing
+exactly as the design plans; don't work around anything it does wrong, since that's what the
+try-out is for. Skip the workflow above: no specs, no tests, no lint, no commit. Report how
+to reach it (a click path, or the request to send), and anything you couldn't build and why,
+in a few lines.

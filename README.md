@@ -151,9 +151,9 @@ You don't run these. The skills above and the agents load them when the work nee
 
 | Agent | What it does |
 |---|---|
-| [`builder`](plugins/umbraco-devkit/agents/builder.md) | Builds one task at a time, or a throwaway spike for a design to try |
+| [`builder`](plugins/umbraco-devkit/agents/builder.md) | Builds one task at a time, or a throwaway spike that proves a design's risky assumption |
 | [`reviewer`](plugins/umbraco-devkit/agents/reviewer.md) | Checks every diff, read-only, before it's committed |
-| [`smoke-tester`](plugins/umbraco-devkit/agents/smoke-tester.md) | Drives the running app and takes its screenshots, so the session that sent it stays small: each change's smoke test, and trying a CMS component before a design depends on it |
+| [`smoke-tester`](plugins/umbraco-devkit/agents/smoke-tester.md) | Drives the running app and takes its screenshots, so the session that sent it stays small: each change's smoke test, and trying a design's risky assumption before the plan depends on it |
 | [`issue-triager`](plugins/umbraco-devkit/agents/issue-triager.md) | Reads and classifies tracker issues, read-only |
 
 **Hooks** (checks Claude Code runs before an action, so they hold even if Claude forgets a rule):

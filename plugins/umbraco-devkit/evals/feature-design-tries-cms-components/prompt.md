@@ -1,7 +1,7 @@
 ---
 description: A flow action's settings reuse the CMS document type picker and an element property editor. With no running demo site, feature-design must read how each behaves with required and an empty value and what value it saves, or list those as guesses for the human, instead of assuming they work in a modal. The smoke-tester try-out path needs a running site and isn't covered here.
 tags: [feature-design, workflow, real-bug]
-# covers: ["Backoffice UX check (features with a UI)"]
+# covers: ["Prove the riskiest assumptions"]
 max_turns: 50
 timeout_seconds: 1800
 allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, WebFetch, Agent]

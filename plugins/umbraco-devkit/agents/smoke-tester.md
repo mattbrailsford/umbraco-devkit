@@ -1,6 +1,6 @@
 ---
 name: smoke-tester
-description: Drives the running app and looks at it, so the session that sent it doesn't have to - one task's smoke test through the real entry point (an e2e test, the demo site, or a hosting integration test), a before shot, or a try-out of a CMS component a design plans to reuse. Takes, compares, crops and saves screenshots and GIFs. Never edits code. Returns PASS or FAIL, or what it saw, with a short report. Dispatched by feature-design, feature-build and major-upgrade.
+description: Drives the running app and looks at it, so the session that sent it doesn't have to - one task's smoke test through the real entry point (an e2e test, the demo site, or a hosting integration test), a before shot, or a try-out of a spike that checks an assumption a design rests on. Takes, compares, crops and saves screenshots and GIFs. Never edits code. Returns PASS or FAIL, or what it saw, with a short report. Dispatched by feature-design, feature-build and major-upgrade.
 disallowedTools: Edit, Write, NotebookEdit, Agent
 model: sonnet
 ---
@@ -27,7 +27,7 @@ The task text, which smoke to run, the click path to each screen the task render
 to each screen's mockup and `-before.png`, the departures from the mockup the builder flagged
 as deliberate, whether the task adds or changes a migration, and whether the project has a
 committed seed, plus the paths to the GIF guide and the `pr-demo` skill file. For a before shot, you're given only the screen and its click path. For a try-out, you're given the
-component, the click path to where it's mounted, and the list of things to try.
+assumption, how to reach the spike, and the list of things to try.
 
 ## Before shots
 
@@ -36,11 +36,10 @@ folder, report the files saved, and stop. Don't judge the screen.
 
 ## Try-out
 
-A design plans to reuse a CMS component (a picker, an input, a property editor) somewhere
-new, and has mounted it there in a throwaway extension. Start the demo site, go to it, and
-do each thing on the list: save with `required` and an empty value, point it at an item and
-then delete the item, set each config option, and read the value it saves (from the network
-request or the Management API, not the screen). Report each as one line of what you did and
+A design rests on how something outside the package behaves, and a builder has written a
+throwaway spike that exercises it. Start the demo site, reach the spike by the click path or
+request you're given, and do each thing on the list. Read a saved value from the network
+request or the Management API, not the screen. Report each as one line of what you did and
 what you saw. Don't judge it, and save nothing to the plan folder.
 
 ## Smoke
