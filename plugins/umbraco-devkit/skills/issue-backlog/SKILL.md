@@ -91,6 +91,8 @@ show the board again and pick again, until the user stops or nothing is left to 
 2. Invoke `issue-resolve` (Skill tool) for the first one. One at a time: a fix leaves real changes for the user to review, so it
    never runs in parallel.
 3. When `issue-resolve` hands back, show the board again and offer the next ready issue.
+   Count the issue as cleared only once it closes, and name any issues it split off, so the
+   board shows the net change.
 
 ## Rules
 

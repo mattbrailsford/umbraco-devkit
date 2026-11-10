@@ -94,8 +94,9 @@ Either way, ask the lane to fix the cause, not just the reported spot. A reporte
 siblings with the same cause (other endpoints missing the same check, other components with
 the same pattern), especially when the same kind of bug has been reported before. `quick-fix`
 searches for them in its own loop. For the pipeline route, include "find other places with
-the same cause" in what you hand `feature-explore`, so the brief can bring them into scope or
-list them as follow-ups.
+the same cause" in what you hand `feature-explore`, so the brief brings them into scope.
+An issue with more than one part goes to one lane whole; split a part off only as
+`issue-triage`'s Splitting an issue allows.
 
 ## Closing the loop
 
@@ -119,12 +120,17 @@ finishes and the PR is open for the pipeline route:
 4. Show the draft to the user. Only post the comment or change the status if they say to —
    same rule as `issue-triage`: a draft is the default output, posting is a separate, explicit
    step.
-5. **Find every follow-up.** Gather each follow-up mentioned anywhere: the lane's hand-off,
-   review findings left out of scope, the PR description, places with the same cause, and
-   the chat. List them and ask where each one goes: a new issue (drafted with
-   `git-workflow`'s issue template), its own PR, or dropped. Never leave one only in a PR
-   description or the chat; it's lost when the chat ends. Name each filed one in the "Fix
-   landed" notes' **Left out** field.
+5. **Ask whether to fold in or split each follow-up.** Gather each follow-up mentioned
+   anywhere: the lane's hand-off, review findings left out of scope, the PR description,
+   places with the same cause, and the chat. Before changing anything, list them in one
+   question, each with a recommendation and its impact: what stays broken if it isn't done
+   now, and what folding it in adds to this fix (size, risk, a fresh review). Recommend
+   folding it into this fix's PR unless `issue-triage`'s Splitting an issue allows a split,
+   and then name the reason. Recommend dropping one only when it isn't worth doing at all.
+   On the user's answer, hand the folded ones back to the lane that made the fix, on the
+   same branch, and draft each split one with `git-workflow`'s issue template. Never leave a
+   follow-up only in a PR description or the chat; it's lost when the chat ends. Name each
+   filed one in the "Fix landed" notes' **Left out** field.
 6. **Other version lines.** If `CLAUDE.md` lists more than one supported version line and
    the bug exists on another line still in an active phase, offer `change-backport` with
    the fix's commit or PR.
