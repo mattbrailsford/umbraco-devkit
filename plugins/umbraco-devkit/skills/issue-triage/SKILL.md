@@ -151,7 +151,9 @@ and follow-ups found during one.
 
 Split only when one of these holds, and name which:
 
-- a part needs a maintainer decision nobody has made yet;
+- a part needs a decision only someone else can make. If the user can make the call, ask
+  them now and keep the part in, so the work can go on. A triager can't ask, so it writes
+  the question into its notes for the decision run instead of suggesting a split;
 - a part has a different cause or need, so it would be its own issue if reported alone;
 - a part has to ship apart from the rest: a breaking change held for the next major, a
   database change that can't go in a patch release, or another version line.

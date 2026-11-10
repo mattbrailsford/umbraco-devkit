@@ -120,15 +120,17 @@ finishes and the PR is open for the pipeline route:
 4. Show the draft to the user. Only post the comment or change the status if they say to —
    same rule as `issue-triage`: a draft is the default output, posting is a separate, explicit
    step.
-5. **Fold in or split each follow-up.** Gather each follow-up mentioned anywhere: the lane's
-   hand-off, review findings left out of scope, the PR description, places with the same
-   cause, and the chat. By default, hand each one back to the lane that made the fix, on the
-   same branch, so it lands in this fix's PR. Split one into a new issue only as
-   `issue-triage`'s Splitting an issue allows, and drop one only on the user's say. Show the
-   sorted list, with the reason for each split, and ask once. Draft a split issue with
-   `git-workflow`'s issue template. Never leave a follow-up only in a PR description or the
-   chat; it's lost when the chat ends. Name each filed one in the "Fix landed" notes'
-   **Left out** field.
+5. **Ask whether to fold in or split each follow-up.** Gather each follow-up mentioned
+   anywhere: the lane's hand-off, review findings left out of scope, the PR description,
+   places with the same cause, and the chat. Before changing anything, list them in one
+   question, each with a recommendation and its impact: what stays broken if it isn't done
+   now, and what folding it in adds to this fix (size, risk, a fresh review). Recommend
+   folding it into this fix's PR unless `issue-triage`'s Splitting an issue allows a split,
+   and then name the reason. Recommend dropping one only when it isn't worth doing at all.
+   On the user's answer, hand the folded ones back to the lane that made the fix, on the
+   same branch, and draft each split one with `git-workflow`'s issue template. Never leave a
+   follow-up only in a PR description or the chat; it's lost when the chat ends. Name each
+   filed one in the "Fix landed" notes' **Left out** field.
 6. **Other version lines.** If `CLAUDE.md` lists more than one supported version line and
    the bug exists on another line still in an active phase, offer `change-backport` with
    the fix's commit or PR.
