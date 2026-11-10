@@ -5,8 +5,8 @@ description: >-
   possible security reports, as a report for human review. Once approved, applies `state/*`
   labels and a plain-language comment for the reporter. A `decisions` run walks through
   issues waiting on a maintainer. Use to classify a backlog, or one issue before acting on
-  it. Owns the plugin's state labels, its tracker comment format, and its rule for handling
-  security reports.
+  it. Owns the plugin's state labels, its tracker comment format, its rule for handling
+  security reports, and when to split an issue.
 user-invocable: true
 argument-hint: "[issue ID | ID range | decisions | leave blank for whole tracker]"
 ---
@@ -100,7 +100,8 @@ few hundred subagent calls, and that's worth flagging before it runs.
 Every dispatch gets: the issue ID, the tracker's type/location/access method, the repo path,
 any dedup-pre-pass hint for that issue, why it's back if it already had a state label (a
 reply, the needs-info timeout, or a closed blocker), the "What counts" list from Security
-reports below, the "Which state" rules from State labels, and the Tracker comments section.
+reports below, the "Which state" rules from State labels, Splitting an issue, and the
+Tracker comments section.
 The triager searches the tracker itself, open and closed, for earlier duplicates. It also
 checks whether an open pull request is already linked to the issue (GitHub: the issue's
 "Development" links or a cross-reference in its timeline), opened by the reporter or another
@@ -132,7 +133,7 @@ No subagents: the notes already hold the facts, so the main thread reads each is
    since: new comments, reaction counts, newly linked duplicates.
 2. Show one table: issue, need, size, risks, suggestion, and what's new since the notes. Put
    anything new that changes the picture (a lot more demand, a workaround someone found) in
-   the suggestion, and say so.
+   the suggestion, and say so. Suggest a split only as Splitting an issue below allows.
 3. Ask the user for an answer per issue:
    - **Yes** → `state/ready`.
    - **Yes, another way** → `state/ready`, with the other way as what was agreed.
@@ -140,6 +141,30 @@ No subagents: the notes already hold the facts, so the main thread reads each is
    - **Not yet** → no change, no comment. It comes back on the next decision run.
 4. Draft each answer's label and comment, following Tracker comments below. Apply exactly
    the ones the user approves, as in Aggregating and reporting.
+
+## Splitting an issue
+
+The goal of working a tracker is to clear it. Splitting an issue, or moving part of a fix
+into a new issue, adds tracker work, so the default is one issue, fixed whole. This applies
+wherever an issue's work gets divided: a triage or decision suggestion, the start of a fix,
+and follow-ups found during one.
+
+Split only when one of these holds, and name which:
+
+- a part needs a decision only someone else can make. If the user can make the call, ask
+  them now and keep the part in, so the work can go on. A triager can't ask, so it writes
+  the question into its notes for the decision run instead of suggesting a split;
+- a part has a different cause or need, so it would be its own issue if reported alone;
+- a part has to ship apart from the rest: a breaking change held for the next major, a
+  database change that can't go in a patch release, or another version line.
+
+These aren't reasons: keeping a PR small, "out of scope", "can do later", a part needing
+more design, or one part depending on another issue (that's an order to work in).
+
+A split is for tracking, never for putting work off. Each part keeps the state the whole
+had, unless a reason above says otherwise, and is drafted ready to work: its cause and fix
+written down, never just "look into this". Show each split with its reason, and apply it
+only on the user's yes.
 
 ## State labels
 

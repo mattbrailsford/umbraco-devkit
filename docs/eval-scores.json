@@ -772,7 +772,7 @@
     "withoutDate": "2026-10-16"
   },
   "investigate-bug-no-fix": {
-    "date": "2026-10-16",
+    "date": "2026-11-08",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -781,6 +781,14 @@
   },
   "issue-backlog-board": {
     "date": "2026-10-16",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-resolve-fold-follow-ups": {
+    "date": "2026-11-10",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -797,6 +805,14 @@
   },
   "issue-resolve-security-stop": {
     "date": "2026-10-16",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-triage-decision-no-defer-split": {
+    "date": "2026-11-10",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
