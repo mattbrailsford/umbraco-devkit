@@ -5,7 +5,7 @@ description: >-
   and what's out of scope, written to BRIEF.md. Use when starting a feature, package or
   add-on, or when a request is too vague to design yet.
 user-invocable: true
-argument-hint: [one-line idea, optional]
+argument-hint: "[one-line idea, optional]"
 ---
 
 # feature-explore

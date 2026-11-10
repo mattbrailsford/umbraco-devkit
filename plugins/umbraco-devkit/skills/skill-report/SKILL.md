@@ -7,7 +7,7 @@ description: >-
   removed. Shows the draft and posts only on the user's yes. Use when the user says Claude
   got something wrong that the devkit should have caught, or asks to report a skill miss.
 user-invocable: true
-argument-hint: [optional: what went wrong]
+argument-hint: "[optional: what went wrong]"
 ---
 
 # skill-report

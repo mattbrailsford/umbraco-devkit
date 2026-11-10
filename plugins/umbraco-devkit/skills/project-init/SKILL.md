@@ -6,7 +6,7 @@ description: >-
   local CMS source and docs clones) and offers to add what's missing, one step at a time.
   Use for a new repo, a repo without CLAUDE.md, or to fill gaps later.
 user-invocable: true
-argument-hint: [project name, optional]
+argument-hint: "[project name, optional]"
 ---
 
 # project-init

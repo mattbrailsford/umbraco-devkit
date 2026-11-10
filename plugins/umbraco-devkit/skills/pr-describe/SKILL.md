@@ -6,7 +6,7 @@ description: >-
   otherwise a summary, why, how to verify, and risks.
   Use whenever a PR is opened or updated.
 user-invocable: true
-argument-hint: [PR number | leave blank for the current branch]
+argument-hint: "[PR number | leave blank for the current branch]"
 ---
 
 # Describe a pull request

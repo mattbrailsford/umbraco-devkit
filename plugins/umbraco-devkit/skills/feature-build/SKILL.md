@@ -5,7 +5,7 @@ description: >-
   subagent gates, and each task commits only on pass. Use once feature-plan has an ordered
   task list and it's time to write code.
 user-invocable: true
-argument-hint: [path to the feature's plan folder, optional]
+argument-hint: "[path to the feature's plan folder, optional]"
 ---
 
 # feature-build

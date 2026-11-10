@@ -6,7 +6,7 @@ description: >-
   feature-explore has defined the problem, or on its own to capture a mockup starter for a
   product screen.
 user-invocable: true
-argument-hint: [area to focus, optional]
+argument-hint: "[area to focus, optional]"
 ---
 
 # feature-design
