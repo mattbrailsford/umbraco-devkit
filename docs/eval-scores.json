@@ -787,6 +787,14 @@
     "without": null,
     "withoutDate": null
   },
+  "issue-resolve-fold-follow-ups": {
+    "date": "2026-11-10",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "issue-resolve-linked-pr": {
     "date": "2026-10-19",
     "runs": 3,
