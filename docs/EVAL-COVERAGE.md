@@ -279,7 +279,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `investigate-bug-no-fix` | 100 | 2026-10-16 |
+| `investigate-bug-no-fix` | 100 | 2026-11-08 |
 
 ### `issue-backlog`
 

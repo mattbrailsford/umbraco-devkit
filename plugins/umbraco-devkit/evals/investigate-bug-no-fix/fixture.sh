@@ -60,3 +60,13 @@ export class MyPackageStatsDashboardElement extends UmbLitElement {
 }
 export default MyPackageStatsDashboardElement;
 EOF
+cat > CLAUDE.md <<'EOF'
+# MyPackage
+
+## Issue tracker
+
+- Type: GitHub Issues
+- Location: this repo, `acme/MyPackage`
+- Access: `gh`
+- State labels: the defaults
+EOF
