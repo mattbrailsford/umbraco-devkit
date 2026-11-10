@@ -70,8 +70,8 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 2 | 0 | – | – |
-| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
+| [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 9 | 0 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
@@ -84,7 +84,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions) | knowledge | Proven | +100 | 6 | 2 | 3/11 | 1 |
 | [`umbraco-backoffice-testing`](#umbraco-backoffice-testing) | knowledge | Proven | +67 | 2 | 0 | 2/2 | 0 |
-| [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 1 |
+| [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 11 | 0 | 5/6 | 1 |
 | [`umbraco-cms-source`](#umbraco-cms-source) | knowledge | Proven | +33 | 3 | 1 | 1/5 | 0 |
 | [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 0 |
 | [`umbraco-docs`](#umbraco-docs) | knowledge | Gain, skill rarely loads | +23 | 2 | 0 | 1/5 | 0 |
@@ -281,7 +281,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `investigate-bug-no-fix` | 100 | 2026-10-16 |
+| `investigate-bug-no-fix` | 100 | 2026-11-08 |
 
 ### `issue-backlog`
 
@@ -293,6 +293,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `issue-resolve-fold-follow-ups` | 100 | 2026-11-10 |
 | `issue-resolve-linked-pr` | 100 | 2026-10-19 |
 | `issue-resolve-security-stop` | 100 | 2026-10-16 |
 
@@ -300,6 +301,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
+| `issue-triage-decision-no-defer-split` | 100 | 2026-11-10 |
 | `issue-triage-linked-pr` | 100 | 2026-10-19 |
 | `issue-triage-security-report` | 100 | 2026-10-16 |
 
@@ -440,6 +442,7 @@ Stays quiet on: `backoffice-conventions-skip-plain-lit`
 | Choosing things: picker, not select | `backoffice-ux-picker-reviewer-user` | – | 100 | – | – | – |
 | Choosing things: picker, not select | `backoffice-ux-picker-sibling-select` | 75 | 0 | 75 | 3/4 | 2026-10-17 |
 | Choosing things: picker, not select | `backoffice-ux-write-connections-dashboard` | 100 | 100 | 0 | 6/6 | 2026-10-16 |
+| Modals that edit something get a URL | `backoffice-ux-edit-modal-sibling-open` | 100 | 0 | 100 | 3/3 | 2026-11-08 |
 | The five moments | `backoffice-ux-moments-remember-filter` | 100 | 0 | 100 | 4/4 | 2026-10-17 |
 | The five moments | `backoffice-ux-write-connections-dashboard` | 100 | 100 | 0 | 6/6 | 2026-10-16 |
 | The five moments | `backoffice-ux-write-sync-button` | 100 | 100 | 0 | 6/6 | 2026-10-16 |

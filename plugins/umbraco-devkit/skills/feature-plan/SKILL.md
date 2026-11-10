@@ -4,7 +4,7 @@ description: >-
   Slices a finished design into user stories and an ordered task checklist (STORIES.md and
   PLAN.md) for feature-build. Use once feature-design has decided how to build the feature.
 user-invocable: true
-argument-hint: [scope to plan, optional]
+argument-hint: [feature slug or plan folder path, and/or scope to plan, optional]
 ---
 
 # feature-plan
@@ -45,7 +45,8 @@ tracks completion via issues instead of an in-doc checklist.
 
 ## Preflight
 
-1. Resolve which feature this run is for. If more than one plan folder exists, prefer a match
+1. Resolve which feature this run is for. If the argument names a plan folder (its path or
+   feature slug), use it. Else, if more than one plan folder exists, prefer a match
    between the current branch/worktree name and a folder name (see `CLAUDE.md`'s "Finding the
    current feature's plan folder" rule) — this is the normal case once `feature-build` has
    started. If nothing matches, fall back to the one plan folder present, or ask if more than
@@ -145,5 +146,7 @@ blocks task Y, why a slice was deferred).
 Summarize: N stories, M tasks, S spec files generated, the first parallel group. Offer to
 open `PLAN.md` in a live preview, following `markdown-preview`'s "Offering a preview". With a
 preview open, ask for approval on `PLAN.md`, following its "Approval". Then:
-`Suggested next: feature-build — specs are in place and pending.` For a large or risky plan,
-mention `feature-interrogate` as an optional stress-test before that first build.
+`Suggested next: /clear, then feature-build <feature-slug> — specs are in place and
+pending.` Name the slug: no feature branch exists yet for `feature-build` to match. For a
+large or risky plan, mention `feature-interrogate` as an optional stress-test before that
+first build.
