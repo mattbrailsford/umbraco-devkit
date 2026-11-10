@@ -819,6 +819,14 @@
     "without": null,
     "withoutDate": null
   },
+  "issue-triage-feature-route-question": {
+    "date": "2026-11-10",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "issue-triage-linked-pr": {
     "date": "2026-10-19",
     "runs": 3,
@@ -829,6 +837,14 @@
   },
   "issue-triage-security-report": {
     "date": "2026-10-16",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-triage-type-labels": {
+    "date": "2026-11-10",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,

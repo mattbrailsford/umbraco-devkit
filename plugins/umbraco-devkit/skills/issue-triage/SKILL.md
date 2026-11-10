@@ -2,8 +2,9 @@
 name: issue-triage
 description: >-
   Triages one, several or all untriaged tracker issues: type, code area, duplicates and
-  possible security reports, as a report for human review. Once approved, applies `state/*`
-  labels and a plain-language comment for the reporter. A `decisions` run walks through
+  possible security reports, as a report for human review. Once approved, applies a type
+  label (`bug` or `enhancement`), a `state/*` label and a plain-language comment for the
+  reporter, or moves a feature request to Discussions where the project wants that. A `decisions` run walks through
   issues waiting on a maintainer. Use to classify a backlog, or one issue before acting on
   it. Owns the plugin's state labels, its tracker comment format, its rule for handling
   security reports, and when to split an issue.
@@ -38,10 +39,11 @@ and nothing is written to it until the user says so.
    tracker type, else its CLI (`gh` for GitHub, `jira` CLI, `az boards`), else a documented
    REST call. Record whichever one actually worked in `## Issue tracker` so the next run skips
    this detection step.
-4. Resolve the state label names: the defaults in State labels below, or the mapping
-   `CLAUDE.md` records under `## Issue tracker`. If that section exists but has no `State
-   labels` line, ask just the interview's state-labels question and add the line. If the
-   mapping has no entry for one of the states, ask about just that state.
+4. Resolve the label names and where feature requests go: the defaults in Type labels and
+   State labels below, or what `CLAUDE.md` records under `## Issue tracker`. If that section
+   exists but has no `Type labels`, `State labels` or `Feature requests` line, ask just that
+   interview question and add the line. If a mapping has no entry for one of the labels, ask
+   about just that label.
 5. Resolve which issues this run covers, from the argument:
    - One ID → that issue, whatever its labels. Naming an issue means re-triage it.
    - A range (e.g. `120-135`) → every ID in that range that still exists and is open.
@@ -63,6 +65,10 @@ Ask in one batch:
 4. **State labels** — does the tracker already have labels or tags for triage state? If so,
    map them onto the states in State labels below. If not, may this create the default
    `state/*` ones? Creating them is a tracker write, so it waits for a yes.
+5. **Type labels** — use GitHub's default `bug` and `enhancement` labels, or map them onto
+   the tracker's own type labels? If the tracker has neither, may this create them?
+6. **Feature requests** — do they stay on the tracker, or go somewhere else first, such as
+   GitHub Discussions (and which category) or a forum?
 
 Append the answers to `CLAUDE.md`:
 ```markdown
@@ -70,7 +76,9 @@ Append the answers to `CLAUDE.md`:
 - Type: <type>
 - Location: <repo/project/org — note explicitly if separate from the source repo>
 - Access: <MCP server name | CLI command | REST endpoint>
+- Type labels: default   <!-- or a mapping, e.g. enhancement → type/feature -->
 - State labels: default   <!-- or a mapping, e.g. ready → status/accepted -->
+- Feature requests: issues   <!-- or where they go, e.g. GitHub Discussions, Ideas category -->
 - Needs-info timeout: 30 days
 ```
 
@@ -100,8 +108,9 @@ few hundred subagent calls, and that's worth flagging before it runs.
 Every dispatch gets: the issue ID, the tracker's type/location/access method, the repo path,
 any dedup-pre-pass hint for that issue, why it's back if it already had a state label (a
 reply, the needs-info timeout, or a closed blocker), the "What counts" list from Security
-reports below, the "Which state" rules from State labels, Splitting an issue, and the
-Tracker comments section.
+reports below, the Type labels section with this project's label names and `Feature requests`
+line, the "Which state" rules from State labels, Splitting an issue, and the Tracker comments
+section.
 The triager searches the tracker itself, open and closed, for earlier duplicates. It also
 checks whether an open pull request is already linked to the issue (GitHub: the issue's
 "Development" links or a cross-reference in its timeline), opened by the reporter or another
@@ -118,8 +127,8 @@ outside contributor, and reports it if so.
    outside contributor, the recommended action is "Review with `pr-review` #<PR>", not a
    state label or fix route — the fix already exists, it hasn't been built yet.
 4. Next to each recommended action, show the tracker write it maps to (State labels below):
-   the label or close, any type or area label fix the triager found, and the comment the
-   triager drafted. A label fix is a tracker write like any other, applied only on approval.
+   the type label, the state label, close or move, any area label fix the triager found, and
+   the comment the triager drafted. A label fix is a tracker write like any other, applied only on approval.
 5. Present the table and the security list (if non-empty) to the user. Nothing gets written
    back to the tracker until the user says which recommendations to apply. Then apply exactly
    those, and report what was written.
@@ -166,6 +175,38 @@ had, unless a reason above says otherwise, and is drafted ready to work: its cau
 written down, never just "look into this". Show each split with its reason, and apply it
 only on the user's yes.
 
+## Type labels
+
+Every issue that stays open after triage gets one type label, saying what kind of issue it
+is. The state label says where it's stuck. They're separate: the type stays the same while
+the state moves on.
+
+| Label | For |
+|---|---|
+| `bug` | Something that doesn't work the way it's meant to |
+| `enhancement` | A request for something new, or a change to how something is meant to work |
+
+- These are GitHub's default labels, so most repos already have them. Use the names in
+  `Type labels` under `## Issue tracker` when the project maps them onto its own.
+- A report of a "bug" in something that works as designed is an `enhancement`. Say so kindly
+  in the comment for the reporter.
+- A wrong type label already on the issue is swapped, not added to.
+- Support questions, duplicates, security reports, and issues to close get no type label.
+- Never create a type label the tracker doesn't have without the user's yes.
+
+**Feature requests elsewhere.** When `Feature requests` under `## Issue tracker` names a place
+other than the tracker, such as GitHub Discussions or a forum, an `enhancement` goes there
+instead of getting a state label:
+
+- On GitHub, the move is the issue's "Convert to discussion" button. It keeps the reporter
+  as the author and carries the comments over. GitHub's API can't do it, so once the user
+  approves, post the comment, then tell the user to click the button, with the issue's link
+  and the category to pick.
+- Anywhere else, close the issue as not planned, with the comment linking to the place.
+- It stays on the tracker, sorted by "Which state" below, when someone on the team opened it
+  or a maintainer has already agreed to it.
+- `Feature requests: issues`, or no line at all, keeps every request on the tracker.
+
 ## State labels
 
 The tracker holds triage state, so there's no separate log to commit or keep in sync. An open
@@ -201,14 +242,14 @@ state label:
 2. `state/blocked` when the fix can't happen in this project until something outside it
    changes: a CMS bug with no package workaround planned, or a dependency's release. Link
    what it's waiting on. If a workaround in the package is planned, it isn't blocked.
-3. `state/needs-decision` for a feature request, or a change to how something is meant to
-   work, that's clear enough to plan but that nobody has agreed to do. Triage doesn't make
+3. `state/needs-decision` for an issue that asks for something new, or a change to how
+   something is meant to work, that's clear enough to plan but that nobody has agreed to do. Triage doesn't make
    that call. The user can make it while approving the report: yes means `state/ready`, no
    means a close as not planned. The label is for when they don't decide yet.
 4. `state/ready` only when there's nothing left to prove or decide. A bug is ready once
    `investigate-bug` has proven its cause, or when the report and the code together leave no
-   doubt (a wrong label, a broken link, an error message pointing at the exact line). A
-   feature request is ready once it's been agreed and has enough detail to plan.
+   doubt (a wrong label, a broken link, an error message pointing at the exact line). An
+   `enhancement` is ready once it's been agreed and has enough detail to plan.
 5. `state/needs-investigation` for any other real-looking bug. When in doubt between this and
    `state/ready`, pick this. `investigate-bug` moves it on: to `state/ready` once the cause
    is proven, to `state/needs-info` if only the reporter can fill a gap, or to a close if it
@@ -353,6 +394,12 @@ Rules for the notes:
   - **Checked:** what was tried, such as the setup it failed to reproduce on.
   - **Reopen if:** what new detail would make it worth another look.
 
+**Moved out of the tracker** (Feature requests elsewhere, under Type labels)
+- Reporter: thank them, and say feature ideas are talked through in that place first, where
+  others can add their own use case and vote. Say where to find it. Give any workaround that
+  exists today. Don't hint at whether it will be built.
+- No notes. The idea starts fresh where it lands.
+
 **Needs-info timeout close**
 - Reporter: there was no reply, so it's closed for now, and replying with the detail will
   reopen it.
@@ -384,8 +431,8 @@ reference, or similar.
 
 ## Rules
 
-- Read-only against the codebase. The only file this skill writes is, on first run only, the
-  `## Issue tracker` section of `CLAUDE.md`. The tracker is written to only as the next rule
+- Read-only against the codebase. The only file this skill writes is the `## Issue tracker`
+  section of `CLAUDE.md`, when it or one of its lines is missing. The tracker is written to only as the next rule
   allows.
 - Never post a comment, apply a label, or close an issue without the user picking that action
   explicitly — issue by issue, or as a stated "apply all." A draft is the default output, not
