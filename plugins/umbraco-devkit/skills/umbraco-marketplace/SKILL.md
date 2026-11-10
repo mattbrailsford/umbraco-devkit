@@ -6,7 +6,7 @@ description: >-
   umbraco-marketplace.json. Use when a package is ready to publish, or when reviewing its
   packaging.
 user-invocable: true
-argument-hint: [optional]
+argument-hint: "[optional]"
 ---
 
 # umbraco-marketplace

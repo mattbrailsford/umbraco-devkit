@@ -6,7 +6,7 @@ description: >-
   or bump), plus fixes to dependabot.yml. Acts only with a yes. Use for "go through the
   Dependabot PRs", "can I merge this bump", "what's out of date", or tidying dependencies.
 user-invocable: true
-argument-hint: [PR number or URL, optional; reviews everything if empty]
+argument-hint: "[PR number or URL, optional; reviews everything if empty]"
 ---
 
 # dependency-review

@@ -6,7 +6,7 @@ description: >-
   hand for an earlier look. Use when asked what decisions were made, what to check, or what
   needs attention on a finished build.
 user-invocable: true
-argument-hint: [path to the feature's plan folder, optional]
+argument-hint: "[path to the feature's plan folder, optional]"
 ---
 
 # decision-review

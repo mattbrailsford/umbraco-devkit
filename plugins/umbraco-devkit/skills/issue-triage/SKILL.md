@@ -8,7 +8,7 @@ description: >-
   it. Owns the plugin's state labels, its tracker comment format, its rule for handling
   security reports, and when to split an issue.
 user-invocable: true
-argument-hint: [issue ID | ID range | decisions | leave blank for whole tracker]
+argument-hint: "[issue ID | ID range | decisions | leave blank for whole tracker]"
 ---
 
 # issue-triage

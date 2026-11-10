@@ -4,7 +4,8 @@
 # skill or agent without any error, so nothing else in the repo would catch it.
 #
 # Checks: the file opens with a `---` block that parses as YAML; `name` matches the skill's
-# folder or the agent's file name; `description` is present and at most 1024 characters.
+# folder or the agent's file name; `description` is present and at most 1024 characters;
+# `argument-hint`, if present, parses as text rather than a list.
 #
 # Usage: scripts/check-frontmatter.sh
 # Exit code: 0 if every header is valid, 1 if something needs a look.
@@ -50,6 +51,13 @@ ARGV.each do |path|
   end
   if data["name"] != expected
     puts "#{path}: name is #{data["name"].inspect}, expected #{expected.inspect}"
+    problems += 1
+  end
+
+  # An unquoted hint like `[file, optional]` parses as a YAML list, and Claude Code then
+  # shows it joined with commas, or as `[object Object]` if it holds a `key: value`.
+  if data.key?("argument-hint") && !data["argument-hint"].is_a?(String)
+    puts "#{path}: argument-hint parses as #{data["argument-hint"].class}, not text; wrap it in quotes"
     problems += 1
   end
 
