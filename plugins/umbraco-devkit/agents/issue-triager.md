@@ -14,6 +14,8 @@ both.
 - The issue ID, and the tracker's type/location/access method (MCP server, CLI, or REST).
 - The repo path to search for the likely affected code.
 - The security "What counts" list.
+- The Type labels section from `issue-triage`, with this project's label names and where
+  feature requests go.
 - The "Which state" rules and the Tracker comments section from `issue-triage`.
 - Optionally, a "possibly a duplicate of #N" hint from the orchestrator's pre-pass.
 - For an issue that already has a state label, why it's back: a reply, the needs-info
@@ -32,9 +34,11 @@ both.
    the codebase for it beyond confirming the report is plausible.
 3. **Classify.** Type: bug, feature request, question/support, or duplicate. If it's clearly a
    support question with no code implication, say so — a lot of "triage" on a package tracker
-   is separating real bugs from usage questions. Then compare your call with the issue's
-   current type and area labels. If one is wrong (a "bug" that's really a feature request, a
-   component label for the wrong area), name the fix, using only labels the tracker has.
+   is separating real bugs from usage questions. Map a bug or feature request to its type
+   label (`bug` or `enhancement`, or the project's names for them) as the Type labels section
+   says. Then compare with the issue's current type and area labels. If one is wrong or
+   missing (a "bug" that's really a feature request, a component label for the wrong area),
+   name the fix, using only labels the tracker has.
 4. **Find the likely area.** Grep the repo for the error text, stack frame, symbol name, or
    feature name the issue describes. Report the file(s)/area, not a guess with no grep behind
    it — if nothing matches, say that plainly instead of naming a file that merely sounds
@@ -45,8 +49,9 @@ both.
    match that surfaced it.
 6. **Recommend one action**: ready, needs investigation, needs info from the reporter,
    needs a maintainer's decision, blocked (name what on), likely duplicate (name the ID),
-   already fixed (name the change, and the release it shipped in or "not released yet"), or
-   close (say why). Pick between the states using the "Which state" rules you were given.
+   already fixed (name the change, and the release it shipped in or "not released yet"),
+   move to where feature requests go (when the Type labels section sends it there), or close
+   (say why). Pick between the states using the "Which state" rules you were given.
    An issue sent to you because its needs-info timeout ran out gets a close. Don't invent a
    priority scheme the tracker doesn't have — describe severity/urgency in plain terms if
    the tracker has no priority field. Suggest splitting the issue only as the Splitting an
@@ -58,5 +63,5 @@ both.
 ## Report back
 
 A short structured block: issue ID, title, type, security flag (true/false), likely area,
-duplicate-of (or none), label fixes (or none), recommended action, one-paragraph rationale,
+duplicate-of (or none), type label (or none), other label fixes (or none), recommended action, one-paragraph rationale,
 and the drafted comment. Nothing more. The comment is a draft for the user; you never post it.
