@@ -6,7 +6,7 @@ description: >-
   click-through list of what to try. Use when someone wants to try a PR or branch in the
   backoffice themselves before approving or merging it.
 user-invocable: true
-argument-hint: [PR number, PR URL, or branch | leave blank for the current branch]
+argument-hint: "[PR number, PR URL, or branch | leave blank for the current branch]"
 ---
 
 # Try a pull request on the demo site

@@ -8,7 +8,7 @@ description: >-
   "do a retro", "write this down for next time", "what would make this faster next time", or
   after a session that involved real digging or more than one wrong turn.
 user-invocable: true
-argument-hint: [optional: what felt slow or went wrong]
+argument-hint: "[optional: what felt slow or went wrong]"
 ---
 
 # project-retro

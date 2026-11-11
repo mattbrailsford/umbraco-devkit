@@ -5,7 +5,7 @@ description: >-
   decisions into project memory, and archives the folder. Use after the feature's PR merges
   on each version line it shipped to, or when a plan is dropped or replaced.
 user-invocable: true
-argument-hint: [feature slug or plan folder path, one or more, optional]
+argument-hint: "[feature slug or plan folder path, one or more, optional]"
 ---
 
 # feature-close

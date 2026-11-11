@@ -4,7 +4,7 @@ description: >-
   Slices a finished design into user stories and an ordered task checklist (STORIES.md and
   PLAN.md) for feature-build. Use once feature-design has decided how to build the feature.
 user-invocable: true
-argument-hint: [feature slug or plan folder path, and/or scope to plan, optional]
+argument-hint: "[feature slug or plan folder path, and/or scope to plan, optional]"
 ---
 
 # feature-plan
