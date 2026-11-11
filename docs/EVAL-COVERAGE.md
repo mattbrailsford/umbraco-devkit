@@ -34,7 +34,7 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 A workflow eval scored under 100, so the skill broke one of its own rules.
 
 - [`feature-build`](#feature-build): `feature-build-checks-agent-skills` (67) `feature-build-open-comments` (56). Read the run, then fix the skill or the grader.
-- [`feature-design`](#feature-design): `feature-design-nfr-targets` (83). Read the run, then fix the skill or the grader.
+- [`feature-design`](#feature-design): `feature-design-nfr-targets` (83) `feature-design-tries-cms-components` (44). Read the run, then fix the skill or the grader.
 - [`feature-explore`](#feature-explore): `feature-explore-writes-brief` (97). Read the run, then fix the skill or the grader.
 - [`feature-plan`](#feature-plan): `feature-plan-awaits-approval` (67) `feature-plan-offers-preview` (83). Read the run, then fix the skill or the grader.
 - [`major-upgrade`](#major-upgrade): `major-upgrade-offers-stopgaps` (67). Read the run, then fix the skill or the grader.
@@ -61,7 +61,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
 | [`feature-build`](#feature-build) | workflow | Broke a rule | – | 7 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`feature-design`](#feature-design) | workflow | Broke a rule | – | 12 | 4 | – | – |
+| [`feature-design`](#feature-design) | workflow | Broke a rule | – | 13 | 5 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 6 | 0 | – | – |
@@ -232,6 +232,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `feature-design-nfr-targets` | 83 | 2026-10-26 |
 | `feature-design-open-comments` | 100 | 2026-10-26 |
 | `feature-design-stops-without-brief` | 100 | 2026-10-16 |
+| `feature-design-tries-cms-components` | 44 | 2026-11-11 |
 
 ### `feature-explore`
 

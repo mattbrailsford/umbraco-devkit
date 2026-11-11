@@ -131,6 +131,9 @@ it before finalizing the design:
    noted as a deliberate skip.
 3. **List every place each component will appear**, so the mockups and the spec cover all of
    them.
+4. **A CMS component reused somewhere new is a risky assumption.** A picker, input or
+   property editor can behave differently outside the screen it was built for. Prove it as
+   "Prove the riskiest assumptions" below describes.
 
 ### Mockup each screen
 
@@ -401,6 +404,49 @@ This doesn't relax "stop, don't guess" — that rule is about a phase's *require
 missing (no `BRIEF.md` to read). This is about which of *this* phase's own questions you put
 to the human versus answer yourself and show your work.
 
+## Prove the riskiest assumptions
+
+A design often rests on how something outside the package behaves: a CMS picker in a new
+host, when a notification fires, what an API returns, whether a query works on both database
+providers. When that's wrong, the build finds out: a task blocks on a question, then takes
+several fix rounds. In real builds, one CMS picker let an empty required value save, another's
+Choose button did nothing in a modal, and a question about the format a CMS editor saves
+blocked a build for 15 hours. Prove these while the design is still cheap to change.
+
+1. **Pick them.** List each decision that rests on outside behaviour the docs and source
+   don't state plainly for this use, and that would change the design if it's wrong. The
+   interview's hardest-risk question names the first one. A CMS picker, input or property
+   editor reused in a new host always counts: how it behaves there is never plain from its
+   docs. Most features have none, one or two.
+2. **Say what to check:** the case the design relies on, plus the edges that would break it.
+   For a CMS picker, input or property editor reused somewhere new: `required` with an empty
+   value, a value pointing at a deleted item, each config option the design relies on, and
+   the shape of the value it saves.
+3. **Hand it off and keep only the answers.** The spike's code, the browser and the source
+   stay out of this session.
+   - **The project has a demo site:** dispatch a `builder` (Agent tool,
+     `subagent_type: builder`) in spike mode, with the assumption and how the design plans
+     to use it (the host, the config, the call). It writes the smallest throwaway that
+     exercises it, in one `<feature-slug>-spike` folder in the demo site. Where the CMS uses
+     it differently from the plan, it builds the CMS's way as a second variant. Then dispatch
+     a `smoke-tester` (`subagent_type: smoke-tester`) for a try-out of every variant, with the
+     list from step 2. If none works, send its report to one more `builder` spike and try
+     again. Delete the spike folder once you have the answers.
+   - **No demo site:** dispatch a `general-purpose` subagent to load `umbraco-cms-source` and
+     `umbraco-docs`, read how it behaves at the project's release tag, and answer the list in
+     one line each.
+4. **Write each answer down.** It becomes a line in `ARCHITECTURE.md` or `SPEC.md`, whichever
+   owns the fact. When the planned way failed and another worked (a routed modal, not a plain
+   one), change the design to the way that worked and log the change in `DECISION-LOG.md`.
+   When nothing worked, pick another approach or ask the human. One read, not tried, goes in
+   that file's guesses at the top for the human to confirm, with an answer for each item on
+   step 2's list, not one line for the component as a whole ("works in a modal" says nothing
+   about an empty required value). A surprise changes the design now, not during the build.
+5. **Don't rest on what's unproven.** For each answer that's still a guess, or couldn't be
+   checked at all, the design says what the package does if the guess is wrong. For a reused
+   input with `required`, that's the package's own check that blocks an empty save, on the
+   server too.
+
 ## Interview
 
 Up to ~10 questions, adaptive, batched (4 at a time) — only what's left after the filter
@@ -419,7 +465,7 @@ above:
 7. Auth & trust boundaries — is this backoffice-only, or does anything cross into the
    public-facing site?
 8. Hardest technical risk, and the fallback if the assumed extension point doesn't behave as
-   expected?
+   expected? Prove it before the plan, as "Prove the riskiest assumptions" describes.
 9. What are we explicitly **not** building for now (YAGNI)?
 10. Non-functionals that bite: content-tree or data scale, request latency, cold-start on a
     busy site, accessibility of a new screen? Each answer becomes a target in `SPEC.md`.

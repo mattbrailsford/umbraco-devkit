@@ -1,6 +1,6 @@
 ---
 name: builder
-description: Implements a single task from a feature's PLAN.md, or from a CMS upgrade's task list, in C# (.NET / Umbraco) and/or Lit + UUI. Builds and self-tests; never commits unless told. Dispatched by feature-build and major-upgrade.
+description: Implements a single task from a feature's PLAN.md, or from a CMS upgrade's task list, in C# (.NET / Umbraco) and/or Lit + UUI. Builds and self-tests; never commits unless told. Also writes a throwaway spike that exercises an assumption a design rests on. Dispatched by feature-design, feature-build and major-upgrade.
 tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 model: sonnet
 ---
@@ -126,3 +126,28 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
   one, mark it `[Obsolete]`, and have it proxy to the new one. Follow the project's
   deprecation-window convention if it has one, otherwise the default in
   `umbraco-package-conventions`.
+
+## Spike mode
+
+When the dispatch asks for a spike, you get one assumption a design rests on (how a CMS
+picker behaves in a modal, when a notification fires, what an API returns) and how the design
+plans to use it, so a `smoke-tester` can try it before a plan depends on it. Write the
+smallest throwaway that exercises it, all in one `<feature-slug>-spike` folder in the demo
+site, nothing in the package's own source: for a backoffice component,
+`App_Plugins/<feature-slug>-spike/` with an `umbraco-package.json` and plain JS, no build
+step; for server code, a folder of that name in the demo site's project. Skip the workflow
+above: no specs, no tests, no lint, no commit.
+
+1. **Build it exactly as the design plans.**
+2. **Check that against how it's meant to be used:** how the CMS itself uses it
+   (`umbraco-cms-source`) and what the docs say (`umbraco-docs`). If the CMS uses it
+   differently (it hosts a picker only in a routed modal, it publishes a notification only
+   on some paths), build that way too, as a second variant beside the first. The documented
+   way, never a hack.
+3. **If the dispatch includes a try-out report where nothing worked,** look for the way the
+   report points to and build it as a new variant. If no documented way turns up after a
+   short look, stop and report what you tried.
+
+You don't run the variants; a `smoke-tester` tries them. Report in a few lines: each variant
+and how to reach it (a click path, or the request to send), and for one that departs from the
+plan, how it differs and the CMS `file:line` it follows.
