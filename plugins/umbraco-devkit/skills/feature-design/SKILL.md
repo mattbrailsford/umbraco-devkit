@@ -439,8 +439,9 @@ blocked a build for 15 hours. Prove these while the design is still cheap to cha
    owns the fact. When the planned way failed and another worked (a routed modal, not a plain
    one), change the design to the way that worked and log the change in `DECISION-LOG.md`.
    When nothing worked, pick another approach or ask the human. One read, not tried, goes in
-   that file's guesses at the top for the human to confirm. A surprise changes the design
-   now, not during the build.
+   that file's guesses at the top for the human to confirm, with an answer for each item on
+   step 2's list, not one line for the component as a whole ("works in a modal" says nothing
+   about an empty required value). A surprise changes the design now, not during the build.
 5. **Don't rest on what's unproven.** For each answer that's still a guess, or couldn't be
    checked at all, the design says what the package does if the guess is wrong. For a reused
    input with `required`, that's the package's own check that blocks an empty save, on the
