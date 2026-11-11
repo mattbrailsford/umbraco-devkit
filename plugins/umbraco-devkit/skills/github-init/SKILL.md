@@ -5,7 +5,7 @@ description: >-
   report template and a Dependabot config. Use when a project has no `origin` remote yet and
   is about to go public.
 user-invocable: true
-argument-hint: [optional repo name]
+argument-hint: "[optional repo name]"
 ---
 
 # github-init

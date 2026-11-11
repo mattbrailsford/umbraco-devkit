@@ -8,7 +8,7 @@ description: >-
   interrogate, pressure-test, stress-test, or find the gaps in a plan, or before committing
   to a risky build.
 user-invocable: true
-argument-hint: [path to the feature's plan folder, optional]
+argument-hint: "[path to the feature's plan folder, optional]"
 ---
 
 # feature-interrogate

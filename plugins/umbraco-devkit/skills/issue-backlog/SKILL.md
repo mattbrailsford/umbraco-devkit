@@ -6,7 +6,7 @@ description: >-
   next stage. Use for "work through the backlog" or "what's next on the tracker". For one
   known issue, use `issue-triage`, `investigate-bug` or `issue-resolve`.
 user-invocable: true
-argument-hint: [stage to start at: triage | decisions | investigate | fix, optional]
+argument-hint: "[stage to start at: triage | decisions | investigate | fix, optional]"
 ---
 
 # issue-backlog

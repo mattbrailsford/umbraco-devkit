@@ -25,6 +25,9 @@ These decide what belongs in this repo. Check a new rule, skill, or section agai
 - **Front-load human input where it's cheap.** A mockup, a design decision, a drafted PR
   description: show it once, early, before code or commits depend on it, rather than asking
   in small pieces as the work proceeds.
+- **Survives a `/clear`.** Anything the next step needs goes in a file or on the tracker,
+  never only in chat. A hand-off names the next command with an argument (a slug, path, or
+  issue ID) that works in a fresh session.
 - **A foundation, not a finished house.** Covers the workflow from idea to merged PR. Release
   prep, CI, and hosting stay out; they live in each product repo.
 

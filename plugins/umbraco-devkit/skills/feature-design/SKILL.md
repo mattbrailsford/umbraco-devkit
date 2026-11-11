@@ -6,7 +6,7 @@ description: >-
   feature-explore has defined the problem, or on its own to capture a mockup starter for a
   product screen.
 user-invocable: true
-argument-hint: [area to focus, optional]
+argument-hint: "[feature slug or plan folder path, and/or area to focus, optional]"
 ---
 
 # feature-design
@@ -71,7 +71,8 @@ If the request is only to capture a project mockup starter, skip this preflight:
 folder or `BRIEF.md` is needed. Read the project's `CLAUDE.md` for the Umbraco version, then
 go straight to "Project starters".
 
-1. Resolve which feature this run is for. If more than one plan folder exists, prefer a match
+1. Resolve which feature this run is for. If the argument names a plan folder (its path or
+   feature slug), use it. Else, if more than one plan folder exists, prefer a match
    between the current branch/worktree name and a folder name (see `CLAUDE.md`'s "Finding the
    current feature's plan folder" rule) — this is the normal case once `feature-build` has
    started. If nothing matches, fall back to the one plan folder present, or ask if more than
@@ -569,4 +570,5 @@ Otherwise, note any open question in `ARCHITECTURE.md`/`SPEC.md`, any screen moc
 hasn't approved yet, and any project starter created or refreshed in `docs/mockups/starters/`.
 Offer to open `ARCHITECTURE.md` in a live preview, following `markdown-preview`'s "Offering a
 preview". With a preview open, ask for approval on `SPEC.md` and `ARCHITECTURE.md`, following
-its "Approval". Then: `Suggested next: feature-plan.`
+its "Approval". Then: `Suggested next: /clear, then feature-plan <feature-slug>.` The plan
+folder carries everything over, so a fresh session loses nothing.

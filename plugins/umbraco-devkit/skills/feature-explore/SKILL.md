@@ -5,7 +5,7 @@ description: >-
   and what's out of scope, written to BRIEF.md. Use when starting a feature, package or
   add-on, or when a request is too vague to design yet.
 user-invocable: true
-argument-hint: [one-line idea, optional]
+argument-hint: "[one-line idea, optional]"
 ---
 
 # feature-explore
@@ -217,5 +217,7 @@ just this one), write it to `.claude/memory/` instead (type: `decision`) — see
 
 State any open question still in the brief. Offer to open `BRIEF.md` in a live preview,
 following `markdown-preview`'s "Offering a preview". With a preview open, ask for approval on
-`BRIEF.md`, following its "Approval". Then: `Suggested next: feature-design — or re-run feature-explore
-to close open questions first.`
+`BRIEF.md`, following its "Approval". Then: `Suggested next: /clear, then feature-design
+<feature-slug> — or re-run feature-explore to close open questions first.` Everything the
+next phase needs is in the plan folder, so a fresh session loses nothing and starts the next
+phase with room to work.

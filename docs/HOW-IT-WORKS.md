@@ -70,6 +70,11 @@ Three rules make this work:
   nothing to merge-conflict over.
 - **Stop, don't guess.** A step missing its input sends you back to the step that owns it.
 
+Because every step reads its input from the plan folder, not the chat, you can `/clear` between
+steps and lose nothing. Each hand-off suggests it, with the command to run next. The same goes
+for a bug: `investigate-bug` puts its report on the tracker, so `issue-resolve <issue ID>` can
+start fresh.
+
 Review comments left in `markdown-preview` follow the same ownership. A comment on a file the
 running step doesn't own is left for the step that does, and that step picks it up as input
 the next time it runs. Comments are kept in the worktree's git folder, never in the plan.

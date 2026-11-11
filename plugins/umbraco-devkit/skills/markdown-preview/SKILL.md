@@ -10,7 +10,7 @@ description: >-
   comments left on its files, which docs a step asks the reader to approve, and the check
   for unresolved comments and approvals before a step moves on.
 user-invocable: true
-argument-hint: [file or folder, optional]
+argument-hint: "[file or folder, optional]"
 ---
 
 # markdown-preview
