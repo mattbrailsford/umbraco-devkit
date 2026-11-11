@@ -659,6 +659,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-design-tries-cms-components": {
+    "date": "2026-11-11",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 44,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-explore-writes-brief": {
     "date": "2026-10-27",
     "runs": 3,
