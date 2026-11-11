@@ -415,8 +415,9 @@ blocked a build for 15 hours. Prove these while the design is still cheap to cha
 
 1. **Pick them.** List each decision that rests on outside behaviour the docs and source
    don't state plainly for this use, and that would change the design if it's wrong. The
-   interview's hardest-risk question names the first one. Most features have none, one or
-   two.
+   interview's hardest-risk question names the first one. A CMS picker, input or property
+   editor reused in a new host always counts: how it behaves there is never plain from its
+   docs. Most features have none, one or two.
 2. **Say what to check:** the case the design relies on, plus the edges that would break it.
    For a CMS picker, input or property editor reused somewhere new: `required` with an empty
    value, a value pointing at a deleted item, each config option the design relies on, and
