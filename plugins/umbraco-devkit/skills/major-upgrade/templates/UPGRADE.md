@@ -71,6 +71,16 @@ Screenshots to retake (Finish step 3):
 - **[docs/images/stock-dashboard.png]**, on [docs/dashboard.md]. [Content › Stock].\
   Why: [CMS change: new UUI table styling]
 
+## Waiting on the CMS
+
+Open CMS PRs labelled for the target major's final release that would hit this project
+(inventory step 2). Only while the target is a pre-release. Not tasks: each becomes an
+inventory entry once a release includes it.
+
+- **[Data Types: rename default picker data types]** ([umbraco/Umbraco-CMS#24568]). [Open /
+  Merged in rc2].\
+  Would hit: [`src/Migrations/CreatePickerDataType.cs` looks the data type up by name]
+
 ## Blockers
 
 [Dependencies with no release for the target major yet, or "None".]
@@ -115,8 +125,9 @@ Bugs fixed on this branch that the upgrade didn't cause, each in its own commit.
 
 [Things found along the way that the upgrade didn't need: obsolete APIs whose replacement
 isn't in every CMS version the branch builds against, shipped dependency majors not picked,
-stopgaps not picked, faults already on the current major that this branch didn't fix,
-refactors, dropping an old major.]
+stopgaps not picked, CMS PRs from "Waiting on the CMS" that missed the final release,
+faults already on the current major that this branch didn't fix, refactors, dropping an
+old major.]
 
 ## Log
 

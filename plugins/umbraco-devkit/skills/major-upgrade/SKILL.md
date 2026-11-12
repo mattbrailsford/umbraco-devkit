@@ -116,6 +116,16 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
      providers; trees), a change anywhere in that subsystem can break it, even one that
      still compiles. Group these by subsystem and diff the whole folder, not only what the
      PRs name. Read the behavior changes. Each subsystem gets its own scenario in the smoke.
+   - **Open PRs still due in the release.** Only when the target is a beta or RC. Umbraco
+     labels PRs meant for a release `release/<x.y.z>` (`release/19.0.0`), and some are still
+     open when a pre-release ships. They're in no tag yet, so the diff can't see them. List
+     the open ones with the label of the major's final release, and their changed files.
+     Flag each one whose files include a CMS type, subsystem, backoffice element or manifest
+     type the package uses (the lists above), labelled `category/breaking` or not; a
+     breaking one in an area the package never uses is noise. Write the flagged ones to
+     the upgrade file's "Waiting on the CMS" section, with what each would hit. They're not
+     tasks: nothing is built against unmerged code. Name them to the user with the plan, so
+     they can raise a likely break with the CMS team before it ships.
    - **CMS data migrations.** Read every migration the target adds to `UmbracoPlan.cs`. If
      one rewrites data shaped like data the package stores (block JSON, property values it
      owns), add a task to check the package's data after it, and include it in the upgrade
@@ -343,6 +353,10 @@ the last RC to the final release). Work on the same branch.
    run step 12 for the new entries.
 3. Append what you find to the file as new entries and new unchecked tasks. Don't rewrite or
    untick earlier ones; they're done and committed. Update the file's target release line.
+   Re-check "Waiting on the CMS": an entry merged into the newer release is now in the
+   diff, so mark it merged and handle it as an inventory entry; one still open stays. On the
+   final release, an entry still open missed it but may land in a later minor: move it to
+   "Follow-ups" with what it would hit, and say so. It doesn't block the upgrade.
    Don't re-offer step 10's or step 11's list, but re-check each unchecked step 10 task against the newer
    tag: its locked packages, and whether a forced bump changed.
 4. Always add a task, ahead of any unchecked step 10 or removal tasks, to move the CMS
@@ -475,10 +489,10 @@ line's trunk, follow `feature-close`'s
 ## Hand off
 
 Report: current to target version (and the CMS release, if it's a pre-release), tasks done
-and commits, what the upgrade smoke and the screen comparison showed, third-party
-dependencies moved, any breaking changes for consumers, the docs changed, the follow-ups, and
-the backport candidates with the ones picked. Then the PR link. Once the PR merges, offer
-`change-backport` for each picked backport, one run per change and target line.
+and commits, open CMS PRs still waiting and what each would hit, what the upgrade smoke and
+the screen comparison showed, third-party dependencies moved, any breaking changes for
+consumers, the docs changed, the follow-ups, and the backport candidates with the ones
+picked. Then the PR link. Once the PR merges, offer `change-backport` for each picked backport, one run per change and target line.
 
 When the docs live outside this repo, the upgrade file's "Docs" section is their hand-off:
 show it, and say which docs copy was searched. If `CLAUDE.local.md` names a skill or command
