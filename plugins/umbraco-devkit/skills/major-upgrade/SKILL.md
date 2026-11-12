@@ -355,7 +355,8 @@ the last RC to the final release). Work on the same branch.
    untick earlier ones; they're done and committed. Update the file's target release line.
    Re-check "Waiting on the CMS": an entry merged into the newer release is now in the
    diff, so mark it merged and handle it as an inventory entry; one still open stays. On the
-   final release, an entry still open missed it: drop it from the list and say so.
+   final release, an entry still open missed it but may land in a later minor: move it to
+   "Follow-ups" with what it would hit, and say so. It doesn't block the upgrade.
    Don't re-offer step 10's or step 11's list, but re-check each unchecked step 10 task against the newer
    tag: its locked packages, and whether a forced bump changed.
 4. Always add a task, ahead of any unchecked step 10 or removal tasks, to move the CMS

@@ -125,8 +125,9 @@ Bugs fixed on this branch that the upgrade didn't cause, each in its own commit.
 
 [Things found along the way that the upgrade didn't need: obsolete APIs whose replacement
 isn't in every CMS version the branch builds against, shipped dependency majors not picked,
-stopgaps not picked, faults already on the current major that this branch didn't fix,
-refactors, dropping an old major.]
+stopgaps not picked, CMS PRs from "Waiting on the CMS" that missed the final release,
+faults already on the current major that this branch didn't fix, refactors, dropping an
+old major.]
 
 ## Log
 
