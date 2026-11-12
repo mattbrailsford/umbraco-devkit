@@ -71,6 +71,16 @@ Screenshots to retake (Finish step 3):
 - **[docs/images/stock-dashboard.png]**, on [docs/dashboard.md]. [Content › Stock].\
   Why: [CMS change: new UUI table styling]
 
+## Waiting on the CMS
+
+Open CMS PRs labelled for the target major's final release that would hit this project
+(inventory step 2). Only while the target is a pre-release. Not tasks: each becomes an
+inventory entry once a release includes it.
+
+- **[Data Types: rename default picker data types]** ([umbraco/Umbraco-CMS#24568]). [Open /
+  Merged in rc2].\
+  Would hit: [`src/Migrations/CreatePickerDataType.cs` looks the data type up by name]
+
 ## Blockers
 
 [Dependencies with no release for the target major yet, or "None".]

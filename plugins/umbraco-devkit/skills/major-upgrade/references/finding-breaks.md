@@ -52,6 +52,18 @@ feature branch that was later squash-merged, so their merge commit is in no tag.
 one by grepping the target tag for what it changed. If the limit is reached, split the
 search by date.
 
+## Open PRs still due in the release
+
+Only when the target is a beta or RC. List the open PRs labelled for the major's final
+release, with their `category/*` labels and changed files, then match the files against the
+CMS types and subsystems the package uses:
+
+```bash
+gh pr list -R umbraco/Umbraco-CMS --state open --label "release/<major>.0.0" --limit 200 \
+  --json number,title,labels,files \
+  -q '.[] | "#\(.number) [\([.labels[].name | select(startswith("category/"))] | join(","))] \(.title)\n" + ([.files[].path | "    " + .] | join("\n"))'
+```
+
 ## Which PR made a change
 
 Find the commit that added or removed a line, then its PR:
