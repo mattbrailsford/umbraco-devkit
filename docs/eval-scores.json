@@ -931,6 +931,14 @@
     "without": null,
     "withoutDate": null
   },
+  "major-upgrade-flags-open-release-prs": {
+    "date": "2026-11-12",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-lists-docs": {
     "date": "2026-11-06",
     "runs": 3,
