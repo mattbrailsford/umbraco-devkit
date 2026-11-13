@@ -82,8 +82,12 @@ Start your report with `Skills loaded:` and the name of every skill you loaded.
 5. Run the project's build and tests, narrowed to what the task touches: build the projects
    you changed and the test projects that cover them, not the whole solution; run this
    task's specs and the tests for the code you changed (`dotnet test --filter`, one spec file
-   for a frontend test runner, Playwright `--grep` for the task's e2e test against a site
-   that's already running), and any frontend `npm run build` the task touches. Don't run or
+   for a frontend test runner, Playwright `--grep` for the task's e2e test against the demo
+   site in the dispatch's `Demo site:` line), and any frontend `npm run build` the task
+   touches. Never start a site of your own. If the e2e test needs your server-side change,
+   restart that site once with its own command, stopping only the process on its port, and
+   say in your report that it now runs your last change. With no `Demo site:` line, leave the
+   e2e test as "not run": the loop's smoke step runs it. Don't run or
    list a whole slow suite (the full solution, an integration project, every e2e test), even
    as optional: the reviewer runs the full build and tests after you, and the loop's smoke
    step runs the task's e2e test. Fix until the relevant specs pass. Do not weaken
