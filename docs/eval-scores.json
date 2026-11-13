@@ -167,6 +167,14 @@
     "without": 22,
     "withoutDate": "2026-10-16"
   },
+  "builder-narrow-test-runs": {
+    "date": "2026-11-13",
+    "runs": 3,
+    "skillLoaded": 0,
+    "with": 78,
+    "without": null,
+    "withoutDate": null
+  },
   "change-backport-security-only-line": {
     "date": "2026-10-16",
     "runs": 3,
@@ -523,6 +531,14 @@
     "without": null,
     "withoutDate": null
   },
+  "feature-build-one-demo-site": {
+    "date": "2026-11-13",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "feature-build-open-comments": {
     "date": "2026-11-06",
     "runs": 3,
@@ -540,7 +556,7 @@
     "withoutDate": null
   },
   "feature-build-smoke-tester-screens": {
-    "date": "2026-11-06",
+    "date": "2026-11-13",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -925,6 +941,14 @@
   },
   "major-upgrade-docs-elsewhere": {
     "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-docs-retakes": {
+    "date": "2026-11-13",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -1672,6 +1696,14 @@
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "smoke-tester-one-restart": {
+    "date": "2026-11-13",
+    "runs": 3,
+    "skillLoaded": 0,
+    "with": 92,
     "without": null,
     "withoutDate": null
   },

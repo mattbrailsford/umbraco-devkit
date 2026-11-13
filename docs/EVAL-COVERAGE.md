@@ -59,7 +59,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +83 | 3 | 0 | 5/24 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
-| [`feature-build`](#feature-build) | workflow | Broke a rule | – | 7 | 0 | – | – |
+| [`feature-build`](#feature-build) | workflow | Broke a rule | – | 8 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-design`](#feature-design) | workflow | Broke a rule | – | 13 | 5 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
@@ -71,7 +71,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 5 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 10 | 0 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 11 | 0 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
@@ -205,9 +205,10 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `feature-build-asks-before-trunk` | 100 | 2026-11-06 |
 | `feature-build-checks-agent-skills` | 67 | 2026-11-06 |
 | `feature-build-names-agent-skills` | 100 | 2026-11-06 |
+| `feature-build-one-demo-site` | 100 | 2026-11-13 |
 | `feature-build-open-comments` | 56 | 2026-11-06 |
 | `feature-build-rethink-after-three-rounds` | 100 | 2026-11-06 |
-| `feature-build-smoke-tester-screens` | 100 | 2026-11-06 |
+| `feature-build-smoke-tester-screens` | 100 | 2026-11-13 |
 | `feature-build-stops-without-checklist` | 100 | 2026-11-06 |
 
 ### `feature-close`
@@ -312,6 +313,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 |---|---|---|
 | `major-upgrade-diffs-used-types` | 100 | 2026-11-06 |
 | `major-upgrade-docs-elsewhere` | 100 | 2026-11-06 |
+| `major-upgrade-docs-retakes` | 100 | 2026-11-13 |
 | `major-upgrade-flags-open-release-prs` | 100 | 2026-11-12 |
 | `major-upgrade-lists-docs` | 100 | 2026-11-06 |
 | `major-upgrade-no-docs-copy` | 100 | 2026-11-06 |
