@@ -363,7 +363,8 @@ the last RC to the final release). Work on the same branch.
    packages, `@umbraco-cms/backoffice`, every shared dependency (step 1 at the newer tag),
    and the package's own pre-release version to the newer release. On the final release,
    that drops the package's pre-release suffix unless the user wants one more pre-release
-   first.
+   first. If a package moves onto or off Umbraco's pre-release feed, invoke
+   `umbraco-dependencies` and follow its "A pre-release floor" for the feed and lock files.
 5. **Fixes from older lines.** List every change released on each older line the project
    still supports since this line was cut: the commits between the branch point and that
    line's newest release tag. Check each one is on this branch. Match by commit message or
