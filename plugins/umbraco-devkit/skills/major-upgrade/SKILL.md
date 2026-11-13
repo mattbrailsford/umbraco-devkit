@@ -63,8 +63,20 @@ major's final release and its PR is merged, the upgrade is done: skip to "Archiv
 4. **Other Umbraco dependencies.** For every other Umbraco package the project depends on
    (Forms, Commerce, community packages), check NuGet for a release that supports the target
    release. For a pre-release target, check Umbraco's pre-release feed too
-   (`umbraco-dependencies`' "A pre-release floor"). A missing one is a blocker: record it and
-   ask before going on.
+   (`umbraco-dependencies`' "A pre-release floor"). It's a blocker when it has no release for
+   the target, or only on a feed the package's own release can't depend on (a MyGet-only
+   pre-release when the package publishes to NuGet.org). Record each blocker in the file's
+   "Blockers" with:
+   - the feed it's on now and the feed it's needed on;
+   - the projects that use it. Only their tasks wait; the rest of the upgrade goes ahead;
+   - how to tell it has landed: the package and feed to check, at every Refresh and before
+     each Build task;
+   - its own new major: before the code that uses it moves to that major, whether now from
+     a feed the build can reach or once it lands, read that product's breaking changes and
+     release notes, and add what hits that code as inventory entries and tasks, the same as
+     for the CMS. A version bump alone misses changes that still compile.
+
+   Ask before going on.
 5. **Branch.** Read `git-workflow`'s "Umbraco packages and version tracking" section and the
    project's `CLAUDE.md` to see how it carries more than one major.
    - Branch-per-major: the new line (for example `v18/dev`) is cut from the current major's
@@ -353,7 +365,8 @@ the last RC to the final release). Work on the same branch.
    run step 12 for the new entries.
 3. Append what you find to the file as new entries and new unchecked tasks. Don't rewrite or
    untick earlier ones; they're done and committed. Update the file's target release line.
-   Re-check "Waiting on the CMS": an entry merged into the newer release is now in the
+   Re-check each blocker as its entry says, and when one has landed, run its new-major step if it
+   hasn't run yet. Re-check "Waiting on the CMS": an entry merged into the newer release is now in the
    diff, so mark it merged and handle it as an inventory entry; one still open stays. On the
    final release, an entry still open missed it but may land in a later minor: move it to
    "Follow-ups" with what it would hit, and say so. It doesn't block the upgrade.
