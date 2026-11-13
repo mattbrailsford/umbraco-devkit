@@ -65,8 +65,8 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 6 | 0 | – | – |
-| [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
+| [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
@@ -76,9 +76,9 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Broke a rule | – | 6 | 0 | – | – |
+| [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions) | knowledge | Proven | +100 | 6 | 2 | 3/11 | 1 |
@@ -227,9 +227,9 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `feature-design-mockup-full-height` | 100 | 2026-11-06 |
 | `feature-design-mockup-modal-property-layout` | 100 | 2026-10-20 |
 | `feature-design-mockup-no-invented-styling` | 100 | 2026-11-05 |
-| `feature-design-mockups-email-without-ui` | 100 | 2026-10-20 |
 | `feature-design-mockup-shared-surface-css` | 100 | 2026-11-05 |
 | `feature-design-mockup-tree-state-sign` | 100 | 2026-11-05 |
+| `feature-design-mockups-email-without-ui` | 100 | 2026-10-20 |
 | `feature-design-nfr-targets` | 83 | 2026-10-26 |
 | `feature-design-open-comments` | 100 | 2026-10-26 |
 | `feature-design-stops-without-brief` | 100 | 2026-10-16 |
@@ -258,12 +258,6 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `feature-plan-stops-without-design` | 100 | 2026-10-20 |
 | `feature-plan-stops-without-mockup` | 100 | 2026-10-20 |
 
-### `github-init`
-
-| Eval | Score | Recorded |
-|---|---|---|
-| `github-init-stub-readme` | 100 | 2026-10-16 |
-
 ### `git-workflow`
 
 | Section | Eval | With | Without | Gain | Skill loaded | Recorded |
@@ -276,6 +270,12 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | Pull requests — `gh pr create` | `git-workflow-pr-reply` | 67 | 0 | 67 | 3/3 | 2026-10-19 |
 | Sanity rules | `git-workflow-stash-safety` | 100 | 33 | 67 | 3/3 | 2026-10-19 |
 | Umbraco packages and version tracking | `git-workflow-two-cms-majors` | 100 | 83 | 17 | 6/6 | 2026-10-17 |
+
+### `github-init`
+
+| Eval | Score | Recorded |
+|---|---|---|
+| `github-init-stub-readme` | 100 | 2026-10-16 |
 
 ### `investigate-bug`
 
@@ -374,6 +374,13 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 | `pr-describe-plan-folder` | 100 | 2026-10-23 |
 | `pr-describe-stacked-pr` | 100 | 2026-10-23 |
 
+### `pr-review`
+
+| Eval | Score | Recorded |
+|---|---|---|
+| `pr-review-checks-findings` | 100 | 2026-10-20 |
+| `pr-review-hidden-install-hooks` | 100 | 2026-10-20 |
+
 ### `project-init`
 
 | Eval | Score | Recorded |
@@ -387,13 +394,6 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 | Eval | Score | Recorded |
 |---|---|---|
 | `project-retro-sorts-and-waits` | 100 | 2026-10-19 |
-
-### `pr-review`
-
-| Eval | Score | Recorded |
-|---|---|---|
-| `pr-review-checks-findings` | 100 | 2026-10-20 |
-| `pr-review-hidden-install-hooks` | 100 | 2026-10-20 |
 
 ### `quick-fix`
 
