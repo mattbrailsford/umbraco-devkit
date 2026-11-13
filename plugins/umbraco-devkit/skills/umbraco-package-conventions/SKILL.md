@@ -126,8 +126,10 @@ public ItemController(IItemService itemService)
 ```
 
 Give consumers a real deprecation window — state the target version in the `[Obsolete]`
-message. The default target is the highest CMS major the package supports + 2. A package
-supporting v17 and v18 that obsoletes a member in both targets v20, on both branches. Check
+message. The default target is the highest *released* CMS major the package supports + 2. A
+package supporting v17 and v18 that obsoletes a member in both targets v20, on both branches.
+A major still in beta or RC doesn't count: with a v19 line on a CMS 19 beta, the target is
+still v20, on all three branches. Check
 the project's `CLAUDE.md` first and follow whatever it actually states if it already commits
 to a different number.
 

@@ -364,7 +364,12 @@ the last RC to the final release). Work on the same branch.
    and the package's own pre-release version to the newer release. On the final release,
    that drops the package's pre-release suffix unless the user wants one more pre-release
    first.
-5. Show the user the new entries and tasks, wait for a yes, then build them as below.
+5. **Fixes from older lines.** List every change released on each older line the project
+   still supports since this line was cut: the commits between the branch point and that
+   line's newest release tag. Check each one is on this branch. Match by commit message or
+   PR number first. For any that don't match, read this branch's code, since a fix carried
+   over by hand has a different message. Add a task for each one that's missing.
+6. Show the user the new entries and tasks, wait for a yes, then build them as below.
 
 ## Build
 
@@ -441,9 +446,11 @@ When every task is ticked:
    Record the result per screen in the table. Commit only the pairs that show a difference,
    with the upgrade file; screens that match stay out of the repo, and the table says they
    matched. If the project has no demo site, say this was skipped in the PR.
-4. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file
+4. **Fixes from older lines.** Run Refresh step 5 again, since the older lines may have
+   released more since the last refresh. Build each missing fix as a task.
+5. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file
    as the design. Fix and re-review until `PASS`, as in `feature-build`'s "Finish".
-5. **Propose backports.** List every "Backport candidates" entry that shows on at least one
+6. **Propose backports.** List every "Backport candidates" entry that shows on at least one
    supported line, and sort each one:
    - **Safe for a patch release**: no public API change, no migration, no new dependency,
      and no behavior a consumer could rely on. Name every line it would go to: each line
@@ -455,7 +462,7 @@ When every task is ticked:
 
    Show the list and ask which to port, per change and line. Mark the picks in the file.
    Port nothing yet: `change-backport` only ports a merged change.
-6. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
+7. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
    uses its plain style, since there's no plan folder. Point it at the upgrade file, so the PR
    lists the breaking changes handled, any breaking changes for consumers, the docs changed
    or handed off, the follow-ups, and the picked backports. Under "How to verify", it shows
