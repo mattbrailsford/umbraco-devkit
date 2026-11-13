@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: major-upgrade-docs-retakes
+context:
+  scaffold_script: fixture.sh

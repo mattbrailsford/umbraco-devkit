@@ -386,10 +386,14 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   scheduled it, so a planned removal isn't flagged as an unproxied public API break. It
   still checks that nothing inside the package, its tests, or its demo site uses the removed
   code.
-- **Smoke.** Dispatch a `smoke-tester` as `feature-build`'s "Smoke the real entry point" step
-  does. Once the framework bump task lands, tell it the demo site must start on the target
-  major and the backoffice must load with the package's extensions registered, and to open
-  every screen the package adds and read the browser console: an error from the package
+- **Smoke.** Keep one demo site for the run, started as `feature-build`'s Preflight "Start
+  the demo site once" step does, with its `Demo site:` line at the top of the upgrade file's
+  "Log" section. Restart it after a task that changes server code, and give the line to each
+  `builder` and `smoke-tester`. Dispatch a `smoke-tester` as `feature-build`'s "Smoke the
+  real entry point" step does. Once the framework bump task lands and the site restarts on
+  the target major, tell it the backoffice must load with the package's extensions
+  registered, and to open every screen the package adds and read the browser console: an
+  error from the package
   fails the smoke, and an "Umbraco Backoffice:" deprecation warning with the package as its
   origin comes back as a finding that becomes a task. Have it run the scenario for each
   subsystem the package extends (inventory step 2) once its task lands.
@@ -431,12 +435,14 @@ When every task is ticked:
 
    Each screen sorted as a CMS change or an upgrade regression may also appear in the
    package's own docs. Add each docs screenshot of it to the "Docs" section's screenshots to
-   retake, with the screen's click path. Retake them now if the docs are in this repo.
+   retake, with the screen's click path. If the docs are in this repo, retake them now, as a
+   docs retake by a `smoke-tester`: give it each docs image's path and its screen's click
+   path.
 
    Hand the screenshots and the comparison to `smoke-tester` subagents, a few screens each,
-   and have each report every difference in a line with how it sorted it. Never open the
-   images in this session: a full upgrade compares many screens, and every image would stay
-   in context for the rest of the run.
+   and have each report every difference in a line with how it sorted it. Never open any of
+   these images in this session, docs images included: a full upgrade compares many screens,
+   and every image would stay in context for the rest of the run.
 
    Record the result per screen in the table. Commit only the pairs that show a difference,
    with the upgrade file; screens that match stay out of the repo, and the table says they
