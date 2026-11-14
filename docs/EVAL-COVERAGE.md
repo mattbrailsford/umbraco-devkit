@@ -77,7 +77,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 5 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 13 | 0 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 14 | 1 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
@@ -322,6 +322,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `major-upgrade-lists-docs` | 100 | 2026-11-06 |
 | `major-upgrade-no-docs-copy` | 100 | 2026-11-06 |
 | `major-upgrade-offers-stopgaps` | 67 | 2026-11-06 |
+| `major-upgrade-product-new-major` | 100 | 2026-11-14 |
 | `major-upgrade-proposes-backports` | 100 | 2026-11-06 |
 | `major-upgrade-refresh-forward-ports` | 100 | 2026-11-13 |
 | `major-upgrade-reviews-small-bumps` | 100 | 2026-11-14 |
@@ -329,6 +330,8 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `major-upgrade-subsystem-port-first` | 100 | 2026-11-06 |
 | `major-upgrade-tracks-blockers` | 100 | 2026-11-13 |
 | `major-upgrade-version-mismatch` | 100 | 2026-11-06 |
+
+Stays quiet on: `major-upgrade-skip-product-patch`
 
 ### `markdown-preview`
 

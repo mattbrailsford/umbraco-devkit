@@ -4,8 +4,9 @@ description: >-
   Moves an Umbraco package to a new CMS major (for example 17 to 18): finds the breaking
   changes that hit it, writes an ordered checklist in `docs/upgrades/v<major>.md`, and works
   through it with the builder and reviewer agents. Use for "upgrade to Umbraco N", "support
-  v18", a new major's beta or RC, or moving from one RC to the next. Not for minor or patch
-  bumps.
+  v18", a new major's beta or RC, moving from one RC to the next, or updating for another
+  Umbraco product the package uses (Deploy, Forms, Commerce) that ships its new major, beta
+  or RC. Not for minor or patch bumps.
 user-invocable: true
 argument-hint: <target CMS major, e.g. 18>
 ---
@@ -36,8 +37,16 @@ the same builder → reviewer → smoke → commit gate as `feature-build`.
 upgraded to a CMS release of this major, usually a beta or RC. This run is a **refresh**: move
 to the newest CMS release of the major (the next RC, or the final release) and handle only
 what changed since the release the file records. Skip to "Refresh" below. If the file doesn't
-exist and the project already targets that major, say so and stop. If the file targets the
+exist and the project already targets that major, say so and stop, unless the run is for
+another product's new major (below). If the file targets the
 major's final release and its PR is merged, the upgrade is done: skip to "Archive" instead.
+
+**Another Umbraco product's new major.** When a product the package uses (Deploy, Forms,
+Commerce) ships its release for the major, the target is still the CMS major. If the upgrade
+file exists, refresh it and re-check its blockers (Refresh step 3). If it doesn't, and the
+project already targets the CMS major, write `docs/upgrades/v<major>.md` for the projects that
+use that product only: its Preflight step 4 entry, then its new-major step as the inventory.
+Then show the plan and build it as below.
 
 ## Preflight
 
