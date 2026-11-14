@@ -436,7 +436,9 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
 
 ## Finish
 
-When every task is ticked:
+When every task is ticked, and before any pre-release of the package (a beta or RC for
+testers) ships. If asked to ship one first, say which Finish steps haven't run and run them;
+a green build and unit tests aren't Finish.
 
 1. Run the full test suite on every database provider the project supports.
 2. **Smoke an upgrade, not just a fresh install.** Start a demo site on the current major
@@ -495,6 +497,9 @@ When every task is ticked:
    or handed off, the follow-ups, and the picked backports. Under "How to verify", it shows
    each changed screen's two screenshots side by side, with the click path, and says how
    each difference was sorted.
+8. **Watch the PR's first CI run** to the end. It's the first restore and build from a clean
+   machine, so an SDK, feed or lock file change shows here first. A failure becomes a task,
+   built and reviewed as above. Hand back only once CI passes.
 
 ## Archive
 
@@ -526,7 +531,7 @@ Report: current to target version (and the CMS release, if it's a pre-release), 
 and commits, open CMS PRs still waiting and what each would hit, what the upgrade smoke and
 the screen comparison showed, third-party dependencies moved, any breaking changes for
 consumers, the docs changed, the follow-ups, and the backport candidates with the ones
-picked. Then the PR link. Once the PR merges, offer `change-backport` for each picked backport, one run per change and target line.
+picked. Then the PR link and its CI result. Once the PR merges, offer `change-backport` for each picked backport, one run per change and target line.
 
 When the docs live outside this repo, the upgrade file's "Docs" section is their hand-off:
 show it, and say which docs copy was searched. If `CLAUDE.local.md` names a skill or command

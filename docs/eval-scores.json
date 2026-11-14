@@ -939,6 +939,14 @@
     "without": null,
     "withoutDate": null
   },
+  "major-upgrade-finish-before-prerelease": {
+    "date": "2026-11-14",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-flags-open-release-prs": {
     "date": "2026-11-12",
     "runs": 3,
