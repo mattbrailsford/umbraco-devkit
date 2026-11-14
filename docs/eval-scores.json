@@ -987,6 +987,14 @@
     "without": null,
     "withoutDate": null
   },
+  "major-upgrade-reviews-small-bumps": {
+    "date": "2026-11-14",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-subsystem-in-bump": {
     "date": "2026-11-06",
     "runs": 3,

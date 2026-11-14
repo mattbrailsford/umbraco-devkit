@@ -405,6 +405,10 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   scheduled it, so a planned removal isn't flagged as an unproxied public API break. It
   still checks that nothing inside the package, its tests, or its demo site uses the removed
   code.
+- **No task is too small for the gate.** A one-line refresh bump, or one already done in
+  other repos, still goes builder then reviewer. A problem you spot yourself in a builder's
+  diff goes to a fresh `builder` as a finding, never into your own edit, and the reviewer
+  then reviews the fixed diff.
 - **Smoke.** Dispatch a `smoke-tester` as `feature-build`'s "Smoke the real entry point" step
   does. Once the framework bump task lands, tell it the demo site must start on the target
   major and the backoffice must load with the package's extensions registered, and to open
