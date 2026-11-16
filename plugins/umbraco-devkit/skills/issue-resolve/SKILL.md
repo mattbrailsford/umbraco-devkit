@@ -156,8 +156,6 @@ linked PR) and why,
 then whatever that lane's own hand-off says. Once code is committed, report the draft tracker
 resolution and wait for confirmation before posting it.
 
-- **If another skill started this one** (such as `issue-backlog`'s fix stage), return once the
-  lane finishes or hands off, and stop. That skill decides what runs next.
-
-- **If another skill started this one**, return once the resolution is posted or declined,
-  and stop. That skill decides what runs next.
+- **If another skill started this one** (such as `issue-backlog`'s fix stage), return once
+  the resolution is posted or declined, or once the lane hands off without a fix, and stop.
+  That skill decides what runs next.
