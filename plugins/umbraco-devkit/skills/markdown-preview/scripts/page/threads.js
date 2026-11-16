@@ -4,7 +4,7 @@
 // A comment moves through: draft (not sent) -> sent -> working (Claude has it) -> replied
 // (Claude asked something), addressed (Claude says it's done) or deferred (left for another
 // step) -> resolved. Only the reader resolves.
-import { $, ago, avatar, content, esc, fetchText, page, post, replay } from './state.js';
+import { $, ago, avatar, content, esc, fetchText, keyLabel, page, post, replay } from './state.js';
 import { blockText, clearQuoteMarks, findBlock, findHeading, markQuote, sectionOf, tableBox } from './doc.js';
 import { attachHighlight, autoGrow, prepareBox, submitOnEnter } from './editor.js';
 import { renderCommentMenu } from './comment-menu.js';
@@ -138,7 +138,7 @@ export function openForm(block, quote, prefix, suffix) {
   thread.className = 'thread new';
   const quoteLine = quote !== blockText(block) ? `<div class="msg-quote">${esc(quote)}</div>` : '';
   thread.innerHTML = `<div class="comment-form">${avatar('you')}<div class="msg-main">${quoteLine}`
-    + '<textarea placeholder="Leave a comment · ⌘Enter to add · ⌘B ⌘I ⌘K to format"></textarea>'
+    + `<textarea placeholder="${keyLabel('Leave a comment · ⌘Enter to add · ⌘B ⌘I ⌘K to format')}"></textarea>`
     + '<div class="form-actions"><button class="btn suggest" title="Write the exact new wording">± Suggest a change</button><span>'
     + '<button class="btn cancel">Cancel</button><button class="btn primary add">Add comment</button></span></div></div></div>';
   place(block, thread);

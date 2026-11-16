@@ -1,5 +1,5 @@
 // Keyboard shortcuts while reading, and the "?" list of them.
-import { $, content, page, replay } from './state.js';
+import { $, content, keyLabel, page, replay } from './state.js';
 import { blockText, hot, setHot } from './doc.js';
 import { quoteInto } from './editor.js';
 import { openForm } from './threads.js';
@@ -23,7 +23,7 @@ const BOX_SHORTCUTS = [
   ['⌘⇧7 / ⌘⇧8', 'Numbered or bulleted list'], ['⌘⇧.', 'Quote'], ['⌘G', 'Suggest a change'],
 ];
 const help = $('keys');
-const rows = list => list.map(([k, v]) => `<dt>${k.split(' / ').map(x => `<kbd>${x}</kbd>`).join(' ')}</dt><dd>${v}</dd>`).join('');
+const rows = list => list.map(([k, v]) => `<dt>${k.split(' / ').map(x => `<kbd>${keyLabel(x)}</kbd>`).join(' ')}</dt><dd>${v}</dd>`).join('');
 help.querySelector('dl').innerHTML = rows(SHORTCUTS) + '<dt class="keys-group">In a comment box</dt>' + rows(BOX_SHORTCUTS);
 $('keys-hint').onclick = () => help.classList.toggle('show');
 

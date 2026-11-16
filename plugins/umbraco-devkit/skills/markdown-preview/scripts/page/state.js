@@ -43,6 +43,9 @@ export function setPage(path) {
 setPage(boot.path);
 
 export const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// Shortcut keys as the reader's keyboard labels them: ⌘ and ⇧ on a Mac, Ctrl+ and Shift+ elsewhere.
+const isMac = /mac|iphone|ipad/i.test(navigator.userAgentData?.platform ?? navigator.platform);
+export const keyLabel = k => isMac ? k : k.replace(/⌘/g, 'Ctrl+').replace(/⇧/g, 'Shift+');
 export const norm = s => s.replace(/\s+/g, ' ').trim();
 
 export async function fetchText(url) {
