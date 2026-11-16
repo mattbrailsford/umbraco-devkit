@@ -29,8 +29,8 @@ plan folder moves from `docs/plans/<feature-slug>/` to `docs/archive/plans/<feat
 - **Never** edits any other file in the plan folder. They record what happened at the time;
   rewriting them after the fact loses that.
 
-`major-upgrade` archives its own upgrade checklist with the same steps (see its "Archive"
-section).
+`major-upgrade` archives its own upgrade checklist, and `change-build` its change file, with
+the same steps (see each one's "Archive" section).
 
 ## Scope
 

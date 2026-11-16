@@ -61,6 +61,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 |---|---|---|---|---|---|---|---|
 | [`bdd-specs`](#bdd-specs) | knowledge | Proven | +78 | 1 | 0 | 1/6 | 3 |
 | [`change-backport`](#change-backport) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`change-build`](#change-build) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`decision-review`](#decision-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +83 | 3 | 0 | 5/24 | 1 |
@@ -139,6 +140,13 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | Eval | Score | Recorded |
 |---|---|---|
 | `change-backport-security-only-line` | 100 | 2026-10-16 |
+
+### `change-build`
+
+| Eval | Score | Recorded |
+|---|---|---|
+| `change-build-escalates` | 100 | 2026-11-16 |
+| `change-build-plans-first` | 100 | 2026-11-16 |
 
 ### `decision-review`
 
@@ -412,9 +420,9 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `quick-fix-escalates` | 100 | 2026-10-16 |
-| `quick-fix-root-cause` | 100 | 2026-10-23 |
-| `quick-fix-stopgap-marker` | 100 | 2026-10-23 |
+| `quick-fix-escalates` | 100 | 2026-11-16 |
+| `quick-fix-root-cause` | 100 | 2026-11-16 |
+| `quick-fix-stopgap-marker` | 100 | 2026-11-16 |
 
 ### `skill-report`
 

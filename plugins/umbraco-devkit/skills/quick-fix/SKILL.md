@@ -3,8 +3,8 @@ name: quick-fix
 description: >-
   Makes a small, obvious fix directly, without the feature pipeline: a typo, a reversed
   condition, a missing null check, a stray import, or a patch or minor dependency bump. One
-  concern, usually under 20 lines, in C# or Lit/TypeScript. Escalates to the feature
-  pipeline if the fix turns out bigger.
+  concern, usually under 20 lines, in C# or Lit/TypeScript. Escalates to `change-build` or
+  the feature pipeline if the fix turns out bigger.
 user-invocable: true
 argument-hint: <describe the fix>
 ---
@@ -25,8 +25,9 @@ naming — it's an escape hatch *around* the pipeline, not a phase in it.
   conventions`, not a quick-fix), renames a backoffice manifest `alias` (a silent breaking
   change per `umbraco-backoffice-conventions`), changes behavior across modules, or needs
   more than one new test. A bug fix may add one regression test for the bug. If it smells like any of that, **stop and escalate** —
-  suggest `feature-plan` (if a plan folder already covers this area) or `feature-explore` (if it
-  doesn't).
+  suggest `feature-plan` if a plan folder already covers this area. Otherwise apply
+  `change-build`'s Size test: `change-build` when the way to fix it is clear,
+  `feature-explore` when it needs a design.
 
 ## Argument
 
@@ -44,7 +45,7 @@ is one that changes behavior someone saw go wrong. Typos, comments, and dead cod
 2. **Confirm it's actually small.** If reading the surrounding code reveals the fix is
    non-trivial (touches a class/component boundary, changes a public contract, needs new
    branches of test coverage), **stop and escalate** — tell the user this isn't a quick-fix
-   and suggest `feature-plan`. If you can't say what's causing the bug, stop and suggest
+   and suggest the next lane, as Scope says. If you can't say what's causing the bug, stop and suggest
    `investigate-bug` instead: a quick fix needs a known cause.
 3. **Fix the cause where it belongs, not where it shows.** Before editing, say where the
    cause lives and what the well-built fix is: the layer that produces the bad value or makes
@@ -55,7 +56,9 @@ is one that changes behavior someone saw go wrong. Typos, comments, and dead cod
      the narrower one. Say why in the hand-off.
    - If it doesn't (a model change, a new concept, a fix shared across modules), stop
      before editing and ask the user which way to go. Give both options: the proper fix
-     through `feature-explore` or `feature-plan`, or the narrow fix as a stopgap, naming the
+     through the next lane (`feature-explore` for a model change or a new concept, since
+     those need a design; `change-build` for a shared fix whose approach is clear), or the
+     narrow fix as a stopgap, naming the
      debt it leaves (what stays broken, which other places still fail). Recommend one in a
      line. Don't choose for them, and don't start the bigger fix here.
    - If they choose the stopgap, make it and mark it so the debt can be found later. At each
