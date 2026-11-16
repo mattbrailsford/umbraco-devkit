@@ -2,7 +2,8 @@
 name: issue-resolve
 description: >-
   Takes one triaged tracker issue to a fix by the right route: `quick-fix` for something
-  small, the `feature-*` pipeline for anything bigger. Drafts the tracker resolution once
+  small, `change-build` for a clear change across several files, the `feature-*` pipeline
+  for anything that needs a design. Drafts the tracker resolution once
   the fix lands. Use once you've decided to act on a triaged issue.
 user-invocable: true
 argument-hint: <issue ID> [notes on how you want it fixed, optional]
@@ -11,15 +12,16 @@ argument-hint: <issue ID> [notes on how you want it fixed, optional]
 # issue-resolve
 
 Bridges a triaged issue into an actual fix, using the mechanisms this plugin already has —
-it doesn't write the fix itself. `quick-fix` handles something small; the full pipeline
-handles anything bigger. Once the fix lands, this closes the loop back on the tracker as a
+it doesn't write the fix itself. `quick-fix` handles something small, `change-build` a clear
+change across several files, and the full pipeline anything that needs a design. Once the fix lands, this closes the loop back on the tracker as a
 draft, never a live action.
 
 ## Scope
 
 - IN: pull the issue and its triage read, route to the right existing fix mechanism, seed it
   with the issue's content and your notes, draft the tracker resolution once the fix lands.
-- OUT: writing the fix itself (that's `quick-fix`'s inline edit, or the pipeline's `builder`),
+- OUT: writing the fix itself (that's `quick-fix`'s inline edit, or the `builder` that
+  `change-build` and the pipeline dispatch),
   reclassifying an issue that's already triaged, posting or closing anything on the tracker
   without your say-so.
 
@@ -75,7 +77,11 @@ but the real judgment stays where it already lives:
   triage's likely-area finding, the repro, and the user's notes. `quick-fix` still makes its own
   escalation call if the fix turns out bigger once someone's actually in the code; this skill
   doesn't override that.
-- **Looks bigger, or `quick-fix` escalates** → invoke `feature-explore` (Skill tool) with the
+- **Bigger, but the way to fix it is clear** — several files or more than one new test, no
+  design call (`change-build`'s Size test), or `quick-fix` escalates to it → invoke
+  `change-build` (Skill tool) with the same starting material as `quick-fix` gets.
+  `change-build` runs its own size test and may hand on to either neighbor.
+- **Needs a design, or `change-build` hands off** → invoke `feature-explore` (Skill tool) with the
   issue as its starting material: the issue's title and body, the triage's findings, the
   repro, and the user's notes as constraints or success criteria. `feature-explore` owns `BRIEF.md`, so it writes
   the brief from that and only asks about what's still missing. From there the normal pipeline
@@ -93,15 +99,15 @@ changes code (`quick-fix` does this in its own loop).
 Either way, ask the lane to fix the cause, not just the reported spot. A reported bug often has
 siblings with the same cause (other endpoints missing the same check, other components with
 the same pattern), especially when the same kind of bug has been reported before. `quick-fix`
-searches for them in its own loop. For the pipeline route, include "find other places with
+and `change-build` search for them in their own loops. For the pipeline route, include "find other places with
 the same cause" in what you hand `feature-explore`, so the brief brings them into scope.
 An issue with more than one part goes to one lane whole; split a part off only as
 `issue-triage`'s Splitting an issue allows.
 
 ## Closing the loop
 
-Once the fix is committed — right after commit for `quick-fix`, or once `feature-build`
-finishes and the PR is open for the pipeline route:
+Once the fix is committed — right after commit for `quick-fix`, or once the PR is open for
+`change-build` or the pipeline route:
 
 1. Check the lane reported the repro passing through the real entry point. If it didn't, run
    it now, as `feature-build`'s "Smoke the real entry point" step describes. Don't draft the
@@ -145,7 +151,8 @@ finishes and the PR is open for the pipeline route:
 
 ## Hand off
 
-Report which lane it took (`quick-fix`, the pipeline, or `pr-review` for a linked PR) and why,
+Report which lane it took (`quick-fix`, `change-build`, the pipeline, or `pr-review` for a
+linked PR) and why,
 then whatever that lane's own hand-off says. Once code is committed, report the draft tracker
 resolution and wait for confirmation before posting it.
 

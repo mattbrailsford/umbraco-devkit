@@ -24,7 +24,9 @@ as-is; don't restate them here.
 
 1. **Check for a plan folder.** Does `docs/plans/<feature-slug>/` exist for the current branch
    (the feature-* pipeline ran for this feature)? This decides which style you write in step 4 — a
-   `quick-fix` or trunk-based commit won't have one, and that's expected, not an error.
+   `quick-fix` or trunk-based commit won't have one, and that's expected, not an error. A
+   change file (`docs/changes/<slug>.md`, from `change-build`), given as the argument or
+   matching the branch, is not a plan folder: use the plain summary style.
 
 2. **Gather context.**
    - Resolve `<base>` first, using `git-workflow`'s "Resolving the base branch" (branch
@@ -38,6 +40,10 @@ as-is; don't restate them here.
      by hand and don't re-derive the list yourself.
    - No plan folder: read the branch's commit messages instead — there's no separate plan
      artifact to draw on, and `decision-review` needs a plan folder to run against.
+   - A change file: read its Problem, Cause and Approach for the "why", and its Repro for
+     how to verify. Each Decisions entry marked `agent` goes first in the description, in a
+     `> [!IMPORTANT]` callout, one line each, so a human checks the choices made without
+     them.
    - Either way, read the full diff against the resolved base (`git diff <base>...HEAD`, or
      `gh pr diff <number>` if a PR already exists) — enough of it, and enough surrounding code,
      to explain behavior and ownership, not just line counts.

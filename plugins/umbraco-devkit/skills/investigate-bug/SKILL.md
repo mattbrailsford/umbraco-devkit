@@ -3,7 +3,7 @@ name: investigate-bug
 description: >-
   Finds the cause of a bug in an Umbraco package or backoffice extension: reproduces it,
   gathers evidence, and tests one hypothesis at a time until the cause is proven. Never
-  writes the fix; routes it to `quick-fix` or the feature pipeline. Use for "why is this
+  writes the fix; routes it to `quick-fix`, `change-build` or the feature pipeline. Use for "why is this
   broken", "this stopped working", an unexplained failing test, or an issue triaged as
   needing investigation. `--unattended` runs without questions in its own worktree.
 user-invocable: true
@@ -13,7 +13,7 @@ argument-hint: <what's going wrong, or an issue ID> [--unattended]
 # investigate-bug
 
 A fix aimed at a guessed cause often moves the bug instead of removing it. This skill finds
-the cause first and proves it, so the fix lane (`quick-fix` or the pipeline) starts from a
+the cause first and proves it, so the fix lane (`quick-fix`, `change-build` or the pipeline) starts from a
 known cause and a repro, not a theory.
 
 ## Scope
@@ -148,7 +148,7 @@ Write the report in chat:
 **Evidence:** <the check that proved it, and its result>
 **Same cause elsewhere:** <file:line per place, or "none found">
 **Suggested fix:** <one or two lines, and the test that should guard it>
-**Route:** <quick-fix | feature-explore | upstream CMS issue>, because <one line>
+**Route:** <quick-fix | change-build | feature-explore | upstream CMS issue>, because <one line>
 ```
 
 **If the argument was an issue ID**, also draft the issue's update, following
@@ -173,8 +173,10 @@ Then pick the route for the fix, for the report's **Route** line:
   and the report, so the fix gets tracked on the issue.
 - **Small fix** (one concern, the size `quick-fix` describes): `quick-fix`, passing it the
   cause, the repro, and the places with the same cause.
-- **Bigger fix**, or a shared fix across several places: `feature-explore`, with the report as
-  its starting material.
+- **Bigger fix with a clear approach**, or one shared fix across several places, with no
+  design call (`change-build`'s Size test): `change-build`, with the report as its starting
+  material.
+- **Needs a design**: `feature-explore`, with the report as its starting material.
 - **CMS bug:** draft an issue for `umbraco/Umbraco-CMS` with the minimal repro on a plain
   site, never posting it yourself. Route any package workaround as above.
 

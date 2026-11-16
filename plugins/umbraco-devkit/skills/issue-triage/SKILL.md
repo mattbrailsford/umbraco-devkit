@@ -443,7 +443,7 @@ reference, or similar.
 ## Hand off
 
 A triaged issue that turns into real work goes to `issue-resolve` next, with its ID. That
-picks `quick-fix` or the pipeline, and drafts the tracker reply once the fix lands. A
+picks `quick-fix`, `change-build` or the pipeline, and drafts the tracker reply once the fix lands. A
 `state/needs-investigation` issue can go to `investigate-bug` first instead, to prove it
 before anyone commits to a fix. An issue with a linked open PR goes to `pr-review` with that
 PR number instead — name the skill explicitly, never a generic "review the PR(s)", since a

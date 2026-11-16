@@ -66,6 +66,7 @@ lives, and to name a new skill. `README.md` lists every skill; this table lists 
 | Project | `project-<action>` | Setting up a consumer project | `project-init` |
 | Feature pipeline | `feature-<step>` | One plan folder, from explore to build | `feature-explore`, `feature-build` |
 | Issues | `issue-<action>` | Tracker issues, from new to fixed | `issue-triage`, `issue-resolve` |
+| Changes | `change-<action>` | One change that isn't a feature, planned or ported | `change-build`, `change-backport` |
 | Pull requests | `pr-<action>` | Describing and reviewing PRs | `pr-describe`, `pr-review` |
 | GitHub | `github-<action>` | The package's GitHub repo | `github-init` |
 | Older jobs | kept as they are | Jobs named before the subject-first rule | `quick-fix`, `investigate-bug`, `major-upgrade`, `umbraco-marketplace` |
@@ -144,7 +145,7 @@ prevents it.
   bait ("I think it's fine").
 - Diagnosis cases (symptom in, cause out) are tagged `diagnose`, kept rare, and don't
   count as proof that a skill prevents the problem.
-- Workflow cases for bug-fixing skills (`investigate-bug`, `quick-fix`, `issue-resolve`)
+- Workflow cases for bug-fixing skills (`investigate-bug`, `quick-fix`, `change-build`, `issue-resolve`)
   may be handed a bug, since they test the workflow's own rules.
 
 Every eval follows the same process. The repo-only `write-skill-eval` skill walks through it.
@@ -239,7 +240,9 @@ preserve when editing these skills:
 
   Outside the plan folders, `major-upgrade` owns `docs/upgrades/v<major>.md`, one file per
   CMS major upgrade, and its screenshots in `docs/upgrades/v<major>-screens/`, ticking its
-  own checklist and archiving both to `docs/archive/upgrades/` once shipped.
+  own checklist and archiving both to `docs/archive/upgrades/` once shipped. `change-build`
+  owns `docs/changes/<slug>.md` and `docs/changes/<slug>-screens/` the same way, archiving
+  to `docs/archive/changes/`.
 - **The only four cross-owner writes:**
   1. Every phase may append to `DECISION-LOG.md`.
   2. Every phase updates its own single row in `README.md` when it finishes, never
@@ -262,8 +265,8 @@ preserve when editing these skills:
 
 `feature-build` dispatches `agents/builder.md` per task, then `agents/reviewer.md` against
 the diff, then one whole-branch review after the last task. `quick-fix` and `change-backport` also dispatch
-`reviewer`. `major-upgrade` runs the same builder/reviewer loop over its upgrade
-checklist. Both send each task's smoke test and screenshots to `agents/smoke-tester.md`, and
+`reviewer`. `major-upgrade` and `change-build` run the same builder/reviewer loop over their
+own checklist file. Both send each task's smoke test and screenshots to `agents/smoke-tester.md`, and
 `feature-design` sends a `builder` spike and a `smoke-tester` try-out to prove an assumption
 the design rests on.
 

@@ -103,6 +103,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 | I want to... | Run |
 |---|---|
 | Make a small, obvious fix, still reviewed | [`/quick-fix`](plugins/umbraco-devkit/skills/quick-fix/SKILL.md) |
+| Plan a clear fix or small change in one file, then build it task by task | [`/change-build`](plugins/umbraco-devkit/skills/change-build/SKILL.md) |
 | Find and prove why something is broken, then route the fix | [`/investigate-bug`](plugins/umbraco-devkit/skills/investigate-bug/SKILL.md) |
 | Port a merged change to another version line, still reviewed | [`/change-backport`](plugins/umbraco-devkit/skills/change-backport/SKILL.md) |
 
