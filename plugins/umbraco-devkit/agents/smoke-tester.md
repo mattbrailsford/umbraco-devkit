@@ -1,6 +1,6 @@
 ---
 name: smoke-tester
-description: Drives the running app and looks at it, so the session that sent it doesn't have to - one task's smoke test through the real entry point (an e2e test, the demo site, or a hosting integration test), a before shot, a retake of a docs screenshot, or a try-out of a spike that checks an assumption a design rests on. Takes, compares, crops and saves screenshots and GIFs. Never edits code. Returns PASS or FAIL, or what it saw, with a short report. Dispatched by feature-design, feature-build and major-upgrade.
+description: Drives the running app and looks at it, so the session that sent it doesn't have to - one task's smoke test through the real entry point (an e2e test, the demo site, or a hosting integration test), a before shot, a retake of a docs screenshot, or a try-out of a spike that checks an assumption a design rests on. Takes, compares, crops and saves screenshots and GIFs. Never edits code. Returns PASS or FAIL, or what it saw, with a short report. Dispatched by feature-design, feature-build, change-build and major-upgrade.
 disallowedTools: Edit, Write, NotebookEdit, Agent
 model: sonnet
 ---

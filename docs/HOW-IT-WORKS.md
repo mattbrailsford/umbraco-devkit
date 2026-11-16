@@ -5,14 +5,18 @@ you.
 
 ## How the skills connect
 
-Code only changes through one of four flows, and all four go through the
+Code only changes through one of five flows, and all five go through the
 [builder/reviewer gate](#the-builderreviewer-gate) (`quick-fix` skips it for a text-only
 change):
 
 - **The pipeline**, `feature-explore` → `feature-design` → `feature-plan` →
-  `feature-build`, for a feature or any fix too big to do in one go.
-- **`quick-fix`**, for a small fix of one concern. It hands over to the pipeline if the fix
-  turns out bigger.
+  `feature-build`, for a feature or any change that needs a design.
+- **`quick-fix`**, for a small fix of one concern. It hands over to `change-build` or the
+  pipeline if the fix turns out bigger.
+- **`change-build`**, for the size in between: a fix or small change across several files,
+  where the way to do it is clear. It plans the change in one file,
+  `docs/changes/<slug>.md`, asks once, then builds it task by task. It hands over to the
+  pipeline if the change needs a design.
 - **`major-upgrade`**, for moving to a new Umbraco major. It also lists the pages and
   screenshots of the package's own docs that the upgrade makes wrong.
 - **`change-backport`**, for landing a change that's already merged on one version line on
@@ -100,7 +104,8 @@ way: a plan's folder name is its name, and other plans refer to it by that.
 
 Once a feature's PR is merged, or the plan is dropped or replaced, `feature-close` moves the
 folder to `docs/archive/plans/<feature-slug>/`. `major-upgrade` does the same for its upgrade
-file, into `docs/archive/upgrades/`. This keeps the plans folder to live work, so an active
+file, into `docs/archive/upgrades/`, and `change-build` for its change file, into
+`docs/archive/changes/`. This keeps the plans folder to live work, so an active
 plan is easy to find, and Claude doesn't mistake an old design for the current one.
 
 Before the move, it adds one status line to the folder's `README.md` (shipped, abandoned, or
@@ -146,7 +151,8 @@ package behaves (a CMS picker in a new place, when a notification fires, what an
 returns), a `builder` writes a throwaway spike on the demo site and the `smoke-tester` tries
 it before the plan depends on it. Design only reads their short reports.
 
-`quick-fix` uses the same reviewer for small fixes. `major-upgrade` uses the whole gate for
+`quick-fix` uses the same reviewer for small fixes. `change-build` uses the whole gate for a
+change planned in one file. `major-upgrade` uses the whole gate for
 a move to a new Umbraco major: it lists the breaking changes that hit the project in
 `docs/upgrades/v<major>.md`, then builds that list task by task, green at every commit.
 
