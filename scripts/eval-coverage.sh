@@ -13,6 +13,9 @@
 #        scripts/eval-coverage.sh --check  exit 1 if it's out of date or a covers value is wrong
 
 set -euo pipefail
+# Sort byte by byte, as CI does. A UTF-8 locale ignores hyphens when sorting, so the report
+# would come out in a different order on a developer's machine and fail --check in CI.
+export LC_ALL=C
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repo_root"

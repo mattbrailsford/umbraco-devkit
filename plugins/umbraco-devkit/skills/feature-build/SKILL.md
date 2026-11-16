@@ -73,6 +73,13 @@ doesn't replace the whole-feature review (see "Finish"); the two catch different
    random `:0` port nothing can find. If missing, **stop and flag it** and suggest re-running
    `project-init`; its "Demo site ports" step adds the package and fixes anything that finds the
    site by a hardcoded port. No demo/test site: this step is a no-op.
+7. **Start the demo site once, if there is one.** From the worktree, run the start command in
+   `CLAUDE.md`'s "Build & test" in the background, its output going to a log file outside the
+   repo, and wait until the site answers. The port comes from `git wdp-port`. Put a
+   `Demo site:` line at the top of `BUILD-LOG.md` with its URL, the start command and the log
+   path. That one site serves the whole build: every `builder` and `smoke-tester` in the loop
+   gets the line, and none starts another. On a resumed run, read the line back, and start the
+   site the same way if it doesn't answer.
 
 ## The loop
 
@@ -90,8 +97,9 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    `umbraco-backoffice-conventions`, etc. as relevant) and run the existing specs before
    reporting back. Ask it to start its report with the skills it loaded, so a skipped one
    shows. If the project has e2e tests and none covers the task's path, tell the builder to
-   add one (the smoke step runs it). Give it the pre-review check command below, to run and
-   fix before it reports. The builder does not commit.
+   add one (the smoke step runs it). Give it the `Demo site:` line, for the task's e2e test.
+   Give it the pre-review check command below, to run and fix before it reports. The builder
+   does not commit.
 
 2. **Pre-review checks.** Run `node "${CLAUDE_PLUGIN_ROOT}/checks/run.mjs"` in the task's
    worktree. It checks the uncommitted changes for slips a script can catch: a file that
@@ -140,8 +148,14 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    real entry point, not an internal function that bypasses it. A green unit test suite is
    not enough to ship.
 
+   First make sure the demo site runs this task's code. If the task changed server code and
+   the builder's report doesn't say it restarted the site after its last change, restart it
+   once: stop the process on the site's port, start it with the same command, and wait until
+   it answers. A change to client code alone needs only the frontend build the builder ran.
+
    Dispatch a `smoke-tester` subagent (Agent tool, `subagent_type: smoke-tester`) to run it.
-   Give it: the task text, which of the three smokes to run, the click path to each screen
+   Give it: the task text, which of the three smokes to run, the `Demo site:` line (it uses
+   that site and never starts, rebuilds or stops one), the click path to each screen
    the task renders, the path to each screen's mockup and `-before.png`, the departures from
    the mockup the builder's report flagged as deliberate, whether the task adds or changes a
    migration, whether the project has a committed seed, and the full paths to this skill's
@@ -204,6 +218,7 @@ runs `decision-review`, so the assumptions, deviations, and workarounds in `DECI
 reach a human in the PR. (`decision-review` is also user-invocable on its own, read-only, for
 an earlier look.)
 
+Stop the demo site the build started: a site left running keeps files in the worktree open.
 If this feature built inside a worktree, don't remove it here. That's post-merge cleanup (the
 project's `WorktreeRemove` hook, or `git worktree remove`). Archiving the plan folder is
 post-merge too: `feature-close`, once the PR is merged.

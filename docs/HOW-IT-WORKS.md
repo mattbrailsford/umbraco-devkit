@@ -136,6 +136,11 @@ reports back in words, so the session running the build stays small: that sessio
 task, and whatever it reads stays in its context until the build ends. The builder and
 reviewer keep their reports short for the same reason.
 
+The build starts the demo site once, before the first task, and notes it at the top of
+`BUILD-LOG.md`. Every builder and smoke-tester uses that one site instead of starting its
+own, and it restarts only after a task changes server code. When a site won't serve the
+change, the smoke-tester restarts it once and then reports, rather than rebuilding in a loop.
+
 The same agent works for `feature-design`. When a design rests on how something outside the
 package behaves (a CMS picker in a new place, when a notification fires, what an API
 returns), a `builder` writes a throwaway spike on the demo site and the `smoke-tester` tries
