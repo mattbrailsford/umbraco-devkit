@@ -5,8 +5,8 @@ description: >-
   sites, and dev-only, and says what each kind needs: which version, how sibling packages
   pin each other, and Dependabot rules. Use when adding, bumping or importing a dependency
   (including writing client code that imports Lit, UUI or RxJS), referencing a sibling
-  package, judging an update PR, writing dependabot.yml, or matching dependencies
-  to a new CMS version.
+  package, judging an update PR, writing dependabot.yml, matching dependencies to a new
+  CMS version, or moving a line from one CMS beta or RC to the next.
 
 ---
 
@@ -79,6 +79,13 @@ A new major's line usually starts against a CMS beta or RC, so its floor is a pr
   Umbraco's pre-release feed, `https://www.myget.org/F/umbracoprereleases/api/v3/index.json`.
   Check that feed as well as nuget.org. If a version is only there, add the feed to the
   repo's `NuGet.config` (and to its package source mapping, if it has one).
+- **Re-lock after any feed change, from a clean cache.** Adding the feed and removing it
+  again both change where packages resolve from, and the same version can differ in bytes
+  between the two feeds. Regenerate `packages.lock.json` and `package-lock.json`, then prove
+  them with a locked restore from an empty cache (`dotnet nuget locals all --clear`, then
+  `dotnet restore --locked-mode`; `npm cache clean --force`, then `npm ci`). A warm local
+  cache hides a mismatch that CI then fails on with NU1403 or an integrity error. Never
+  get past that error with `--force-evaluate`.
 - **Consumers need the feed too.** A site restoring the package's pre-release also has to
   restore that product's pre-release. Say so in the pre-release's install notes, with the
   feed URL. Once the products ship to nuget.org, remove the feed and the note.

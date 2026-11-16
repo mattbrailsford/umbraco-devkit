@@ -12,6 +12,12 @@ These evals gain, but the skill mostly didn't load, so the gain may come from el
 - [`umbraco-docs`](#umbraco-docs): `docs-custom-webhook-event` (+23, loaded 0/4). Fix its description's "Use when" for these requests, then rerun to see if the gain holds.
 - [`umbraco-performance`](#umbraco-performance): `performance-converter-cache-level` (+100, loaded 0/4). Fix its description's "Use when" for these requests, then rerun to see if the gain holds.
 
+### Prove the gain
+
+No baseline yet, or the gain is too small to trust.
+
+- [`umbraco-package-conventions`](#umbraco-package-conventions): best gain only 17 (`package-conventions-obsolete-prerelease-major`). Rerun with `--runs 6`, or add a harder scenario.
+
 ### Under-covered
 
 Fewer than 50% of the skill's sections have an eval, so most of its rules are unproven.
@@ -71,7 +77,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 5 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 11 | 0 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 16 | 1 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
@@ -85,13 +91,13 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`umbraco-backoffice-testing`](#umbraco-backoffice-testing) | knowledge | Proven | +67 | 2 | 0 | 2/2 | 0 |
 | [`umbraco-backoffice-ux`](#umbraco-backoffice-ux) | knowledge | Proven | +100 | 11 | 0 | 5/6 | 1 |
 | [`umbraco-cms-source`](#umbraco-cms-source) | knowledge | Proven | +33 | 3 | 1 | 1/5 | 0 |
-| [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 10 | 0 | 4/5 | 0 |
+| [`umbraco-dependencies`](#umbraco-dependencies) | knowledge | Proven | +100 | 11 | 1 | 4/5 | 0 |
 | [`umbraco-docs`](#umbraco-docs) | knowledge | Gain, skill rarely loads | +23 | 2 | 0 | 1/5 | 0 |
 | [`umbraco-dotnet-testing`](#umbraco-dotnet-testing) | knowledge | Proven | +78 | 3 | 0 | 3/3 | 0 |
 | [`umbraco-env-sync`](#umbraco-env-sync) | knowledge | Proven | +27 | 7 | 0 | 7/31 | 1 |
 | [`umbraco-extensibility`](#umbraco-extensibility) | knowledge | Proven | +89 | 24 | 4 | 6/23 | 6 |
 | [`umbraco-marketplace`](#umbraco-marketplace) | knowledge | Proven | +100 | 1 | 0 | 1/4 | 4 |
-| [`umbraco-package-conventions`](#umbraco-package-conventions) | knowledge | Proven | +22 | 4 | 0 | 1/6 | 1 |
+| [`umbraco-package-conventions`](#umbraco-package-conventions) | knowledge | Small gain | +17 | 5 | 1 | 1/6 | 1 |
 | [`umbraco-performance`](#umbraco-performance) | knowledge | Proven | +100 | 6 | 4 | 4/10 | 2 |
 | [`umbraco-security`](#umbraco-security) | knowledge | Proven | +44 | 18 | 6 | 6/6 | 1 |
 | [`user-stories`](#user-stories) | knowledge | Proven | +56 | 1 | 0 | 3/4 | 1 |
@@ -314,14 +320,21 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `major-upgrade-diffs-used-types` | 100 | 2026-11-06 |
 | `major-upgrade-docs-elsewhere` | 100 | 2026-11-06 |
 | `major-upgrade-docs-retakes` | 100 | 2026-11-13 |
+| `major-upgrade-finish-before-prerelease` | 100 | 2026-11-14 |
 | `major-upgrade-flags-open-release-prs` | 100 | 2026-11-12 |
 | `major-upgrade-lists-docs` | 100 | 2026-11-06 |
 | `major-upgrade-no-docs-copy` | 100 | 2026-11-06 |
 | `major-upgrade-offers-stopgaps` | 67 | 2026-11-06 |
+| `major-upgrade-product-new-major` | 100 | 2026-11-14 |
 | `major-upgrade-proposes-backports` | 100 | 2026-11-06 |
+| `major-upgrade-refresh-forward-ports` | 100 | 2026-11-13 |
+| `major-upgrade-reviews-small-bumps` | 100 | 2026-11-14 |
 | `major-upgrade-subsystem-in-bump` | 100 | 2026-11-06 |
 | `major-upgrade-subsystem-port-first` | 100 | 2026-11-06 |
+| `major-upgrade-tracks-blockers` | 100 | 2026-11-13 |
 | `major-upgrade-version-mismatch` | 100 | 2026-11-06 |
+
+Stays quiet on: `major-upgrade-skip-product-patch`
 
 ### `markdown-preview`
 
@@ -476,6 +489,7 @@ shown to follow (kept so a regression shows up), or a case not yet mapped.
 |---|---|---|---|---|---|---|
 | Which CMS version: the floor | `dependencies-add-ef-core` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Which CMS version: the floor | `dependencies-ef-core-floor` | 100 | 0 | 100 | 3/3 | 2026-10-16 |
+| Which CMS version: the floor | `dependencies-prerelease-every-config` | 100 | 0 | 100 | 3/3 | 2026-11-13 |
 | Which CMS version: the floor | `dependencies-prerelease-feed` | 100 | 60 | 40 | 3/3 | 2026-10-29 |
 | Locked to the CMS | `dependencies-add-ef-core` | 100 | 100 | 0 | 3/3 | 2026-10-16 |
 | Locked to the CMS | `dependencies-bare-lit-import` | 100 | 22 | 78 | 3/4 | 2026-10-17 |
@@ -606,10 +620,11 @@ Stays quiet on: `extensibility-skip-dashboard` `extensibility-skip-generic-cshar
 | Async method naming: `[Action][Entity]Async` | **no eval** | | | | | |
 | Visibility: `internal` by default | **no eval** | | | | | |
 | Routine failures: `Attempt<TResult, TStatus>`, like Umbraco's services | **no eval** | | | | | |
-| Public API backwards compatibility | `package-conventions-controller-constructor` | 100 | 100 | 0 | 2/3 | 2026-10-17 |
-| Public API backwards compatibility | `package-conventions-controller-constructor-audit` | 67 | 50 | 17 | 3/4 | 2026-10-17 |
-| Public API backwards compatibility | `package-conventions-new-parameter` | 89 | 67 | 22 | 2/3 | 2026-10-16 |
-| Public API backwards compatibility | `package-conventions-view-component-constructor` | – | 100 | – | – | – |
+| Public API backwards compatibility | `package-conventions-controller-constructor` | 100 | 100 | 0 | 3/3 | 2026-11-13 |
+| Public API backwards compatibility | `package-conventions-controller-constructor-audit` | 78 | 78 | 0 | 3/3 | 2026-11-13 |
+| Public API backwards compatibility | `package-conventions-new-parameter` | 78 | 67 | 11 | 1/3 | 2026-11-13 |
+| Public API backwards compatibility | `package-conventions-obsolete-prerelease-major` | 67 | 50 | 17 | 1/3 | 2026-11-13 |
+| Public API backwards compatibility | `package-conventions-view-component-constructor` | 100 | 100 | 0 | 2/3 | 2026-11-13 |
 | Extension methods | **no eval** | | | | | |
 | Multi-version support | **no eval** | | | | | |
 
