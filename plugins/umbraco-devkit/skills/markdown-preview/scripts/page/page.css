@@ -1,9 +1,12 @@
 
-:root { --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --border: #d1d9e0; --header: #f6f8fa; --link: #0969da; --hover: #f6f8fa; }
+:root { --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --border: #d1d9e0; --header: #f6f8fa; --link: #0969da; --hover: #f6f8fa;
+        --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #0d1117; --fg: #f0f6fc; --muted: #9198a1; --border: #3d444d; --header: #151b23; --link: #4493f8; --hover: #151b23; }
 }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 14px var(--sans); }
+/* Buttons don't inherit the page's font by default. */
+button { font-family: inherit; }
 main { box-sizing: border-box; max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
 .layout { display: grid; grid-template-columns: 260px minmax(0, 1fr) 24px; gap: 24px; align-items: start; }
 aside { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
@@ -41,7 +44,7 @@ aside summary { display: none; }
 /* Preview | Code, as GitHub's segmented switch. */
 .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
 .seg[hidden] { display: none; }
-.seg button { padding: 4px 12px; border: 0; background: var(--header); color: var(--fg); font: 500 13px/20px sans-serif; cursor: pointer; }
+.seg button { padding: 4px 12px; border: 0; background: var(--header); color: var(--fg); font: 500 13px/20px var(--sans); cursor: pointer; }
 .seg button + button { border-left: 1px solid var(--border); }
 .seg button[aria-pressed="true"] { background: var(--bg); font-weight: 600; }
 .cant-show { text-align: center; padding: 32px 16px; color: var(--muted); }
@@ -86,7 +89,7 @@ aside summary { display: none; }
 .thread .msg { display: flex; gap: 10px; padding: 12px 14px; }
 .thread .msg + .msg { border-top: 1px solid var(--border); }
 .thread .msg.claude { background: var(--header); }
-.avatar { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 600 11px/1 sans-serif; color: #fff; background: #6e7781; overflow: hidden; }
+.avatar { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 600 11px/1 var(--sans); color: #fff; background: #6e7781; overflow: hidden; }
 .avatar img { width: 100%; height: 100%; }
 .avatar.claude { background: #d97757; }
 .msg-main { min-width: 0; flex: 1; }
@@ -140,7 +143,7 @@ aside summary { display: none; }
 .thread .summary .tick { color: var(--done); font-weight: 600; margin-right: 4px; }
 .thread.resolved { display: none; }
 .thread.resolved.open { display: block; }
-.resolved-pin { position: absolute; top: 2px; height: 20px; min-width: 20px; padding: 0 4px; border: 0; border-radius: 10px; background: none; color: var(--done); opacity: .75; font: 600 11px/20px sans-serif; cursor: pointer; display: flex; align-items: center; gap: 2px; }
+.resolved-pin { position: absolute; top: 2px; height: 20px; min-width: 20px; padding: 0 4px; border: 0; border-radius: 10px; background: none; color: var(--done); opacity: .75; font: 600 11px/20px var(--sans); cursor: pointer; display: flex; align-items: center; gap: 2px; }
 .resolved-pin:hover, .resolved-pin.on { opacity: 1; background: var(--hover); box-shadow: 0 0 0 1px var(--border); }
 .resolved-pin svg { fill: currentColor; }
 .thread.outdated .msg:first-child .msg-quote::before { content: "No longer in the doc · "; font-weight: 600; }
@@ -165,12 +168,12 @@ mark.cmark { background: var(--pending-bg); color: inherit; border-bottom: 2px s
 .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
 .btn.suggest { margin-left: 0; }
 .suggestion { margin: 6px 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
-.suggestion .sg-head { padding: 4px 10px; background: var(--header); border-bottom: 1px solid var(--border); color: var(--muted); font-family: -apple-system, sans-serif; }
+.suggestion .sg-head { padding: 4px 10px; background: var(--header); border-bottom: 1px solid var(--border); color: var(--muted); font-family: var(--sans); }
 .suggestion .sg-del, .suggestion .sg-add { padding: 2px 10px; white-space: pre-wrap; }
 .suggestion .sg-del { background: color-mix(in srgb, #f85149 15%, transparent); }
 .suggestion .sg-add { background: color-mix(in srgb, #3fb950 15%, transparent); }
 .thread.editing .msg-body textarea, .comment-form textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; resize: none; }
-.btn { padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--header); color: var(--fg); font: 500 13px/20px sans-serif; cursor: pointer; margin-left: 6px; }
+.btn { padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--header); color: var(--fg); font: 500 13px/20px var(--sans); cursor: pointer; margin-left: 6px; }
 .btn.primary { background: #1f883d; border-color: #1f883d; color: #fff; }
 #sendbar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: none; align-items: center; gap: 12px; padding: 10px 12px 10px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 10; }
 #sendbar.show { display: flex; }
@@ -271,7 +274,7 @@ kbd { display: inline-block; padding: 1px 6px; border: 1px solid var(--border); 
 .doc-actions { display: flex; align-items: center; gap: 16px; }
 #approval:empty { display: none; }
 .ap-btn { height: 26px; padding: 0 12px; border: 1px solid rgba(31,35,40,.15); border-radius: 6px; background: var(--done); color: #fff;
-          font: 500 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; cursor: pointer; }
+          font: 500 12px var(--sans); cursor: pointer; }
 .ap-btn:hover { filter: brightness(1.08); }
 .ap-btn.again { background: var(--changed); }
 .ap-btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
