@@ -83,7 +83,13 @@ inventory entry once a release includes it.
 
 ## Blockers
 
-[Dependencies with no release for the target major yet, or "None".]
+[One entry per dependency with no release the package can use for the target yet, or "None".]
+
+- **[Package]:** on [feed it's on now, or nowhere]; needed on [feed]. Holds back: [projects
+  and tasks].
+  - Check: [package and feed to look at, at every refresh and before each task].
+  - New major: before [the code that uses it] moves to it, read its breaking changes and
+    release notes, and add what hits that code as entries and tasks. [Done / not yet.]
 
 ## Tasks
 

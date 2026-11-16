@@ -231,6 +231,14 @@
     "without": 0,
     "withoutDate": "2026-10-16"
   },
+  "dependencies-prerelease-every-config": {
+    "date": "2026-11-13",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": 0,
+    "withoutDate": "2026-11-13"
+  },
   "dependencies-prerelease-feed": {
     "date": "2026-10-29",
     "runs": 3,
@@ -931,6 +939,14 @@
     "without": null,
     "withoutDate": null
   },
+  "major-upgrade-finish-before-prerelease": {
+    "date": "2026-11-14",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-flags-open-release-prs": {
     "date": "2026-11-12",
     "runs": 3,
@@ -963,6 +979,14 @@
     "without": null,
     "withoutDate": null
   },
+  "major-upgrade-product-new-major": {
+    "date": "2026-11-14",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-proposes-backports": {
     "date": "2026-11-06",
     "runs": 3,
@@ -970,6 +994,30 @@
     "with": 100,
     "without": null,
     "withoutDate": null
+  },
+  "major-upgrade-refresh-forward-ports": {
+    "date": "2026-11-13",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-reviews-small-bumps": {
+    "date": "2026-11-14",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-skip-product-patch": {
+    "date": "2026-11-14",
+    "runs": 3,
+    "skillLoaded": 0,
+    "with": 83,
+    "without": 83,
+    "withoutDate": "2026-11-14"
   },
   "major-upgrade-subsystem-in-bump": {
     "date": "2026-11-06",
@@ -981,6 +1029,14 @@
   },
   "major-upgrade-subsystem-port-first": {
     "date": "2026-11-06",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "major-upgrade-tracks-blockers": {
+    "date": "2026-11-13",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -1052,40 +1108,52 @@
     "withoutDate": "2026-10-16"
   },
   "package-conventions-controller-constructor": {
-    "date": "2026-10-17",
+    "date": "2026-11-13",
     "runs": 3,
-    "skillLoaded": 2,
+    "skillLoaded": 3,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-17"
+    "withoutDate": "2026-11-13"
   },
   "package-conventions-controller-constructor-audit": {
-    "date": "2026-10-17",
-    "runs": 4,
+    "date": "2026-11-13",
+    "runs": 3,
     "skillLoaded": 3,
-    "with": 67,
-    "without": 50,
-    "withoutDate": "2026-10-17"
+    "with": 78,
+    "without": 78,
+    "withoutDate": "2026-11-13"
   },
   "package-conventions-new-parameter": {
-    "date": "2026-10-16",
+    "date": "2026-11-13",
     "runs": 3,
-    "skillLoaded": 2,
-    "with": 89,
+    "skillLoaded": 1,
+    "with": 78,
     "without": 67,
-    "withoutDate": "2026-10-16"
+    "withoutDate": "2026-11-13"
+  },
+  "package-conventions-obsolete-prerelease-major": {
+    "date": "2026-11-13",
+    "runs": 3,
+    "skillLoaded": 1,
+    "with": 67,
+    "without": 50,
+    "withoutDate": "2026-11-13"
   },
   "package-conventions-skip-notification-handler": {
-    "date": "2026-10-16",
+    "date": "2026-11-13",
     "runs": 3,
     "skillLoaded": 0,
     "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-16"
+    "withoutDate": "2026-11-13"
   },
   "package-conventions-view-component-constructor": {
+    "date": "2026-11-13",
+    "runs": 3,
+    "skillLoaded": 2,
+    "with": 100,
     "without": 100,
-    "withoutDate": "2026-10-17"
+    "withoutDate": "2026-11-13"
   },
   "performance-converter-cache-level": {
     "date": "2026-10-17",

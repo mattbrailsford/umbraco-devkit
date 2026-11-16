@@ -4,8 +4,9 @@ description: >-
   Moves an Umbraco package to a new CMS major (for example 17 to 18): finds the breaking
   changes that hit it, writes an ordered checklist in `docs/upgrades/v<major>.md`, and works
   through it with the builder and reviewer agents. Use for "upgrade to Umbraco N", "support
-  v18", a new major's beta or RC, or moving from one RC to the next. Not for minor or patch
-  bumps.
+  v18", a new major's beta or RC, moving from one RC to the next, or updating for another
+  Umbraco product the package uses (Deploy, Forms, Commerce) that ships its new major, beta
+  or RC. Not for minor or patch bumps.
 user-invocable: true
 argument-hint: <target CMS major, e.g. 18>
 ---
@@ -36,8 +37,16 @@ the same builder → reviewer → smoke → commit gate as `feature-build`.
 upgraded to a CMS release of this major, usually a beta or RC. This run is a **refresh**: move
 to the newest CMS release of the major (the next RC, or the final release) and handle only
 what changed since the release the file records. Skip to "Refresh" below. If the file doesn't
-exist and the project already targets that major, say so and stop. If the file targets the
+exist and the project already targets that major, say so and stop, unless the run is for
+another product's new major (below). If the file targets the
 major's final release and its PR is merged, the upgrade is done: skip to "Archive" instead.
+
+**Another Umbraco product's new major.** When a product the package uses (Deploy, Forms,
+Commerce) ships its release for the major, the target is still the CMS major. If the upgrade
+file exists, refresh it and re-check its blockers (Refresh step 3). If it doesn't, and the
+project already targets the CMS major, write `docs/upgrades/v<major>.md` for the projects that
+use that product only: its Preflight step 4 entry, then its new-major step as the inventory.
+Then show the plan and build it as below.
 
 ## Preflight
 
@@ -63,8 +72,20 @@ major's final release and its PR is merged, the upgrade is done: skip to "Archiv
 4. **Other Umbraco dependencies.** For every other Umbraco package the project depends on
    (Forms, Commerce, community packages), check NuGet for a release that supports the target
    release. For a pre-release target, check Umbraco's pre-release feed too
-   (`umbraco-dependencies`' "A pre-release floor"). A missing one is a blocker: record it and
-   ask before going on.
+   (`umbraco-dependencies`' "A pre-release floor"). It's a blocker when it has no release for
+   the target, or only on a feed the package's own release can't depend on (a MyGet-only
+   pre-release when the package publishes to NuGet.org). Record each blocker in the file's
+   "Blockers" with:
+   - the feed it's on now and the feed it's needed on;
+   - the projects that use it. Only their tasks wait; the rest of the upgrade goes ahead;
+   - how to tell it has landed: the package and feed to check, at every Refresh and before
+     each Build task;
+   - its own new major: before the code that uses it moves to that major, whether now from
+     a feed the build can reach or once it lands, read that product's breaking changes and
+     release notes, and add what hits that code as inventory entries and tasks, the same as
+     for the CMS. A version bump alone misses changes that still compile.
+
+   Ask before going on.
 5. **Branch.** Read `git-workflow`'s "Umbraco packages and version tracking" section and the
    project's `CLAUDE.md` to see how it carries more than one major.
    - Branch-per-major: the new line (for example `v18/dev`) is cut from the current major's
@@ -353,7 +374,8 @@ the last RC to the final release). Work on the same branch.
    run step 12 for the new entries.
 3. Append what you find to the file as new entries and new unchecked tasks. Don't rewrite or
    untick earlier ones; they're done and committed. Update the file's target release line.
-   Re-check "Waiting on the CMS": an entry merged into the newer release is now in the
+   Re-check each blocker as its entry says, and when one has landed, run its new-major step if it
+   hasn't run yet. Re-check "Waiting on the CMS": an entry merged into the newer release is now in the
    diff, so mark it merged and handle it as an inventory entry; one still open stays. On the
    final release, an entry still open missed it but may land in a later minor: move it to
    "Follow-ups" with what it would hit, and say so. It doesn't block the upgrade.
@@ -363,8 +385,14 @@ the last RC to the final release). Work on the same branch.
    packages, `@umbraco-cms/backoffice`, every shared dependency (step 1 at the newer tag),
    and the package's own pre-release version to the newer release. On the final release,
    that drops the package's pre-release suffix unless the user wants one more pre-release
-   first.
-5. Show the user the new entries and tasks, wait for a yes, then build them as below.
+   first. If a package moves onto or off Umbraco's pre-release feed, invoke
+   `umbraco-dependencies` and follow its "A pre-release floor" for the feed and lock files.
+5. **Fixes from older lines.** List every change released on each older line the project
+   still supports since this line was cut: the commits between the branch point and that
+   line's newest release tag. Check each one is on this branch. Match by commit message or
+   PR number first. For any that don't match, read this branch's code, since a fix carried
+   over by hand has a different message. Add a task for each one that's missing.
+6. Show the user the new entries and tasks, wait for a yes, then build them as below.
 
 ## Build
 
@@ -386,6 +414,10 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   scheduled it, so a planned removal isn't flagged as an unproxied public API break. It
   still checks that nothing inside the package, its tests, or its demo site uses the removed
   code.
+- **No task is too small for the gate.** A one-line refresh bump, or one already done in
+  other repos, still goes builder then reviewer. A problem you spot yourself in a builder's
+  diff goes to a fresh `builder` as a finding, never into your own edit, and the reviewer
+  then reviews the fixed diff.
 - **Smoke.** Dispatch a `smoke-tester` as `feature-build`'s "Smoke the real entry point" step
   does. Once the framework bump task lands, tell it the demo site must start on the target
   major and the backoffice must load with the package's extensions registered, and to open
@@ -404,7 +436,9 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
 
 ## Finish
 
-When every task is ticked:
+When every task is ticked, and before any pre-release of the package (a beta or RC for
+testers) ships. If asked to ship one first, say which Finish steps haven't run and run them;
+a green build and unit tests aren't Finish.
 
 1. Run the full test suite on every database provider the project supports.
 2. **Smoke an upgrade, not just a fresh install.** Start a demo site on the current major
@@ -441,9 +475,11 @@ When every task is ticked:
    Record the result per screen in the table. Commit only the pairs that show a difference,
    with the upgrade file; screens that match stay out of the repo, and the table says they
    matched. If the project has no demo site, say this was skipped in the PR.
-4. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file
+4. **Fixes from older lines.** Run Refresh step 5 again, since the older lines may have
+   released more since the last refresh. Build each missing fix as a task.
+5. Dispatch one `reviewer` in whole-feature mode over the branch diff, with the upgrade file
    as the design. Fix and re-review until `PASS`, as in `feature-build`'s "Finish".
-5. **Propose backports.** List every "Backport candidates" entry that shows on at least one
+6. **Propose backports.** List every "Backport candidates" entry that shows on at least one
    supported line, and sort each one:
    - **Safe for a patch release**: no public API change, no migration, no new dependency,
      and no behavior a consumer could rely on. Name every line it would go to: each line
@@ -455,12 +491,15 @@ When every task is ticked:
 
    Show the list and ask which to port, per change and line. Mark the picks in the file.
    Port nothing yet: `change-backport` only ports a merged change.
-6. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
+7. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
    uses its plain style, since there's no plan folder. Point it at the upgrade file, so the PR
    lists the breaking changes handled, any breaking changes for consumers, the docs changed
    or handed off, the follow-ups, and the picked backports. Under "How to verify", it shows
    each changed screen's two screenshots side by side, with the click path, and says how
    each difference was sorted.
+8. **Watch the PR's first CI run** to the end. It's the first restore and build from a clean
+   machine, so an SDK, feed or lock file change shows here first. A failure becomes a task,
+   built and reviewed as above. Hand back only once CI passes.
 
 ## Archive
 
@@ -492,7 +531,7 @@ Report: current to target version (and the CMS release, if it's a pre-release), 
 and commits, open CMS PRs still waiting and what each would hit, what the upgrade smoke and
 the screen comparison showed, third-party dependencies moved, any breaking changes for
 consumers, the docs changed, the follow-ups, and the backport candidates with the ones
-picked. Then the PR link. Once the PR merges, offer `change-backport` for each picked backport, one run per change and target line.
+picked. Then the PR link and its CI result. Once the PR merges, offer `change-backport` for each picked backport, one run per change and target line.
 
 When the docs live outside this repo, the upgrade file's "Docs" section is their hand-off:
 show it, and say which docs copy was searched. If `CLAUDE.local.md` names a skill or command
