@@ -1,8 +1,8 @@
 # Finding breaks: commands
 
-Commands for inventory steps 2 and 5. `$CMS`, `$REMOTE` and the tags come from
-`umbraco-cms-source`. Set `current_tag` to the project's current release and `target_tag`
-to the target release.
+Commands for inventory steps 2 and 5, and for another Umbraco product's new major (Preflight
+step 4). `$CMS`, `$REMOTE` and the tags come from `umbraco-cms-source`. Set `current_tag` to
+the project's current release and `target_tag` to the target release.
 
 They're written to run the same in bash and zsh, macOS and Linux:
 
@@ -76,6 +76,36 @@ gh api "repos/umbraco/Umbraco-CMS/commits/<sha>/pulls" -q '.[].number'
 
 Umbraco's squash commits usually end with `(#12345)`, which names the PR without the API
 call. Cherry-picks and merge-ups list the same change more than once: keep one entry per PR.
+
+The same two commands name the PR in another Umbraco product's repo: point `-C` at its
+clone and `repos/` at its repo.
+
+## Another Umbraco product
+
+For another product's new major (Deploy, Forms, Commerce). Don't rely on labels or release
+notes: many products have neither. Clone the product's repo, or fetch its two tags as above.
+
+1. **Every merged PR in the range.** List every PR merged into the product's repo between
+   the current and target tags, with no label filter. Run "Labelled PRs in the range"
+   without `--label`, against the product's repo and clone. Read each description, not only
+   the title.
+2. **Search for the package's own name.** Product teams often list the downstream packages
+   a change needs. A hit is an entry:
+
+   ```bash
+   gh search prs --repo <owner>/<product repo> "<Package.Name>"
+   gh search issues --repo <owner>/<product repo> "<Package.Name>"
+   ```
+
+   Search for the NuGet id too, if it differs from the package name.
+3. **Types and subsystems the package extends.** Diff every type the package names, and the
+   whole folder of each subsystem it extends, as inventory step 2 does for the CMS. For
+   Deploy: service connectors, value connectors, entity type registration, and the
+   backoffice entry points.
+4. **Attribution.** Name the PR behind each entry from `git log -S` in the product's clone,
+   as "Which PR made a change" says, never from a PR title.
+5. **Private repo.** If the repo can't be read, say so in the upgrade file, and ask the
+   product's team for their list of downstream changes.
 
 ## CMS types the package uses
 
