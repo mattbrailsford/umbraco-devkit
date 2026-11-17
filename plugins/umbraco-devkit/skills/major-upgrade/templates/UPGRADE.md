@@ -53,6 +53,19 @@ already there, upgrade regression.
 - **[Stock level property editor]**. [Content › any product › Stock level].\
   Difference: [Upgrade regression: value not shown]. Task: [Fix stock level editor]
 
+## Host operations
+
+Only when the package plugs into another Umbraco product (inventory step 2). Every operation
+that product offers on the package's types, by mode. The smoke runs each cell: pass, fail
+(with its task), or n/a.
+
+| Operation | [Default edition] | [BackOfficeOnly] |
+|---|---|---|
+| [Queue + transfer to a second environment] | | |
+| [Restore / tree restore / partial restore] | | |
+| [Export / import] | | |
+| [Disk files written / deleted on save / delete] | | n/a |
+
 ## Docs
 
 Where this package's user docs live (from `CLAUDE.md`), the copy searched, and what this

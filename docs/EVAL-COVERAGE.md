@@ -78,7 +78,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 5 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 16 | 1 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 17 | 2 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
@@ -330,6 +330,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `major-upgrade-docs-retakes` | 100 | 2026-11-13 |
 | `major-upgrade-finish-before-prerelease` | 100 | 2026-11-14 |
 | `major-upgrade-flags-open-release-prs` | 100 | 2026-11-12 |
+| `major-upgrade-host-operations` | 100 | 2026-11-17 |
 | `major-upgrade-lists-docs` | 100 | 2026-11-06 |
 | `major-upgrade-no-docs-copy` | 100 | 2026-11-06 |
 | `major-upgrade-offers-stopgaps` | 67 | 2026-11-06 |
