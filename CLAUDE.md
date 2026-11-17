@@ -338,3 +338,12 @@ catches stale references, not wrong boundaries. A false positive goes in
 After adding, renaming, splitting, or substantially changing a skill, run the repo-only
 `review-skill-links` skill. It runs the check scripts, then reads for routing gaps,
 conflicting advice, and duplicated rules the scripts can't see.
+
+## Issue tracker
+- Type: GitHub Issues
+- Location: mattbrailsford/umbraco-devkit (same repo as the source)
+- Access: `gh` CLI
+- Type labels: default
+- State labels: default
+- Feature requests: issues
+- Needs-info timeout: 30 days
