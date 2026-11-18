@@ -125,8 +125,10 @@ catch problems that build up across tasks.
 
 Between the builder and the reviewer, a script runs cheap checks a reviewer shouldn't spend a
 round on: a file that isn't UTF-8, a code comment linking into a plan folder, `unsafeHTML`
-with nothing sanitizing it, a new file git doesn't track. A finding goes straight back to the
-builder. The checks live in the plugin's `checks/` folder, one file each. A project adds its
+with nothing sanitizing it, a new file git doesn't track. Others catch shortcuts to a green
+build: a test switched off, a warning suppressed with no reason, an empty `catch`, a fixed
+wait in a test. A finding goes straight back to the builder. One the builder can't fix, it
+keeps with a reason, and the reviewer judges it. The checks live in the plugin's `checks/` folder, one file each. A project adds its
 own in `.claude/checks/`, and turns one off in `.claude/checks/config.json`.
 
 A failed task goes back to a fresh builder, and the next review looks only at what that

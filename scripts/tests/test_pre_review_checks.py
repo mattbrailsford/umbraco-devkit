@@ -96,6 +96,110 @@ class PreReviewCheckTests(unittest.TestCase):
         git(self.repo, "add", "-N", "client")
         self.assertEqual(self.run_checks(), [])
 
+    # test-skip
+
+    def add(self, path, content):
+        self.write(path, content)
+        git(self.repo, "add", "-N", path)
+
+    def test_ignored_nunit_test(self):
+        self.add("tests/Foo.Tests/ThingTests.cs", '[Test, Ignore("flaky")]\npublic void Saves() { }\n')
+        findings = self.run_checks()
+        self.assertEqual(self.names(findings), ["test-skip"])
+        self.assertEqual(findings[0]["line"], 1)
+
+    def test_xunit_skip_and_if_false(self):
+        self.add("src/Foo.Tests/ThingTests.cs", '[Fact(Skip = "later")]\npublic void A() { }\n#if false\n#endif\n')
+        self.assertEqual([f["line"] for f in self.run_checks()], [1, 3])
+
+    def test_pending_spec_is_allowed(self):
+        self.add("src/Foo.Tests/ThingTests.cs", '[Test, Ignore("Pending")]\npublic void A() { }\n')
+        self.add("client/el.test.ts", 'it.skip("pending implementation", () => {});\n')
+        self.assertEqual(self.run_checks(), [])
+
+    def test_js_skip_and_only(self):
+        self.add("client/el.test.ts", 'it.skip("saves", () => {});\ndescribe.only("x", () => {});\n')
+        self.assertEqual(self.names(self.run_checks()), ["test-skip"])
+
+    def test_focused_test_is_reported_even_if_pending(self):
+        self.add("e2e/save.spec.ts", 'test.only("pending", async () => {});\n')
+        self.assertEqual(self.names(self.run_checks()), ["test-skip"])
+
+    def test_ignore_attribute_outside_tests_is_fine(self):
+        self.add("src/Persistence/ThingDto.cs", "[Ignore]\npublic string Name { get; set; }\n")
+        self.add("src/Latest.cs", '[Ignore("x")]\nclass Latest { }\n')
+        self.assertEqual(self.run_checks(), [])
+
+    # test-sleep
+
+    def test_sleep_in_test(self):
+        self.add("tests/ThingTests.cs", "await Task.Delay(500);\nThread.Sleep(10);\n")
+        self.add("e2e/save.spec.ts", "await page.waitForTimeout(1000);\n")
+        findings = self.run_checks()
+        self.assertEqual(self.names(findings), ["test-sleep"])
+        self.assertEqual(len(findings), 3)
+
+    def test_delay_outside_tests_is_fine(self):
+        self.write("src/Thing.cs", "namespace X;\n\npublic class Thing { Task Wait() => Task.Delay(10); }\n")
+        self.assertEqual(self.run_checks(), [])
+
+    # empty-catch
+
+    def test_empty_catch_one_line_and_multi_line(self):
+        self.write("src/Thing.cs", "namespace X;\n\npublic class Thing {\n void A() { try { } catch { } }\n"
+                                   " void B() {\n  try { }\n  catch (Exception)\n  {\n  }\n }\n}\n")
+        self.add("client/el.ts", "try { go(); } catch (e) {}\n")
+        findings = self.run_checks()
+        self.assertEqual(self.names(findings), ["empty-catch"])
+        self.assertEqual(sorted((f["path"], f["line"]) for f in findings),
+                         [("client/el.ts", 1), ("src/Thing.cs", 4), ("src/Thing.cs", 7)])
+
+    def test_catch_with_comment_or_body_is_fine(self):
+        self.write("src/Thing.cs", "namespace X;\n\npublic class Thing {\n void A() { try { } catch { /* optional cache */ } }\n"
+                                   " void B() { try { } catch (Exception ex) { _log.Warn(ex); } }\n}\n")
+        self.assertEqual(self.run_checks(), [])
+
+    # warning-suppression
+
+    def test_pragma_and_nullable_without_reason(self):
+        self.write("src/Thing.cs", "#pragma warning disable CS0618\n#nullable disable\nnamespace X;\n\npublic class Thing { }\n")
+        findings = self.run_checks()
+        self.assertEqual(self.names(findings), ["warning-suppression"])
+        self.assertEqual(len(findings), 2)
+
+    def test_pragma_with_reason_on_line_or_above(self):
+        self.write("src/Thing.cs", "#pragma warning disable CS0618 // IPublishedCache is obsolete until v18\n"
+                                   "// Generated code; nullable annotations don't apply\n#nullable disable\n"
+                                   "namespace X;\n\npublic class Thing { }\n")
+        self.assertEqual(self.run_checks(), [])
+
+    def test_suppress_message_needs_justification(self):
+        self.write("src/Thing.cs", 'namespace X;\n\n[SuppressMessage("Design", "CA1000")]\n'
+                                   '[SuppressMessage("Design", "CA1001", Justification = "Owned by the DI container")]\n'
+                                   "public class Thing { }\n")
+        findings = self.run_checks()
+        self.assertEqual([f["line"] for f in findings], [3])
+
+    def test_project_file_settings(self):
+        self.add("src/Thing.csproj", "<Project>\n<PropertyGroup>\n<NoWarn>$(NoWarn);CS1591</NoWarn>\n"
+                                     "<TreatWarningsAsErrors>false</TreatWarningsAsErrors>\n"
+                                     "<!-- Docs are generated elsewhere -->\n<NoWarn>$(NoWarn);CS1573</NoWarn>\n"
+                                     "</PropertyGroup>\n</Project>\n")
+        self.assertEqual([f["line"] for f in self.run_checks()], [3, 4])
+
+    def test_editorconfig_severity(self):
+        self.add(".editorconfig", "[*.cs]\ndotnet_diagnostic.CA2007.severity = none\n"
+                                  "# Umbraco has no sync context\ndotnet_diagnostic.CA2008.severity = none\n"
+                                  "dotnet_diagnostic.CA1000.severity = error\n")
+        self.assertEqual([f["line"] for f in self.run_checks()], [2])
+
+    def test_typescript_suppressions(self):
+        self.add("client/el.ts", "// @ts-ignore\nconst a = b;\n"
+                                 "// @ts-expect-error the generated client types this field wrongly\nconst c = d;\n"
+                                 "// eslint-disable-next-line no-explicit-any\nlet e: any;\n"
+                                 "// eslint-disable-next-line no-explicit-any -- payload shape is open\nlet f: any;\n")
+        self.assertEqual([f["line"] for f in self.run_checks()], [1, 5])
+
     # untracked
 
     def test_untracked_file_is_reported(self):
