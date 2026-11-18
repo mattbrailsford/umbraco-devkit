@@ -51,6 +51,7 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
+- [`major-upgrade`](#major-upgrade): `major-upgrade-product-private-source`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -78,7 +79,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 5 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 17 | 2 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 18 | 3 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
@@ -335,6 +336,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `major-upgrade-offers-stopgaps` | 67 | 2026-11-06 |
 | `major-upgrade-product-new-major` | 100 | 2026-11-14 |
 | `major-upgrade-product-pr-depth` | 100 | 2026-11-17 |
+| `major-upgrade-product-private-source` | – | – |
 | `major-upgrade-proposes-backports` | 100 | 2026-11-06 |
 | `major-upgrade-refresh-forward-ports` | 100 | 2026-11-13 |
 | `major-upgrade-reviews-small-bumps` | 100 | 2026-11-14 |
