@@ -1,8 +1,8 @@
 # Finding breaks: commands
 
-Commands for inventory steps 2 and 5. `$CMS`, `$REMOTE` and the tags come from
-`umbraco-cms-source`. Set `current_tag` to the project's current release and `target_tag`
-to the target release.
+Commands for inventory steps 2 and 5, and for another Umbraco product's new major (Preflight
+step 4). `$CMS`, `$REMOTE` and the tags come from `umbraco-cms-source`. Set `current_tag` to
+the project's current release and `target_tag` to the target release.
 
 They're written to run the same in bash and zsh, macOS and Linux:
 
@@ -76,6 +76,57 @@ gh api "repos/umbraco/Umbraco-CMS/commits/<sha>/pulls" -q '.[].number'
 
 Umbraco's squash commits usually end with `(#12345)`, which names the PR without the API
 call. Cherry-picks and merge-ups list the same change more than once: keep one entry per PR.
+
+The same two commands name the PR in another Umbraco product's repo, when you can read it:
+point `-C` at its clone and `repos/` at its repo.
+
+## Another Umbraco product
+
+For another product's new major (Deploy, Forms, Commerce). Many products have no labels and
+no full release notes, and their source is often private. Start with what every package
+developer can read, then add the source if you can read it.
+
+1. **Public API of the two packages.** Restore the current and the target version of each
+   product package the package references, from the feed Preflight found, and compare each
+   assembly the package uses:
+
+   ```bash
+   dotnet nuget locals global-packages --list   # where restored packages live
+   dotnet tool install --global Microsoft.DotNet.ApiCompat.Tool
+   apicompat --left  <packages>/<id>/<current>/lib/<tfm>/<Assembly>.dll \
+             --right <packages>/<id>/<target>/lib/<tfm>/<Assembly>.dll
+   ```
+
+   Each removed or changed member the package uses is an entry. This finds what no longer
+   compiles or binds, not what changed behavior: each subsystem the package extends still
+   gets its own scenario in the smoke, as inventory step 2 says.
+2. **Docs and release notes.** Read the product's upgrade and version-specific pages, with
+   `umbraco-docs`, and its release notes where they exist.
+3. **The product's public issue tracker.** Umbraco's closed-source products keep one
+   (`umbraco/Umbraco.Deploy.Issues`, `umbraco/Umbraco.Forms.Issues`,
+   `umbraco/Umbraco.Commerce.Issues`). Search it for the target version and for the
+   package's own name. Product teams often list the downstream packages a change needs. A
+   hit is an entry:
+
+   ```bash
+   gh search issues --repo <owner>/<issues repo> "<Package.Name>"
+   gh search issues --repo <owner>/<issues repo> "<target major>"
+   ```
+
+   Search for the NuGet id too, if it differs from the package name.
+4. **The product's source, if you can read it.** Also do the following, in its repo:
+   - List every PR merged between the current and target tags, with no label filter: run
+     "Labelled PRs in the range" without `--label`. Read each description, not only the
+     title.
+   - Run the step 3 searches with `gh search prs` against the source repo.
+   - Diff every type the package names, and the whole folder of each subsystem it extends,
+     as inventory step 2 does for the CMS. For Deploy: service connectors, value
+     connectors, entity type registration, and the backoffice entry points.
+   - Name the PR behind each entry from `git log -S`, as "Which PR made a change" says,
+     never from a PR title.
+5. **Say how deep the search went.** In the upgrade file, list which of these sources were
+   read and which weren't (source private, no release notes, the API compare still to run),
+   so the reviewer knows what could still be missing.
 
 ## CMS types the package uses
 

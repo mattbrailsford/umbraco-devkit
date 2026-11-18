@@ -81,9 +81,10 @@ Then show the plan and build it as below.
    - how to tell it has landed: the package and feed to check, at every Refresh and before
      each Build task;
    - its own new major: before the code that uses it moves to that major, whether now from
-     a feed the build can reach or once it lands, read that product's breaking changes and
-     release notes, and add what hits that code as inventory entries and tasks, the same as
-     for the CMS. A version bump alone misses changes that still compile.
+     a feed the build can reach or once it lands, find what that product's new major
+     changed, as "Another Umbraco product" in `references/finding-breaks.md` says, and add
+     what hits that code as inventory entries and tasks. A version bump alone misses changes
+     that still compile.
 
    Ask before going on.
 5. **Branch.** Read `git-workflow`'s "Umbraco packages and version tracking" section and the
