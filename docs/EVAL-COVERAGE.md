@@ -51,7 +51,6 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
-- [`major-upgrade`](#major-upgrade): `major-upgrade-product-private-source`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -336,7 +335,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `major-upgrade-offers-stopgaps` | 67 | 2026-11-06 |
 | `major-upgrade-product-new-major` | 100 | 2026-11-14 |
 | `major-upgrade-product-pr-depth` | 100 | 2026-11-17 |
-| `major-upgrade-product-private-source` | – | – |
+| `major-upgrade-product-private-source` | 100 | 2026-11-18 |
 | `major-upgrade-proposes-backports` | 100 | 2026-11-06 |
 | `major-upgrade-refresh-forward-ports` | 100 | 2026-11-13 |
 | `major-upgrade-reviews-small-bumps` | 100 | 2026-11-14 |
