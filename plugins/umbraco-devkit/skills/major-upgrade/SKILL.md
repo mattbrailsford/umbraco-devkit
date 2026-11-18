@@ -509,18 +509,14 @@ a green build and unit tests aren't Finish.
 
    Show the list and ask which to port, per change and line. Mark the picks in the file.
    Port nothing yet: `change-backport` only ports a merged change.
-7. **Ask the host product's maintainer.** When the package plugs into another Umbraco
-   product, ask the user who maintains that product's side. Once the PR is open, ask before
-   requesting their review on it, pointing them at the inventory and the "Host operations"
-   table: they know which operations the package's types take part in. If no review is
-   possible, say so in the PR.
-8. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
+7. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
    uses its plain style, since there's no plan folder. Point it at the upgrade file, so the PR
    lists the breaking changes handled, any breaking changes for consumers, the docs changed
-   or handed off, the follow-ups, and the picked backports. Under "How to verify", it shows
-   each changed screen's two screenshots side by side, with the click path, and says how
-   each difference was sorted.
-9. **Watch the PR's first CI run** to the end. It's the first restore and build from a clean
+   or handed off, the follow-ups, the picked backports, and, when the package plugs into
+   another Umbraco product, the "Host operations" table: which cells were smoked and which
+   weren't. Under "How to verify", it shows each changed screen's two screenshots side by
+   side, with the click path, and says how each difference was sorted.
+8. **Watch the PR's first CI run** to the end. It's the first restore and build from a clean
    machine, so an SDK, feed or lock file change shows here first. A failure becomes a task,
    built and reviewed as above. Hand back only once CI passes.
 
