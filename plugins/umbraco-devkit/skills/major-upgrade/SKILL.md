@@ -153,10 +153,15 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
      owns), add a task to check the package's data after it, and include it in the upgrade
      smoke ("Finish").
 
-   For each entry, grep the project for what it changed or removed. Name the PR behind an
-   entry from history (`git log -S` on the changed line), never from a PR title: titles
-   don't say everything a PR touched. Merge-ups and cherry-picks repeat a change; keep one
-   entry per PR.
+   For each entry, grep the project for what it changed or removed. A removal with no grep
+   hit is still an entry when it sits in a subsystem the package extends. Ask what the
+   removed code did for the package without being called by it (a default, a fallback, a
+   generic handler), and what replaces it. If the answer isn't clear from the diff, add the
+   operation to that subsystem's smoke scenario so it's run, not assumed.
+
+   Name the PR behind an entry from history (`git log -S` on the changed line), never from a
+   PR title: titles don't say everything a PR touched. Merge-ups and cherry-picks repeat a
+   change; keep one entry per PR.
 3. **Release notes.** Each beta, RC, and final release of the target major has a
    "💥 Breaking Changes" section (`gh release view <tag> -R umbraco/Umbraco-CMS`). Read
    every one in the range. The list to work from is everything step 2 found plus every PR
