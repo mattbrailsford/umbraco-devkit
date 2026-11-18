@@ -138,6 +138,16 @@ or incomplete. Never treat "not in the docs" as "not a breaking change".
      providers; trees), a change anywhere in that subsystem can break it, even one that
      still compiles. Group these by subsystem and diff the whole folder, not only what the
      PRs name. Read the behavior changes. Each subsystem gets its own scenario in the smoke.
+   - **Host operations.** When the package plugs into another Umbraco product (Deploy,
+     Forms, Commerce), the smoke tests what the host does with the package's types, not only
+     what the package adds. List every operation the host offers on those types, and every
+     mode that changes them (an edition, a setting, the number of environments). Write them
+     to the upgrade file's "Host operations" table, one row per operation and one column per
+     mode. For Deploy: queue and transfer to a second environment; restore, tree restore and
+     partial restore from it; export and import; disk files written and deleted on save and
+     delete; each in the default and the BackOfficeOnly edition. An operation that needs two
+     environments needs two demo sites: say so with the plan, so the second is set up before
+     Build.
    - **Open PRs still due in the release.** Only when the target is a beta or RC. Umbraco
      labels PRs meant for a release `release/<x.y.z>` (`release/19.0.0`), and some are still
      open when a pre-release ships. They're in no tag yet, so the diff can't see them. List
@@ -434,7 +444,9 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   error from the package
   fails the smoke, and an "Umbraco Backoffice:" deprecation warning with the package as its
   origin comes back as a finding that becomes a task. Have it run the scenario for each
-  subsystem the package extends (inventory step 2) once its task lands.
+  subsystem the package extends (inventory step 2) once its task lands, and every cell of
+  the "Host operations" table once the host product's bump lands, recording each result in
+  its cell. An operation across two environments runs on the second demo site too.
 - **Bugs the upgrade didn't cause.** A bug found during a task may also exist on older
   lines. Fix it in its own commit, apart from the upgrade work, so it can be ported later.
   Check whether it shows on every line the project still supports, not only the current
@@ -506,9 +518,10 @@ a green build and unit tests aren't Finish.
 7. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
    uses its plain style, since there's no plan folder. Point it at the upgrade file, so the PR
    lists the breaking changes handled, any breaking changes for consumers, the docs changed
-   or handed off, the follow-ups, and the picked backports. Under "How to verify", it shows
-   each changed screen's two screenshots side by side, with the click path, and says how
-   each difference was sorted.
+   or handed off, the follow-ups, the picked backports, and, when the package plugs into
+   another Umbraco product, the "Host operations" table: which cells were smoked and which
+   weren't. Under "How to verify", it shows each changed screen's two screenshots side by
+   side, with the click path, and says how each difference was sorted.
 8. **Watch the PR's first CI run** to the end. It's the first restore and build from a clean
    machine, so an SDK, feed or lock file change shows here first. A failure becomes a task,
    built and reviewed as above. Hand back only once CI passes.
