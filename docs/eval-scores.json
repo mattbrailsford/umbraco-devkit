@@ -995,6 +995,14 @@
     "without": null,
     "withoutDate": null
   },
+  "major-upgrade-host-operations": {
+    "date": "2026-11-17",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-lists-docs": {
     "date": "2026-11-06",
     "runs": 3,
