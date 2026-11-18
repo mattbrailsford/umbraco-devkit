@@ -338,6 +338,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `major-upgrade-proposes-backports` | 100 | 2026-11-06 |
 | `major-upgrade-refresh-forward-ports` | 100 | 2026-11-13 |
 | `major-upgrade-reviews-small-bumps` | 100 | 2026-11-14 |
+| `major-upgrade-silent-removal` | 100 | 2026-11-17 |
 | `major-upgrade-subsystem-in-bump` | 100 | 2026-11-06 |
 | `major-upgrade-subsystem-port-first` | 100 | 2026-11-06 |
 | `major-upgrade-tracks-blockers` | 100 | 2026-11-13 |

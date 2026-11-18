@@ -1059,6 +1059,14 @@
     "without": null,
     "withoutDate": null
   },
+  "major-upgrade-silent-removal": {
+    "date": "2026-11-17",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "major-upgrade-skip-product-patch": {
     "date": "2026-11-14",
     "runs": 3,
