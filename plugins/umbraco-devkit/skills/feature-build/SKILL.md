@@ -104,8 +104,11 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
 2. **Pre-review checks.** Run `node "${CLAUDE_PLUGIN_ROOT}/checks/run.mjs"` in the task's
    worktree. It checks the uncommitted changes for slips a script can catch: a file that
    isn't UTF-8, a link into a plan folder, `unsafeHTML` with no `sanitizeHTML`, a new file
-   git doesn't track. Exit 1 prints one finding per line: send them to a fresh `builder` as
-   the round's findings and run the checks again, before any review. Exit 2 means the
+   git doesn't track, and shortcuts to a green build (a test switched off, a warning
+   suppressed with no reason, an empty `catch`, a fixed wait in a test). Exit 1 prints one
+   finding per line: send them to a fresh `builder` as the round's findings and run the
+   checks again, before any review. A finding the builder kept, with its reason, goes to the
+   `reviewer` to judge instead of another round. Exit 2 means the
    checks couldn't run: note it in `BUILD-LOG.md` and go on to review. A project adds its own
    checks as `.mjs` files in `.claude/checks/`, and turns one off by name in
    `.claude/checks/config.json` (`{ "disabled": ["untracked"] }`); see the header of

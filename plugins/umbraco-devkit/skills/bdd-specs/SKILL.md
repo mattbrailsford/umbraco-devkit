@@ -72,9 +72,9 @@ file(s) that layer needs:
    builders, fakes/mocks, and fixtures rather than writing ad hoc setup per spec.
 6. **New specs are pending by default**, marked so the runner reports them as skipped, not
    failed, until a `builder` task makes them pass: `[Ignore("Pending")]` in NUnit,
-   `[Fact(Skip = "Pending")]` in xUnit, `it.skip` in Mocha. A spec left active against code
-   that doesn't exist yet fails the whole suite, and the next task can't tell its own failures
-   from these.
+   `[Fact(Skip = "Pending")]` in xUnit, `it.skip("pending: ...")` in Mocha. A spec left
+   active against code that doesn't exist yet fails the whole suite, and the next task can't
+   tell its own failures from these.
 7. Never invent acceptance criteria. If a story is underspecified, stop and send the user
    back to `user-stories` to tighten it.
 
