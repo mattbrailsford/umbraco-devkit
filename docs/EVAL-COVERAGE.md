@@ -78,7 +78,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 5 | 0 | – | – |
-| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 17 | 2 | – | – |
+| [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 18 | 3 | – | – |
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
