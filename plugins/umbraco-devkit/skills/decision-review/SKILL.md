@@ -116,8 +116,8 @@ your review" and stop; don't pad an empty result with the search process.
 
 ## Hand off
 
-Suggested next: a Must fix item goes back to `feature-build` as a fix round first. Then
-`pr-describe`, which puts Your call at the top of the PR, then open the PR per
+Suggested next: a Must fix item goes back to `/feature-build` as a fix round first. Then
+`/pr-describe`, which puts Your call at the top of the PR, then open the PR per
 `git-workflow`.
 
 This is the post-build half of plan scrutiny; `feature-interrogate` is the pre-build half,

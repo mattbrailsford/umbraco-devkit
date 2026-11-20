@@ -616,5 +616,5 @@ Otherwise, note any open question in `ARCHITECTURE.md`/`SPEC.md`, any screen moc
 hasn't approved yet, and any project starter created or refreshed in `docs/mockups/starters/`.
 Offer to open `ARCHITECTURE.md` in a live preview, following `markdown-preview`'s "Offering a
 preview". With a preview open, ask for approval on `SPEC.md` and `ARCHITECTURE.md`, following
-its "Approval". Then: `Suggested next: /clear, then feature-plan <feature-slug>.` The plan
+its "Approval". Then: `Suggested next: /clear, then /feature-plan <feature-slug>.` The plan
 folder carries everything over, so a fresh session loses nothing.
