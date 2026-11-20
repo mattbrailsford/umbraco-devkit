@@ -131,4 +131,4 @@ because real Umbraco package repos don't carry the extra weight:
 
 Report: remote URL, license + visibility + owner, files created, anything skipped and why.
 Suggested next: `git-workflow` for the first commit/PR once there's something to ship. When
-Dependabot PRs start arriving, `dependency-review` works through them.
+Dependabot PRs start arriving, `/dependency-review` works through them.

@@ -210,4 +210,4 @@ set it up. Read only the one for the step you're on. The same rules apply to all
 
 End with one line per step (found, added, or skipped), the file list (created vs. skipped vs.
 appended-to), the plan-folder path convention settled on, then:
-`Suggested next: feature-explore — to define the first feature.`
+`Suggested next: /feature-explore — to define the first feature.`

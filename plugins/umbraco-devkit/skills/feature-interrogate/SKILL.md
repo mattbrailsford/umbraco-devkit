@@ -178,9 +178,9 @@ a human's attention.
 Report: N findings, S survived verification, the blocking tier's decisions, and how the rest
 were triaged. Then:
 - Findings routed to `feature-design` or `feature-plan` → `Suggested next: re-run
-  <feature-design|feature-plan> to fold these in, then feature-interrogate again if the
-  change was non-trivial, before feature-build.`
-- Nothing routed → `Suggested next: feature-build.`
+  /feature-design or /feature-plan to fold these in, then /feature-interrogate again if the
+  change was non-trivial, before /feature-build <feature-slug>.`
+- Nothing routed → `Suggested next: /clear, then /feature-build <feature-slug>.`
 
 ## Rules
 
