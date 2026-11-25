@@ -106,6 +106,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 | Plan a clear fix or small change in one file, then build it task by task | [`/change-build`](plugins/umbraco-devkit/skills/change-build/SKILL.md) |
 | Find and prove why something is broken, then route the fix | [`/investigate-bug`](plugins/umbraco-devkit/skills/investigate-bug/SKILL.md) |
 | Port a merged change to another version line, still reviewed | [`/change-backport`](plugins/umbraco-devkit/skills/change-backport/SKILL.md) |
+| Fix a confirmed vulnerability under embargo, from report to published advisory, with the affected and fixed versions | [`/advisory-fix`](plugins/umbraco-devkit/skills/advisory-fix/SKILL.md) |
 
 ### Work the issue tracker
 

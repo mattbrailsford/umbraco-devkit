@@ -5,7 +5,7 @@ you.
 
 ## How the skills connect
 
-Code only changes through one of five flows, and all five go through the
+Code only changes through one of these flows, and all of them go through the
 [builder/reviewer gate](#the-builderreviewer-gate) (`quick-fix` skips it for a text-only
 change):
 
@@ -21,6 +21,11 @@ change):
   screenshots of the package's own docs that the upgrade makes wrong.
 - **`change-backport`**, for landing a change that's already merged on one version line on
   another.
+- **`advisory-fix`**, for a confirmed security vulnerability. It follows the project's own
+  security process from `CLAUDE.md`, puts the fix under [embargo](#plan-folders-branches-and-worktrees)
+  so it can only reach the advisory's private fork, keeps every public word neutral, works out
+  the affected and fixed versions, and times the release. Its notes live in the repo's `.git`
+  folder, where no push can carry them.
 
 Every other skill you run works around those flows and never changes code itself:
 

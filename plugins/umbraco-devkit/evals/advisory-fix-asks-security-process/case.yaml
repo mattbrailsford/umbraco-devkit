@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: advisory-fix-asks-security-process
+context:
+  scaffold_script: fixture.sh
