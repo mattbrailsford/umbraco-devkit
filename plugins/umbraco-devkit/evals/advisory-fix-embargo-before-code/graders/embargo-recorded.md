@@ -1,6 +1,5 @@
 ---
-type: regex
-pattern: '\[devkit-embargo "GHSA-abcd-efgh-ijkl"\]'
-flags: i
-target: {source: file, path: .git/config}
+type: tool_used
+tool: Bash
+input_match: 'embargo\.mjs"?\s+add\s+GHSA-abcd-efgh-ijkl'
 ---

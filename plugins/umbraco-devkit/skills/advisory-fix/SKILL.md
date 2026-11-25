@@ -40,8 +40,9 @@ comes back.
 ## The security process (`CLAUDE.md`)
 
 This skill owns the `## Security process` section of the project's `CLAUDE.md`. Read it
-first. If it, or a line in it, is missing, ask for each missing line, one question at a time,
-and write the answers in. With no process at all (often a small community package), suggest
+before anything else, before reading the report or any code. If it, or a line in it, is
+missing, stop there: ask for each missing line, one question at a time, with your suggestion,
+and write the answers in. Step 1 starts only once the section is complete. With no process at all (often a small community package), suggest
 GitHub's private vulnerability reporting and repository security advisories as the default.
 
 ```markdown
@@ -61,10 +62,30 @@ Never write a ticket id, advisory id, channel name, or anything about a specific
 
 ## Where this writes
 
-- **Owns:** the advisory file, `<git common dir>/devkit-advisories/<key>.md`, from
-  `templates/advisory.md` (`git rev-parse --git-common-dir` finds the folder). It lives inside
-  the repo's `.git` folder: no worktree tracks it, no push carries it, every worktree of the
-  checkout sees it, and it survives a `/clear`. Exploit detail is allowed here and only here.
+- **Owns:** the advisory file, `<git common dir>/devkit-advisories/<key>.md`, made from
+  `templates/advisory.md`. It lives inside the repo's `.git` folder: no worktree tracks it, no
+  push carries it, every worktree of the checkout sees it, and it survives a `/clear`. Exploit
+  detail is allowed here and only here.
+- **Through its script only.** Claude Code's file tools won't write inside `.git`, so every
+  change goes through `scripts/notes.mjs` in this skill's folder, run from inside the repo.
+  Keep each change small: add to or replace one section, never retype the whole file.
+
+  ```bash
+  N="node <this skill's folder>/scripts/notes.mjs"
+  $N <key>                                        # create it if missing, then print it
+  $N <key> --append Log <<'EOF'
+  - 25-11-2026: Issue 1 confirmed in DraftsController.
+  EOF
+  $N <key> --section Versions <<'EOF'
+  | Package | Line | Affected | Fixed in |
+  ...
+  EOF
+  $N <key> --write < file                         # last resort: replace it whole
+  ```
+
+  Headings match by their first words, case-insensitively, and a missing one is added at the
+  end. Each change keeps the previous version as `<key>.md.bak`. Read the file by running
+  `$N <key>` again, not with the file tools.
 - **Never** writes a plan, change file, or note about the advisory anywhere git tracks, and
   never into project memory.
 - `issue-triage`'s Security reports section keeps an unconfirmed report in chat only. Once
@@ -89,14 +110,15 @@ The details go in the advisory file and, at publish time, the advisory itself.
 
 ## Steps
 
-Record every step's outcome in the advisory file's Log as it finishes, with the date
+Record every step's outcome as it finishes with `--append Log`, one dated line each
 (DD-MM-YYYY unless the project says otherwise).
 
 ### 1. Read the report
 
 Read it from where the Security process says it lives, with the tool it names. If that fails,
 ask the user to paste it; don't guess. Ask which update channel to use if the process says to
-ask each time. Write the advisory file: the key, each reported issue, the channel.
+ask each time. Create the advisory file and fill in its header and Issues section: the key,
+each reported issue, the channel.
 
 ### 2. Check, don't change
 
@@ -125,7 +147,8 @@ lifts the embargo; never try.
 
 ### 4. Plan
 
-Write the plan into the advisory file, with every decision in it, and show it once:
+Write the plan into the advisory file's Plan section, with every decision in it, and show it
+once:
 
 - **Fix:** for each issue, what changes and where, and why this way.
 - **Lines:** every supported version line the issues reach. Build on the newest, then port.
@@ -152,8 +175,8 @@ Work out, for each package the issues reach and each version line:
   Check it against how the project bumps versions, per package or together.
 - A line out of support: affected, no fix, said plainly.
 
-Write the table in the advisory file, with each range in GitHub's advisory format so it
-pastes straight in:
+Write the table into the advisory file's Versions section, with each range in GitHub's
+advisory format so it pastes straight in:
 
 | Package | Line | Affected | Fixed in |
 |---|---|---|---|
