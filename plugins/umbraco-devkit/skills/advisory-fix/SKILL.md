@@ -257,15 +257,28 @@ the channel is private.
 2. **Agree the time.** Propose the release date the Release timing gives for this severity
    (a fixed weekday, a notice period, a blog post ahead), then ask for the date and time and
    who approves it (the Security process names who).
-3. **Prepare locally.** Prepare release branches, changelog and release notes locally, in the
+3. **Draft the advisory.** Write its text into the advisory file's Advisory section, in
+   GitHub's advisory fields, and send it to the security team as a draft update (step 8)
+   before the release date, whatever else is still open: they may need it early, to request a CVE or plan an
+   announcement.
+   - **Summary:** one line, what an attacker could do, in which product.
+   - **Impact:** who could do it (anonymous, any backoffice user, a user with a given
+     permission), to what, and under which setup. Enough for a site owner to judge their
+     risk; never the steps to exploit it.
+   - **Affected and patched versions:** step 5's table, ranges in GitHub's format.
+   - **Workarounds:** a setting or change that closes the hole without upgrading, or "None".
+   - **Severity:** the one the security team agreed, with its score if they gave one.
+   - **Credit:** the reporter, the way the report names them. Ask how they want to be
+     credited if it doesn't say; never guess a GitHub handle.
+4. **Prepare locally.** Prepare release branches, changelog and release notes locally, in the
    project's own way, with neutral wording. Add each release branch to the embargo. Draft the
    docs changes the fix needs, with neutral wording, in a local branch of the docs repo.
-4. **Lifting is the user's.** Pushing anything public, a release branch to start CI
+5. **Lifting is the user's.** Pushing anything public, a release branch to start CI
    included, needs the embargo lifted. Say what lifting early exposes and for how long, then
    ask the user to lift it themselves, in their own terminal, when the approver says go:
    `git embargo lift <key>`. Without that shortcut (the guard wasn't installed), it's
    `git config --remove-section devkit-embargo.<key>`.
-5. **Time it.** For each step that must happen at release time (opening the docs PR,
+6. **Time it.** For each step that must happen at release time (opening the docs PR,
    publishing the advisory), say how it will run and ask:
    - a timer in this session (`CronCreate`), which only fires while the session stays open;
    - a cloud scheduled task (`schedule`), which can only use what's already pushed, so only
@@ -276,9 +289,9 @@ the channel is private.
 
 Once the packages are out:
 
-1. Draft the advisory text for whoever the Security process says publishes it: summary,
-   affected and fixed versions from step 5, workarounds, credit to the reporter if they
-   want it. Writing to GitHub's advisory is outward-facing: ask first.
+1. Bring the Advisory section up to date with the versions that actually shipped, and hand
+   it to whoever the Security process says publishes it. Writing to GitHub's advisory is
+   outward-facing: ask first.
 2. Open the docs PR, if not scheduled.
 3. Offer to delete the fix and release branches, local and remote, and remove their
    worktrees. Ask before each delete.

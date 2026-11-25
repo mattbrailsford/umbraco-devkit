@@ -35,6 +35,11 @@ release in progress waits. Open choices, with the answer once given.]
 - Introduced by: [commit, and the first tag that contains it]
 - Told the security team: [date, and what]
 
+## Advisory
+
+[Drafted in step 9, before release: Summary, Impact, Affected and patched versions,
+Workarounds, Severity, Credit.]
+
 ## Release
 
 - Approved by: [who, when]
