@@ -247,7 +247,8 @@ the channel is private.
    docs changes the fix needs, with neutral wording, in a local branch of the docs repo.
 4. **Lifting is the user's.** Pushing anything public, a release branch to start CI
    included, needs the embargo lifted. Say what lifting early exposes and for how long, then
-   ask the user to lift it themselves when the approver says go:
+   ask the user to lift it themselves, in their own terminal, when the approver says go:
+   `git embargo lift <key>`. Without that shortcut (the guard wasn't installed), it's
    `git config --remove-section devkit-embargo.<key>`.
 5. **Time it.** For each step that must happen at release time (opening the docs PR,
    publishing the advisory), say how it will run and ask:
