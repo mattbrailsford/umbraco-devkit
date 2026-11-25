@@ -144,6 +144,10 @@ whenever one is created later, release branches included. Show the output of
 `embargo.mjs status` to the user. If it says the git pre-push guard isn't installed, say so:
 pushes from outside Claude Code aren't checked in this repo.
 
+If the script can't run (no git, no node), stop: give the user the exact `add` command, with
+its branch names, to run themselves. Nothing is committed until `embargo.mjs status` shows
+the embargo.
+
 With a GHSA key, the only remote allowed is the advisory's private fork, which GitHub names
 `<repo>-ghsa-xxxx-xxxx-xxxx`. With a ticket key there is no allowed remote. Only the user
 lifts the embargo; never try.
