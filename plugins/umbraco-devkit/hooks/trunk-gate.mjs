@@ -74,7 +74,7 @@ export function tokenize(line, { powershell = false } = {}) {
   return words;
 }
 
-function segments(words) {
+export function segments(words) {
   const out = [[]];
   for (const w of words) {
     if (SEPARATORS.has(w)) out.push([]);
@@ -180,10 +180,13 @@ function checkCommit(dir, sub, args) {
   };
 }
 
-/** Returns { decision, reason } for a shell command, or null when it doesn't touch a protected branch. */
-export function decide(command, cwd, tool = "Bash") {
+/**
+ * Splits a shell command into the programs it runs, each with the folder it runs in. Follows
+ * `cd`, `Set-Location` and `pushd`, and skips leading `FOO=bar` assignments.
+ */
+export function commandCalls(command, cwd, tool = "Bash") {
   let dir = cwd;
-  let result = null;
+  const calls = [];
   for (const seg of segments(tokenize(command, { powershell: tool === "PowerShell" }))) {
     let i = 0;
     while (i < seg.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(seg[i])) i++; // FOO=bar git ...
@@ -194,20 +197,36 @@ export function decide(command, cwd, tool = "Bash") {
       if (target && target !== "-") dir = resolve(dir, expandHome(target));
       continue;
     }
-    if (!(cmd === "git" || cmd === "git.exe" || /[\\/]git(\.exe)?$/.test(cmd))) continue;
+    calls.push({ dir, cmd, args: seg.slice(i + 1) });
+  }
+  return calls;
+}
 
-    let gitDir = dir;
-    let j = i + 1;
-    while (j < seg.length && seg[j].startsWith("-")) {
-      const opt = seg[j];
-      if (opt === "-C" && j + 1 < seg.length) {
-        const p = expandHome(seg[j + 1]);
-        gitDir = isAbsolute(p) ? p : resolve(gitDir, p);
-      }
-      j += GIT_OPTS_WITH_VALUE.has(opt) ? 2 : 1;
+export function isGit(cmd) {
+  return cmd === "git" || cmd === "git.exe" || /[\\/]git(\.exe)?$/.test(cmd);
+}
+
+/** For a git call, works out the folder it acts on (after -C), the subcommand and its arguments. */
+export function gitCall({ dir, args }) {
+  let gitDir = dir;
+  let j = 0;
+  while (j < args.length && args[j].startsWith("-")) {
+    const opt = args[j];
+    if (opt === "-C" && j + 1 < args.length) {
+      const p = expandHome(args[j + 1]);
+      gitDir = isAbsolute(p) ? p : resolve(gitDir, p);
     }
-    const sub = seg[j];
-    const rest = seg.slice(j + 1);
+    j += GIT_OPTS_WITH_VALUE.has(opt) ? 2 : 1;
+  }
+  return { dir: gitDir, sub: args[j], rest: args.slice(j + 1) };
+}
+
+/** Returns { decision, reason } for a shell command, or null when it doesn't touch a protected branch. */
+export function decide(command, cwd, tool = "Bash") {
+  let result = null;
+  for (const call of commandCalls(command, cwd, tool)) {
+    if (!isGit(call.cmd)) continue;
+    const { dir: gitDir, sub, rest } = gitCall(call);
     let r = null;
     if (COMMITTING.has(sub)) r = checkCommit(gitDir, sub, rest);
     else if (sub === "push") r = checkPush(gitDir, rest);

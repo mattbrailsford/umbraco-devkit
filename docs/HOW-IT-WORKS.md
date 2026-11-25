@@ -194,6 +194,35 @@ the trunk commit `feature-build` makes can ask twice: once in chat, once from th
 project that doesn't want it sets `UMBRACO_DEVKIT_TRUNK_GATE=off` in the `env` block of its
 `.claude/settings.json`.
 
+A security fix needs a stronger guard: it must not reach a public remote until the advisory is
+published. An embargo, keyed by the advisory's GHSA id, marks the branches that hold the fix.
+It lives in the repo's local git config, so it's never committed and covers every worktree.
+
+```bash
+node <plugin>/hooks/embargo.mjs add GHSA-xxxx-xxxx-xxxx --branch v18/hotfix/x --branch v17/hotfix/x
+node <plugin>/hooks/embargo.mjs status
+git config --remove-section devkit-embargo.GHSA-xxxx-xxxx-xxxx   # lift it, once approved
+```
+
+The only remote allowed to receive the fix is the advisory's private fork. GitHub names it after
+the repo and the id (`<owner>/<repo>-ghsa-xxxx-xxxx-xxxx`), so the guard works it out from the
+id and the repo's own remotes. Nothing else needs setting, and nothing can widen it. With no
+private fork (the code and the tracker live in different places), key the embargo by the
+internal ticket instead, and nothing can be pushed until you lift it.
+
+Two guards read it, and both block instead of asking, since one quick "yes" would publish the
+fix:
+
+- The `embargo-gate` hook stops Claude from pushing the fix, or any branch holding it (merged,
+  cherry-picked or reworded), anywhere but the private fork, and from opening a public PR with
+  it. It also stops Claude from lifting the embargo.
+- A git `pre-push` hook, which `add` installs, stops the same push from a terminal or editor.
+  It isn't installed when the repo already has its own pre-push hook or sets `core.hooksPath`;
+  `add` says so.
+
+`git push --no-verify` skips the pre-push hook, so the guard catches mistakes, not someone set
+on getting round it.
+
 ## Building on top
 
 The devkit stops where most projects start to differ. As a project grows, it usually
