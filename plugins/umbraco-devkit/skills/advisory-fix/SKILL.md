@@ -61,6 +61,7 @@ GitHub's private vulnerability reporting and repository security advisories as t
 - Updates go to: <the advisory's comments | an email thread | a private channel per advisory, named <pattern, e.g. team-security-{ticket}>, or (ask each time) | none>
 - Security team needs: <what they ask for, e.g. affected and fixed version ranges, release date>
 - Approves release: <who says go: a security team, the maintainer>
+- Release timing: <how the agreed severity sets whether to fix, which lines, which version and when, e.g. Critical/High: every supported line at once; Low: next minor | the same for every issue>
 - Private fork: <GitHub advisory fork | none: share the fix as patch files>
 - Advisory published by: <who, and when, e.g. the maintainer once packages ship>
 ```
@@ -128,7 +129,8 @@ ask the user to paste it; don't guess. Find the update channel: when the Updates
 naming pattern, fill in `{ticket}` or `{ghsa}` and, if the chat tool can, check the channel
 exists; ask only when there's no pattern, the process says to ask, or the channel isn't
 there. Create the advisory file and fill in its header and Issues section: both ids, each
-reported issue, the channel.
+reported issue, the channel, and the severity the security team agreed (ask if the report
+doesn't say; it's theirs to set, not yours).
 
 ### 2. Check, don't change
 
@@ -168,7 +170,10 @@ Write the plan into the advisory file's Plan section, with every decision in it,
 once:
 
 - **Fix:** for each issue, what changes and where, and why this way.
-- **Lines:** every supported version line the issues reach. Build on the newest, then port.
+- **Severity:** apply the Security process's Release timing for the agreed severity. Where
+  it allows not fixing, ask whether to fix before planning anything else.
+- **Lines:** every supported version line the issues reach, unless the Release timing
+  narrows them. Build on the newest, then port.
 - **Public API:** any change to a public signature follows `umbraco-package-conventions`. A
   security fix ships as a patch, so it can't break anyone.
 - **Release:** whether a release already in progress waits for this fix or ships first.
@@ -188,8 +193,10 @@ Work out, for each package the issues reach and each version line:
   tag per release (`v1.2.3`) or per package (`My.Package@1.2.3`). A flaw older than the
   first tag affects every release on that line.
 - **Last affected:** the latest released version on the line.
-- **Fixed in:** the next patch version on the line, as the release step will number it.
-  Check it against how the project bumps versions, per package or together.
+- **Fixed in:** the next patch version on the line, as the release step will number it,
+  unless the Release timing says otherwise for this severity (for example, the next minor
+  on the newest line). Check it against how the project bumps versions, per package or
+  together.
 - A line out of support: affected, no fix, said plainly.
 
 Write the table into the advisory file's Versions section, with each range in GitHub's
@@ -247,8 +254,9 @@ the channel is private.
 
 1. **Check the numbers.** Compare the versions the release will produce with step 5's table
    and with what the security team was told. Any difference goes back to them before release.
-2. **Agree the time.** Ask for the release date and time, and who approves it (the Security
-   process names who).
+2. **Agree the time.** Propose the release date the Release timing gives for this severity
+   (a fixed weekday, a notice period, a blog post ahead), then ask for the date and time and
+   who approves it (the Security process names who).
 3. **Prepare locally.** Prepare release branches, changelog and release notes locally, in the
    project's own way, with neutral wording. Add each release branch to the embargo. Draft the
    docs changes the fix needs, with neutral wording, in a local branch of the docs repo.

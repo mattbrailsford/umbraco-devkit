@@ -15,6 +15,14 @@
     "without": null,
     "withoutDate": null
   },
+  "advisory-fix-severity-timing": {
+    "date": "2026-11-25",
+    "runs": 2,
+    "skillLoaded": 2,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "advisory-fix-version-ranges": {
     "date": "2026-11-25",
     "runs": 3,

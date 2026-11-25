@@ -59,7 +59,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
 | Skill | Kind | Status | Best gain | Evals | Real bugs | Sections covered | Context |
 |---|---|---|---|---|---|---|---|
-| [`advisory-fix`](#advisory-fix) | workflow | Keeps its rules | – | 3 | 0 | – | – |
+| [`advisory-fix`](#advisory-fix) | workflow | Keeps its rules | – | 4 | 0 | – | – |
 | [`bdd-specs`](#bdd-specs) | knowledge | Proven | +78 | 1 | 0 | 1/6 | 3 |
 | [`change-backport`](#change-backport) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`change-build`](#change-build) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -131,6 +131,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 |---|---|---|
 | `advisory-fix-asks-security-process` | 100 | 2026-11-25 |
 | `advisory-fix-embargo-before-code` | 100 | 2026-11-25 |
+| `advisory-fix-severity-timing` | 100 | 2026-11-25 |
 | `advisory-fix-version-ranges` | 100 | 2026-11-25 |
 
 ### `bdd-specs`

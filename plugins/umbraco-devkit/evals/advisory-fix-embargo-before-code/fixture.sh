@@ -24,6 +24,7 @@ Trunk branch: `v17/dev`. Release tags look like `My.Package@17.2.0`.
 - Updates go to: the advisory's comments
 - Security team needs: affected and fixed version ranges, release date
 - Approves release: the maintainer
+- Release timing: the same for every issue: every supported line, next patch, as soon as it is ready
 - Private fork: GitHub advisory fork
 - Advisory published by: the maintainer, once packages ship
 MD
