@@ -167,7 +167,7 @@ class GateTests(Base):
 
     def test_cd_and_dash_c_reach_the_repo(self):
         self.embargo()
-        self.assertEqual(self.run_hook(f"cd {self.repo} && git push origin {FIX}", cwd=self.tmp), "deny")
+        self.assertEqual(self.run_hook(f"cd \"{self.repo}\" && git push origin {FIX}", cwd=self.tmp), "deny")
         self.assertEqual(self.run_hook(f"git -C repo push origin {FIX}", cwd=self.tmp), "deny")
 
     def test_worktree_shares_the_embargo(self):
