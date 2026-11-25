@@ -86,7 +86,7 @@ PRIVATE. This file lives in the repo's `.git` folder and is never pushed.
 - Status: confirmed
 - Entry point: GET /umbraco/management/api/v1/my-package/drafts
 - Cause: `DraftsController` has no `SectionAccessContent` policy
-- From: the report, by Dana Reyes, who asked to be credited as @dreyes-sec on GitHub
+- From: the report
 
 ## Plan
 

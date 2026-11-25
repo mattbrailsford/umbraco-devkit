@@ -38,7 +38,7 @@ release in progress waits. Open choices, with the answer once given.]
 ## Advisory
 
 [Drafted in step 9, before release: Summary, Impact, Affected and patched versions,
-Workarounds, Severity, Credit.]
+Workarounds, Severity.]
 
 ## Release
 

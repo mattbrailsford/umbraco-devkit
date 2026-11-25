@@ -268,8 +268,8 @@ the channel is private.
    - **Affected and patched versions:** step 5's table, ranges in GitHub's format.
    - **Workarounds:** a setting or change that closes the hole without upgrading, or "None".
    - **Severity:** the one the security team agreed, with its score if they gave one.
-   - **Credit:** the reporter, the way the report names them. Ask how they want to be
-     credited if it doesn't say; never guess a GitHub handle.
+
+   Leave credits out: GitHub's advisory handles them.
 4. **Prepare locally.** Prepare release branches, changelog and release notes locally, in the
    project's own way, with neutral wording. Add each release branch to the embargo. Draft the
    docs changes the fix needs, with neutral wording, in a local branch of the docs repo.

@@ -1,5 +1,5 @@
 ---
-description: advisory-fix must draft the advisory text before release with impact, versions, workarounds and the reporter's own credit.
+description: advisory-fix must draft the advisory text before release with impact, versions and workarounds.
 tags: [advisory-fix, workflow]
 max_turns: 30
 timeout_seconds: 900
