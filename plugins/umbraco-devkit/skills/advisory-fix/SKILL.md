@@ -143,10 +143,13 @@ not, where, and why. Report back before going further.
 Before any branch gets a commit, record the embargo:
 
 ```bash
-node <this skill's folder>/../../hooks/embargo.mjs add <key> --branch <branch> [--branch <branch>...]
+node <this skill's folder>/../../hooks/embargo.mjs add <key> --branch <branch> [--branch <branch>...] [--ticket <ticket id>]
 ```
 
-Name every fix branch, one per version line, with neutral names. Add a branch the same way
+Name every fix branch, one per version line, with neutral names. Pass the ticket id too when
+the key is the GHSA id: the guard then blocks either id in a commit message, branch name or
+PR, and asks before text with words like "bypass" or "XSS" goes out. Treat a block as a
+wording mistake to fix, never something to get round. Add a branch the same way
 whenever one is created later, release branches included. Show the output of
 `embargo.mjs status` to the user. If it says the git pre-push guard isn't installed, say so:
 pushes from outside Claude Code aren't checked in this repo.
