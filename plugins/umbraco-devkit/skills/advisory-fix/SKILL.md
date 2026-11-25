@@ -61,7 +61,7 @@ GitHub's private vulnerability reporting and repository security advisories as t
 - Updates go to: <the advisory's comments | an email thread | a private channel per advisory, named <pattern, e.g. team-security-{ticket}>, or (ask each time) | none>
 - Security team needs: <what they ask for, e.g. affected and fixed version ranges, release date>
 - Approves release: <who says go: a security team, the maintainer>
-- Release timing: <how the agreed severity sets whether to fix, which lines, which version and when, e.g. Critical/High: every supported line at once; Low: next minor | the same for every issue>
+- Release timing: <how the severity sets whether to fix, which lines, which version and when, e.g. Critical/High: every supported line at once; Low: next minor | the same for every issue>
 - Private fork: <GitHub advisory fork | none: share the fix as patch files>
 - Advisory published by: <who, and when, e.g. the maintainer once packages ship>
 ```
@@ -129,8 +129,10 @@ ask the user to paste it; don't guess. Find the update channel: when the Updates
 naming pattern, fill in `{ticket}` or `{ghsa}` and, if the chat tool can, check the channel
 exists; ask only when there's no pattern, the process says to ask, or the channel isn't
 there. Create the advisory file and fill in its header and Issues section: both ids, each
-reported issue, the channel, and the severity the security team agreed (ask if the report
-doesn't say; it's theirs to set, not yours).
+reported issue, the channel, and the severity once the security team sets it. Severity is
+theirs to decide: never set it yourself. Asked for a view, give a suggested CVSS 3.1 vector
+and score with one line of reasoning, labelled as a suggestion. Until they decide, record it
+as pending.
 
 ### 2. Check, don't change
 
@@ -170,8 +172,10 @@ Write the plan into the advisory file's Plan section, with every decision in it,
 once:
 
 - **Fix:** for each issue, what changes and where, and why this way.
-- **Severity:** apply the Security process's Release timing for the agreed severity. Where
-  it allows not fixing, ask whether to fix before planning anything else.
+- **Severity:** apply the Security process's Release timing for the security team's
+  severity. Where it allows not fixing, ask whether to fix before planning anything else.
+  While it's pending, plan for every supported line and say the plan may narrow once it's
+  set.
 - **Lines:** every supported version line the issues reach, unless the Release timing
   narrows them. Build on the newest, then port.
 - **Public API:** any change to a public signature follows `umbraco-package-conventions`. A
@@ -267,9 +271,9 @@ the channel is private.
      risk; never the steps to exploit it.
    - **Affected and patched versions:** step 5's table, ranges in GitHub's format.
    - **Workarounds:** a setting or change that closes the hole without upgrading, or "None".
-   - **Severity:** the one the security team agreed, with its score if they gave one.
 
-   Leave credits out: GitHub's advisory handles them.
+   Leave severity and credits out: the security team sets the severity, and GitHub's advisory
+   handles credits.
 4. **Prepare locally.** Prepare release branches, changelog and release notes locally, in the
    project's own way, with neutral wording. Add each release branch to the embargo. Draft the
    docs changes the fix needs, with neutral wording, in a local branch of the docs repo.

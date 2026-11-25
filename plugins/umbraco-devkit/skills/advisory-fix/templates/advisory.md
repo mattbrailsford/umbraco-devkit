@@ -6,7 +6,7 @@ published.
 
 - Report: [the ticket id and the GHSA id, and where each lives]
 - Update channel: [where updates go for this advisory]
-- Severity: [as the security team agreed it, e.g. Low (CVSS 3.1: 3.1)]
+- Severity: [as the security team set it, e.g. Low (CVSS 3.1: 3.1), or pending]
 - Private fork: [`<owner>/<repo>-ghsa-xxxx-xxxx-xxxx`, or none: patch files]
 - Embargoed branches: [`v18/hotfix/<neutral-slug>`, `v17/hotfix/<neutral-slug>`]
 
@@ -38,7 +38,7 @@ release in progress waits. Open choices, with the answer once given.]
 ## Advisory
 
 [Drafted in step 9, before release: Summary, Impact, Affected and patched versions,
-Workarounds, Severity.]
+Workarounds.]
 
 ## Release
 
