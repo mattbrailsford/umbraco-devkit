@@ -42,7 +42,10 @@ comes back.
 This skill owns the `## Security process` section of the project's `CLAUDE.md`. Read it
 before anything else, before reading the report or any code. If it, or a line in it, is
 missing, stop there: ask for each missing line, one question at a time, with your suggestion,
-and write the answers in. Step 1 starts only once the section is complete. With no process at all (often a small community package), suggest
+and write the answers in. Step 1 starts only once the section is complete. Suggest only
+what's generic (GitHub's private reporting, the advisory's comments); never guess an
+organisation's address, channel, or approver, even one that seems obvious from the package
+name. Those come from the user. With no process at all (often a small community package), suggest
 GitHub's private vulnerability reporting and repository security advisories as the default.
 
 ```markdown
