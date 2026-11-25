@@ -201,8 +201,14 @@ It lives in the repo's local git config, so it's never committed and covers ever
 ```bash
 node <plugin>/hooks/embargo.mjs add GHSA-xxxx-xxxx-xxxx --branch v18/hotfix/x --branch v17/hotfix/x --ticket SEC-123
 node <plugin>/hooks/embargo.mjs status
-git config --remove-section devkit-embargo.GHSA-xxxx-xxxx-xxxx   # lift it, once approved
+git embargo lift                                       # a person lifts it, once approved
 ```
+
+`add` sets up the `git embargo` shortcut in the repo. `lift` shows what the embargo protects
+and asks you to type its id, at your own terminal: it won't run without one, and the hook
+stops Claude running it, so lifting stays a human step. Once no embargo is left, it removes the
+guard and the shortcut. By hand, `git config --remove-section devkit-embargo.<id>` does the
+same.
 
 The only remote allowed to receive the fix is the advisory's private fork. GitHub names it after
 the repo and the id (`<owner>/<repo>-ghsa-xxxx-xxxx-xxxx`), so the guard works it out from the
