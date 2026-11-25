@@ -10,6 +10,7 @@ repos. Needs node and git; skipped without node. Run with `scripts/check-skill-s
 """
 import json
 import os
+import sys
 import pathlib
 import shutil
 import subprocess
@@ -199,6 +200,15 @@ class GateTests(Base):
 
     # Lifting or loosening
 
+    def test_claude_cannot_lift_through_the_shortcut_or_script(self):
+        self.embargo()
+        for cmd in ["git embargo lift", f"git embargo lift {ID}",
+                    f"node {CLI} lift {ID}", "node .git/hooks/umbraco-devkit-embargo.mjs lift",
+                    "git config alias.embargo '!git config --remove-section devkit-embargo." + ID + "'",
+                    "git config --unset alias.embargo"]:
+            self.assertEqual(self.run_hook(cmd), "deny", cmd)
+        self.assertIsNone(self.run_hook("git embargo status"))
+
     def test_lifting_or_loosening_is_blocked(self):
         self.embargo()
         for cmd in [f"git config --remove-section devkit-embargo.{ID}",
@@ -304,6 +314,57 @@ class CliTests(Base):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertIn("Ticket: SEC-881", r.stdout)
         self.assertIn(f"devkit-embargo.{ID}.ticket SEC-881", git(self.repo, "config", "--get-regexp", "^devkit-embargo\\.").stdout)
+
+    def test_add_sets_up_the_git_embargo_shortcut(self):
+        self.embargo()
+        r = git(self.repo, "embargo", "status")
+        self.assertIn(f"Lift (a person, once approved): git embargo lift {ID}", r.stdout)
+
+    def test_lift_refuses_without_a_terminal(self):
+        self.embargo()
+        r = cli(self.repo, "lift", ID)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("person at a terminal", r.stderr)
+        self.assertIn(ID, git(self.repo, "config", "--get-regexp", "^devkit-embargo\\.").stdout)
+
+    def lift_at_terminal(self, typed, *args):
+        import pty
+        pid, fd = pty.fork()
+        if pid == 0:
+            os.chdir(self.repo)
+            os.execvpe("git", ["git", "embargo", "lift", *args], ENV)
+        out = b""
+        sent = False
+        while True:
+            try:
+                chunk = os.read(fd, 1024)
+            except OSError:
+                break
+            if not chunk:
+                break
+            out += chunk
+            if not sent and b"to lift it:" in out:
+                os.write(fd, typed.encode() + b"\n")
+                sent = True
+        _, status = os.waitpid(pid, 0)
+        return os.waitstatus_to_exitcode(status), out.decode(errors="replace")
+
+    @unittest.skipIf(sys.platform == "win32", "needs a pseudo-terminal")
+    def test_wrong_id_at_the_terminal_keeps_the_embargo(self):
+        self.embargo()
+        code, out = self.lift_at_terminal("GHSA-nope-nope-nope")
+        self.assertNotEqual(code, 0, out)
+        self.assertIn(ID, git(self.repo, "config", "--get-regexp", "^devkit-embargo\\.").stdout)
+
+    @unittest.skipIf(sys.platform == "win32", "needs a pseudo-terminal")
+    def test_person_lifts_at_the_terminal_and_the_guard_is_removed(self):
+        self.embargo()
+        code, out = self.lift_at_terminal(ID.lower())
+        self.assertEqual(code, 0, out)
+        self.assertIn("lifted", out)
+        self.assertEqual(git(self.repo, "config", "--get-regexp", "^devkit-embargo\\.", check=False).stdout, "")
+        self.assertFalse(os.path.exists(os.path.join(self.repo, ".git", "hooks", "pre-push")))
+        self.assertEqual(git(self.repo, "config", "--get", "alias.embargo", check=False).stdout, "")
 
     def test_a_remote_cannot_be_named(self):
         r = cli(self.repo, "add", ID, "--branch", FIX, "--remote", PUBLIC_URL)

@@ -4,8 +4,9 @@
 // - `git push` of an embargoed branch, or of anything holding its commits or a copy of them, to
 //   a remote the embargo doesn't allow;
 // - `gh pr create` from such a branch against a repo the embargo doesn't allow;
-// - lifting or loosening the embargo: writing its git config other than adding a branch or a
-//   ticket, and editing the repo's git config or hooks with the file tools;
+// - lifting or loosening the embargo: `git embargo lift` or `embargo.mjs lift`, writing its git
+//   config other than adding a branch or a ticket, changing the `git embargo` shortcut, and
+//   editing the repo's git config or hooks with the file tools;
 // - an advisory or ticket id in a commit, tag or merge message, a branch name, pull request or
 //   issue text, or the messages of pushed commits. Words that point at a security fix there are
 //   asked about instead, since plain fixes use them too.
@@ -128,6 +129,9 @@ function checkGitPush(dir, args) {
 }
 
 function checkGitConfig(dir, args) {
+  if (args.some((a) => /^alias\.embargo$/i.test(a)) && !args.some((a) => CONFIG_READS.has(a)) && embargoesIn(dir).length) {
+    return deny("This changes the git embargo shortcut, which could make it lift the embargo. Only a person lifts an embargo.");
+  }
   if (!args.some((a) => a.toLowerCase().includes(SECTION))) {
     // `git config --edit` can change anything, the embargo included.
     if ((args.includes("-e") || args.includes("--edit") || args[0] === "edit") && embargoesIn(dir).length) {
@@ -260,6 +264,10 @@ function checkText(dir, getText) {
 export function decideCommand(command, cwd, tool = "Bash") {
   for (const call of commandCalls(command, cwd, tool)) {
     let r = null;
+    const words = [call.cmd, ...call.args];
+    if (words.includes("lift") && words.some((w) => /embargo(\.mjs)?$/i.test(w))) {
+      return deny("Only a person lifts an embargo, at their own terminal, once the fix is approved to ship. Tell the user it's ready to lift, and the command: git embargo lift");
+    }
     if (isGit(call.cmd)) {
       const { dir, sub, rest } = gitCall(call);
       if (sub === "push") r = checkGitPush(dir, rest);
@@ -295,7 +303,7 @@ function main() {
   const ti = input.tool_input || {};
   let r = null;
   if (typeof ti.command === "string") {
-    if (!/\b(git|gh)\b/.test(ti.command)) return;
+    if (!/\b(git|gh)\b|embargo/.test(ti.command)) return;
     r = decideCommand(ti.command, cwd, input.tool_name);
   } else {
     r = decideFileEdit(ti.file_path || ti.notebook_path, cwd);

@@ -31,27 +31,35 @@
 // installs, stops everyone else: a push from a terminal, an editor, or a GUI client. Both fail
 // closed: if an embargo exists and the check can't run, the push is blocked.
 //
-// Only a person lifts an embargo, once the fix is approved to ship:
+// Only a person lifts an embargo, once the fix is approved to ship. `add` sets up a `git embargo`
+// shortcut in the repo, and lifting asks the person to type the id at their own terminal; it
+// refuses to run without one, so Claude (whose shell has no terminal) can't lift it:
 //
-//   git config --remove-section devkit-embargo.<id>
+//   git embargo lift [<id>]
+//   git config --remove-section devkit-embargo.<id>     (the same, by hand)
 //
 // Usage:
 //   node embargo.mjs add <GHSA id> --branch <name> [--branch <name>...] [--ticket <id>...]
 //   node embargo.mjs status
+//   node embargo.mjs lift [<id>]                 (a person, at a terminal)
 //   node embargo.mjs pre-push <remote> <url>     (run by git, reads the refs on stdin)
 //
 // Node only, no dependencies: `add` copies this file into the repo's hooks folder, where it runs
 // on its own. It runs the same on Windows, macOS and Linux.
 
 import { spawnSync } from "node:child_process";
-import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { createInterface } from "node:readline";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 export const SECTION = "devkit-embargo";
 const MARK = "# umbraco-devkit embargo guard";
 const COPY_NAME = "umbraco-devkit-embargo.mjs";
 const ZERO_SHA = /^0+$/;
+const ALIAS = "alias.embargo";
+// Runs the copy in the shared hooks folder, from any worktree.
+const ALIAS_VALUE = `!node "$(git rev-parse --git-path hooks)/${COPY_NAME}"`;
 
 function gitRaw(dir, args, input) {
   const r = spawnSync("git", ["-C", dir, ...args], {
@@ -280,6 +288,8 @@ export function installPrePush(dir) {
       `exec node "$(dirname "$0")/${COPY_NAME}" pre-push "$@"\n`,
   );
   try { chmodSync(hook, 0o755); } catch { /* Windows: git runs it through sh anyway */ }
+  const alias = gitRaw(dir, ["config", "--get", ALIAS]).out;
+  if (!alias) git(dir, ["config", ALIAS, ALIAS_VALUE]);
   return { installed: true, why: null };
 }
 
@@ -342,7 +352,8 @@ function status(dir) {
       const warn = leaked.length ? `  WARNING: already on public remote ${leaked.join(", ")}` : "";
       process.stdout.write(`  Branch ${b}${here}${warn}\n`);
     }
-    process.stdout.write(`  Lift (a person, once approved): git config --remove-section ${SECTION}.${e.id}\n`);
+    const shortcut = gitRaw(dir, ["config", "--get", ALIAS]).out === ALIAS_VALUE;
+    process.stdout.write(`  Lift (a person, once approved): ${shortcut ? `git embargo lift ${e.id}` : `git config --remove-section ${SECTION}.${e.id}`}\n`);
   }
   process.stdout.write(`\nGit pre-push guard: ${prePushInstalled(dir) ? "installed" : "NOT installed"}\n`);
 }
@@ -368,15 +379,62 @@ function prePush(dir, remote, url) {
   return 1;
 }
 
-function main(argv) {
+function ask(question) {
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise((done) => rl.question(question, (answer) => { rl.close(); done(answer.trim()); }));
+}
+
+/** Removes the guard, the copy and the shortcut once no embargo is left. */
+function uninstall(dir) {
+  const { dir: hooks } = hooksDir(dir);
+  if (hooks) {
+    const hook = join(hooks, "pre-push");
+    if (existsSync(hook) && readFileSync(hook, "utf8").includes(MARK)) rmSync(hook);
+    rmSync(join(hooks, COPY_NAME), { force: true });
+  }
+  if (gitRaw(dir, ["config", "--get", ALIAS]).out === ALIAS_VALUE) gitRaw(dir, ["config", "--unset", ALIAS]);
+}
+
+/** Lifts an embargo, after the person at the terminal types its id. */
+async function lift(dir, argv) {
+  if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    throw new Error("lifting an embargo needs a person at a terminal. Run `git embargo lift` in your own terminal, not through Claude.");
+  }
+  const embargoes = readEmbargoes(dir);
+  if (!embargoes.length) return void process.stdout.write("No embargo in this repo.\n");
+  const wanted = argv[0];
+  const e = wanted ? embargoes.find((x) => x.id.toLowerCase() === wanted.toLowerCase()) : embargoes.length === 1 ? embargoes[0] : null;
+  if (!e) throw new Error(wanted ? `no embargo ${wanted} here` : `name the one to lift: ${embargoes.map((x) => x.id).join(", ")}`);
+  process.stdout.write(
+    `\nEmbargo ${e.id} keeps ${e.branches.join(", ")} off every public remote.\n` +
+      "Lift it only once the fix is approved to ship: after this, any push can publish it.\n\n",
+  );
+  const typed = await ask(`Type ${e.id} to lift it: `);
+  if (typed.toLowerCase() !== e.id.toLowerCase()) {
+    process.stdout.write("That doesn't match. The embargo stays.\n");
+    return 1;
+  }
+  git(dir, ["config", "--remove-section", `${SECTION}.${e.id}`]);
+  process.stdout.write(`Embargo ${e.id} lifted.\n`);
+  if (!readEmbargoes(dir).length) {
+    uninstall(dir);
+    process.stdout.write("No embargo is left, so the pre-push guard and the git embargo shortcut are removed.\n");
+  }
+  return 0;
+}
+
+const USAGE = "Usage: embargo.mjs add <GHSA id> --branch <name> [--branch <name>...] [--ticket <id>...] | status | lift [<id>]\n";
+
+async function main(argv) {
   const [cmd, ...rest] = argv;
   const dir = process.cwd();
   if (cmd === "pre-push") return prePush(dir, rest[0], rest[1]);
   try {
     if (cmd === "add") add(dir, rest);
     else if (cmd === "status") status(dir);
+    else if (cmd === "lift") return await lift(dir, rest);
     else {
-      process.stderr.write("Usage: embargo.mjs add <GHSA id> --branch <name> [--branch <name>...] [--ticket <id>...] | status\n");
+      process.stderr.write(USAGE);
       return 2;
     }
     return 0;
@@ -387,5 +445,5 @@ function main(argv) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  process.exitCode = main(process.argv.slice(2));
+  main(process.argv.slice(2)).then((code) => { process.exitCode = code; });
 }
