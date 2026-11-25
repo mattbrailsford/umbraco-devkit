@@ -6,6 +6,6 @@ timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, Bash]
 ---
 
-/advisory-fix GHSA-abcd-efgh-ijkl
+Use the advisory-fix skill for GHSA-abcd-efgh-ijkl.
 
 Carry on. Before we build, the security team wants to know which versions are affected and which version will fix it.

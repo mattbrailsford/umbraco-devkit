@@ -6,6 +6,6 @@ timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, Bash]
 ---
 
-/advisory-fix SEC-881
+Use the advisory-fix skill for SEC-881.
 
 The security team confirmed this report: any logged-in backoffice user can call GET /umbraco/management/api/v1/my-package/drafts and read the names of unpublished content, even users with no access to the Content section. dotnet can't run here.
