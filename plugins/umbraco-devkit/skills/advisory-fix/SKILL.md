@@ -261,19 +261,22 @@ the channel is private.
 2. **Agree the time.** Propose the release date the Release timing gives for this severity
    (a fixed weekday, a notice period, a blog post ahead), then ask for the date and time and
    who approves it (the Security process names who).
-3. **Draft the advisory.** Write its text into the advisory file's Advisory section, in
-   GitHub's advisory fields, and send it to the security team as a draft update (step 8)
-   before the release date, whatever else is still open: they may need it early, to request a CVE or plan an
-   announcement.
+3. **Draft the advisory.** Gather everything the advisory could use into the advisory
+   file's Advisory section, in GitHub's advisory fields, and send it all to the security
+   team as a draft update (step 8) before the release date, whatever else is still open.
+   They take what they need, to fill in the advisory, request a CVE or plan an announcement.
    - **Summary:** one line, what an attacker could do, in which product.
    - **Impact:** who could do it (anonymous, any backoffice user, a user with a given
      permission), to what, and under which setup. Enough for a site owner to judge their
      risk; never the steps to exploit it.
    - **Affected and patched versions:** step 5's table, ranges in GitHub's format.
    - **Workarounds:** a setting or change that closes the hole without upgrading, or "None".
+   - **Severity:** the security team's, as recorded in step 1. If none is set yet, a
+     suggested CVSS 3.1 vector and score, labelled as a suggestion.
+   - **Also known:** anything else gathered on the way that helps, such as the commit and
+     release that brought the flaw in, other affected packages, and the release date.
 
-   Leave severity and credits out: the security team sets the severity, and GitHub's advisory
-   handles credits.
+   Leave credits out: GitHub's advisory handles them.
 4. **Prepare locally.** Prepare release branches, changelog and release notes locally, in the
    project's own way, with neutral wording. Add each release branch to the embargo. Draft the
    docs changes the fix needs, with neutral wording, in a local branch of the docs repo.
