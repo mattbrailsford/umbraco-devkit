@@ -19,6 +19,13 @@
 //   [devkit-embargo "GHSA-xxxx-xxxx-xxxx"]
 //       branch = v18/hotfix/access-check
 //       branch = v17/hotfix/access-check
+//       ticket = SEC-123
+//
+// While an embargo exists, the wording of anything that goes public later is checked too:
+// commit, tag and merge messages, branch names, pull request and issue text, and the messages
+// of pushed commits. An advisory id (any GHSA or CVE id, the embargo's key, or its ticket) is
+// blocked. A word that points at a security fix ("vulnerability", "bypass", "XSS") is a
+// question for the hook, and a warning for the pre-push guard, because plain fixes use them too.
 //
 // Two guards read it. The embargo-gate hook stops Claude Code. A git pre-push hook, which `add`
 // installs, stops everyone else: a push from a terminal, an editor, or a GUI client. Both fail
@@ -29,7 +36,7 @@
 //   git config --remove-section devkit-embargo.<id>
 //
 // Usage:
-//   node embargo.mjs add <GHSA id> --branch <name> [--branch <name>...]
+//   node embargo.mjs add <GHSA id> --branch <name> [--branch <name>...] [--ticket <id>...]
 //   node embargo.mjs status
 //   node embargo.mjs pre-push <remote> <url>     (run by git, reads the refs on stdin)
 //
@@ -92,10 +99,61 @@ export function readEmbargoes(dir) {
     if (dot <= 0) continue;
     const id = rest.slice(0, dot);
     const name = rest.slice(dot + 1).toLowerCase();
-    if (!byId.has(id)) byId.set(id, { id, branches: [] });
+    if (!byId.has(id)) byId.set(id, { id, branches: [], tickets: [] });
     if (name === "branch" && value) byId.get(id).branches.push(value.replace(/^refs\/heads\//, ""));
+    if (name === "ticket" && value) byId.get(id).tickets.push(value);
   }
   return [...byId.values()];
+}
+
+// Any advisory id gives the fix away, not just this embargo's.
+const ADVISORY_IDS = [/\bGHSA(-[a-z0-9]{4}){3}\b/i, /\bCVE-\d{4}-\d{4,}\b/i];
+// Words that point at a security fix. Plain fixes use some of them too, so they're a question.
+const TELLING_WORDS =
+  /\b(vulnerab\w*|exploit\w*|bypass\w*|security|xss|csrf|ssrf|rce|cve|ghsa|injection|unauthori[sz]ed|unauthenticated|privilege|escalat\w*|leak\w*|attacker\w*|malicious|embargo\w*|advisor(y|ies)|disclos\w*|infosec)\b/gi;
+
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Checks text that will go public for wording that gives an embargoed fix away. Returns null,
+ * { level: "block", found } for an advisory id, or { level: "ask", found } for telling words.
+ */
+export function checkWording(embargoes, text) {
+  if (!embargoes.length || !text) return null;
+  const ids = [];
+  for (const re of ADVISORY_IDS) {
+    const m = re.exec(text);
+    if (m) ids.push(m[0]);
+  }
+  for (const e of embargoes) {
+    for (const v of [e.id, ...(e.tickets || [])]) {
+      const m = new RegExp(`(^|[^A-Za-z0-9])(${escapeRegex(v)})(?![A-Za-z0-9])`, "i").exec(text);
+      if (m && !ids.some((i) => i.toLowerCase() === m[2].toLowerCase())) ids.push(m[2]);
+    }
+  }
+  if (ids.length) return { level: "block", found: ids };
+  const words = [...new Set((text.match(TELLING_WORDS) || []).map((w) => w.toLowerCase()))];
+  return words.length ? { level: "ask", found: words } : null;
+}
+
+/** The commit messages and branch names a push sends that no remote has yet. */
+export function pushedText(dir, updates) {
+  const parts = [];
+  for (const u of updates) {
+    if (!u.sha || ZERO_SHA.test(u.sha)) continue;
+    parts.push(shortRef(u.remoteRef), git(dir, ["log", "--format=%B", u.sha, "--not", "--remotes"]));
+  }
+  return parts.join("\n");
+}
+
+export function wordingReason(r) {
+  return r.level === "block"
+    ? `This text names ${r.found.join(", ")}, which gives away a security fix that's still under embargo. ` +
+        "Commits, branches and pull requests go public with the fix, so describe what the change does in neutral words, with no advisory or ticket id."
+    : `This text uses ${r.found.map((w) => `"${w}"`).join(", ")} while a security fix is under embargo. ` +
+        "If this is the fix, describe what the change does in neutral words instead; it goes public before the advisory does.";
 }
 
 const GHSA_ID = /^ghsa(-[a-z0-9]{4}){3}$/i;
@@ -238,8 +296,10 @@ function add(dir, argv) {
     throw new Error("key the embargo by the advisory's GHSA id, or an internal ticket id when there is no advisory");
   }
   const branches = [];
+  const tickets = [];
   for (let i = 1; i < argv.length; i++) {
     if (argv[i] === "--branch" && argv[i + 1]) branches.push(argv[++i].replace(/^refs\/heads\//, ""));
+    else if (argv[i] === "--ticket" && argv[i + 1]) tickets.push(argv[++i]);
     else throw new Error(`unknown argument ${argv[i]}`);
   }
   if (!branches.length) throw new Error("name at least one --branch");
@@ -248,6 +308,9 @@ function add(dir, argv) {
   const key = existing ? existing.id : id;
   for (const b of branches) {
     if (!existing || !existing.branches.includes(b)) git(dir, ["config", "--add", `${SECTION}.${key}.branch`, b]);
+  }
+  for (const t of tickets) {
+    if (!existing || !existing.tickets.includes(t)) git(dir, ["config", "--add", `${SECTION}.${key}.ticket`, t]);
   }
   const guard = installPrePush(dir);
   process.stdout.write(`Embargo ${key} recorded.\n`);
@@ -270,6 +333,7 @@ function status(dir) {
   for (const e of embargoes) {
     process.stdout.write(`\nEmbargo ${e.id}\n`);
     const allowed = allowedUrls(e, all);
+    if (e.tickets.length) process.stdout.write(`  Ticket: ${e.tickets.join(", ")}\n`);
     process.stdout.write(`  Private fork: ${allowed.length ? allowed.join(" or ") : "none (nothing may be pushed)"}\n`);
     const pub = all.filter((r) => !r.urls.some((u) => allowed.includes(u)));
     for (const b of e.branches) {
@@ -291,6 +355,11 @@ function prePush(dir, remote, url) {
   let r;
   try {
     r = checkPush(dir, { url: url || remote, updates });
+    if (!r) {
+      const w = checkWording(readEmbargoes(dir), pushedText(dir, updates));
+      if (w && w.level === "block") r = { reason: wordingReason(w) };
+      else if (w) process.stderr.write(`\numbraco-devkit embargo guard: ${wordingReason(w)}\n\n`);
+    }
   } catch (err) {
     r = { reason: `The umbraco-devkit embargo check couldn't run (${err.message}), so the push is blocked to be safe.` };
   }
@@ -307,7 +376,7 @@ function main(argv) {
     if (cmd === "add") add(dir, rest);
     else if (cmd === "status") status(dir);
     else {
-      process.stderr.write("Usage: embargo.mjs add <GHSA id> --branch <name> [--branch <name>...] | status\n");
+      process.stderr.write("Usage: embargo.mjs add <GHSA id> --branch <name> [--branch <name>...] [--ticket <id>...] | status\n");
       return 2;
     }
     return 0;

@@ -4,8 +4,11 @@
 // - `git push` of an embargoed branch, or of anything holding its commits or a copy of them, to
 //   a remote the embargo doesn't allow;
 // - `gh pr create` from such a branch against a repo the embargo doesn't allow;
-// - lifting or loosening the embargo: writing its git config other than adding a branch, and
-//   editing the repo's git config or hooks with the file tools.
+// - lifting or loosening the embargo: writing its git config other than adding a branch or a
+//   ticket, and editing the repo's git config or hooks with the file tools;
+// - an advisory or ticket id in a commit, tag or merge message, a branch name, pull request or
+//   issue text, or the messages of pushed commits. Words that point at a security fix there are
+//   asked about instead, since plain fixes use them too.
 //
 // It blocks instead of asking because one quick "yes" would make the fix public before the
 // advisory. A person lifts the embargo themselves when the fix is approved to ship.
@@ -19,7 +22,7 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
-import { SECTION, checkPush, normalizeUrl, readEmbargoes, remotes } from "./embargo.mjs";
+import { SECTION, checkPush, checkWording, normalizeUrl, pushedText, readEmbargoes, remotes, wordingReason } from "./embargo.mjs";
 import { commandCalls, gitCall, isGit } from "./trunk-gate.mjs";
 
 const PUSH_OPTS_WITH_VALUE = new Set(["-o", "--push-option", "--receive-pack", "--exec", "--repo"]);
@@ -118,7 +121,7 @@ function checkGitPush(dir, args) {
       const r = checkPush(dir, { url, updates: plan.updates });
       if (r) return deny(r.reason);
     }
-    return null;
+    return wording(dir, pushedText(dir, plan.updates));
   } catch (err) {
     return deny(`This repo has a security embargo and the umbraco-devkit embargo gate couldn't check this push (${err.message}), so it's blocked to be safe.`);
   }
@@ -135,7 +138,7 @@ function checkGitConfig(dir, args) {
   if (args.some((a) => CONFIG_READS.has(a))) return null;
   // Adding a branch tightens an embargo; anything else (unset, remove, rename) loosens it.
   const key = args.find((a) => a.toLowerCase().startsWith(`${SECTION}.`)) || "";
-  if (args.includes("--add") && /\.branch$/i.test(key)) return null;
+  if (args.includes("--add") && /\.(branch|ticket)$/i.test(key)) return null;
   return deny(
     "This changes a security embargo. Only a person lifts or loosens one, once the fix is approved to ship. " +
       "To record a new embargo or add a branch, use the plugin's embargo.mjs add.",
@@ -183,6 +186,76 @@ function checkGhPrCreate(dir, args) {
   }
 }
 
+function wording(dir, text) {
+  const r = checkWording(embargoesIn(dir), text);
+  return r ? { decision: r.level === "block" ? "deny" : "ask", reason: wordingReason(r) } : null;
+}
+
+const FILE_OPTS = new Set(["-F", "--file", "--body-file"]);
+
+function readText(dir, file) {
+  return file && file !== "-" ? readFileSync(resolve(dir, file), "utf8") : "";
+}
+
+/** A git message: every -m / --message value (also in a cluster like -am) and any -F file. */
+function messageText(dir, args) {
+  const parts = [];
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if (a === "--") break;
+    if (a === "--message" || a === "--file") parts.push(a === "--file" ? readText(dir, args[++i]) : args[++i] || "");
+    else if (a.startsWith("--message=")) parts.push(a.slice(10));
+    else if (a.startsWith("--file=")) parts.push(readText(dir, a.slice(7)));
+    else if (/^-[A-Za-z]+$/.test(a) && /[mF]$/.test(a)) parts.push(a.endsWith("F") ? readText(dir, args[++i]) : args[++i] || "");
+    else if (/^-m./.test(a)) parts.push(a.slice(2));
+  }
+  return parts.join("\n");
+}
+
+const BRANCH_LISTS = new Set(["-d", "-D", "--delete", "-l", "--list", "-r", "-a", "--all", "--show-current", "--contains", "--merged", "--no-merged", "-u", "--set-upstream-to", "--unset-upstream"]);
+
+/** The text a git command would publish: messages, and the names of new branches and tags. */
+function gitText(dir, sub, args) {
+  if (sub === "commit" || sub === "merge") return messageText(dir, args);
+  const value = (flags) => {
+    const i = args.findIndex((a) => flags.includes(a));
+    return i >= 0 ? args[i + 1] || "" : "";
+  };
+  if (sub === "checkout") return value(["-b", "-B", "--orphan"]);
+  if (sub === "switch") return value(["-c", "-C", "--create", "--force-create", "--orphan"]);
+  if (sub === "worktree") return args[0] === "add" ? value(["-b", "-B"]) : "";
+  const positional = args.filter((a) => !a.startsWith("-"));
+  if (sub === "branch") return args.some((a) => BRANCH_LISTS.has(a)) ? "" : positional.join("\n");
+  if (sub === "tag") return args.some((a) => ["-d", "--delete", "-l", "--list", "-v", "--verify"].includes(a)) ? "" : `${positional[0] || ""}\n${messageText(dir, args)}`;
+  return "";
+}
+
+/** The text a gh command would publish: every argument except the repo, plus any body file. */
+function ghText(dir, args) {
+  const parts = [];
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if (a === "-R" || a === "--repo") { i++; continue; }
+    if (a.startsWith("--repo=")) continue;
+    if (FILE_OPTS.has(a)) { parts.push(readText(dir, args[++i])); continue; }
+    if (a.startsWith("--body-file=")) { parts.push(readText(dir, a.slice(12))); continue; }
+    parts.push(a);
+  }
+  return parts.join("\n");
+}
+
+const GIT_TEXT = new Set(["commit", "tag", "merge", "checkout", "switch", "branch", "worktree"]);
+const GH_TEXT = { pr: new Set(["create", "edit", "comment", "review"]), issue: new Set(["create", "edit", "comment"]) };
+
+function checkText(dir, getText) {
+  if (!embargoesIn(dir).length) return null;
+  try {
+    return wording(dir, getText());
+  } catch (err) {
+    return deny(`This repo has a security embargo and the umbraco-devkit embargo gate couldn't check this text (${err.message}), so it's blocked to be safe.`);
+  }
+}
+
 /** Returns { decision, reason } for a shell command, or null when no embargo is at stake. */
 export function decideCommand(command, cwd, tool = "Bash") {
   for (const call of commandCalls(command, cwd, tool)) {
@@ -191,8 +264,11 @@ export function decideCommand(command, cwd, tool = "Bash") {
       const { dir, sub, rest } = gitCall(call);
       if (sub === "push") r = checkGitPush(dir, rest);
       else if (sub === "config") r = checkGitConfig(dir, rest);
-    } else if (/(^|[\\/])gh(\.exe)?$/.test(call.cmd) && call.args[0] === "pr" && call.args[1] === "create") {
-      r = checkGhPrCreate(call.dir, call.args.slice(2));
+      else if (GIT_TEXT.has(sub)) r = checkText(dir, () => gitText(dir, sub, rest));
+    } else if (/(^|[\\/])gh(\.exe)?$/.test(call.cmd)) {
+      const [noun, verb] = call.args;
+      if (noun === "pr" && verb === "create") r = checkGhPrCreate(call.dir, call.args.slice(2));
+      if (!r && GH_TEXT[noun] && GH_TEXT[noun].has(verb)) r = checkText(call.dir, () => ghText(call.dir, call.args.slice(2)));
     }
     if (r) return r;
   }

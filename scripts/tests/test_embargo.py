@@ -222,6 +222,54 @@ class GateTests(Base):
     def test_file_tools_are_quiet_without_an_embargo(self):
         self.assertIsNone(self.run_hook(tool="Edit", file_path=os.path.join(self.repo, ".git", "config")))
 
+    # Wording
+
+    def test_advisory_or_ticket_id_in_published_text_is_blocked(self):
+        self.embargo()
+        git(self.repo, "config", "--add", f"devkit-embargo.{ID}.ticket", "SEC-881")
+        for cmd in [f'git commit -m "fix: tidy {ID.lower()}"',
+                    'git commit -am "fix(core): tidy" -m "Refs SEC-881"',
+                    "git commit -m \"$(cat <<'EOF'\nfix: tidy\n\nCVE-2026-12345\nEOF\n)\"",
+                    "git checkout -b v18/hotfix/sec-881",
+                    "git tag v18.0.1 -m 'GHSA-zzzz-yyyy-xxxx'",
+                    'gh pr create -R example/Example.Package-ghsa-abcd-efgh-ijkl --title "Tidy" --body "Fixes SEC-881"',
+                    'gh issue comment 12 --body "see sec-881"']:
+            self.assertEqual(self.run_hook(cmd), "deny", cmd)
+
+    def test_message_file_is_read(self):
+        self.embargo()
+        with open(os.path.join(self.repo, "msg.txt"), "w") as f:
+            f.write(f"fix: tidy\n\n{ID}\n")
+        self.assertEqual(self.run_hook("git commit -F msg.txt"), "deny")
+
+    def test_telling_words_are_asked_about(self):
+        self.embargo()
+        self.assertEqual(self.run_hook('git commit -m "fix: prevent permission bypass"'), "ask")
+        self.assertEqual(self.run_hook('gh pr create --title "Fix XSS in picker" --body x'), "ask")
+
+    def test_neutral_text_and_places_are_quiet(self):
+        self.embargo()
+        git(self.repo, "config", "--add", f"devkit-embargo.{ID}.ticket", "SEC-881")
+        for cmd in ['git commit -m "fix(core): Check access consistently" -- src/Security/Access.cs',
+                    'gh pr create -R example/Example.Package-ghsa-abcd-efgh-ijkl --title "Check access consistently" --body "Tidy."',
+                    f"git worktree add -b v18/hotfix/access-check ../Example.Package-{ID}",
+                    "git checkout -- src/Security/Access.cs",
+                    "git branch -d v18/hotfix/sec-881-old"]:
+            self.assertIsNone(self.run_hook(cmd), cmd)
+
+    def test_wording_is_quiet_without_an_embargo(self):
+        self.assertIsNone(self.run_hook(f'git commit -m "fix {ID} bypass"'))
+
+    def test_pushed_commit_messages_are_checked_even_to_the_fork(self):
+        self.embargo()
+        git(self.repo, "checkout", "-q", FIX)
+        commit(self.repo, "more.cs", "x\n", f"fix: follow-up for {ID}")
+        self.assertEqual(self.run_hook(f"git push fork {FIX}"), "deny")
+
+    def test_adding_a_ticket_is_quiet(self):
+        self.embargo()
+        self.assertIsNone(self.run_hook(f"git config --add devkit-embargo.{ID}.ticket SEC-881"))
+
     # Plumbing
 
     def test_bad_input_is_quiet(self):
@@ -250,6 +298,12 @@ class CliTests(Base):
         config = git(self.repo, "config", "--get-regexp", "^devkit-embargo\\.").stdout
         self.assertEqual(config.strip(), f"devkit-embargo.{ID}.branch {FIX}")
         self.assertTrue(os.path.exists(os.path.join(self.repo, ".git", "hooks", "umbraco-devkit-embargo.mjs")))
+
+    def test_ticket_is_recorded_and_shown(self):
+        r = cli(self.repo, "add", ID, "--branch", FIX, "--ticket", "SEC-881")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("Ticket: SEC-881", r.stdout)
+        self.assertIn(f"devkit-embargo.{ID}.ticket SEC-881", git(self.repo, "config", "--get-regexp", "^devkit-embargo\\.").stdout)
 
     def test_a_remote_cannot_be_named(self):
         r = cli(self.repo, "add", ID, "--branch", FIX, "--remote", PUBLIC_URL)
@@ -337,6 +391,20 @@ class PrePushTests(Base):
         git(self.repo, "config", "--remove-section", f"devkit-embargo.{ID}")
         self.assertEqual(git(self.repo, "push", "-q", "origin", FIX, check=False).returncode, 0)
         self.assertTrue(self.on_public(FIX))
+
+    def test_id_in_a_commit_message_is_stopped_even_to_the_fork(self):
+        git(self.repo, "checkout", "-q", FIX)
+        commit(self.repo, "more.cs", "x\n", f"fix: follow-up for {ID}")
+        r = git(self.repo, "push", "fork", FIX, check=False)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("neutral words", r.stderr)
+
+    def test_telling_words_only_warn(self):
+        git(self.repo, "checkout", "-q", "-b", "v18/feature/y")
+        commit(self.repo, "y.cs", "y\n", "feat: add an exploit-proof thing")
+        r = git(self.repo, "push", "origin", "v18/feature/y", check=False)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("exploit", r.stderr)
 
     def test_push_from_a_worktree_is_stopped(self):
         wt = os.path.join(self.tmp, "wt")
