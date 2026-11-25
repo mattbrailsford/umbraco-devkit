@@ -199,7 +199,7 @@ published. An embargo, keyed by the advisory's GHSA id, marks the branches that 
 It lives in the repo's local git config, so it's never committed and covers every worktree.
 
 ```bash
-node <plugin>/hooks/embargo.mjs add GHSA-xxxx-xxxx-xxxx --branch v18/hotfix/x --branch v17/hotfix/x
+node <plugin>/hooks/embargo.mjs add GHSA-xxxx-xxxx-xxxx --branch v18/hotfix/x --branch v17/hotfix/x --ticket SEC-123
 node <plugin>/hooks/embargo.mjs status
 git config --remove-section devkit-embargo.GHSA-xxxx-xxxx-xxxx   # lift it, once approved
 ```
@@ -219,6 +219,14 @@ fix:
 - A git `pre-push` hook, which `add` installs, stops the same push from a terminal or editor.
   It isn't installed when the repo already has its own pre-push hook or sets `core.hooksPath`;
   `add` says so.
+
+Both also read the words that go public with the fix: commit, tag and merge messages, new
+branch and tag names, PR and issue text, and the messages of pushed commits, even to the
+private fork, since its commits go public later. An advisory id (any GHSA or CVE id, the
+embargo's key or its `--ticket`) is blocked. Words that point at a security fix
+("vulnerability", "bypass", "XSS") get a question from the hook and a warning from `pre-push`,
+because plain fixes use them too. Neither can spot a vague hint, so neutral wording is still
+on whoever writes the message.
 
 `git push --no-verify` skips the pre-push hook, so the guard catches mistakes, not someone set
 on getting round it.

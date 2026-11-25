@@ -162,7 +162,7 @@ You don't run these. The skills above and the agents load them when the work nee
 | Hook | What it does |
 |---|---|
 | [`trunk-gate`](plugins/umbraco-devkit/hooks/trunk-gate.mjs) | Asks you before any commit or push to `main` or a version branch. Needs Node |
-| [`embargo-gate`](plugins/umbraco-devkit/hooks/embargo-gate.mjs) | Blocks an unreleased security fix from reaching any remote except its private fork, until you lift the embargo. Needs Node |
+| [`embargo-gate`](plugins/umbraco-devkit/hooks/embargo-gate.mjs) | Blocks an unreleased security fix from reaching any remote except its private fork, until you lift the embargo, and blocks advisory ids in commit messages, branch names and PRs. Needs Node |
 
 **Pre-review checks:** [`checks/`](plugins/umbraco-devkit/checks/run.mjs) is a script `feature-build` runs between the builder and the reviewer, for slips a script can catch (file encoding, links into plan folders, unsanitized `unsafeHTML`, files git doesn't track, tests switched off, warnings suppressed with no reason, empty `catch` blocks, fixed waits in tests). Add your own in `.claude/checks/`. Needs Node.
 
