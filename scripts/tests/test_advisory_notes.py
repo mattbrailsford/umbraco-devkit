@@ -100,6 +100,17 @@ class NotesTests(unittest.TestCase):
         self.assertNotEqual(self.notes("../escape").returncode, 0)
         self.assertNotEqual(self.notes(KEY, "--section").returncode, 0)
 
+    def test_list_shows_keys_and_their_tickets(self):
+        self.assertIn("No advisory files", self.notes("--list").stdout)
+        self.notes(KEY)
+        with open(self.file) as f:
+            text = f.read()
+        with open(self.file, "w") as f:
+            f.write(text.replace("- Report: [", "- Report: SEC-881 and the advisory [", 1))
+        out = self.notes("--list").stdout
+        self.assertIn(KEY, out)
+        self.assertIn("SEC-881", out)
+
     def test_outside_a_repo_fails(self):
         self.assertNotEqual(self.notes(KEY, cwd=self.tmp).returncode, 0)
 

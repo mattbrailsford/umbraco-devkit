@@ -6,6 +6,7 @@
 // Code's file tools won't write inside a git folder, so every change goes through this script.
 //
 // Usage (run from anywhere inside the repo):
+//   node notes.mjs --list                         list every advisory file: key, then its Report line
 //   node notes.mjs <key>                          create it from the template if missing, then print it
 //   node notes.mjs <key> --path                   print only the file's path
 //   node notes.mjs <key> --append <heading>       add stdin to the end of a "## <heading>" section
@@ -19,7 +20,7 @@
 //
 // Node only, no dependencies, and it doesn't run git. It runs the same on Windows, macOS and Linux.
 
-import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -111,7 +112,20 @@ function readStdin() {
   return text;
 }
 
+function list(cwd) {
+  const dir = join(gitCommonDir(cwd), "devkit-advisories");
+  const files = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".md")).sort() : [];
+  if (!files.length) return void process.stdout.write("No advisory files in this repo.\n");
+  for (const f of files) {
+    const text = readFileSync(join(dir, f), "utf8");
+    const report = /^- Report:\s*(.*)$/m.exec(text);
+    const status = /^> \*\*Status:\*\*\s*(.*)$/m.exec(text);
+    process.stdout.write(`${f.slice(0, -3)}\t${report ? report[1] : ""}${status ? `\t(${status[1]})` : ""}\n`);
+  }
+}
+
 export function main(argv, cwd = process.cwd()) {
+  if (argv[0] === "--list") return list(cwd);
   const [key, flag, heading] = argv;
   if (!key) throw new Error("Usage: notes.mjs <key> [--path | --append <heading> | --section <heading> | --write]");
   const file = notesPath(cwd, key);

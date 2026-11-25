@@ -4,7 +4,7 @@ PRIVATE. This file lives in the repo's `.git` folder and is never pushed. Nothin
 into a commit, PR, comment, or chat outside the update channel until the advisory is
 published.
 
-- Report: [where it lives, e.g. the advisory, or a ticket in the tracker the Security process names]
+- Report: [the ticket id and the GHSA id, and where each lives]
 - Update channel: [where updates go for this advisory]
 - Private fork: [`<owner>/<repo>-ghsa-xxxx-xxxx-xxxx`, or none]
 - Embargoed branches: [`v18/hotfix/<neutral-slug>`, `v17/hotfix/<neutral-slug>`]

@@ -30,9 +30,14 @@ follows the project's own security process instead of assuming one.
 
 ## Argument
 
-`$ARGUMENTS` is the advisory's key: its GHSA id (`GHSA-xxxx-xxxx-xxxx`) when there is a
-GitHub advisory, else the security team's ticket id. With an existing advisory file for that
-key, resume it at its first unfinished step. With nothing, ask for the key. If the user found
+`$ARGUMENTS` is the GHSA id (`GHSA-xxxx-xxxx-xxxx`) or the security team's ticket id. The
+advisory's key is its GHSA id whenever there is one, because the key names the private fork.
+Given a ticket id, read the ticket (step 1) and look in it for a GHSA id; if there is none,
+ask whether a GitHub advisory exists, and without one the ticket id is the key. Record both
+ids in the advisory file's header.
+
+With an existing advisory file, resume it at its first unfinished step: `notes.mjs --list`
+shows each file's key and the ticket it came from. With nothing, ask for the id. If the user found
 the hole themselves and nothing has been reported yet, stop: tell them to report it to the
 Security process section's "Report a vulnerability to" address first, and start from what
 comes back.
@@ -53,7 +58,7 @@ GitHub's private vulnerability reporting and repository security advisories as t
 - Report a vulnerability to: <email or URL, e.g. security@example.com, or GitHub private vulnerability reporting>
 - Reports arrive as: <a GitHub security advisory | a ticket in <tracker>>
 - Read with: <MCP server | CLI | paste it>
-- Updates go to: <the advisory's comments | an email thread | a private channel per advisory (ask each time) | none>
+- Updates go to: <the advisory's comments | an email thread | a private channel per advisory, named <pattern, e.g. team-security-{ticket}>, or (ask each time) | none>
 - Security team needs: <what they ask for, e.g. affected and fixed version ranges, release date>
 - Approves release: <who says go: a security team, the maintainer>
 - Private fork: <GitHub advisory fork | none>
@@ -119,9 +124,11 @@ Record every step's outcome as it finishes with `--append Log`, one dated line e
 ### 1. Read the report
 
 Read it from where the Security process says it lives, with the tool it names. If that fails,
-ask the user to paste it; don't guess. Ask which update channel to use if the process says to
-ask each time. Create the advisory file and fill in its header and Issues section: the key,
-each reported issue, the channel.
+ask the user to paste it; don't guess. Find the update channel: when the Updates line gives a
+naming pattern, fill in `{ticket}` or `{ghsa}` and, if the chat tool can, check the channel
+exists; ask only when there's no pattern, the process says to ask, or the channel isn't
+there. Create the advisory file and fill in its header and Issues section: both ids, each
+reported issue, the channel.
 
 ### 2. Check, don't change
 
