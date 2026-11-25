@@ -61,7 +61,7 @@ GitHub's private vulnerability reporting and repository security advisories as t
 - Updates go to: <the advisory's comments | an email thread | a private channel per advisory, named <pattern, e.g. team-security-{ticket}>, or (ask each time) | none>
 - Security team needs: <what they ask for, e.g. affected and fixed version ranges, release date>
 - Approves release: <who says go: a security team, the maintainer>
-- Private fork: <GitHub advisory fork | none>
+- Private fork: <GitHub advisory fork | none: share the fix as patch files>
 - Advisory published by: <who, and when, e.g. the maintainer once packages ship>
 ```
 
@@ -226,7 +226,14 @@ smoke, commit), with these differences:
 - **Private fork:** push the fix branches to it and open one PR per line there. The embargo
   allows exactly this. The PR descriptions may describe the issue; the fork is private.
 - **No private fork:** nothing leaves the machine. Offer the review in the way the Security
-  process names, or as `git format-patch` files for the user to share privately.
+  process names, or as patch files for the user to share privately. Write them where git
+  never tracks them, one folder per line:
+  `git format-patch -o "$(git rev-parse --git-common-dir)/devkit-advisories/<key>-patches/<line>" <base>..<branch>`.
+  Log each folder in the advisory file.
+
+An advisory filed on a repo that holds no code (a separate issue tracker repo) has a private
+fork with no code in it, and pushing the whole codebase there to review one fix isn't
+practical. Treat it as no private fork.
 
 Post a short update to the update channel (step 8's rules) with the PR links or patch files.
 
