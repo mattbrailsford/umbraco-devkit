@@ -51,7 +51,6 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
-- [`advisory-fix`](#advisory-fix): `advisory-fix-asks-security-process` `advisory-fix-embargo-before-code` `advisory-fix-version-ranges`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -60,7 +59,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
 | Skill | Kind | Status | Best gain | Evals | Real bugs | Sections covered | Context |
 |---|---|---|---|---|---|---|---|
-| [`advisory-fix`](#advisory-fix) | workflow | Not run | – | 3 | 0 | – | – |
+| [`advisory-fix`](#advisory-fix) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`bdd-specs`](#bdd-specs) | knowledge | Proven | +78 | 1 | 0 | 1/6 | 3 |
 | [`change-backport`](#change-backport) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`change-build`](#change-build) | workflow | Keeps its rules | – | 2 | 0 | – | – |
@@ -130,9 +129,9 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `advisory-fix-asks-security-process` | – | – |
-| `advisory-fix-embargo-before-code` | – | – |
-| `advisory-fix-version-ranges` | – | – |
+| `advisory-fix-asks-security-process` | 100 | 2026-11-25 |
+| `advisory-fix-embargo-before-code` | 100 | 2026-11-25 |
+| `advisory-fix-version-ranges` | 100 | 2026-11-25 |
 
 ### `bdd-specs`
 
