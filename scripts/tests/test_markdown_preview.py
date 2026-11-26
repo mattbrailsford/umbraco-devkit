@@ -85,7 +85,7 @@ class WorktreeTests(TempRepo):
 
     def test_comments_live_in_the_devkit_folder(self):
         self.assertEqual(worktree.state_paths(self.root).comments,
-                         os.path.join(self.root, ".umbraco-devkit", "markdown-preview", "comments.json"))
+                         os.path.join(self.root, ".umbraco-devkit", "previews", "comments.json"))
 
     def test_devkit_folder_ignores_itself(self):
         worktree.state_paths(self.root)

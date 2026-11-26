@@ -71,7 +71,7 @@ Never write a ticket id, advisory id, channel name, or anything about a specific
 
 ## Where this writes
 
-- **Owns:** the advisory file, `<git common dir>/devkit-advisories/<key>.md`, made from
+- **Owns:** the advisory file, `<git common dir>/umbraco-devkit/advisories/<key>.md`, made from
   `templates/advisory.md`. It lives inside the repo's `.git` folder: no worktree tracks it, no
   push carries it, every worktree of the checkout sees it, and it survives a `/clear`. Exploit
   detail is allowed here and only here.
@@ -239,7 +239,7 @@ smoke, commit), with these differences:
 - **No private fork:** nothing leaves the machine. Offer the review in the way the Security
   process names, or as patch files for the user to share privately. Write them where git
   never tracks them, one folder per line:
-  `git format-patch -o "$(git rev-parse --git-common-dir)/devkit-advisories/<key>-patches/<line>" <base>..<branch>`.
+  `git format-patch -o "$(git rev-parse --git-common-dir)/umbraco-devkit/advisories/<key>-patches/<line>" <base>..<branch>`.
   Log each folder in the advisory file.
 
 An advisory filed on a repo that holds no code (a separate issue tracker repo) has a private

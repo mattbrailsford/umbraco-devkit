@@ -43,12 +43,12 @@ def session_id():
 
 
 def data_dir(root):
-    """The preview's own files in a worktree: `.umbraco-devkit/markdown-preview/`. The
+    """The preview's own files in a worktree: `.umbraco-devkit/previews/`. The
     `.umbraco-devkit` folder ignores itself, so nothing in it is ever committed and the
     project's own `.gitignore` is never touched. Files kept in the worktree's git folder by
     earlier versions move here the first time."""
     devkit = os.path.join(root, ".umbraco-devkit")
-    folder = os.path.join(devkit, "markdown-preview")
+    folder = os.path.join(devkit, "previews")
     ignore = os.path.join(devkit, ".gitignore")
     if not os.path.exists(ignore):
         os.makedirs(devkit, exist_ok=True)
@@ -65,7 +65,7 @@ def state_paths(root, session=""):
     """Where a worktree's server details, comments, approvals, waiting helper and copies of
     what the reader last saw are kept. Each session has its own helper.
 
-    Comments, approvals and copies go in the worktree's `.umbraco-devkit/markdown-preview/`:
+    Comments, approvals and copies go in the worktree's `.umbraco-devkit/previews/`:
     never committed, kept across restarts, and removed with the worktree. Outside a repo they
     fall back to the temp folder.
     """

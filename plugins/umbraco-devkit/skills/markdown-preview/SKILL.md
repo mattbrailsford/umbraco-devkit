@@ -200,7 +200,7 @@ first writes one:
 - Internet access: GitHub draws the page, and the styles, Mermaid and math load from a CDN.
 - The file's text, and the text of comments on it, go to GitHub's Markdown API to be drawn,
   including plans that aren't committed. Nothing else is sent anywhere. The `gh` sign-in is read once and kept in memory only.
-- Comments are kept in the worktree's `.umbraco-devkit/markdown-preview/comments.json`, and
+- Comments are kept in the worktree's `.umbraco-devkit/previews/comments.json`, and
   so is a copy of each doc as it was when the reader last sent comments (`seen/`), which the
   page compares against to mark what's changed, and the approvals (`approvals.json`).
   `.umbraco-devkit/` holds a `.gitignore` of `*`, so none of it is ever committed, and

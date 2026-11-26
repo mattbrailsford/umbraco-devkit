@@ -64,8 +64,8 @@ git commit -q -am "feat: filter drafts by type" && git tag My.Package@17.2.0
 git update-ref refs/remotes/origin/v17/dev v17/dev
 git update-ref refs/remotes/origin/v16/dev v16/dev
 
-mkdir -p "$(git rev-parse --git-common-dir)/devkit-advisories"
-cat > "$(git rev-parse --git-common-dir)/devkit-advisories/GHSA-abcd-efgh-ijkl.md" <<'MD'
+mkdir -p "$(git rev-parse --git-common-dir)/umbraco-devkit/advisories"
+cat > "$(git rev-parse --git-common-dir)/umbraco-devkit/advisories/GHSA-abcd-efgh-ijkl.md" <<'MD'
 # GHSA-abcd-efgh-ijkl
 
 PRIVATE. This file lives in the repo's `.git` folder and is never pushed.

@@ -28,7 +28,7 @@ class NotesTests(unittest.TestCase):
         os.makedirs(self.repo)
         git(self.repo, "init", "-q", "-b", "main")
         git(self.repo, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "init")
-        self.file = os.path.join(self.repo, ".git", "devkit-advisories", f"{KEY}.md")
+        self.file = os.path.join(self.repo, ".git", "umbraco-devkit", "advisories", f"{KEY}.md")
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
@@ -47,7 +47,7 @@ class NotesTests(unittest.TestCase):
         self.assertTrue(os.path.exists(self.file))
         self.assertTrue(self.read().startswith(f"# {KEY}\n"))
         self.assertIn("## Versions", r.stdout)
-        self.assertIn(os.path.join("devkit-advisories", f"{KEY}.md"), r.stdout)
+        self.assertIn(os.path.join("umbraco-devkit", "advisories", f"{KEY}.md"), r.stdout)
 
     def test_git_never_sees_it(self):
         self.notes(KEY)

@@ -272,7 +272,8 @@ places in the consumer project:
   removed with the worktree. Examples: `issue-triage`'s and `issue-backlog`'s `issues/`, `markdown-preview`'s comments.
 - **Every worktree of the repo:** `<git common dir>/umbraco-devkit/<skill-or-subject>/`
   (`git rev-parse --git-common-dir`). Claude Code blocks its own file tools inside `.git`,
-  so only a script the skill ships may write here.
+  so only a script the skill ships may write here. Example: `advisory-fix`'s `advisories/`,
+  through `notes.mjs`.
 
 Don't put working data anywhere else: not `.claude/` (Claude Code asks before every write
 there, and an unattended run can't answer), not the per-worktree git folder (`--git-dir`), not the

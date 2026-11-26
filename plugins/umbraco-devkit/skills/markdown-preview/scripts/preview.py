@@ -24,7 +24,7 @@ this command returns once it's listening. It stays up while any Claude session t
 it is still running, and stops once the last has ended, or once its worktree is removed.
 Each Claude session on a worktree gets its own tab and helper: comments sent from a tab go
 to the session that opened it.
-Comments live in the worktree's `.umbraco-devkit/markdown-preview/`, a folder git ignores, so
+Comments live in the worktree's `.umbraco-devkit/previews/`, a folder git ignores, so
 they're never committed and any step can read them without the server running.
 
 The parts: server.py (the web server), comments.py (the comment store), approvals.py (docs
