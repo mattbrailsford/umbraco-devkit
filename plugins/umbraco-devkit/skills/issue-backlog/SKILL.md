@@ -19,7 +19,7 @@ the next stage, and hands that stage to the skill that owns it.
 
 - IN: count issues by state, suggest the next stage, run it through its owning skill, run
   investigations in parallel and gather their results, apply the tracker updates the user
-  approves, start fixes one at a time.
+  approves, start fixes one at a time, keep a run log the user can watch.
 - OUT: triage judgments (`issue-triage`), proving a cause (`investigate-bug`), the fix itself
   and its tracker updates (`issue-resolve`), and any tracker write the user hasn't
   approved.
@@ -42,6 +42,36 @@ Count open issues in each of these, and show the counts:
 | Waiting | `state/needs-info` and `state/blocked` not yet due for another look |
 | Ready | `state/ready` |
 | In progress | `state/in-progress` |
+
+## The run log
+
+A run scrolls out of sight in chat. Keep the board and every issue the run touches in one
+file the user can keep open beside it.
+
+- **Where.** `.claude/backlog/RUN.md`. Before writing it, create `.claude/backlog/.gitignore`
+  holding `*` if it isn't there, so git ignores the whole folder and the log is never
+  committed. Never edit the project's own `.gitignore` for it.
+- **Start.** Write it as soon as the board is counted, before asking about the first stage.
+  If a `RUN.md` from earlier today exists, keep its rows: the run was cut short, by a `/clear`
+  or a closed session, and is picking up again. Otherwise start it empty.
+- **Keep it current.** Rewrite it after every change, not at the end of a stage: the board
+  when it's counted again, a row as each issue gets a result (each investigation as it
+  returns, not when the batch ends), and its status once the user approves or skips it.
+- **Shape.** The date it started, then:
+  - The board, as a table of counts.
+  - `## Issues this run`: one row per issue, newest last. Issue number and title, stage,
+    the result in a few words, the state label it gets, and its status: `drafted`,
+    `applied` or `skipped`.
+  - `## Waiting on you`: drafted updates and questions the user hasn't answered yet, or
+    "Nothing."
+- **Security reports.** A flagged issue gets its number and "security report" only, never
+  the title or details, as `issue-triage`'s Security reports section says.
+- **Show it.** After the first write, offer to open it with `markdown-preview`, read-only
+  (`--no-comments`), as its "Offering a preview" section says. The page refreshes on each
+  write.
+
+The tracker's labels stay the record. The log only shows this run's progress; losing it
+loses nothing.
 
 ## Pick the next stage
 
@@ -103,5 +133,5 @@ show the board again and pick again, until the user stops or nothing is left to 
 
 ## Hand off
 
-The board, and what's still open: issues in progress, and issues waiting on a reporter or
+Where the run log is, the board, and what's still open: issues in progress, and issues waiting on a reporter or
 an upstream fix.
