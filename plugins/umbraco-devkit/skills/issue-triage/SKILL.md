@@ -129,7 +129,7 @@ outside contributor, and reports it if so.
 4. Next to each recommended action, show the tracker write it maps to (State labels below):
    the type label, the state label, close or move, any area label fix the triager found, and
    the comment the triager drafted. A label fix is a tracker write like any other, applied only on approval.
-5. Write the table to the drafts file (below) and show the security list (if non-empty) in
+5. Write the drafts to the drafts file (below) and show the security list (if non-empty) in
    chat only. Nothing gets written back to the tracker until the user says which
    recommendations to apply. Then apply exactly those, and report what was written.
 
@@ -141,8 +141,10 @@ and approved in a preview instead of scrolling past in chat.
 - **Where.** `issues/DRAFTS.md` under the worktree's git folder (`git rev-parse --git-dir`),
   the way `markdown-preview` keeps its comments. Git never tracks its own folder, so nothing
   here is committed. Other files in that folder belong to other skills; leave them alone.
-- **What.** The table from Aggregating and reporting, or the drafted answers from a decision
-  run, with each drafted comment written out in full. Replace the file with each new batch.
+- **What.** The drafts from Aggregating and reporting, or the drafted answers from a
+  decision run: one section per issue, headed `## #<number>` alone so other files can link
+  to `DRAFTS.md#<number>`, then the issue's title, the table's columns for it, and its
+  drafted comment written out in full. Replace the file with each new batch.
   Never put a security report in it: the preview sends the file's text to GitHub to draw it.
 - **Ask.** Give the file's path, for anyone who'd rather read it in an editor, and offer to
   open the folder in `markdown-preview`, scoped to it, with comments on. Follow its

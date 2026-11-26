@@ -61,7 +61,8 @@ file the user can keep open beside it.
   - The board, as a table of counts.
   - `## Issues this run`: one row per issue, newest last. Issue number and title, stage,
     the result in a few words, the state label it gets, and its status: `drafted`,
-    `applied` or `skipped`.
+    `applied` or `skipped`. A `drafted` status links to that issue's draft
+    (`DRAFTS.md#<number>`); drop the link once it's applied or skipped.
   - `## Waiting on you`: questions the user hasn't answered yet, and a link to
     `DRAFTS.md` while it holds updates waiting for approval, or "Nothing."
 - **Security reports.** A flagged issue gets its number and "security report" only, never
