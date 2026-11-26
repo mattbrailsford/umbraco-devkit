@@ -42,6 +42,12 @@ is one that changes behavior someone saw go wrong. Typos, comments, and dead cod
 
 1. **Locate.** Find the exact site. If the description is ambiguous or matches multiple
    places, ask before guessing.
+
+   **Security check.** If the bug, or the code around it, is what `issue-triage`'s Security
+   reports section counts as a vulnerability, stop before any edit, branch or commit, and
+   follow that section. A fix in a public commit or PR tells everyone about the hole before
+   sites are patched. If it only shows up after an edit, commit nothing, stop the same way,
+   and say the edit is still in the working tree.
 2. **Confirm it's actually small.** If reading the surrounding code reveals the fix is
    non-trivial (touches a class/component boundary, changes a public contract, needs new
    branches of test coverage), **stop and escalate** — tell the user this isn't a quick-fix

@@ -62,7 +62,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`advisory-fix`](#advisory-fix) | workflow | Keeps its rules | – | 5 | 0 | – | – |
 | [`bdd-specs`](#bdd-specs) | knowledge | Proven | +78 | 1 | 0 | 1/6 | 3 |
 | [`change-backport`](#change-backport) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`change-build`](#change-build) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`change-build`](#change-build) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`decision-review`](#decision-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +83 | 3 | 0 | 5/24 | 1 |
@@ -87,7 +87,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 3 | 0 | – | – |
+| [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 4 | 0 | – | – |
 | [`skill-report`](#skill-report) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions) | knowledge | Proven | +100 | 6 | 2 | 3/11 | 1 |
 | [`umbraco-backoffice-testing`](#umbraco-backoffice-testing) | knowledge | Proven | +67 | 2 | 0 | 2/2 | 0 |
@@ -158,6 +158,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 |---|---|---|
 | `change-build-escalates` | 100 | 2026-11-16 |
 | `change-build-plans-first` | 100 | 2026-11-16 |
+| `change-build-security-stop` | 100 | 2026-11-26 |
 
 ### `decision-review`
 
@@ -437,6 +438,7 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 |---|---|---|
 | `quick-fix-escalates` | 100 | 2026-11-16 |
 | `quick-fix-root-cause` | 100 | 2026-11-16 |
+| `quick-fix-security-stop` | 100 | 2026-11-26 |
 | `quick-fix-stopgap-marker` | 100 | 2026-11-16 |
 
 ### `skill-report`
