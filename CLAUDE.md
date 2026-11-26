@@ -266,15 +266,16 @@ preserve when editing these skills:
 Files a skill keeps for itself or for the user to watch, never committed, go in one of two
 places in the consumer project:
 
-- **One worktree:** `.claude/devkit/<skill-or-subject>/`. The first skill to write there
-  creates `.claude/devkit/.gitignore` holding `*`, so nothing in it is committed and the
+- **One worktree:** `.umbraco-devkit/<skill-or-subject>/`. The first skill to write there
+  creates `.umbraco-devkit/.gitignore` holding `*`, so nothing in it is committed and the
   project's own `.gitignore` is never touched. Claude's file tools can write here, and it's
   removed with the worktree. Example: `issue-triage`'s and `issue-backlog`'s `issues/`.
 - **Every worktree of the repo:** `<git common dir>/umbraco-devkit/<skill-or-subject>/`
   (`git rev-parse --git-common-dir`). Claude Code blocks its own file tools inside `.git`,
   so only a script the skill ships may write here.
 
-Don't put working data anywhere else: not the per-worktree git folder (`--git-dir`), not the
+Don't put working data anywhere else: not `.claude/` (Claude Code asks before every write
+there, and an unattended run can't answer), not the per-worktree git folder (`--git-dir`), not the
 system temp folder, unless it's a process's own state (a server's port, a pid).
 
 ## Architecture: the builder/reviewer gate

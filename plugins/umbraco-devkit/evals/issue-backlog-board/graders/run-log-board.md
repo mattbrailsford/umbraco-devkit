@@ -3,7 +3,7 @@ type: llm
 focus: trace
 ---
 PASS if, before asking about the first stage, the run wrote a run log to
-`.claude/devkit/issues/RUN.md`, and that file
+`.umbraco-devkit/issues/RUN.md`, and that file
 shows the board's counts (to triage 2, needs decision 1, needs investigation 3, waiting 1,
 ready 2, in progress 1) plus a section for issues this run and one for what's waiting on
 the user.

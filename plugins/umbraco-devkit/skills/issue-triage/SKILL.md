@@ -138,8 +138,8 @@ outside contributor, and reports it if so.
 Tracker updates waiting for the user's yes go in one file, so they can be read, commented on
 and approved in a preview instead of scrolling past in chat.
 
-- **Where.** `.claude/devkit/issues/DRAFTS.md` in this worktree. Before writing it, create
-  `.claude/devkit/.gitignore` holding `*` if it isn't there, so nothing in the folder is
+- **Where.** `.umbraco-devkit/issues/DRAFTS.md` in this worktree. Before writing it, create
+  `.umbraco-devkit/.gitignore` holding `*` if it isn't there, so nothing in the folder is
   committed. Other files in the issues folder belong to other skills; leave them alone.
 - **What.** The drafts from Aggregating and reporting, or the drafted answers from a
   decision run: one section per issue, headed `## #<number>` alone so other files can link
