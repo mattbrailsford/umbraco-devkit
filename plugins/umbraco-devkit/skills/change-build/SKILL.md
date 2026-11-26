@@ -55,11 +55,14 @@ If it's empty and no file matches the branch, ask what the change is.
 
 Read the code the change touches before deciding. Then pick the first that fits:
 
-1. **Cause unknown.** A bug where nobody can say what causes it: stop and hand off to
+1. **Security hole.** The change fixes what `issue-triage`'s Security reports section counts
+   as a vulnerability: stop before writing the change file or touching git, and follow that
+   section. A change file, branch or PR describing it is public before sites are patched.
+2. **Cause unknown.** A bug where nobody can say what causes it: stop and hand off to
    `investigate-bug`. A plan built on a guessed cause fixes the wrong thing.
-2. **Fits `quick-fix`.** One concern, about 20 lines, at most one new test, nothing for a
+3. **Fits `quick-fix`.** One concern, about 20 lines, at most one new test, nothing for a
    reviewer to weigh up: hand off to `quick-fix`. Don't write a change file for it.
-3. **Needs a design.** Any one of these is a hard stop, not a judgment call:
+4. **Needs a design.** Any one of these is a hard stop, not a judgment call:
    - A new screen, dialog, workspace or section, or a change to an existing screen big
      enough that someone should see a mockup first. Adding one field, button or column to
      an existing screen is fine.
@@ -71,7 +74,7 @@ Read the code the change touches before deciding. Then pick the first that fits:
 
    Hand off to `feature-explore` with what you've gathered as its starting material: the
    problem, the cause, the repro, and the code you read.
-4. **Otherwise**, it's this skill's. Go on.
+5. **Otherwise**, it's this skill's. Go on.
 
 Say which one you picked, and why, in one line.
 
@@ -124,6 +127,9 @@ Say which one you picked, and why, in one line.
      reviewer's findings show the approach is wrong, stop. Commit nothing more. Report what
      was built, and hand off to `feature-explore` with the change file as its starting
      material. The branch stays as it is for the user to decide.
+   - **A security hole after all.** If a task or the reviewer shows the change fixes a
+     vulnerability, stop the same way: commit nothing more, push nothing, and follow the size
+     test's Security hole step. Say what's already committed on the branch.
 
 ## Finish
 

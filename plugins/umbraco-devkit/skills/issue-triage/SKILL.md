@@ -432,7 +432,7 @@ A security report never gets a comment (Security reports below).
 ## Security reports
 
 This section is the plugin's one statement of this rule. `issue-triager`, `issue-resolve`,
-and `investigate-bug` all point here.
+`investigate-bug`, `quick-fix` and `change-build` all point here.
 
 **What counts.** An issue or symptom that reads like a real vulnerability: auth bypass, an
 action allowed without permission, data shown to someone who shouldn't see it, injection or
@@ -445,7 +445,9 @@ reference, or similar.
 - Tell the user, naming the issue but not detailing it, and point them at the
   responsible-disclosure process: the "Report a vulnerability to" line of `CLAUDE.md`'s
   `## Security process` section, or, with none, say the project hasn't set one. Once the
-  security team confirms it, `advisory-fix` fixes it.
+  security team confirms it, `advisory-fix` fixes it. If the user says it's already
+  reported and confirmed (a security ticket or GHSA id), hand over to `advisory-fix` with
+  that id now.
 - Never put it in a public commit, PR, comment, or issue, and never draft a public response
   to it. A public reference to an unpatched vulnerability is a leak, not a fix.
 - Never quote exploit detail into a report, log, or plan file.

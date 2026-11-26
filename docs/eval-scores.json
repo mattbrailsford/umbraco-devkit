@@ -239,6 +239,14 @@
     "without": null,
     "withoutDate": null
   },
+  "change-build-security-stop": {
+    "date": "2026-11-26",
+    "runs": 2,
+    "skillLoaded": 2,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "cms-source-content-update-keeps-values": {
     "date": "2026-10-17",
     "runs": 3,
@@ -1543,6 +1551,14 @@
     "date": "2026-11-16",
     "runs": 3,
     "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "quick-fix-security-stop": {
+    "date": "2026-11-26",
+    "runs": 2,
+    "skillLoaded": 2,
     "with": 100,
     "without": null,
     "withoutDate": null
