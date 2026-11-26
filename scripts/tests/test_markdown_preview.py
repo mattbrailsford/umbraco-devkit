@@ -241,6 +241,19 @@ class CommentStoreTests(TempRepo):
         self.store.send_drafts("b")
         self.assertEqual([c["body"] for c in self.store.claim_sent("b")], ["From A", "From B"])
 
+    def test_an_ended_sessions_comments_go_to_any_session(self):
+        # A tab left open from before Claude was restarted still sends as the old session.
+        ended = subprocess.Popen([sys.executable, "-c", "pass"])
+        ended.wait()
+        running = str(os.getpid())
+        self.store.add(self.brief, "Retry with backoff.", "From the old tab", session=str(ended.pid))
+        self.store.add(self.brief, "Webhooks", "From a running session's tab", session=running)
+        self.assertEqual(self.store.drafts("new"), [])  # drafts stay with their own tab
+        self.store.send_drafts(str(ended.pid))
+        self.store.send_drafts(running)
+        self.assertEqual([c["body"] for c in self.store.claim_sent("new")], ["From the old tab"])
+        self.assertEqual([c["body"] for c in self.store.claim_sent(running)], ["From a running session's tab"])
+
     def test_describe_says_whose_move_it_is(self):
         c = self.store.add(self.brief, "Retry with backoff.", "```suggestion\nRetry twice.\n```", section="Goals")
         self.store.claude_reply(c["id"], "Left for later.", defer="feature-plan")

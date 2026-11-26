@@ -45,7 +45,7 @@ import urllib.request
 import webbrowser
 
 import compat
-from comments import Comments, belongs, describe
+from comments import Comments, describe, for_claude
 from approvals import Approvals
 from rendering import Renderer, fetch_css, github_user, repo_context
 from seen import Seen
@@ -112,7 +112,7 @@ def comments_command(argv):
         # its worktree removed) stop waiting rather than run on unseen.
         gone_since = None
         while True:
-            if any(c["status"] == "sent" and belongs(c, session) for c in store.load()):
+            if any(c["status"] == "sent" and for_claude(c, session) for c in store.load()):
                 batch = store.claim_sent(session)
                 print(f"The reviewer sent {len(batch)} comment{'s' if len(batch) > 1 else ''}:")
                 return print(describe(batch))
@@ -155,7 +155,7 @@ def comments_command(argv):
             items = [c for c in store.unresolved() if c["path"] in wanted and c["status"] != "draft"]
             empty = "No open comments."
         else:
-            items = [c for c in store.load() if c["status"] in ("sent", "working") and belongs(c, session)]
+            items = [c for c in store.load() if c["status"] in ("sent", "working") and for_claude(c, session)]
             empty = "No comments waiting."
         return print(describe(items) if items else empty)
 
