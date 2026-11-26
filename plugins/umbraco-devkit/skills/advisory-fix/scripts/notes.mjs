@@ -52,6 +52,9 @@ export function notesPath(cwd, key) {
   return join(gitCommonDir(cwd), "devkit-advisories", `${key}.md`);
 }
 
+/** Windows checkouts can give the template, and so the file, CRLF line endings. Work in LF. */
+const lf = (text) => text.replace(/\r\n?/g, "\n");
+
 function save(file, text) {
   mkdirSync(dirname(file), { recursive: true });
   if (existsSync(file)) copyFileSync(file, `${file}.bak`);
@@ -61,7 +64,7 @@ function save(file, text) {
 }
 
 function create(file, key) {
-  const template = existsSync(TEMPLATE) ? readFileSync(TEMPLATE, "utf8") : "# [key]\n\n## Log\n";
+  const template = existsSync(TEMPLATE) ? lf(readFileSync(TEMPLATE, "utf8")) : "# [key]\n\n## Log\n";
   save(file, template.replace(/^# .*$/m, `# ${key}`));
 }
 
@@ -81,8 +84,8 @@ function sectionEnd(lines, start) {
 
 /** Returns the text with stdin added to, or replacing, one section's body. */
 export function editSection(text, heading, body, mode) {
-  const lines = text.replace(/\n+$/, "").split("\n");
-  const content = body.replace(/\n+$/, "").split("\n");
+  const lines = lf(text).replace(/\n+$/, "").split("\n");
+  const content = lf(body).replace(/\n+$/, "").split("\n");
   let start = findSection(lines, heading);
   if (start < 0) {
     lines.push("", `## ${heading.trim()}`, "");
@@ -117,7 +120,7 @@ function list(cwd) {
   const files = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".md")).sort() : [];
   if (!files.length) return void process.stdout.write("No advisory files in this repo.\n");
   for (const f of files) {
-    const text = readFileSync(join(dir, f), "utf8");
+    const text = lf(readFileSync(join(dir, f), "utf8"));
     const report = /^- Report:\s*(.*)$/m.exec(text);
     const status = /^> \*\*Status:\*\*\s*(.*)$/m.exec(text);
     process.stdout.write(`${f.slice(0, -3)}\t${report ? report[1] : ""}${status ? `\t(${status[1]})` : ""}\n`);

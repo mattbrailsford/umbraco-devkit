@@ -73,6 +73,19 @@ class NotesTests(unittest.TestCase):
         self.assertIn("## Release", text)
         self.assertIn("## Plan", text)
 
+    def test_crlf_file_is_edited_like_lf(self):
+        # A Windows checkout gives the template CRLF line endings.
+        self.notes(KEY)
+        with open(self.file, "rb") as f:
+            text = f.read().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+        with open(self.file, "wb") as f:
+            f.write(text)
+        self.assertEqual(self.notes(KEY, "--append", "Log", stdin="- 25-11-2026: confirmed.\n").returncode, 0)
+        text = self.read()
+        self.assertNotIn("\r", text)
+        self.assertEqual(text.count("## Log"), 1)
+        self.assertNotIn("[DD-MM-YYYY", text.split("## Log", 1)[1])
+
     def test_missing_section_is_added_at_the_end(self):
         self.notes(KEY)
         self.notes(KEY, "--append", "Follow-ups", stdin="- Cap the page size.\n")
