@@ -41,8 +41,9 @@ reach outside still work.
 
 ## Open it
 
-Run `scripts/preview.py` from this skill's folder as a background command, then start the
-comment helper from the same folder, also in the background:
+Run `scripts/preview.py` from this skill's folder. It starts the server on its own, or reuses
+the one already running, and returns once it's listening. Then start the comment helper from
+the same folder, in the background:
 
 ```bash
 python3 <this skill's folder>/scripts/preview.py <file-or-folder> [--scope [<folder>]]
@@ -58,8 +59,10 @@ python3 <this skill's folder>/scripts/preview.py wait
   from a tab, and the news that its docs are approved, go only to the session that opened
   it. Never stop a running server to open another file: another session may be using it.
 - The script prints the page's URL. Give it to the user.
-- The server stops when the session ends, when it's killed, or once its worktree is removed.
-  The helper then stops by itself within a minute, saying the preview has stopped. Don't start
+- The server stays up while any Claude session that opened it is still running, so one
+  session ending doesn't close another's tab. It stops once the last of them has ended, when
+  it's killed, or once its worktree is removed. The helper then stops by itself within a
+  minute, saying the preview has stopped. Don't start
   it again unless the preview is opened again.
 
 ## Review comments
@@ -134,7 +137,7 @@ whether the last step's docs were approved:
 
 ```bash
 python3 <this skill's folder>/scripts/preview.py comments --folder <plan folder>
-python3 <this skill's folder>/scripts/preview.py approval
+python3 <this skill's folder>/scripts/preview.py approval --folder <plan folder>
 ```
 
 - **New, or left for this step:** input to this run, under "Open comments on your files".
@@ -167,12 +170,13 @@ python3 <this skill's folder>/scripts/preview.py approval --request <file> [<fil
 | `feature-plan` | `PLAN.md` |
 | `issue-triage` | `DRAFTS.md`, the tracker updates waiting for a yes |
 
-- Each ask replaces the last, so the page only marks this step's docs. Say in the Hand off
-  which docs are waiting for approval.
+- Each ask replaces the last one for the same plan folder, so the page only marks this
+  step's docs there. Another folder's ask stays, so two features can wait side by side. Say
+  in the Hand off which docs are waiting for approval.
 - The reader approves on the page, once a doc's comments are all resolved. Claude never
   approves: as with resolving, there's no command for it.
 - A doc changed after approval needs approving again. The page shows which.
-- The helper also wakes once every doc asked for is approved. Say so in one line, give the
+- The helper also wakes once every doc this session asked for in one folder is approved. Say so in one line, give the
   suggested next step, and start the helper again. Don't start the next step unasked.
 
 ## Offering a preview

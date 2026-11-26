@@ -1,10 +1,11 @@
-"""The few things macOS/Linux and Windows do differently: locking a file, swapping one in, and
-telling whether a process is still running.
+"""The few things macOS/Linux and Windows do differently: locking a file, swapping one in,
+telling whether a process is still running, and starting one that outlives its parent.
 
 Windows has no `fcntl`, and `os.kill(pid, 0)` there doesn't probe a process: signal 0 is
 `CTRL_C_EVENT`, and the call succeeds even for a process that has exited.
 """
 import os
+import subprocess
 import sys
 import time
 
@@ -55,6 +56,16 @@ if sys.platform == "win32":
         finally:
             _kernel32.CloseHandle(handle)
 
+    def _detach_flags():
+        return subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+
+    def _popen_detached(cmd, **kwargs):
+        # Out of the starter's job too, where the job allows it, so closing that doesn't end this.
+        try:
+            return subprocess.Popen(cmd, creationflags=_detach_flags() | subprocess.CREATE_BREAKAWAY_FROM_JOB, **kwargs)
+        except OSError:
+            return subprocess.Popen(cmd, creationflags=_detach_flags(), **kwargs)
+
 else:
     import fcntl
 
@@ -73,3 +84,15 @@ else:
             return True
         except OSError:
             return False
+
+    def _popen_detached(cmd, **kwargs):
+        return subprocess.Popen(cmd, start_new_session=True, **kwargs)
+
+
+def spawn_detached(cmd, log, cwd=None):
+    """Start `cmd` in its own process group, with no terminal, writing its output to `log`.
+    It keeps running once the caller exits, and isn't stopped with the task that ran the caller:
+    once its parent is gone, nothing links it back."""
+    with open(log, "w") as out:
+        return _popen_detached(cmd, stdin=subprocess.DEVNULL, stdout=out, stderr=subprocess.STDOUT,
+                               cwd=cwd, close_fds=True)

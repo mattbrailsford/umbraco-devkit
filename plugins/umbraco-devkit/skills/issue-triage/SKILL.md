@@ -443,7 +443,9 @@ reference, or similar.
 
 - Stop. Don't triage, investigate, or fix it as normal work.
 - Tell the user, naming the issue but not detailing it, and point them at the
-  responsible-disclosure process.
+  responsible-disclosure process: the "Report a vulnerability to" line of `CLAUDE.md`'s
+  `## Security process` section, or, with none, say the project hasn't set one. Once the
+  security team confirms it, `advisory-fix` fixes it.
 - Never put it in a public commit, PR, comment, or issue, and never draft a public response
   to it. A public reference to an unpatched vulnerability is a leak, not a fix.
 - Never quote exploit detail into a report, log, or plan file.

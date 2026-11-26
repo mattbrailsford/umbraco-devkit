@@ -106,6 +106,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 | Plan a clear fix or small change in one file, then build it task by task | [`/change-build`](plugins/umbraco-devkit/skills/change-build/SKILL.md) |
 | Find and prove why something is broken, then route the fix | [`/investigate-bug`](plugins/umbraco-devkit/skills/investigate-bug/SKILL.md) |
 | Port a merged change to another version line, still reviewed | [`/change-backport`](plugins/umbraco-devkit/skills/change-backport/SKILL.md) |
+| Fix a confirmed vulnerability under embargo, from report to published advisory, with the affected and fixed versions | [`/advisory-fix`](plugins/umbraco-devkit/skills/advisory-fix/SKILL.md) |
 
 ### Work the issue tracker
 
@@ -162,6 +163,7 @@ You don't run these. The skills above and the agents load them when the work nee
 | Hook | What it does |
 |---|---|
 | [`trunk-gate`](plugins/umbraco-devkit/hooks/trunk-gate.mjs) | Asks you before any commit or push to `main` or a version branch. Needs Node |
+| [`embargo-gate`](plugins/umbraco-devkit/hooks/embargo-gate.mjs) | Blocks an unreleased security fix from reaching any remote except its private fork, until you lift the embargo, and blocks advisory ids in commit messages, branch names and PRs. Needs Node |
 
 **Pre-review checks:** [`checks/`](plugins/umbraco-devkit/checks/run.mjs) is a script `feature-build` runs between the builder and the reviewer, for slips a script can catch (file encoding, links into plan folders, unsanitized `unsafeHTML`, files git doesn't track, tests switched off, warnings suppressed with no reason, empty `catch` blocks, fixed waits in tests). Add your own in `.claude/checks/`. Needs Node.
 
