@@ -7,4 +7,4 @@ allowed_tools: [Read, Glob, Grep, Skill, Write, Edit]
 ---
 
 Let's work through the backlog. gh can't reach GitHub from here; `ISSUES.json` is a fresh
-export of every open issue with its labels.
+export of every open issue with its body and labels.

@@ -19,7 +19,7 @@ the next stage, and hands that stage to the skill that owns it.
 
 - IN: count issues by state, suggest the next stage, run it through its owning skill, run
   investigations in parallel and gather their results, apply the tracker updates the user
-  approves, start fixes one at a time.
+  approves, start fixes one at a time, keep a run log the user can watch.
 - OUT: triage judgments (`issue-triage`), proving a cause (`investigate-bug`), the fix itself
   and its tracker updates (`issue-resolve`), and any tracker write the user hasn't
   approved.
@@ -42,6 +42,44 @@ Count open issues in each of these, and show the counts:
 | Waiting | `state/needs-info` and `state/blocked` not yet due for another look |
 | Ready | `state/ready` |
 | In progress | `state/in-progress` |
+
+## The run log
+
+A run scrolls out of sight in chat. Keep the board and every issue the run touches in one
+file the user can keep open beside it.
+
+- **Where.** `RUN.md` in the issues folder `issue-triage` keeps its drafts in (its "The
+  drafts file" section), so one preview shows both the run and what's waiting for approval.
+  Git ignores that folder, so the log is never committed.
+- **Start.** Write it as soon as the board is counted, before asking about the first stage.
+  If a `RUN.md` from earlier today exists, keep its rows: the run was cut short, by a `/clear`
+  or a closed session, and is picking up again. Otherwise start it empty.
+- **Keep it current.** Rewrite it after every change, not at the end of a stage: the board
+  when it's counted again, a row as each issue gets a result (each investigation as it
+  returns, not when the batch ends), and its status once the user approves or skips it.
+- **Shape.** The date it started, then:
+  - The board, as a table of counts. Link each count to the tracker's own list of those
+    issues, when the tracker has a filtered list a link can open. On GitHub that's an issue
+    search for open issues with the row's labels, such as
+    `https://github.com/<owner>/<repo>/issues?q=is:issue+is:open+label:state/ready`:
+    several labels in one row join with commas (`label:state/needs-info,state/blocked`),
+    and To triage excludes every state label (`-label:state/ready` for each). The tracker
+    link shows every issue with the label, so it can differ from a count that leaves some out.
+  - `## Issues this run`: one row per issue, ordered by issue number, so one that opens
+    mid-run lands in its place. Issue number, linked to the issue on the tracker, and title, stage,
+    the result in a few words, the state label it gets, and its status: `drafted`,
+    `applied` or `skipped`. A `drafted` status links to that issue's draft
+    (`DRAFTS.md#<number>`); drop the link once it's applied or skipped.
+  - `## Waiting on you`: questions the user hasn't answered yet, and a link to
+    `DRAFTS.md` while it holds updates waiting for approval, or "Nothing."
+- **Security reports.** A flagged issue gets its number and "security report" only, never
+  the title or details, as `issue-triage`'s Security reports section says.
+- **Show it.** After the first write, offer to open the issues folder with
+  `markdown-preview`, scoped to the folder, as its "Offering a preview" section says. Give
+  the file's path too, for an editor. The page refreshes on each write.
+
+The tracker's labels stay the record. The log only shows this run's progress; losing it
+loses nothing.
 
 ## Pick the next stage
 
@@ -78,11 +116,10 @@ show the board again and pick again, until the user stops or nothing is left to 
    one is an Agent tool call with `isolation: "worktree"`, told to invoke `investigate-bug`
    (Skill tool) with the issue ID and `--unattended`. Send a batch as parallel calls in one message.
 4. **Gather.** Pull any security flag into its own list, handled as `issue-triage`'s
-   Security reports section says. Show one table for the rest: issue, outcome
-   (`state/ready`, `state/needs-info`, `state/blocked`, or a close), the cause in one line,
-   and the drafted comment.
-5. **Apply** exactly the updates the user approves, as `issue-triage`'s Aggregating and
-   reporting section does.
+   Security reports section says. Draft the rest into `issue-triage`'s drafts file, as its
+   "The drafts file" section says: issue, outcome (`state/ready`, `state/needs-info`,
+   `state/blocked`, or a close), the cause in one line, and the drafted comment.
+5. **Apply** exactly the updates the user approves, as that section says.
 
 ## The fix stage
 
@@ -103,5 +140,5 @@ show the board again and pick again, until the user stops or nothing is left to 
 
 ## Hand off
 
-The board, and what's still open: issues in progress, and issues waiting on a reporter or
+Where the run log is, the board, and what's still open: issues in progress, and issues waiting on a reporter or
 an upstream fix.

@@ -312,7 +312,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `issue-backlog-board` | 100 | 2026-10-16 |
+| `issue-backlog-board` | 100 | 2026-11-26 |
 
 ### `issue-resolve`
 
@@ -330,7 +330,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 | `issue-triage-feature-route-question` | 100 | 2026-11-10 |
 | `issue-triage-linked-pr` | 100 | 2026-10-19 |
 | `issue-triage-security-report` | 100 | 2026-10-16 |
-| `issue-triage-type-labels` | 100 | 2026-11-10 |
+| `issue-triage-type-labels` | 100 | 2026-11-26 |
 
 ### `major-upgrade`
 
