@@ -9,9 +9,9 @@ Usage:
                                         list comments waiting on Claude, or every open one on
                                         PATH, or anywhere under DIR (a plan folder, say)
   preview.py reply ID TEXT [--done | --defer STEP] [--move TEXT]
-  preview.py approval [--request FILE... [--step NAME]]
+  preview.py approval [--request FILE... [--step NAME] | --folder DIR]
                                         ask the reader to approve these docs, or list where
-                                        the approvals asked for stand
+                                        the approvals asked for stand (under DIR only)
 
 Renders through GitHub's Markdown API (with the `gh` CLI's sign-in), serves the page on
 127.0.0.1 and refreshes it in place whenever the file changes on disk. A folder opens
@@ -19,7 +19,9 @@ GitHub-style: its file list beside its README. Readers can leave review comments
 line, then send them to Claude in one batch, and approve the docs a step asks them to.
 
 One server runs per git worktree; asking again reuses it, and an open preview tab is sent to
-the new page rather than opening another. The server stops once its worktree is removed.
+the new page rather than opening another. Run from Claude Code, the server runs on its own:
+this command returns once it's listening. It stays up while any Claude session that opened
+it is still running, and stops once the last has ended, or once its worktree is removed.
 Each Claude session on a worktree gets its own tab and helper: comments sent from a tab go
 to the session that opened it.
 Comments live in the worktree's git folder, so they're never committed and any step can read
@@ -81,8 +83,10 @@ def comments_command(argv):
     outcome.add_argument("--defer", metavar="STEP", help="another step owns the file; leave it for STEP")
     parser.add_argument("--move", metavar="TEXT", help="re-pin the comment to TEXT, which replaced what it was on")
     parser.add_argument("--file", action="append", help="comments: open comments on this file instead")
-    parser.add_argument("--folder", help="comments: every open comment on files under this folder, unsent ones too")
-    parser.add_argument("--request", nargs="+", metavar="FILE", help="approval: ask for approval on these docs, replacing the last ask")
+    parser.add_argument("--folder", help="comments: every open comment on files under this folder, unsent ones too;"
+                        " approval: only the docs asked for under this folder")
+    parser.add_argument("--request", nargs="+", metavar="FILE",
+                        help="approval: ask for approval on these docs, replacing the last ask for their folder")
     parser.add_argument("--step", help="approval: the step asking")
     parser.add_argument("--root", help="worktree (default: the one holding the current folder)")
     args = parser.parse_args(argv)
@@ -133,7 +137,7 @@ def comments_command(argv):
                 sys.exit("Not found: " + ", ".join(missing))
             approvals.request(wanted, args.step, session)
             return print("Asked the reviewer to approve " + ", ".join(p.lstrip("/") for p in wanted) + ".")
-        states = approvals.states(root)
+        states = approvals.states(root, url_path(args.folder).rstrip("/") + "/" if args.folder else "/")
         if not states:
             return print("No approval asked for.")
         note = {"needed": "waiting for the reviewer's approval", "approved": "approved",
@@ -177,11 +181,41 @@ def running_port(server_file, root):
         return None
 
 
-def stop_when_gone(server, root):
-    """A removed worktree has nothing left to preview, so shut down with it."""
-    while os.path.isdir(root):
-        time.sleep(2)
+# How long to wait for a server started on its own to start listening: it fetches GitHub's
+# styles and the reader's GitHub login first.
+START_TIMEOUT = 60
+
+
+def stop_when_unused(server, root, every=2):
+    """Shut down once no Claude session that opened the preview is still running, or once its
+    worktree is removed: there's nothing left to preview."""
+    while os.path.isdir(root) and server.users.in_use():
+        time.sleep(every)
     server.shutdown()
+
+
+def post(port, route, data):
+    req = urllib.request.Request(f"http://127.0.0.1:{port}{route}", json.dumps(data).encode(), method="POST")
+    with urllib.request.urlopen(req, timeout=2) as res:
+        return res.read().decode()
+
+
+def start_on_its_own(argv, paths, root, url_path):
+    """Start the server as its own process, so it isn't stopped with the session that ran this
+    command while other sessions still use it. Returns once it's listening."""
+    os.makedirs(STATE_DIR, exist_ok=True)
+    log = os.path.splitext(paths.server)[0] + "-server.log"
+    proc = compat.spawn_detached([sys.executable, os.path.abspath(__file__), *argv, "--serve"], log, cwd=os.getcwd())
+    deadline = time.time() + START_TIMEOUT
+    while time.time() < deadline:
+        port = running_port(paths.server, root)
+        if port:
+            return print(f"Previewing http://127.0.0.1:{port}/{url_path}", flush=True)
+        if proc.poll() is not None:
+            break
+        time.sleep(0.2)
+    with open(log) as f:
+        sys.exit("The preview didn't start:\n" + f.read().strip())
 
 
 def open_command(argv):
@@ -193,6 +227,7 @@ def open_command(argv):
     parser.add_argument("--scope", nargs="?", const="", metavar="DIR",
                         help="keep navigation and comments inside DIR (default: the opened folder, or the file's folder)")
     parser.add_argument("--no-comments", action="store_true", help="open read-only, with no review comments")
+    parser.add_argument("--serve", action="store_true", help=argparse.SUPPRESS)  # be the server, not start one
     args = parser.parse_args(argv)
 
     target = os.path.realpath(args.path)
@@ -222,27 +257,31 @@ def open_command(argv):
 
     # One server per worktree: if it's running, send this session's open tab there (or open one).
     paths = state_paths(root)
+    claude = os.environ.get("CLAUDE_PID")  # this session's Claude Code, which the server outlives only while it runs
     port = running_port(paths.server, root)
     if port:
         url = f"http://127.0.0.1:{port}/{url_path}"
+        if claude:
+            post(port, "/__use", {"claude": claude})
         if not args.no_open:
-            req = urllib.request.Request(f"http://127.0.0.1:{port}/__open", json.dumps({"path": url_path, "session": session}).encode(), method="POST")
-            with urllib.request.urlopen(req, timeout=2) as res:
-                reused = res.read().decode() == "reused"
+            reused = post(port, "/__open", {"path": url_path, "session": session}) == "reused"
             if not reused:
                 webbrowser.open(url)
             print(f"Preview already running for {root}; {'showing it in the open tab' if reused else 'opened'} {url}", flush=True)
         return
 
+    if claude and not args.serve:
+        return start_on_its_own(argv, paths, root, url_path)
+
     server = PreviewServer(args.port, root=root, css=fetch_css(), renderer=Renderer(repo_context(start_dir)),
                            comments=Comments(paths.comments), seen=Seen(paths.seen), approvals=Approvals(paths.approvals),
-                           user=github_user())
+                           user=github_user(), claude=claude)
     os.makedirs(STATE_DIR, exist_ok=True)
     with open(paths.server, "w") as f:
         json.dump({"root": root, "port": server.port, "pid": os.getpid()}, f)
     atexit.register(lambda: os.path.exists(paths.server) and os.remove(paths.server))
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))  # so atexit still runs when killed
-    threading.Thread(target=stop_when_gone, args=(server, root), daemon=True).start()
+    threading.Thread(target=stop_when_unused, args=(server, root), daemon=True).start()
 
     url = f"http://127.0.0.1:{server.port}/{url_path}"
     print(f"Previewing {url}", flush=True)

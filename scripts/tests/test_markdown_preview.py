@@ -9,6 +9,7 @@ import os
 import pathlib
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -26,6 +27,8 @@ import folders  # noqa: E402
 import seen  # noqa: E402
 import server  # noqa: E402
 import approvals  # noqa: E402
+import compat  # noqa: E402
+import preview  # noqa: E402
 import worktree  # noqa: E402
 
 
@@ -100,6 +103,47 @@ class WorktreeTests(TempRepo):
         pid_file = os.path.join(self.root, "pid")
         write(pid_file, str(child.pid))
         self.assertFalse(worktree.pid_alive(pid_file))
+
+
+class LifetimeTests(TempRepo):
+    """The server outlives the Claude session that started it while another still uses it."""
+
+    def ended_pid(self):
+        child = subprocess.Popen([sys.executable, "-c", "pass"])
+        child.wait()
+        return child.pid
+
+    def test_in_use_while_any_session_runs(self):
+        self.assertTrue(server.Users().in_use())  # started outside Claude Code: runs until stopped
+        users = server.Users(self.ended_pid())
+        self.assertFalse(users.in_use())
+        users = server.Users(self.ended_pid())
+        users.add(os.getpid())  # a second session, still running
+        self.assertTrue(users.in_use())
+
+    def test_stops_once_no_session_is_left_or_the_worktree_is_gone(self):
+        class Fake:
+            def __init__(self, users):
+                self.users, self.stopped = users, False
+
+            def shutdown(self):
+                self.stopped = True
+        unused = Fake(server.Users(self.ended_pid()))
+        preview.stop_when_unused(unused, self.root, every=0.01)
+        self.assertTrue(unused.stopped)
+        gone = Fake(server.Users(os.getpid()))
+        preview.stop_when_unused(gone, os.path.join(self.root, "removed"), every=0.01)
+        self.assertTrue(gone.stopped)
+
+    def test_a_detached_process_outlives_its_starter(self):
+        # The starter is the background task Claude Code stops when its session ends.
+        pid_file, log = os.path.join(self.root, "pid"), os.path.join(self.root, "log")
+        code = ("import compat, sys, time; p = compat.spawn_detached([sys.executable, '-c', 'import time; time.sleep(30)'], "
+                f"{log!r}); open({pid_file!r}, 'w').write(str(p.pid))")
+        subprocess.run([sys.executable, "-c", code], cwd=SCRIPTS, check=True, timeout=20)
+        pid = int(read(pid_file))
+        self.addCleanup(lambda: compat.pid_running(pid) and os.kill(pid, signal.SIGTERM))
+        self.assertTrue(compat.pid_running(pid))
 
 
 class CommentStoreTests(TempRepo):
@@ -277,6 +321,8 @@ class CommandTests(TempRepo):
         listing = self.run_cli("approval").stdout
         self.assertIn("docs/plans/retries/SPEC.md: approved", listing)
         self.assertIn("docs/plans/retries/BRIEF.md: waiting for the reviewer's approval", listing)
+        self.assertIn("SPEC.md: approved", self.run_cli("approval", "--folder", self.plan).stdout)
+        self.assertIn("No approval asked for.", self.run_cli("approval", "--folder", os.path.join(self.root, "docs", "other")).stdout)
 
     def test_wait_wakes_when_everything_asked_for_is_approved(self):
         store = approvals.Approvals(worktree.state_paths(self.root).approvals)
@@ -363,6 +409,12 @@ class ServerTests(TempRepo):
         data = res.read().decode()
         conn.close()
         return res.status, res.getheader("Content-Type"), res.getheader("Location"), data
+
+    def test_a_session_using_the_server_keeps_it_up(self):
+        self.assertTrue(self.srv.users.in_use())
+        self.assertEqual(self.request("POST", "/__use", {"claude": os.getpid()})[0], 200)
+        self.assertEqual(self.srv.users.pids, {os.getpid()})
+        self.assertEqual(self.request("POST", "/__use", {})[0], 400)
 
     def test_a_markdown_file_gets_the_filled_in_page(self):
         status, _, _, page = self.request("GET", "/docs/plans/retries/BRIEF.md")
@@ -540,6 +592,30 @@ class ApprovalTests(TempRepo):
         self.approvals.request([self.spec], "feature-design")
         self.assertIsNone(self.state(self.brief))
         self.assertEqual(self.state(self.spec), "needed")
+
+    def test_two_plan_folders_each_keep_their_ask(self):
+        # Two features specced on one worktree by two sessions: the second ask mustn't wipe
+        # the first, and each session hears only about its own.
+        other = "/docs/plans/tags/BRIEF.md"
+        write(self.root + other, "# Tags\n")
+        self.approvals.request([self.spec], "feature-design", session="a")
+        self.approvals.request([other], "feature-explore", session="b")
+        self.assertEqual(self.state(self.spec), "needed")
+        self.assertEqual(self.state(other), "needed")
+        self.approvals.approve(self.spec, self.root + self.spec)
+        self.assertIsNone(self.approvals.claim_all_approved(self.root, "b"))
+        self.assertEqual(self.approvals.claim_all_approved(self.root, "a"), [self.spec])
+        self.approvals.approve(other, self.root + other)
+        self.assertEqual(self.approvals.claim_all_approved(self.root, "b"), [other])
+        self.assertEqual([p for p, *_ in self.approvals.states(self.root, "/docs/plans/tags/")], [other])
+
+    def test_reads_a_file_from_before_asks_were_per_folder(self):
+        write(self.approvals.path, json.dumps({"step": "feature-design", "session": "", "requested": [self.spec],
+                                               "approved": {}, "told": False}))
+        self.assertEqual(self.state(self.spec), "needed")
+        self.approvals.approve(self.spec, self.root + self.spec)
+        self.assertEqual(self.state(self.spec), "approved")
+        self.assertEqual(self.approvals.load()["asks"][0]["folder"], "/docs/plans/retries/")
 
     def test_claude_hears_once_when_all_are_approved(self):
         self.assertIsNone(self.approvals.claim_all_approved(self.root))
