@@ -66,7 +66,7 @@ file the user can keep open beside it.
     and To triage excludes every state label (`-label:state/ready` for each). The tracker
     link shows every issue with the label, so it can differ from a count that leaves some out.
   - `## Issues this run`: one row per issue, ordered by issue number, so one that opens
-    mid-run lands in its place. Issue number and title, stage,
+    mid-run lands in its place. Issue number, linked to the issue on the tracker, and title, stage,
     the result in a few words, the state label it gets, and its status: `drafted`,
     `applied` or `skipped`. A `drafted` status links to that issue's draft
     (`DRAFTS.md#<number>`); drop the link once it's applied or skipped.
