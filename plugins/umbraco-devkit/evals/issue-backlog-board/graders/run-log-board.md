@@ -1,9 +1,12 @@
 ---
 type: llm
-focus: {source: file, path: .claude/backlog/RUN.md}
+focus: trace
 ---
-PASS if the file shows the board's counts: to triage 2, needs decision 1, needs
-investigation 3, waiting 1, ready 2, in progress 1, and has a section for issues this run
-and one for what's waiting on the user.
+PASS if, before asking about the first stage, the run wrote a run log to
+`issue-backlog/RUN.md` inside the git folder (`.git/issue-backlog/RUN.md`), and that file
+shows the board's counts (to triage 2, needs decision 1, needs investigation 3, waiting 1,
+ready 2, in progress 1) plus a section for issues this run and one for what's waiting on
+the user.
 
-FAIL if the counts are missing or wrong, or either section is missing.
+FAIL if no log was written, it was written anywhere else (such as `.claude/` or the repo
+root), the counts are missing or wrong, or either section is missing.

@@ -48,9 +48,9 @@ Count open issues in each of these, and show the counts:
 A run scrolls out of sight in chat. Keep the board and every issue the run touches in one
 file the user can keep open beside it.
 
-- **Where.** `.claude/backlog/RUN.md`. Before writing it, create `.claude/backlog/.gitignore`
-  holding `*` if it isn't there, so git ignores the whole folder and the log is never
-  committed. Never edit the project's own `.gitignore` for it.
+- **Where.** `issue-backlog/RUN.md` under the worktree's git folder (`git rev-parse
+  --git-dir`), the way `markdown-preview` keeps its comments. Git never tracks its own
+  folder, so the log is never committed and nothing needs ignoring.
 - **Start.** Write it as soon as the board is counted, before asking about the first stage.
   If a `RUN.md` from earlier today exists, keep its rows: the run was cut short, by a `/clear`
   or a closed session, and is picking up again. Otherwise start it empty.
