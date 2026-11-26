@@ -80,6 +80,7 @@ mkdir -p .git/markdown-preview
 # feature-design asked for approval on both its docs; only SPEC.md is approved.
 spec_hash="$(shasum -a 256 docs/plans/tag-filters/SPEC.md | cut -d' ' -f1)"
 cat > .git/markdown-preview/approvals.json <<JSON
-{"step": "feature-design", "requested": ["/docs/plans/tag-filters/SPEC.md", "/docs/plans/tag-filters/ARCHITECTURE.md"],
- "approved": {"/docs/plans/tag-filters/SPEC.md": {"hash": "$spec_hash", "at": "2026-10-24T10:00:00"}}, "told": false}
+{"asks": [{"folder": "/docs/plans/tag-filters/", "step": "feature-design", "session": "",
+ "requested": ["/docs/plans/tag-filters/SPEC.md", "/docs/plans/tag-filters/ARCHITECTURE.md"],
+ "approved": {"/docs/plans/tag-filters/SPEC.md": {"hash": "$spec_hash", "at": "2026-10-24T10:00:00"}}, "told": false}]}
 JSON

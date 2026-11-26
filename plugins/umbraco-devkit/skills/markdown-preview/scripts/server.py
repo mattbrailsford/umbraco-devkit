@@ -12,10 +12,12 @@ import json
 import mimetypes
 import os
 import re
+import threading
 import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+import compat
 from folders import breadcrumbs, change_marker, folder_listing
 from worktree import inside, pid_alive, state_paths
 
@@ -96,10 +98,34 @@ class Tabs:
         return self.go_to.pop(session, None)
 
 
+class Users:
+    """The Claude sessions using the server, by the process id of each one's Claude Code, so
+    the server outlives the session that started it while another still uses it."""
+
+    def __init__(self, first=None):
+        self.lock = threading.Lock()
+        self.pids = set()
+        self.tracked = False  # whether any session has said it uses the server
+        if first:
+            self.add(first)
+
+    def add(self, pid):
+        with self.lock:
+            self.pids.add(int(pid))
+            self.tracked = True
+
+    def in_use(self):
+        """False once every session that used the server has ended. Always True for a server
+        no session has said it uses: one started outside Claude Code runs until it's stopped."""
+        with self.lock:
+            self.pids = {p for p in self.pids if compat.pid_running(p)}
+            return bool(self.pids) or not self.tracked
+
+
 class PreviewServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, port, *, root, css, renderer, comments, seen, approvals, user):
+    def __init__(self, port, *, root, css, renderer, comments, seen, approvals, user, claude=None):
         self.root = root
         self.css = css
         self.renderer = renderer
@@ -108,6 +134,7 @@ class PreviewServer(ThreadingHTTPServer):
         self.approvals = approvals
         self.user = user
         self.tabs = Tabs()
+        self.users = Users(claude)
         super().__init__(("127.0.0.1", port), Handler)
 
     @property
@@ -328,6 +355,14 @@ class Handler(BaseHTTPRequestHandler):
         self.server.approvals.approve(path, found)
         self.ok()
 
+    def post_use(self):
+        """A Claude session using the server, so it stays up while that session runs."""
+        try:
+            self.server.users.add(self.data["claude"])
+        except (KeyError, TypeError, ValueError):
+            raise BadRequest("no Claude process id")
+        self.ok()
+
     def post_open(self):
         self.send(200, "reused" if self.server.tabs.open(self.data["path"], self.session()) else "none", "text/plain")
 
@@ -377,6 +412,7 @@ GET_ROUTES = {
 POST_ROUTES = {
     "/__md": Handler.post_markdown,
     "/__open": Handler.post_open,
+    "/__use": Handler.post_use,
     "/__approve": Handler.post_approve,
     "/__comments": Handler.post_comment,
     "/__comments/send": Handler.post_send,
