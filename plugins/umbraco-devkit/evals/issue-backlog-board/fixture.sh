@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-git init -q
 cat > CLAUDE.md <<'EOF'
 # Umbraco.Community.TagCloud
 
@@ -28,9 +27,12 @@ cat > ISSUES.json <<'EOF'
   {"number": 88, "title": "Cloud empty after upgrading to 17.1", "labels": ["state/needs-investigation"], "updatedAt": "2026-10-09"},
   {"number": 90, "title": "Wrong weights with variant content", "labels": ["state/needs-investigation"], "updatedAt": "2026-10-11"},
   {"number": 91, "title": "Slow dashboard with 5,000 tags", "labels": ["state/needs-investigation"], "updatedAt": "2026-10-12"},
-  {"number": 86, "title": "Crash on startup on Azure", "labels": ["state/needs-info"], "updatedAt": "2026-10-14", "note": "needs-info added 2026-10-14; no reply from the reporter since"},
+  {"number": 86, "title": "Crash on startup on Azure", "labels": ["state/needs-info"], "updatedAt": "__RECENT__", "note": "needs-info added __RECENT__; no reply from the reporter since"},
   {"number": 80, "title": "Tags with spaces break the link", "labels": ["state/ready"], "updatedAt": "2026-10-08"},
   {"number": 82, "title": "Typo in the settings label", "labels": ["state/ready"], "updatedAt": "2026-10-08"},
   {"number": 79, "title": "Dark mode colours", "labels": ["state/in-progress"], "updatedAt": "2026-10-13"}
 ]
 EOF
+# Keep #86 inside the 30-day needs-info timeout whenever the case runs.
+RECENT=$(date -u -d '5 days ago' +%F 2>/dev/null || date -u -v-5d +%F)
+sed -i.bak "s/__RECENT__/$RECENT/g" ISSUES.json && rm ISSUES.json.bak

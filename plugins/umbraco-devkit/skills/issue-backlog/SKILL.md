@@ -50,7 +50,7 @@ file the user can keep open beside it.
 
 - **Where.** `RUN.md` in the issues folder `issue-triage` keeps its drafts in (its "The
   drafts file" section), so one preview shows both the run and what's waiting for approval.
-  The folder is under git's own folder, so the log is never committed.
+  Git ignores that folder, so the log is never committed.
 - **Start.** Write it as soon as the board is counted, before asking about the first stage.
   If a `RUN.md` from earlier today exists, keep its rows: the run was cut short, by a `/clear`
   or a closed session, and is picking up again. Otherwise start it empty.

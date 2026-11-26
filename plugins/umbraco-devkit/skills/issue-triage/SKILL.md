@@ -138,9 +138,9 @@ outside contributor, and reports it if so.
 Tracker updates waiting for the user's yes go in one file, so they can be read, commented on
 and approved in a preview instead of scrolling past in chat.
 
-- **Where.** `issues/DRAFTS.md` under the worktree's git folder (`git rev-parse --git-dir`),
-  the way `markdown-preview` keeps its comments. Git never tracks its own folder, so nothing
-  here is committed. Other files in that folder belong to other skills; leave them alone.
+- **Where.** `.claude/devkit/issues/DRAFTS.md` in this worktree. Before writing it, create
+  `.claude/devkit/.gitignore` holding `*` if it isn't there, so nothing in the folder is
+  committed. Other files in the issues folder belong to other skills; leave them alone.
 - **What.** The drafts from Aggregating and reporting, or the drafted answers from a
   decision run: one section per issue, headed `## #<number>` alone so other files can link
   to `DRAFTS.md#<number>`, then the issue's title, the table's columns for it, and its
