@@ -12,18 +12,36 @@ carries no source line numbers. Its status says whose move it is:
     resolved   the reader closed it. Only the reader resolves.
 
 A comment also keeps the Claude session whose tab it was written or last replied in, so
-sending it wakes that session's helper and no other. One with no session goes to any.
+sending it wakes that session's helper and no other. One with no session goes to any, and so
+does one whose session has ended: a tab left open from before Claude was restarted still
+sends as the old session, and nothing would hear it.
 
 The page server and Claude's commands both change the file (see store.py).
 """
+import compat
 from store import JsonStore, now
 
 OPEN = ("draft", "sent", "working", "replied", "addressed", "deferred")
 
 
 def belongs(c, session):
-    """Whether this session's Claude gets the comment."""
+    """Whether the comment was written in this session's tab (or in one with no session)."""
     return c.get("session", "") in ("", session)
+
+
+def session_gone(session):
+    """Whether a session has ended. A session is its Claude Code's process id; any other id
+    (from outside Claude Code, say) can't be checked, so it counts as running."""
+    try:
+        return not compat.pid_running(int(session))
+    except ValueError:
+        return False
+
+
+def for_claude(c, session):
+    """Whether this session's Claude gets the comment: written in its tab, or in the tab of a
+    session that has ended."""
+    return belongs(c, session) or session_gone(c.get("session", ""))
 
 
 class Comments(JsonStore):
@@ -95,9 +113,10 @@ class Comments(JsonStore):
     # ---------- Claude, through the commands ----------
 
     def claim_sent(self, session=""):
-        """Take this session's sent batch: mark it as being worked on, and return it."""
+        """Take this session's sent batch, and any sent from an ended session's tab: mark it as
+        being worked on, and return it."""
         def claim(items):
-            batch = [c for c in items if c["status"] == "sent" and belongs(c, session)]
+            batch = [c for c in items if c["status"] == "sent" and for_claude(c, session)]
             for c in batch:
                 c["status"] = "working"
             return batch
