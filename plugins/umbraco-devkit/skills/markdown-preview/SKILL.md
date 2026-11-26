@@ -32,7 +32,9 @@ made in answer, not just the line they commented on.
   feature's plan folder"), and ask only if it's still ambiguous.
 - **"The brief", "the spec", "the plan's tasks"**: that file in the plan folder, scoped to
   the folder.
-- **A named file or folder**: that one, unscoped unless it's in a plan folder.
+- **A named file or folder**: that one, unscoped unless it's in a plan folder. Then it's
+  scoped to that plan folder (`--scope <plan folder>`), even when the file is in a subfolder
+  such as `mockups/`.
 - **Nothing named**: the file you last wrote or the user last mentioned in this session.
 
 **Scope** keeps the page's navigation and comments inside one folder: the path bar starts
@@ -57,7 +59,9 @@ python3 <this skill's folder>/scripts/preview.py wait
   again reuses them: this session's open tab is sent to the new page instead of opening
   another, and a second helper exits at once saying one is already waiting. Comments sent
   from a tab, and the news that its docs are approved, go only to the session that opened
-  it. Never stop a running server to open another file: another session may be using it.
+  it. So a tab on a plan folder is scoped to it: two features in review each keep their own
+  comments. A tab left from a session that has ended (Claude was restarted) sends to whichever
+  session is waiting. Never stop a running server to open another file: another session may be using it.
 - The script prints the page's URL. Give it to the user.
 - The server stays up while any Claude session that opened it is still running, so one
   session ending doesn't close another's tab. It stops once the last of them has ended, when
