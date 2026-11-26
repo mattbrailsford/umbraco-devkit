@@ -68,8 +68,8 @@ git commit -q -am "fix(api): Check Content section access when listing drafts"
 git checkout -q v17/dev
 git update-ref refs/remotes/origin/v16/dev v16/dev
 
-mkdir -p "$(git rev-parse --git-common-dir)/devkit-advisories"
-cat > "$(git rev-parse --git-common-dir)/devkit-advisories/GHSA-abcd-efgh-ijkl.md" <<'MD'
+mkdir -p "$(git rev-parse --git-common-dir)/umbraco-devkit/advisories"
+cat > "$(git rev-parse --git-common-dir)/umbraco-devkit/advisories/GHSA-abcd-efgh-ijkl.md" <<'MD'
 # GHSA-abcd-efgh-ijkl
 
 PRIVATE. This file lives in the repo's `.git` folder and is never pushed.

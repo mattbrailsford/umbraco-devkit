@@ -83,9 +83,25 @@ class WorktreeTests(TempRepo):
         self.addCleanup(shutil.rmtree, outside)
         self.assertEqual(worktree.find_git(outside), (None, None))
 
-    def test_comments_live_in_the_git_folder(self):
+    def test_comments_live_in_the_devkit_folder(self):
         self.assertEqual(worktree.state_paths(self.root).comments,
-                         os.path.join(self.root, ".git", "markdown-preview", "comments.json"))
+                         os.path.join(self.root, ".umbraco-devkit", "previews", "comments.json"))
+
+    def test_devkit_folder_ignores_itself(self):
+        worktree.state_paths(self.root)
+        with open(os.path.join(self.root, ".umbraco-devkit", ".gitignore")) as f:
+            self.assertEqual(f.read(), "*\n")
+        self.assertFalse(os.path.exists(os.path.join(self.root, ".gitignore")))
+
+    def test_comments_in_the_git_folder_move_once(self):
+        old = os.path.join(self.root, ".git", "markdown-preview")
+        devkit = os.path.join(self.root, ".umbraco-devkit")
+        shutil.rmtree(devkit, ignore_errors=True)
+        write(os.path.join(old, "comments.json"), "[]")
+        comments_file = worktree.state_paths(self.root).comments
+        self.assertFalse(os.path.exists(old))
+        with open(comments_file) as f:
+            self.assertEqual(f.read(), "[]")
 
     def test_pid_alive(self):
         pid_file = os.path.join(self.root, "pid")
@@ -658,7 +674,7 @@ class SeenTests(TempRepo):
         self.assertEqual(store.before(url, spec), "# Spec\n\n- Five attempts.\n")
         store.mark_all(self.root)
         self.assertIsNone(store.before(url, spec))
-        self.assertTrue(store.folder.startswith(os.path.join(self.root, ".git")))
+        self.assertTrue(store.folder.startswith(os.path.join(self.root, ".umbraco-devkit")))
 
 
 class PageScriptTests(unittest.TestCase):

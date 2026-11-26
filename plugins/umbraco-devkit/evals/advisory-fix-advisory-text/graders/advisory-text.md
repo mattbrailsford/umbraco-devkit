@@ -1,7 +1,7 @@
 ---
 type: llm
 weight: 3
-focus: {source: file, path: .git/devkit-advisories/GHSA-abcd-efgh-ijkl.md}
+focus: {source: file, path: .git/umbraco-devkit/advisories/GHSA-abcd-efgh-ijkl.md}
 ---
 The advisory file says the fix is built and approved, releases 02-12-2026, the Security
 process wants the advisory text before release. Versions: affected `>= 17.1.1, < 17.2.1`, fixed in 17.2.1. The flaw: the drafts

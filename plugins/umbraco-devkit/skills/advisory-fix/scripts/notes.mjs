@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Advisory notes: reads and writes an advisory's private file inside the repo's git folder.
 //
-// The file lives at <git common dir>/devkit-advisories/<key>.md. There, no worktree tracks it,
+// The file lives at <git common dir>/umbraco-devkit/advisories/<key>.md. There, no worktree tracks it,
 // no push carries it, every worktree of the checkout sees it, and it survives a /clear. Claude
 // Code's file tools won't write inside a git folder, so every change goes through this script.
 //
@@ -49,7 +49,7 @@ export function gitCommonDir(cwd) {
 
 export function notesPath(cwd, key) {
   if (!KEY.test(key)) throw new Error("the key is the GHSA id or the security ticket id: letters, digits, '.', '_' or '-'");
-  return join(gitCommonDir(cwd), "devkit-advisories", `${key}.md`);
+  return join(gitCommonDir(cwd), "umbraco-devkit", "advisories", `${key}.md`);
 }
 
 /** Windows checkouts can give the template, and so the file, CRLF line endings. Work in LF. */
@@ -116,7 +116,7 @@ function readStdin() {
 }
 
 function list(cwd) {
-  const dir = join(gitCommonDir(cwd), "devkit-advisories");
+  const dir = join(gitCommonDir(cwd), "umbraco-devkit", "advisories");
   const files = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".md")).sort() : [];
   if (!files.length) return void process.stdout.write("No advisory files in this repo.\n");
   for (const f of files) {
