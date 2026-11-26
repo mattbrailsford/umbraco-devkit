@@ -86,7 +86,7 @@ start fresh.
 
 Review comments left in `markdown-preview` follow the same ownership. A comment on a file the
 running step doesn't own is left for the step that does, and that step picks it up as input
-the next time it runs. Comments are kept in the worktree's git folder, never in the plan.
+the next time it runs. Comments are kept in the worktree's `.umbraco-devkit/` folder, which git ignores, never in the plan.
 Before a step builds on a plan, or `feature-close` archives one, it checks for unresolved
 comments: one left for an earlier step sends you back to that step, and ones waiting on you
 are raised in a single question.

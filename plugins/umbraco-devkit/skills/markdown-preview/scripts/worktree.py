@@ -1,6 +1,7 @@
 """Finding the worktree a file is in, and where its preview keeps things."""
 import hashlib
 import os
+import shutil
 import tempfile
 from collections import namedtuple
 
@@ -41,22 +42,42 @@ def session_id():
     return os.environ.get("CLAUDE_PID") or os.environ.get("CLAUDE_CODE_SESSION_ID") or ""
 
 
+def data_dir(root):
+    """The preview's own files in a worktree: `.umbraco-devkit/markdown-preview/`. The
+    `.umbraco-devkit` folder ignores itself, so nothing in it is ever committed and the
+    project's own `.gitignore` is never touched. Files kept in the worktree's git folder by
+    earlier versions move here the first time."""
+    devkit = os.path.join(root, ".umbraco-devkit")
+    folder = os.path.join(devkit, "markdown-preview")
+    ignore = os.path.join(devkit, ".gitignore")
+    if not os.path.exists(ignore):
+        os.makedirs(devkit, exist_ok=True)
+        with open(ignore, "w") as f:
+            f.write("*\n")
+    git_dir = find_git(root)[1]
+    old = os.path.join(git_dir, "markdown-preview") if git_dir else None
+    if old and os.path.isdir(old) and not os.path.exists(folder):
+        shutil.move(old, folder)
+    return folder
+
+
 def state_paths(root, session=""):
     """Where a worktree's server details, comments, approvals, waiting helper and copies of
     what the reader last saw are kept. Each session has its own helper.
 
-    Comments, approvals and copies go in the worktree's git folder: never committed, kept across restarts, and
-    removed with the worktree. Outside a repo they fall back to the temp folder.
+    Comments, approvals and copies go in the worktree's `.umbraco-devkit/markdown-preview/`:
+    never committed, kept across restarts, and removed with the worktree. Outside a repo they
+    fall back to the temp folder.
     """
     key = hashlib.sha1(root.encode()).hexdigest()[:16]
     helper = key + ("-" + hashlib.sha1(session.encode()).hexdigest()[:8] if session else "") + "-waiter.pid"
-    git_dir = find_git(root)[1]
-    comments = (os.path.join(git_dir, "markdown-preview", "comments.json") if git_dir
+    data = data_dir(root) if find_git(root)[0] else None
+    comments = (os.path.join(data, "comments.json") if data
                 else os.path.join(STATE_DIR, key + "-comments.json"))
-    seen = (os.path.join(git_dir, "markdown-preview", "seen") if git_dir
+    seen = (os.path.join(data, "seen") if data
             else os.path.join(STATE_DIR, key + "-seen"))
-    approvals = (os.path.join(git_dir, "markdown-preview", "approvals.json") if git_dir
-                else os.path.join(STATE_DIR, key + "-approvals.json"))
+    approvals = (os.path.join(data, "approvals.json") if data
+                 else os.path.join(STATE_DIR, key + "-approvals.json"))
     return StatePaths(os.path.join(STATE_DIR, key + ".json"), comments, os.path.join(STATE_DIR, helper),
                       seen, approvals)
 

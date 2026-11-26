@@ -3,7 +3,7 @@ changed since: what Claude did with them.
 
 A copy of a doc is kept the first time the reader sees it, or sees the folder it's in, and
 every copy is brought up to date when they send comments. Copies live beside the comments in
-the git folder, mirroring the worktree's paths.
+`.umbraco-devkit/markdown-preview/`, mirroring the worktree's paths.
 """
 import os
 import shutil
