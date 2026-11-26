@@ -1,4 +1,44 @@
 {
+  "advisory-fix-advisory-text": {
+    "date": "2026-11-25",
+    "runs": 2,
+    "skillLoaded": 2,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "advisory-fix-asks-security-process": {
+    "date": "2026-11-25",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "advisory-fix-embargo-before-code": {
+    "date": "2026-11-25",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "advisory-fix-severity-timing": {
+    "date": "2026-11-25",
+    "runs": 2,
+    "skillLoaded": 2,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "advisory-fix-version-ranges": {
+    "date": "2026-11-25",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
   "backoffice-conventions-cache-bust": {
     "date": "2026-10-16",
     "runs": 3,

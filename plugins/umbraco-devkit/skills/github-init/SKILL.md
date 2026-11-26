@@ -70,7 +70,8 @@ actual result." Ask for each field's `description` to include a short hint ("wri
 *exact* version, example: `10.1.0`") — it measurably improves what people fill in.
 
 `config.yml` — copy from `templates/config.yml`, filling in the real Discussions/security
-links for this project.
+links for this project. The security link is the "Report a vulnerability to" line of
+`CLAUDE.md`'s `## Security process` section, when it has one.
 
 A contact link that redirects feature ideas to a discussion, and another that redirects
 security reports to wherever that actually gets handled, is a better fit for a small package

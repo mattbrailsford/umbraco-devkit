@@ -5,7 +5,7 @@ you.
 
 ## How the skills connect
 
-Code only changes through one of five flows, and all five go through the
+Code only changes through one of these flows, and all of them go through the
 [builder/reviewer gate](#the-builderreviewer-gate) (`quick-fix` skips it for a text-only
 change):
 
@@ -21,6 +21,11 @@ change):
   screenshots of the package's own docs that the upgrade makes wrong.
 - **`change-backport`**, for landing a change that's already merged on one version line on
   another.
+- **`advisory-fix`**, for a confirmed security vulnerability. It follows the project's own
+  security process from `CLAUDE.md`, puts the fix under [embargo](#plan-folders-branches-and-worktrees)
+  so it can only reach the advisory's private fork, keeps every public word neutral, works out
+  the affected and fixed versions, and times the release. Its notes live in the repo's `.git`
+  folder, where no push can carry them.
 
 Every other skill you run works around those flows and never changes code itself:
 
@@ -193,6 +198,49 @@ protected branch (`main`, `master`, the remote's default branch, `support/*`, `v
 the trunk commit `feature-build` makes can ask twice: once in chat, once from the hook. A
 project that doesn't want it sets `UMBRACO_DEVKIT_TRUNK_GATE=off` in the `env` block of its
 `.claude/settings.json`.
+
+A security fix needs a stronger guard: it must not reach a public remote until the advisory is
+published. An embargo, keyed by the advisory's GHSA id, marks the branches that hold the fix.
+It lives in the repo's local git config, so it's never committed and covers every worktree.
+
+```bash
+node <plugin>/hooks/embargo.mjs add GHSA-xxxx-xxxx-xxxx --branch v18/hotfix/x --branch v17/hotfix/x --ticket SEC-123
+node <plugin>/hooks/embargo.mjs status
+git embargo lift                                       # a person lifts it, once approved
+```
+
+`add` sets up the `git embargo` shortcut in the repo. `lift` shows what the embargo protects
+and asks you to type its id, at your own terminal: it won't run without one, and the hook
+stops Claude running it, so lifting stays a human step. Once no embargo is left, it removes the
+guard and the shortcut. By hand, `git config --remove-section devkit-embargo.<id>` does the
+same.
+
+The only remote allowed to receive the fix is the advisory's private fork. GitHub names it after
+the repo and the id (`<owner>/<repo>-ghsa-xxxx-xxxx-xxxx`), so the guard works it out from the
+id and the repo's own remotes. Nothing else needs setting, and nothing can widen it. With no
+private fork (the code and the tracker live in different places), key the embargo by the
+internal ticket instead, and nothing can be pushed until you lift it.
+
+Two guards read it, and both block instead of asking, since one quick "yes" would publish the
+fix:
+
+- The `embargo-gate` hook stops Claude from pushing the fix, or any branch holding it (merged,
+  cherry-picked or reworded), anywhere but the private fork, and from opening a public PR with
+  it. It also stops Claude from lifting the embargo.
+- A git `pre-push` hook, which `add` installs, stops the same push from a terminal or editor.
+  It isn't installed when the repo already has its own pre-push hook or sets `core.hooksPath`;
+  `add` says so.
+
+Both also read the words that go public with the fix: commit, tag and merge messages, new
+branch and tag names, PR and issue text, and the messages of pushed commits, even to the
+private fork, since its commits go public later. An advisory id (any GHSA or CVE id, the
+embargo's key or its `--ticket`) is blocked. Words that point at a security fix
+("vulnerability", "bypass", "XSS") get a question from the hook and a warning from `pre-push`,
+because plain fixes use them too. Neither can spot a vague hint, so neutral wording is still
+on whoever writes the message.
+
+`git push --no-verify` skips the pre-push hook, so the guard catches mistakes, not someone set
+on getting round it.
 
 ## Building on top
 
