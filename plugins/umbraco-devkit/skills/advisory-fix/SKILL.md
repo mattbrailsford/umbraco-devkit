@@ -271,6 +271,17 @@ the channel is private.
      risk; never the steps to exploit it.
    - **Affected and patched versions:** step 5's table, ranges in GitHub's format.
    - **Workarounds:** a setting or change that closes the hole without upgrading, or "None".
+     Show a site owner how to apply each one, not just name it:
+     - A public docs page that explains it comes first: link it. Check the page exists and
+       says what the workaround needs. Link only pages that are public before the advisory
+       is.
+     - Where no page covers it, or the change is a single setting, give the exact setting
+       or a short snippet in the site's own terms: the `appsettings.json` key and value, or
+       the few lines of setup code. Check every key and call against the package's code on
+       the affected lines.
+     - Show only the safe setup, never the unsafe one or anything an attacker could use:
+       no request to reproduce it, no route or parameter the attack goes through, no
+       internal names.
    - **Severity:** the security team's, as recorded in step 1. If none is set yet, a
      suggested CVSS 3.1 vector and score, labelled as a suggestion.
    - **Also known:** anything else gathered on the way that helps, such as the commit and
