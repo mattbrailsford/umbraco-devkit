@@ -129,9 +129,29 @@ outside contributor, and reports it if so.
 4. Next to each recommended action, show the tracker write it maps to (State labels below):
    the type label, the state label, close or move, any area label fix the triager found, and
    the comment the triager drafted. A label fix is a tracker write like any other, applied only on approval.
-5. Present the table and the security list (if non-empty) to the user. Nothing gets written
-   back to the tracker until the user says which recommendations to apply. Then apply exactly
-   those, and report what was written.
+5. Write the table to the drafts file (below) and show the security list (if non-empty) in
+   chat only. Nothing gets written back to the tracker until the user says which
+   recommendations to apply. Then apply exactly those, and report what was written.
+
+## The drafts file
+
+Tracker updates waiting for the user's yes go in one file, so they can be read, commented on
+and approved in a preview instead of scrolling past in chat.
+
+- **Where.** `issues/DRAFTS.md` under the worktree's git folder (`git rev-parse --git-dir`),
+  the way `markdown-preview` keeps its comments. Git never tracks its own folder, so nothing
+  here is committed. Other files in that folder belong to other skills; leave them alone.
+- **What.** The table from Aggregating and reporting, or the drafted answers from a decision
+  run, with each drafted comment written out in full. Replace the file with each new batch.
+  Never put a security report in it: the preview sends the file's text to GitHub to draw it.
+- **Ask.** Give the file's path, for anyone who'd rather read it in an editor, and offer to
+  open the folder in `markdown-preview`, scoped to it, with comments on. Follow its
+  "Offering a preview" section for when to ask. If it's open, ask for approval on
+  `DRAFTS.md` as its "Approval" section says.
+- **Answer.** A comment on a row changes that draft or drops it, handled as
+  `markdown-preview`'s "Review comments" section says. The user approves on the page or says
+  yes in chat, either one. A yes in chat that names some rows applies only those.
+- **Apply** exactly what was approved, then empty the file to "Nothing waiting."
 
 ## Decision run
 
@@ -148,8 +168,8 @@ No subagents: the notes already hold the facts, so the main thread reads each is
    - **Yes, another way** → `state/ready`, with the other way as what was agreed.
    - **No** → close as not planned.
    - **Not yet** → no change, no comment. It comes back on the next decision run.
-4. Draft each answer's label and comment, following Tracker comments below. Apply exactly
-   the ones the user approves, as in Aggregating and reporting.
+4. Draft each answer's label and comment, following Tracker comments below, into the
+   drafts file. Apply exactly the ones the user approves, as The drafts file says.
 
 ## Splitting an issue
 
@@ -431,8 +451,8 @@ reference, or similar.
 
 ## Rules
 
-- Read-only against the codebase. The only file this skill writes is the `## Issue tracker`
-  section of `CLAUDE.md`, when it or one of its lines is missing. The tracker is written to only as the next rule
+- Read-only against the codebase. The only files this skill writes are the `## Issue tracker`
+  section of `CLAUDE.md`, when it or one of its lines is missing, and the drafts file. The tracker is written to only as the next rule
   allows.
 - Never post a comment, apply a label, or close an issue without the user picking that action
   explicitly — issue by issue, or as a stated "apply all." A draft is the default output, not

@@ -165,6 +165,7 @@ python3 <this skill's folder>/scripts/preview.py approval --request <file> [<fil
 | `feature-explore` | `BRIEF.md` |
 | `feature-design` | `SPEC.md` and `ARCHITECTURE.md` |
 | `feature-plan` | `PLAN.md` |
+| `issue-triage` | `DRAFTS.md`, the tracker updates waiting for a yes |
 
 - Each ask replaces the last, so the page only marks this step's docs. Say in the Hand off
   which docs are waiting for approval.
@@ -177,7 +178,9 @@ python3 <this skill's folder>/scripts/preview.py approval --request <file> [<fil
 ## Offering a preview
 
 A phase that writes a doc a person reviews (`BRIEF.md`, `ARCHITECTURE.md`, `SPEC.md`,
-`PLAN.md`) offers to open it in its Hand off, before the suggested next step:
+`PLAN.md`) offers to open it in its Hand off, before the suggested next step. A skill that
+writes drafts for approval or a log to watch (`issue-triage`, `issue-backlog`) offers when it
+first writes one:
 
 - **First time this session:** one line, such as "Open BRIEF.md in a live preview? You can
   comment on it there. It sends the file's text to GitHub to be drawn." Then carry on. It's

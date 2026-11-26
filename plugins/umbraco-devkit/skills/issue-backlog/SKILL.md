@@ -48,9 +48,9 @@ Count open issues in each of these, and show the counts:
 A run scrolls out of sight in chat. Keep the board and every issue the run touches in one
 file the user can keep open beside it.
 
-- **Where.** `issue-backlog/RUN.md` under the worktree's git folder (`git rev-parse
-  --git-dir`), the way `markdown-preview` keeps its comments. Git never tracks its own
-  folder, so the log is never committed and nothing needs ignoring.
+- **Where.** `RUN.md` in the issues folder `issue-triage` keeps its drafts in (its "The
+  drafts file" section), so one preview shows both the run and what's waiting for approval.
+  The folder is under git's own folder, so the log is never committed.
 - **Start.** Write it as soon as the board is counted, before asking about the first stage.
   If a `RUN.md` from earlier today exists, keep its rows: the run was cut short, by a `/clear`
   or a closed session, and is picking up again. Otherwise start it empty.
@@ -62,13 +62,13 @@ file the user can keep open beside it.
   - `## Issues this run`: one row per issue, newest last. Issue number and title, stage,
     the result in a few words, the state label it gets, and its status: `drafted`,
     `applied` or `skipped`.
-  - `## Waiting on you`: drafted updates and questions the user hasn't answered yet, or
-    "Nothing."
+  - `## Waiting on you`: questions the user hasn't answered yet, and a link to
+    `DRAFTS.md` while it holds updates waiting for approval, or "Nothing."
 - **Security reports.** A flagged issue gets its number and "security report" only, never
   the title or details, as `issue-triage`'s Security reports section says.
-- **Show it.** After the first write, offer to open it with `markdown-preview`, read-only
-  (`--no-comments`), as its "Offering a preview" section says. The page refreshes on each
-  write.
+- **Show it.** After the first write, offer to open the issues folder with
+  `markdown-preview`, scoped to the folder, as its "Offering a preview" section says. Give
+  the file's path too, for an editor. The page refreshes on each write.
 
 The tracker's labels stay the record. The log only shows this run's progress; losing it
 loses nothing.
@@ -108,11 +108,10 @@ show the board again and pick again, until the user stops or nothing is left to 
    one is an Agent tool call with `isolation: "worktree"`, told to invoke `investigate-bug`
    (Skill tool) with the issue ID and `--unattended`. Send a batch as parallel calls in one message.
 4. **Gather.** Pull any security flag into its own list, handled as `issue-triage`'s
-   Security reports section says. Show one table for the rest: issue, outcome
-   (`state/ready`, `state/needs-info`, `state/blocked`, or a close), the cause in one line,
-   and the drafted comment.
-5. **Apply** exactly the updates the user approves, as `issue-triage`'s Aggregating and
-   reporting section does.
+   Security reports section says. Draft the rest into `issue-triage`'s drafts file, as its
+   "The drafts file" section says: issue, outcome (`state/ready`, `state/needs-info`,
+   `state/blocked`, or a close), the cause in one line, and the drafted comment.
+5. **Apply** exactly the updates the user approves, as that section says.
 
 ## The fix stage
 
