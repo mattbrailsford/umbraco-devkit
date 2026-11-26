@@ -58,8 +58,15 @@ file the user can keep open beside it.
   when it's counted again, a row as each issue gets a result (each investigation as it
   returns, not when the batch ends), and its status once the user approves or skips it.
 - **Shape.** The date it started, then:
-  - The board, as a table of counts.
-  - `## Issues this run`: one row per issue, newest last. Issue number and title, stage,
+  - The board, as a table of counts. Link each count to the tracker's own list of those
+    issues, when the tracker has a filtered list a link can open. On GitHub that's an issue
+    search for open issues with the row's labels, such as
+    `https://github.com/<owner>/<repo>/issues?q=is:issue+is:open+label:state/ready`:
+    several labels in one row join with commas (`label:state/needs-info,state/blocked`),
+    and To triage excludes every state label (`-label:state/ready` for each). The tracker
+    link shows every issue with the label, so it can differ from a count that leaves some out.
+  - `## Issues this run`: one row per issue, ordered by issue number, so one that opens
+    mid-run lands in its place. Issue number and title, stage,
     the result in a few words, the state label it gets, and its status: `drafted`,
     `applied` or `skipped`. A `drafted` status links to that issue's draft
     (`DRAFTS.md#<number>`); drop the link once it's applied or skipped.
