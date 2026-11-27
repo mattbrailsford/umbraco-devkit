@@ -47,7 +47,13 @@ both.
    terms and any error text. If the orchestrator flagged one, look specifically at the issue
    it named. Confirm or rule out each candidate based on the actual content, not just the
    match that surfaced it.
-6. **Recommend one action**: ready, needs investigation, needs info from the reporter,
+6. **Look for a PR that fixes it.** Check for an open pull request linked to the issue (on
+   GitHub, its "Development" links or a cross-reference in its timeline) from the reporter or
+   another outside contributor. With none linked, search open PRs for the issue's number and
+   key terms. Report each as linked, a clear match (it names the issue, or fixes all of the
+   same problem) or a possible match. A linked PR or clear match means the fix exists:
+   recommend reviewing that PR, not a fix route.
+7. **Recommend one action**: ready, needs investigation, needs info from the reporter,
    needs a maintainer's decision, blocked (name what on), likely duplicate (name the ID),
    already fixed (name the change, and the release it shipped in or "not released yet"),
    move to where feature requests go (when the Type labels section sends it there), or close
@@ -56,12 +62,12 @@ both.
    priority scheme the tracker doesn't have — describe severity/urgency in plain terms if
    the tracker has no priority field. Suggest splitting the issue only as the Splitting an
    issue rules you were given allow, and name the reason.
-7. **Draft the comment** for that action, following the Tracker comments section you were
+8. **Draft the comment** for that action, following the Tracker comments section you were
    given: a plain part for the reporter, then the notes that section lists for your
    recommended outcome. Skip this for a security flag.
 
 ## Report back
 
 A short structured block: issue ID, title, type, security flag (true/false), likely area,
-duplicate-of (or none), type label (or none), other label fixes (or none), recommended action, one-paragraph rationale,
+duplicate-of (or none), fixing PR (number and linked, clear or possible; or none), type label (or none), other label fixes (or none), recommended action, one-paragraph rationale,
 and the drafted comment. Nothing more. The comment is a draft for the user; you never post it.

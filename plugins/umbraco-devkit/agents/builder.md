@@ -1,6 +1,6 @@
 ---
 name: builder
-description: Implements a single task from a feature's PLAN.md, a change file's task list, or a CMS upgrade's task list, in C# (.NET / Umbraco) and/or Lit + UUI. Builds and self-tests; never commits unless told. Also writes a throwaway spike that exercises an assumption a design rests on. Dispatched by feature-design, feature-build, change-build and major-upgrade.
+description: Implements a single task from a feature's PLAN.md, a change file's task list, a CMS upgrade's task list, or a review's small fixes on a contributor's PR, in C# (.NET / Umbraco) and/or Lit + UUI. Builds and self-tests; never commits unless told. Also writes a throwaway spike that exercises an assumption a design rests on. Dispatched by feature-design, feature-build, change-build, major-upgrade and pr-review.
 tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 model: sonnet
 ---
