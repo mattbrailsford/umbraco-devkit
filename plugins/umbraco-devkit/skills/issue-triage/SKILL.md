@@ -114,7 +114,9 @@ section.
 The triager searches the tracker itself, open and closed, for earlier duplicates. It also
 checks whether an open pull request is already linked to the issue (GitHub: the issue's
 "Development" links or a cross-reference in its timeline), opened by the reporter or another
-outside contributor, and reports it if so.
+outside contributor, and reports it if so. With none linked, it searches open PRs for one
+that fixes the issue anyway, and reports it as a clear match (the PR names the issue, or
+fixes all of the same problem) or a possible one.
 
 ## Aggregating and reporting
 
@@ -124,8 +126,11 @@ outside contributor, and reports it if so.
 3. Build one combined table for everything else: issue, type, likely area, priority/urgency,
    duplicate-of (if any), recommended action, one-line why (written following
    `plain-writing`). When a triager reports a linked open PR from the reporter or another
-   outside contributor, the recommended action is "Review with `pr-review` #<PR>", not a
-   state label or fix route — the fix already exists, it hasn't been built yet.
+   outside contributor, the recommended action is "Review with `pr-review` #<PR>" and the
+   state is `state/in-progress`, not a fix route: the fix already exists, so nobody should
+   build a second one. A clear match the triager found unlinked gets the same, and its
+   writes include the link, made as `pr-review`'s "Link the issue it fixes" says. A
+   possible match is only named in the why, for the user to check.
 4. Next to each recommended action, show the tracker write it maps to (State labels below):
    the type label, the state label, close or move, any area label fix the triager found, and
    the comment the triager drafted. A label fix is a tracker write like any other, applied only on approval.
@@ -241,7 +246,7 @@ issue with no state label is untriaged.
 | `state/needs-decision` | Clear, but waiting on a maintainer to agree to it | `issue-triage` |
 | `state/blocked` | Can't be fixed here until something outside the project changes | `issue-triage`, `investigate-bug` |
 | `state/ready` | Verified and ready to fix | `issue-triage`, `investigate-bug` |
-| `state/in-progress` | A fix lane has started | `issue-resolve` |
+| `state/in-progress` | A fix lane has started, or a community PR fixes it | `issue-resolve`, `issue-triage` |
 
 **Already fixed?** Check this first. If a merged change already fixes the issue, it gets no
 state label:
@@ -381,10 +386,11 @@ Rules for the notes:
   - **Scope:** what's in and out, and the code area it touches.
   - **Questions left:** anything still to settle while planning.
 
-**`state/in-progress`** (drafted by `issue-resolve`)
-- Reporter: work on a fix has started.
+**`state/in-progress`** (drafted by `issue-resolve`, or by triage for a community PR)
+- Reporter: work on a fix has started. For a community PR, that a fix is open in it, linked,
+  and will be reviewed.
 - Notes, `Notes on the work`:
-  - **Route:** a quick fix or the pipeline, and why.
+  - **Route:** a quick fix, the pipeline, or a community PR, and why.
   - **Where:** the branch, and the plan folder if there is one.
   - **New findings:** anything learned since the ready notes, such as `investigate-bug`'s
     report if it ran just now.
@@ -474,5 +480,5 @@ picks `quick-fix`, `change-build` or the pipeline, and drafts the tracker reply 
 before anyone commits to a fix. An issue with a linked open PR goes to `pr-review` with that
 PR number instead — name the skill explicitly, never a generic "review the PR(s)", since a
 busy install can drop skill descriptions from the listing and a bare mention won't route. To
-work the whole tracker through to ready, `issue-backlog` runs triage, decisions, and
-investigations in order. This skill stops at "here's what I'd do," it doesn't start building.
+work the whole tracker through to ready, `issue-backlog` runs triage, decisions,
+community PRs and investigations in order. This skill stops at "here's what I'd do," it doesn't start building.

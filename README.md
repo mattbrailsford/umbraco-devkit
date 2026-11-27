@@ -112,7 +112,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 
 | I want to... | Run |
 |---|---|
-| Work open issues from new to fixed, one stage at a time | [`/issue-backlog`](plugins/umbraco-devkit/skills/issue-backlog/SKILL.md) |
+| Work open issues and community PRs from new to fixed and merged, one stage at a time | [`/issue-backlog`](plugins/umbraco-devkit/skills/issue-backlog/SKILL.md) |
 | Classify and duplicate-check new issues (report only) | [`/issue-triage`](plugins/umbraco-devkit/skills/issue-triage/SKILL.md) |
 | Send one triaged issue to the right fix | [`/issue-resolve`](plugins/umbraco-devkit/skills/issue-resolve/SKILL.md) |
 
@@ -121,7 +121,7 @@ Not ready to plan yet? Ask Claude to write the idea up in `docs/ideas/` and comm
 | I want to... | Run |
 |---|---|
 | Write the PR description: choices to check first, then screenshots and diagrams | [`/pr-describe`](plugins/umbraco-devkit/skills/pr-describe/SKILL.md) |
-| Review a PR from outside the core team | [`/pr-review`](plugins/umbraco-devkit/skills/pr-review/SKILL.md) |
+| Review a PR from outside the core team, fix small problems, link the issue it fixes, and merge it | [`/pr-review`](plugins/umbraco-devkit/skills/pr-review/SKILL.md) |
 | Try a PR yourself on the demo site, with a click-through list | [`/pr-demo`](plugins/umbraco-devkit/skills/pr-demo/SKILL.md) |
 | Review dependencies: Dependabot PRs, security alerts, and what's out of date | [`/dependency-review`](plugins/umbraco-devkit/skills/dependency-review/SKILL.md) |
 
