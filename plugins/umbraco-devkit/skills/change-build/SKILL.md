@@ -99,7 +99,8 @@ Say which one you picked, and why, in one line.
      missing.
 3. **Ask once, up front.** Put the one open choice, if there is one, into the same message
    that shows the file, with the options and your recommendation. Offer the file as
-   `markdown-preview` says to. Wait for a yes on the whole file. This is the only stop
+   `markdown-preview` says to. Say that on a yes you'll push the branch and open a draft PR
+   once the file is committed. Wait for a yes on the whole file. This is the only stop
    before the PR.
 
    If the answer or the reading so far shows the change fails the size test, stop there and
@@ -113,6 +114,9 @@ Say which one you picked, and why, in one line.
    form). Use the project's `WorktreeCreate` hook if it has one, as `feature-build`'s
    Preflight step 4 does. Commit the change file there first: `docs: add change plan for
    <slug>`. Nothing goes on trunk.
+   Then, if the user said yes to it, push the branch and invoke `pr-describe --start` with the
+   change file, as `git-workflow`'s "Draft PR while a build runs" says. Its `PR:` line goes at
+   the top of the file's Log section.
 2. **Start the demo site once**, if there is one, as `feature-build`'s Preflight steps 6 and
    7 do. Its `Demo site:` line goes at the top of the file's Log section.
 3. For each unchecked task, in order, follow `feature-build`'s loop (build, pre-review
@@ -121,7 +125,7 @@ Say which one you picked, and why, in one line.
      Approach in place of `ARCHITECTURE.md` and `SPEC.md`.
    - **Review.** Give the `reviewer` the same sections, and the Out of scope list.
    - **Tick and log.** Tick the task in the change file, and add its commit SHA and what was
-     verified to the Log. A choice the builder made that the file left open goes in the
+     verified to the Log. With a draft PR open, push once both are committed. A choice the builder made that the file left open goes in the
      Decisions section, dated, with who decided, as `feature-build` step 7 says.
    - **Too big after all.** If a task runs into one of the size test's hard stops, or the
      reviewer's findings show the approach is wrong, stop. Commit nothing more. Report what
@@ -129,7 +133,8 @@ Say which one you picked, and why, in one line.
      material. The branch stays as it is for the user to decide.
    - **A security hole after all.** If a task or the reviewer shows the change fixes a
      vulnerability, stop the same way: commit nothing more, push nothing, and follow the size
-     test's Security hole step. Say what's already committed on the branch.
+     test's Security hole step. Say what's already committed on the branch. If a draft PR is
+     open, say so first: it's public, and the user decides whether to close it.
 
 ## Finish
 
@@ -137,7 +142,8 @@ Say which one you picked, and why, in one line.
 2. Run `feature-build`'s whole-feature review, with the change file as the design and its
    Decisions section in place of `DECISION-LOG.md`.
 3. Stop the demo site.
-4. Invoke `pr-describe` with the change file's path. Don't write the PR body yourself.
+4. Invoke `pr-describe` with the change file's path. Don't write the PR body yourself. It
+   fills in the draft PR if one is open; the user marks it ready.
 5. Offer the "Other version lines" step from `issue-resolve`'s "Closing the loop" if the
    project supports more than one line.
 

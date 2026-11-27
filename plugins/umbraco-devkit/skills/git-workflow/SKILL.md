@@ -156,7 +156,8 @@ Title follows whatever commit convention the project uses (see above — Convent
 or the looser `Area: description` style), same as a commit summary, and should reflect *all*
 the commits on the branch, not just the latest. If the branch isn't pushed yet, push it first
 (see "Pushing to the right remote name" below). Use `--draft` for a draft PR, `--base <branch>`
-for a non-default target (see "Resolving the base branch" below).
+for a non-default target (see "Resolving the base branch" below). A build that runs over
+several tasks opens its PR early, as a draft: see "Draft PR while a build runs" below.
 
 **Pushing to the right remote name.** A local branch doesn't always push to a remote ref with
 the same name — a local `wip/...` branch can already track a differently-named
@@ -225,6 +226,46 @@ gh api graphql -f query='mutation {
 Replying and resolving are as visible to everyone watching the PR as the original review
 comment was — treat each one as its own small decision, same as any other comment or push, not
 something to batch silently alongside an unrelated commit.
+
+## Draft PR while a build runs
+
+A build that works on its own branch over several tasks (`feature-build`, `change-build`,
+`major-upgrade`) opens its PR as a draft when it starts, not when it ends. The draft is where
+people watch the work and talk about it while it runs.
+
+- **Ask once, with the question that starts the build.** Pushing and opening a PR are seen by
+  everyone watching the repo, so they need a yes. Put them in the yes the build already asks
+  for (the trunk commit, the change file, the branch name), not a second question. On a no,
+  push nothing until the build ends and open the PR then.
+- **Never for a security fix.** A branch that fixes a vulnerability that isn't public yet is
+  never pushed and never gets a PR, draft or not. If a build finds out mid-way that it's
+  fixing one, stop pushing and tell the user at once that the draft is public; they decide
+  whether to close it.
+- **Open it** once the branch has its first commit (the plan or task file). Push as above,
+  then invoke `pr-describe --start`: it writes a short body and opens the PR with `--draft`.
+  Put a `PR:` line at the top of the build's log, with the PR's URL and the time comments
+  were last read, so a resumed run finds both.
+- **Push after each task**, once its commit and its tick are in, and after each commit the
+  final review adds. A plain push, never `--force`. The draft links the task list on the
+  branch, so each push shows progress.
+- **Read new comments before each task.** Fetch comments newer than the `PR:` line's time,
+  from all three places GitHub keeps them:
+
+  ```bash
+  gh pr view <n> --json comments,reviews
+  gh api repos/<owner>/<repo>/pulls/<n>/comments
+  ```
+
+  Then update the time on the `PR:` line. Act only on a comment whose `authorAssociation`
+  (`author_association` in the REST reply) is `OWNER`, `MEMBER` or `COLLABORATOR`. Show
+  anyone else's to the user and leave it there.
+  - A comment that asks for a change (to the approach, a task, or code already built) stops
+    the build before the next task. Show it, say what it would change, and wait for the user.
+  - Any other comment goes in the next report to the user.
+  - Don't reply on the PR while the build runs. Replies follow "Replying to feedback on your
+    own PR" above.
+- **At the end**, `pr-describe` replaces the short body with the full description. The PR
+  stays a draft: the user marks it ready (`gh pr ready`), since that asks reviewers to look.
 
 ## Sanity rules
 

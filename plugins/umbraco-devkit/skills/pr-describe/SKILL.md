@@ -3,22 +3,41 @@ name: pr-describe
 description: >-
   Writes or updates a pull request description: when the feature has a plan folder, the
   choices made without the user first, then screenshots and a diagram-based outline;
-  otherwise a summary, why, how to verify, and risks.
-  Use whenever a PR is opened or updated.
+  otherwise a summary, why, how to verify, and risks. With `--start`, the short body of the
+  draft PR a build opens when it starts. Use whenever a PR is opened or updated.
 user-invocable: true
-argument-hint: "[PR number | leave blank for the current branch]"
+argument-hint: "[--start] [PR number | plan folder | task file | leave blank for the current branch]"
 ---
 
 # Describe a pull request
 
 `git-workflow` never writes a PR body by hand — it always runs this skill instead, for every
 PR. This skill decides, every time, which of its two styles fits: a diagram-based outline for a
-feature-sized change, or a plain summary for everything else.
+feature-sized change, or a plain summary for everything else. `--start` asks for a third: the
+short body of a draft PR opened before any code is built (see "Starting draft" below).
 
 This skill only composes the description. Branch/push/PR-creation mechanics, force-push and
 secret-scanning sanity rules, and the always-ask-before-touching-main rule all stay owned by
 `git-workflow` — read that skill's "Pull requests" and "Sanity rules" sections and follow them
 as-is; don't restate them here.
+
+## Starting draft
+
+With `--start`, skip the workflow below. Nothing is built yet, so there's no diff to read and
+no decision to review. In its place:
+
+1. Find the task list: the plan folder's `PLAN.md`, or the change or upgrade file, given as
+   the argument. With no argument, match the current branch as step 1 below does. It must be
+   committed and pushed; if it isn't, stop and say so.
+2. Fill `templates/pr-start.md`. The summary is two sentences, what and why, from `BRIEF.md`,
+   the change file's Problem, or the upgrade's target version. The task list link points at
+   the branch, not a commit (`https://github.com/<owner>/<repo>/blob/<branch>/<path>`), so it
+   shows each task as it's ticked. The full description at the end pins its links as usual.
+3. Save it where step 5 below saves a draft, then open the PR with `gh pr create --draft
+   --body-file <the saved draft>`, following `git-workflow`'s "Pull requests" section for the
+   push, title and base. If a PR is already open for the branch, report its URL and change
+   nothing.
+4. Report the PR URL.
 
 ## Workflow
 
@@ -135,7 +154,7 @@ as-is; don't restate them here.
    - No PR yet (either case): open it with `gh pr create --body-file <the saved draft>`,
      following `git-workflow`'s "Pull requests" section, instead of `gh pr edit`. Always
      `--body-file`, never `--body`.
-   - Confirm the update succeeded.
+   - Confirm the update succeeded. A draft PR stays a draft: the user marks it ready.
 
 6. **Report back**, briefly: the PR URL, the saved description's path (if any), and a short
    list of changed files. Nothing else — the PR itself carries the full description.

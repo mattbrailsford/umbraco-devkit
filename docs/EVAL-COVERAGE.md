@@ -29,7 +29,6 @@ Fewer than 50% of the skill's sections have an eval, so most of its rules are un
 - [`umbraco-performance`](#umbraco-performance): 6 of 10 sections have no eval.
 - [`bdd-specs`](#bdd-specs): 5 of 6 sections have no eval.
 - [`ef-core-data`](#ef-core-data): 5 of 7 sections have no eval.
-- [`git-workflow`](#git-workflow): 5 of 8 sections have no eval.
 - [`umbraco-package-conventions`](#umbraco-package-conventions): 5 of 6 sections have no eval.
 - [`umbraco-cms-source`](#umbraco-cms-source): 4 of 5 sections have no eval.
 - [`umbraco-docs`](#umbraco-docs): 4 of 5 sections have no eval.
@@ -43,6 +42,7 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 - [`feature-design`](#feature-design): `feature-design-nfr-targets` (83) `feature-design-tries-cms-components` (44). Read the run, then fix the skill or the grader.
 - [`feature-explore`](#feature-explore): `feature-explore-writes-brief` (97). Read the run, then fix the skill or the grader.
 - [`feature-plan`](#feature-plan): `feature-plan-awaits-approval` (67) `feature-plan-offers-preview` (83). Read the run, then fix the skill or the grader.
+- [`git-workflow`](#git-workflow): `git-workflow-pr-reply` (67). Read the run, then fix the skill or the grader.
 - [`major-upgrade`](#major-upgrade): `major-upgrade-offers-stopgaps` (67). Read the run, then fix the skill or the grader.
 - [`markdown-preview`](#markdown-preview): `feature-plan-awaits-approval` (67). Read the run, then fix the skill or the grader.
 - [`pr-describe`](#pr-describe): `pr-describe-diagram-readability` (80). Read the run, then fix the skill or the grader.
@@ -51,6 +51,9 @@ A workflow eval scored under 100, so the skill broke one of its own rules.
 
 No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 
+- [`feature-build`](#feature-build): `feature-build-draft-pr-comments`
+- [`git-workflow`](#git-workflow): `feature-build-draft-pr-comments`
+- [`pr-describe`](#pr-describe): `pr-describe-starting-draft`
 - [`umbraco-backoffice-conventions`](#umbraco-backoffice-conventions): `backoffice-conventions-external-markdown`
 - [`umbraco-env-sync`](#umbraco-env-sync): `env-sync-access-rules`
 - [`umbraco-security`](#umbraco-security): `security-secret-in-response-dynamic-settings`
@@ -67,13 +70,13 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`dependency-review`](#dependency-review) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`diagrams`](#diagrams) | knowledge | Proven | +83 | 3 | 0 | 5/24 | 1 |
 | [`ef-core-data`](#ef-core-data) | knowledge | Proven | +33 | 4 | 0 | 2/7 | 1 |
-| [`feature-build`](#feature-build) | workflow | Broke a rule | – | 8 | 0 | – | – |
+| [`feature-build`](#feature-build) | workflow | Broke a rule | – | 9 | 0 | – | – |
 | [`feature-close`](#feature-close) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-design`](#feature-design) | workflow | Broke a rule | – | 13 | 5 | – | – |
 | [`feature-explore`](#feature-explore) | workflow | Broke a rule | – | 1 | 0 | – | – |
 | [`feature-interrogate`](#feature-interrogate) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`feature-plan`](#feature-plan) | workflow | Broke a rule | – | 6 | 0 | – | – |
-| [`git-workflow`](#git-workflow) | knowledge | Proven | +67 | 3 | 0 | 3/8 | 0 |
+| [`git-workflow`](#git-workflow) | workflow | Broke a rule | – | 4 | 0 | – | – |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -83,7 +86,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`markdown-preview`](#markdown-preview) | workflow | Broke a rule | – | 6 | 0 | – | – |
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
-| [`pr-describe`](#pr-describe) | workflow | Broke a rule | – | 6 | 0 | – | – |
+| [`pr-describe`](#pr-describe) | workflow | Broke a rule | – | 7 | 0 | – | – |
 | [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
@@ -230,6 +233,7 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 |---|---|---|
 | `feature-build-asks-before-trunk` | 100 | 2026-11-06 |
 | `feature-build-checks-agent-skills` | 67 | 2026-11-06 |
+| `feature-build-draft-pr-comments` | – | – |
 | `feature-build-names-agent-skills` | 100 | 2026-11-06 |
 | `feature-build-one-demo-site` | 100 | 2026-11-13 |
 | `feature-build-open-comments` | 56 | 2026-11-06 |
@@ -286,16 +290,12 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 ### `git-workflow`
 
-| Section | Eval | With | Without | Gain | Skill loaded | Recorded |
-|---|---|---|---|---|---|---|
-| Branching — when to branch, when not | **no eval** | | | | | |
-| Branch/worktree per feature (the feature-* pipeline) | **no eval** | | | | | |
-| If you are an AI agent: always ask before touching main or a support branch | **no eval** | | | | | |
-| Commits — Conventional Commits, kept honest | **no eval** | | | | | |
-| Issues — `gh issue create` | **no eval** | | | | | |
-| Pull requests — `gh pr create` | `git-workflow-pr-reply` | 67 | 0 | 67 | 3/3 | 2026-10-19 |
-| Sanity rules | `git-workflow-stash-safety` | 100 | 33 | 67 | 3/3 | 2026-10-19 |
-| Umbraco packages and version tracking | `git-workflow-two-cms-majors` | 100 | 83 | 17 | 6/6 | 2026-10-17 |
+| Eval | Score | Recorded |
+|---|---|---|
+| `feature-build-draft-pr-comments` | – | – |
+| `git-workflow-pr-reply` | 67 | 2026-10-19 |
+| `git-workflow-stash-safety` | 100 | 2026-10-19 |
+| `git-workflow-two-cms-majors` | 100 | 2026-10-17 |
 
 ### `github-init`
 
@@ -410,6 +410,7 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 | `pr-describe-plan-diagrams` | 100 | 2026-10-26 |
 | `pr-describe-plan-folder` | 100 | 2026-10-23 |
 | `pr-describe-stacked-pr` | 100 | 2026-10-23 |
+| `pr-describe-starting-draft` | – | – |
 
 ### `pr-review`
 

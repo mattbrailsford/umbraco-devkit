@@ -191,6 +191,14 @@ after the feature. The plan ends up in the feature branch's history because it w
 just before the branch was cut. `git-workflow`'s "Branch/worktree per feature" section has
 the full reasoning.
 
+In the same question, it asks to push the branch and open a draft PR. `change-build` and
+`major-upgrade` ask the same when they cut their branch. The draft starts short: what the work
+is, and a link to its task list on the branch. The build pushes after each task, so the ticks
+show up as it goes. Before each task it reads new comments on the draft; one that asks for a
+change stops the build until you answer. At the end, `pr-describe` writes the full
+description. The PR stays a draft until you mark it ready. `git-workflow`'s "Draft PR while a
+build runs" has the details.
+
 Every skill asks before it commits to trunk, but a skill is advice Claude can miss. The
 plugin's `trunk-gate` hook backs it up. Before any commit, merge, or push that lands on a
 protected branch (`main`, `master`, the remote's default branch, `support/*`, `vN/main`,
