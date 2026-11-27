@@ -94,7 +94,8 @@ Then show the plan and build it as below.
    - Single line: a short-lived branch such as `chore/upgrade-v18`.
 
    Confirm the working tree is clean, then **ask the user to confirm the branch name and its
-   base before creating it.**
+   base before creating it**, and whether to push it and open a draft PR once the upgrade
+   file is committed (see "Build").
 
 ## Inventory: write `docs/upgrades/v<major>.md`
 
@@ -414,8 +415,11 @@ the last RC to the final release). Work on the same branch.
 
 Commit the upgrade file on the new branch first, following the project's commit
 conventions (`git-workflow`): for example `docs: add upgrade plan for v<major>`, or
-`docs: refresh upgrade plan for <release>` on a refresh. Then,
-for each unchecked task, in order, follow `feature-build`'s loop with these differences:
+`docs: refresh upgrade plan for <release>` on a refresh. If the user said yes to a draft PR
+and none is open yet, push the branch and invoke `pr-describe --start` with the upgrade file,
+as `git-workflow`'s "Draft PR while a build runs" says. Its `PR:` line goes at the top of the
+file's "Log" section. Then, for each unchecked task, in order, follow `feature-build`'s loop
+with these differences:
 
 - **Build.** Give the `builder` the task text, the matching inventory entries (with their
   docs link or CMS PR), and the CMS release tag to read source at. Tell it to invoke
@@ -454,7 +458,7 @@ for each unchecked task, in order, follow `feature-build`'s loop with these diff
   line, use its demo site or the code at its head. Add the bug to the file's "Backport
   candidates" with yes, no, or unchecked for each line.
 - **Tick and log.** Tick the task in the upgrade file and add its commit SHA to the "Log"
-  section. A decision the inventory left open goes in the file's "Decisions" section.
+  section. With a draft PR open, push once both are committed. A decision the inventory left open goes in the file's "Decisions" section.
 
 ## Finish
 
@@ -515,7 +519,7 @@ a green build and unit tests aren't Finish.
 
    Show the list and ask which to port, per change and line. Mark the picks in the file.
    Port nothing yet: `change-backport` only ports a merged change.
-7. Open the PR with `pr-describe`, or update it if a PR for this upgrade is already open. It
+7. Open the PR with `pr-describe`, or fill it in if a draft for this upgrade is already open. It
    uses its plain style, since there's no plan folder. Point it at the upgrade file, so the PR
    lists the breaking changes handled, any breaking changes for consumers, the docs changed
    or handed off, the follow-ups, the picked backports, and, when the package plugs into

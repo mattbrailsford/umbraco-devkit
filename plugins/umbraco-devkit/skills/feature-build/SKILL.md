@@ -49,8 +49,9 @@ doesn't replace the whole-feature review (see "Finish"); the two catch different
    2. Confirm you're on the project's trunk branch (see `CLAUDE.md`'s Feature workflow
       section). If not, stop and ask. Don't guess which branch to fork from.
    3. **Ask the user to confirm before running any of this.** It commits to trunk, which the
-      "always ask before touching main" rule covers however small the change. First check the
-      plan folder for unresolved review comments (`markdown-preview`'s "Comments before moving
+      "always ask before touching main" rule covers however small the change. The same
+      question asks to push the branch and open a draft PR once it's cut (step 8). First
+      check the plan folder for unresolved review comments (`markdown-preview`'s "Comments before moving
       on"), and put any that are waiting on the user into this same question, so a plan with
       an open question isn't committed and built without them knowing.
    4. Commit the plan folder as-is, on trunk, with any changed project starters: `git add
@@ -80,10 +81,16 @@ doesn't replace the whole-feature review (see "Finish"); the two catch different
    path. That one site serves the whole build: every `builder` and `smoke-tester` in the loop
    gets the line, and none starts another. On a resumed run, read the line back, and start the
    site the same way if it doesn't answer.
+8. **Open the draft PR**, if the user said yes in step 4: push the branch and invoke
+   `pr-describe --start` with the plan folder, as `git-workflow`'s "Draft PR while a build
+   runs" says. Its `PR:` line goes at the top of `BUILD-LOG.md`. On a resumed run, read the
+   line back; a log with no `PR:` line means the user said no, so push nothing until Finish.
 
 ## The loop
 
-For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
+For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom. With a draft
+PR open, first read its new comments, as `git-workflow`'s "Draft PR while a build runs" says:
+a comment asking for a change stops the loop here, before the next task starts.
 
 1. **Build.** If the task changes an existing screen, first dispatch a `smoke-tester` to
    capture it as `screenshots/<screen>-before.png`, with the screen's click path. Once the
@@ -184,7 +191,8 @@ For each task still unchecked (`- [ ]`) in `PLAN.md`, in order, top to bottom:
    ends; `decision-review` depends on it being on disk. Say who decided:
    `(feature-build, task 3, agent)` for a call the builder made, `(…, user)` for one the
    user made, such as an answer to a question the task raised. The whole-feature review and
-   `decision-review` treat the two differently.
+   `decision-review` treat the two differently. With a draft PR open, push once both commits
+   are in.
 
 8. Next task.
 
@@ -205,7 +213,7 @@ subagent in whole-feature mode with the full branch diff (`git diff <base>...HEA
 - On `FAIL`, send the findings to a fresh `builder`, then review again. Repeat until `PASS`,
   with the same round diffs and three-round limit as the loop's "Recurse" step; here the
   round diff is the round's own `refactor:` commit. Commit each round as its own `refactor:`
-  commit and add a `BUILD-LOG.md` line for it.
+  commit and add a `BUILD-LOG.md` line for it. With a draft PR open, push each round.
 - If a finding means the design itself is wrong, not just the code, stop and hand off to
   `feature-design`.
 
@@ -213,8 +221,9 @@ A human still reviews the PR; this pass means they aren't the first to see cross
 problems. If this feature is (or completes) a standalone package ready to publish, invoke
 `umbraco-marketplace` before tagging a release; it's not part of this loop.
 
-**Open the PR: invoke `pr-describe` directly (via the Skill tool). Don't write the body
-yourself.** Claude Code's built-in `gh pr create --body "$(cat <<'EOF' ... EOF)"` recipe does
+**Open the PR, or fill in the draft: invoke `pr-describe` directly (via the Skill tool). Don't
+write the body yourself.** A draft opened in Preflight stays a draft; tell the user to mark it
+ready once they've looked. Claude Code's built-in `gh pr create --body "$(cat <<'EOF' ... EOF)"` recipe does
 **not** apply here. Per `git-workflow`, the PR body is always `pr-describe`'s job, no
 exceptions: never `--body` at all. `pr-describe` handles branch/push via `git-workflow` and
 runs `decision-review`, so the assumptions, deviations, and workarounds in `DECISION-LOG.md`
