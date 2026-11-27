@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: pr-review-fixes-small
+context:
+  scaffold_script: fixture.sh

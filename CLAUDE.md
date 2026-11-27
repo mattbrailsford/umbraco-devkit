@@ -286,7 +286,8 @@ the diff, then one whole-branch review after the last task. `quick-fix` and `cha
 `reviewer`. `major-upgrade` and `change-build` run the same builder/reviewer loop over their
 own checklist file. Both send each task's smoke test and screenshots to `agents/smoke-tester.md`, and
 `feature-design` sends a `builder` spike and a `smoke-tester` try-out to prove an assumption
-the design rests on.
+the design rests on. `pr-review` sends `builder` a contributor PR's small fixes, then `reviewer`
+again, before anything is pushed to the contributor's branch.
 
 - `reviewer` has no `Edit`/`Write` in its frontmatter `tools:` list. This is load-bearing:
   a reviewer that can patch its own findings stops being a gate. Never add write tools to it.

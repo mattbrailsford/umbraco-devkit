@@ -3,9 +3,10 @@ name: pr-review
 description: >-
   Reviews a pull request from outside the core team on an open-source Umbraco package: runs
   the `reviewer` agent, then checks what's unsafe to build locally, security, contribution
-  rules, docs, and whether the diff does what it claims. Drafts the review for approval;
-  never posts or merges on its own. Use for community PRs. For your own task's diff, use
-  `reviewer` through `feature-build` or `quick-fix`.
+  rules, docs, and whether the diff does what it claims. Links the issue the PR fixes, fixes
+  small findings itself, and offers to merge, sending a PR back only when its approach is
+  wrong; never posts, pushes or merges without a yes. Use for community PRs. For your own task's diff, use `reviewer` through
+  `feature-build` or `quick-fix`.
 user-invocable: true
 argument-hint: <PR number or URL>
 ---
@@ -27,12 +28,12 @@ of checks that only exist *because* the diff came from outside.
 ## Scope
 
 - IN: a PR on a package's public repo, opened by someone who isn't a core maintainer. Fetching
-  it, reviewing it, drafting a review comment.
+  it, reviewing it, linking the issue it fixes, fixing small findings on its branch, drafting a
+  review comment, and pushing and merging once the user says yes.
 - OUT: a `feature-build` task's own diff (dispatch `reviewer` directly — that's what
   `feature-build`/`quick-fix` already do); merging, approving, or requesting changes without
-  you confirming the drafted comment first; fixing the contribution yourself (if it's close
-  but needs a small push, say so in the comment and let the contributor or a maintainer decide
-  who pushes it); clicking through it on the demo site yourself (`pr-demo`).
+  you confirming first; rewriting a PR whose approach is wrong (that goes back to the
+  contributor); clicking through it on the demo site yourself (`pr-demo`).
 
 ## Argument
 
@@ -41,8 +42,9 @@ of checks that only exist *because* the diff came from outside.
 ## Workflow
 
 1. **Fetch the PR, don't run anything yet.**
-   `gh pr view <number> --json title,body,author,baseRefName,headRefName,additions,deletions,files`
-   and `gh pr diff <number>`. Read the diff before touching your working tree.
+   `gh pr view <number> --json title,body,author,baseRefName,headRefName,headRefOid,additions,deletions,files,closingIssuesReferences,reviews,commits`
+   and `gh pr diff <number>`. Read the diff before touching your working tree. If a
+   maintainer approved it and nothing was pushed since, the review is done: go to step 11.
 
 2. **Scan for anything that would execute on your machine before you build or test.** A
    malicious or careless PR can put code where CI, a build, or a package restore will run it
@@ -60,6 +62,22 @@ of checks that only exist *because* the diff came from outside.
    outside contribution — the PR title/body (and the issue it links, if any) is the closest
    equivalent. Read it before judging the diff: `reviewer` needs a task to judge scope against
    in its own step 8, and "what the PR says it does" is that task here.
+
+   **Link the issue it fixes, yourself.** Skip this if `closingIssuesReferences` already
+   lists one. Otherwise look for an open issue the PR fixes: any issue it names by number,
+   then a tracker search on the words of its title and the area it changes. Never ask the
+   contributor to add the link; it's quicker to do it.
+   - **A clear match:** the PR names the issue, or describes the same problem the issue
+     reports, and fixes all of it. Add the link without asking: append a blank line and
+     `Fixes #<issue>` to the PR's description (`gh pr edit <number> --body-file <path>`,
+     keeping the body as it was above it). The review comment says so in one line ("I've
+     linked this to #12."). If the edit is refused, put the link in the draft for the user
+     instead.
+   - **Not clear,** or it fixes only part of the issue: don't link. List it for the user
+     under the draft ("May fix #12: link it?").
+
+   The link is what makes the merge close the issue. GitHub closes it only when the PR
+   targets the repo's default branch; step 11 covers the other case.
 
 5. **Dispatch `reviewer`** (Agent tool, `subagent_type: reviewer`), passing the PR's stated
    intent as the task. With the PR branch already checked out, its own step 1 (`git diff`
@@ -103,25 +121,80 @@ of checks that only exist *because* the diff came from outside.
    turn unsure ones into a question for the contributor instead of a demand. List what was
    dropped, and why, for the user under the draft, not in it.
 
-8. **Draft the review, don't post it yet.** Combine `reviewer`'s verdict and the findings
+8. **Fix it here, unless the approach is wrong.** Sending a PR back costs the contributor a
+   round trip and often stalls it for weeks; a small fix costs minutes. Sort the findings
+   that survived step 7:
+   - **Fix here:** a finding worth fixing whose fix is small and plain. It keeps the PR's
+     approach, and the right code is clear: a missing null or empty check, a missing
+     translation key, a test for the new behavior, a wrong cache key. A `Suggestion` is
+     fixed here only if it's worth the change; otherwise list it for the user, not in the
+     draft.
+   - **Back to the contributor:** the approach itself is wrong, such as the wrong extension
+     point, a design the project doesn't want, or a fix that means rewriting most of the
+     diff. Also any unsure finding from step 7, since only they can answer it. Unsure which
+     side a finding falls on: ask the user.
+   - **Never fixed here:** a PR step 2 found trying to run something it shouldn't. It goes
+     back, or the user closes it.
+
+   If anything goes back, fix nothing yet: one comment covers it all, and a new approach may
+   change the rest. Otherwise dispatch `builder` (Agent tool, `subagent_type: builder`) on
+   the checked-out PR branch, with the fix-here findings as its task, told to commit
+   following `git-workflow` and not push. Then dispatch `reviewer` again on the branch's whole
+   diff against its base. A FAIL goes back to `builder`, at most twice; after that the
+   findings go back to the contributor. Nothing is pushed before the user's yes in step 10.
+
+9. **Draft the review, don't post it yet.** Combine `reviewer`'s verdict and the findings
    that survived step 7 into one comment. Before the first finding, give one line with the
-   verdict and the count per tier, such as `Changes needed: 1 Important, 2 Suggestions`;
-   with nothing to fix, say so in those words. Then the findings, grouped the same way
+   verdict and the count per tier, such as `Changes needed: 1 Important, 2 Suggestions`, or
+   `Fixed here: 1 Important` when step 8 fixed them; with nothing to fix, say so in those
+   words. For each fix made here, say in a line what changed and why, so the contributor
+   learns from it; never ask them to make it. Then the findings, grouped the same way
    `reviewer` tiers them (Critical / Important / Suggestion / Pre-existing). Pre-existing
    ones are for the maintainer, so say plainly the contributor doesn't need to fix them.
    Write it following `plain-writing` — a contributor who doesn't know this codebase needs to be able to act on
    it. Say what's blocking and what's a nice-to-have; don't bury a `Critical` finding in a
    wall of Suggestions.
 
-9. **Show the draft and ask before posting.** A PR comment on a public repo is visible to the
+10. **Show the draft and ask before posting.** A PR comment on a public repo is visible to the
    contributor and anyone else watching the repo — confirm with the user first, every time.
    Once confirmed, post with `gh pr review <number> --comment --body-file <path>` for a plain
    comment, or `--request-changes`/`--approve` instead of `--comment` only if the user
    explicitly wants the review state set, not just a comment left. Never pass `--approve`
-   without the user having said so. Same sanity rules as `git-workflow`: never `--no-verify`,
-   never force-push, re-check the diff for secrets before anything is staged locally.
+   without the user having said so. When nothing goes back to the contributor and step 11's
+   checks pass, make it one question: approve and merge, approve only, or comment only. With
+   fixes made in step 8, the choices are push the fixes, approve and merge; push the fixes
+   only; or send the findings back to the contributor instead. End the reply with that question,
+   its choices as a short list, after the commands each choice would run.
+
+   **Pushing the fixes.** Push to the PR's branch with a plain `git push` from the branch
+   `gh pr checkout` set up; never force-push over the contributor's commits. That works only
+   when the PR allows maintainer edits (`maintainerCanModify`). When it doesn't, push the
+   branch to this repo instead, open a PR from it that keeps the contributor's commits as
+   theirs, and close theirs with a thank-you that links the new one, all as part of the same
+   yes. Wait for the checks on the pushed commit (`gh pr checks <number> --watch`) before
+   step 11.
+
+   Same sanity rules as `git-workflow`: never `--no-verify`, never force-push, re-check the
+   diff for secrets before anything is staged locally.
+
+11. **Merge, on a yes.** Offer it only when all of these hold; otherwise say which one
+    doesn't, and stop:
+    - Nothing `Critical` or `Important` is left from the review.
+    - `gh pr checks <number>` passes, and `gh pr view <number> --json mergeable` says
+      `MERGEABLE`.
+    - The PR's `headRefOid` is the commit that was reviewed, or the fix commit `reviewer`
+      passed in step 8. Any other push since means review again.
+
+    Ask every time: a merge lands on a shared branch. Use the merge method the repo already
+    uses (look at how recent PRs were merged, among the methods it allows):
+    `gh pr merge <number> --squash`, `--merge` or `--rebase`. Never `--admin`; a required
+    check or review is the repo's rule, not this skill's to skip. If the PR targets a branch
+    other than the default, GitHub doesn't close its linked issues, so close each one with a
+    one-line comment naming the PR, as part of the same yes. Then switch back to the branch
+    you were on before step 3.
 
 ## Hand off
 
-One line: the PR, the verdict (`reviewer`'s tier plus anything step 6 added), and whether the
-comment was posted or is still waiting on confirmation.
+One line: the PR, the verdict (`reviewer`'s tier plus anything step 6 added), what was fixed
+here, the issue it was linked to, and whether the comment was posted and the PR merged, or what's still
+waiting on confirmation.

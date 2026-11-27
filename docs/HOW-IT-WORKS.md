@@ -31,9 +31,9 @@ Every other skill you run works around those flows and never changes code itself
 
 - **Finds the work and routes it.** `investigate-bug` proves a bug's cause, then says which
   flow should fix it. `issue-triage`, `issue-backlog`, and `issue-resolve` take tracker
-  issues from new to a started fix.
+  issues from new to a started fix; `issue-backlog` also sends community PRs to `pr-review`.
 - **Reviews and explains it.** `pr-review` runs the same reviewer over a PR from outside the
-  team. `feature-interrogate` adversarially stress-tests a plan before it's built;
+  team, fixes small problems itself, links the issue it fixes, and merges it on your yes. `feature-interrogate` adversarially stress-tests a plan before it's built;
   `decision-review` pulls out what a human should look at after it's built — the same job,
   run at opposite ends of the pipeline. `pr-describe` writes the PR description, opening with
   the choices `decision-review` found that a reviewer should check, and

@@ -79,7 +79,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`git-workflow`](#git-workflow) | workflow | Broke a rule | – | 4 | 0 | – | – |
 | [`github-init`](#github-init) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`investigate-bug`](#investigate-bug) | workflow | Keeps its rules | – | 1 | 0 | – | – |
-| [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 1 | 0 | – | – |
+| [`issue-backlog`](#issue-backlog) | workflow | Keeps its rules | – | 2 | 0 | – | – |
 | [`issue-resolve`](#issue-resolve) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`issue-triage`](#issue-triage) | workflow | Keeps its rules | – | 5 | 0 | – | – |
 | [`major-upgrade`](#major-upgrade) | workflow | Broke a rule | – | 20 | 5 | – | – |
@@ -87,7 +87,7 @@ No recorded score. Run them, then `scripts/record-eval-scores.sh`.
 | [`plain-writing`](#plain-writing) | knowledge | Proven | +75 | 9 | 0 | 6/10 | 1 |
 | [`pr-demo`](#pr-demo) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`pr-describe`](#pr-describe) | workflow | Broke a rule | – | 7 | 0 | – | – |
-| [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 2 | 0 | – | – |
+| [`pr-review`](#pr-review) | workflow | Keeps its rules | – | 4 | 0 | – | – |
 | [`project-init`](#project-init) | workflow | Keeps its rules | – | 3 | 0 | – | – |
 | [`project-retro`](#project-retro) | workflow | Keeps its rules | – | 1 | 0 | – | – |
 | [`quick-fix`](#quick-fix) | workflow | Keeps its rules | – | 4 | 0 | – | – |
@@ -313,7 +313,8 @@ Stays quiet on: `ef-core-skip-generic-efcore`
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `issue-backlog-board` | 100 | 2026-11-26 |
+| `issue-backlog-board` | 100 | 2026-11-27 |
+| `issue-backlog-community-prs` | 100 | 2026-11-27 |
 
 ### `issue-resolve`
 
@@ -416,8 +417,10 @@ Stays quiet on: `plain-writing-skip-code-comment` `plain-writing-skip-commit-mes
 
 | Eval | Score | Recorded |
 |---|---|---|
-| `pr-review-checks-findings` | 100 | 2026-10-20 |
-| `pr-review-hidden-install-hooks` | 100 | 2026-10-20 |
+| `pr-review-checks-findings` | 100 | 2026-11-27 |
+| `pr-review-fixes-small` | 100 | 2026-11-27 |
+| `pr-review-hidden-install-hooks` | 100 | 2026-11-27 |
+| `pr-review-link-merge` | 100 | 2026-11-27 |
 
 ### `project-init`
 

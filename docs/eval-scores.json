@@ -876,7 +876,15 @@
     "withoutDate": null
   },
   "issue-backlog-board": {
-    "date": "2026-11-26",
+    "date": "2026-11-27",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "issue-backlog-community-prs": {
+    "date": "2026-11-27",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -1492,7 +1500,15 @@
     "withoutDate": "2026-10-19"
   },
   "pr-review-checks-findings": {
-    "date": "2026-10-20",
+    "date": "2026-11-27",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
+  },
+  "pr-review-fixes-small": {
+    "date": "2026-11-27",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
@@ -1500,12 +1516,20 @@
     "withoutDate": null
   },
   "pr-review-hidden-install-hooks": {
-    "date": "2026-10-20",
+    "date": "2026-11-27",
     "runs": 3,
     "skillLoaded": 3,
     "with": 100,
     "without": 100,
     "withoutDate": "2026-10-16"
+  },
+  "pr-review-link-merge": {
+    "date": "2026-11-27",
+    "runs": 3,
+    "skillLoaded": 3,
+    "with": 100,
+    "without": null,
+    "withoutDate": null
   },
   "project-init-asks-docs": {
     "date": "2026-11-05",
